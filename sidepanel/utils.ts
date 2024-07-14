@@ -1,7 +1,5 @@
 import pinyin from "tiny-pinyin";
-
-
-
+import { ItemType, type ListItemType } from "./types";
 
 
 export function isChineseChar(char) {
@@ -47,4 +45,20 @@ export function scrollIntoViewIfNeeded(element: HTMLElement, container: HTMLElem
   } else if (elementRect.bottom > containerRect.bottom) {
     container.scrollTop += elementRect.bottom - containerRect.bottom
   }
+}
+
+export function isTabItem(item: ListItemType): item is ListItemType<ItemType.Tab> {
+  return item.itemType === ItemType.Tab;
+}
+
+export function isBookmarkItem(
+  item: ListItemType
+): item is ListItemType<ItemType.Bookmark> {
+  return item.itemType === ItemType.Bookmark
+}
+
+export function isHistoryItem(
+  item: ListItemType
+): item is ListItemType<ItemType.History> {
+  return item.itemType === ItemType.History
 }

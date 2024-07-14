@@ -10,22 +10,15 @@ import {
 import styled from "styled-components"
 
 import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS } from "./constants"
-import type {
-  BookmarkItemType,
-  HistoryItemType,
+import {
   ItemType,
-  TabItemType
+  type BookmarkItemType,
+  type HistoryItemType,
+  type ItemTypeSet,
+  type ListItemType,
+  type TabItemType
 } from "./types"
-import { scrollIntoViewIfNeeded } from "./utils"
-
-export interface ListItemType<T = ItemType> {
-  itemType: T
-  data: T extends ItemType.Bookmark
-    ? BookmarkItemType
-    : T extends ItemType.Tab
-      ? TabItemType
-      : HistoryItemType
-}
+import { isTabItem, scrollIntoViewIfNeeded } from "./utils"
 
 const ListItemWrapper = styled(ListComponent.Item)`
   &:hover {
@@ -46,11 +39,22 @@ const setScrollTopIfNeeded = () => {
   if (!activeItem) return
   scrollIntoViewIfNeeded(activeItem, mainContent)
 }
+
+const activeTab = (item: ListItemType<ItemType.Tab>) => {
+  chrome.tabs.update(item.data.id, {
+    active: true
+  })
+  chrome.storage.session.get("selfWindowId", (result) => {
+    const selfWindowId = result.selfWindowId
+    chrome.windows.remove(selfWindowId)
+  })
+}
+
 export default function List({ list }: { list: ListItemType[] }) {
-  const [activeIndex, setActiveIndex] = useState(-1)
+  const [activeIndex, setActiveIndex] = useState(0)
   const i = useRef(0)
 
-  let changeActiveIndex = useCallback(
+  const changeActiveIndex = useCallback(
     (offset: number) => {
       let currentIndex = i.current
       let index = currentIndex + offset
@@ -65,6 +69,14 @@ export default function List({ list }: { list: ListItemType[] }) {
     },
     [list, setActiveIndex]
   )
+
+  const handleEnterEvent = useCallback(() => {
+    const item = list[activeIndex]
+    if (isTabItem(item)) {
+      activeTab(item)
+      console.log("enter", item)
+    }
+  }, [activeIndex, list])
 
   useLayoutEffect(() => {
     setScrollTopIfNeeded()
@@ -82,6 +94,10 @@ export default function List({ list }: { list: ListItemType[] }) {
           event.preventDefault()
           changeActiveIndex(1)
           break
+        case 13: // KeyCode.ENTER
+          event.preventDefault()
+          handleEnterEvent()
+          break
         default:
           break
       }
@@ -90,12 +106,12 @@ export default function List({ list }: { list: ListItemType[] }) {
     return () => {
       window.removeEventListener("keydown", keydownHandler)
     }
-  }, [changeActiveIndex])
+  }, [changeActiveIndex, handleEnterEvent])
   return (
     <div>
       <ListComponent
         dataSource={list}
-        renderItem={({ itemType, data }, index) => (
+        renderItem={(item, index) => (
           <ListItemWrapper
             className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ""}
             header={<>header</>}
@@ -106,20 +122,16 @@ export default function List({ list }: { list: ListItemType[] }) {
                     color: "var(--semi-color-text-0)",
                     fontWeight: 500
                   }}>
-                  {data.title}
+                  {item.data.title}
                 </span>
               </div>
             }
             extra={
               <Button
                 onClick={() => {
-                  chrome.tabs.update((data as TabItemType).id, {
-                    active: true
-                  })
-                  chrome.storage.session.get("selfWindowId", (result) => {
-                    const selfWindowId = result.selfWindowId
-                    chrome.windows.remove(selfWindowId)
-                  })
+                  if (isTabItem(item)) {
+                    activeTab(item)
+                  }
                 }}>
                 <IconArrowRight />
               </Button>
