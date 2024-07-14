@@ -5,9 +5,9 @@ import { useEffect, useState } from "react"
 import styled from "styled-components"
 
 import { MAIN_CONTENT_CLASS } from "./constants"
-import List, { type ListItemType } from "./list"
+import List from "./list"
 import Search from "./search"
-import { ItemType } from "./types"
+import { ItemType, type ListItemType } from "./types"
 import { traversal } from "./utils"
 
 const { Header, Footer, Content } = Layout
