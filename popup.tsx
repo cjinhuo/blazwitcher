@@ -14,12 +14,20 @@ function IndexPopup() {
     //   })
     // })
 
+    const SEARCH_WINDOW_WIDTH = 900
+    const SEARCH_WINDOW_HEIGHT = 560
+    console.log(
+      "(window.screen.availHeight - SEARCH_WINDOW_HEIGHT) / 2",
+      window.screen.availHeight,
+      (window.screen.availHeight - SEARCH_WINDOW_HEIGHT) / 2
+    )
     chrome.windows.create(
       {
-        width: 800,
-        height: 500,
-        top: 200,
-        left: 300,
+        width: SEARCH_WINDOW_WIDTH,
+        height: SEARCH_WINDOW_HEIGHT,
+        // use width instead of availWidth could make it looks more centered
+        left: Math.floor((window.screen.width - SEARCH_WINDOW_WIDTH) / 2),
+        top: Math.floor((window.screen.availHeight - SEARCH_WINDOW_HEIGHT) / 2),
         focused: true,
         type: "popup",
         url: "./sidepanel.html"
