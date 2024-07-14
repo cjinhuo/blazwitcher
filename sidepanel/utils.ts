@@ -37,3 +37,14 @@ export const traversal = (
   })
   return result
 }
+
+export function scrollIntoViewIfNeeded(element: HTMLElement, container: HTMLElement) {
+  const containerRect = container.getBoundingClientRect()
+  const elementRect = element.getBoundingClientRect()
+  console.log('containerRect', containerRect, 'elementRect', elementRect, 'container', container.scrollTop)
+  if (elementRect.top < containerRect.top) {
+    container.scrollTop -= containerRect.top - elementRect.top
+  } else if (elementRect.bottom > containerRect.bottom) {
+    container.scrollTop += elementRect.bottom - containerRect.bottom
+  }
+}

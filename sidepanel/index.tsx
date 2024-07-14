@@ -4,6 +4,7 @@ import { Layout } from "@douyinfe/semi-ui"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 
+import { MAIN_CONTENT_CLASS } from "./constants"
 import List, { type ListItemType } from "./list"
 import Search from "./search"
 import { ItemType } from "./types"
@@ -49,7 +50,7 @@ export default function SidePanel() {
       <Header style={{ flex: "0 0 50px" }}>
         <Search onSearch={handleSearch}></Search>
       </Header>
-      <ContentWrapper>
+      <ContentWrapper className={MAIN_CONTENT_CLASS}>
         <List list={list}></List>
       </ContentWrapper>
       <Footer style={{ flex: "0 0 30px" }}>footer</Footer>
