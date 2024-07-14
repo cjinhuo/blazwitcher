@@ -1,4 +1,5 @@
-import { List as ListComponent } from "@douyinfe/semi-ui"
+import { IconArrowRight } from "@douyinfe/semi-icons"
+import { Button, List as ListComponent } from "@douyinfe/semi-ui"
 
 import type {
   BookmarkItemType,
@@ -20,7 +21,7 @@ export default function List({ list }: { list: ListItemType[] }) {
     <div>
       <ListComponent
         dataSource={list}
-        renderItem={(item) => (
+        renderItem={({ itemType, data }) => (
           <ListComponent.Item
             header={<>header</>}
             main={
@@ -30,11 +31,24 @@ export default function List({ list }: { list: ListItemType[] }) {
                     color: "var(--semi-color-text-0)",
                     fontWeight: 500
                   }}>
-                  示例标题
+                  {data.title}
                 </span>
               </div>
             }
-            extra={<>extra</>}
+            extra={
+              <Button
+                onClick={() => {
+                  chrome.tabs.update((data as TabItemType).id, {
+                    active: true
+                  })
+                  chrome.storage.session.get("selfWindowId", (result) => {
+                    const selfWindowId = result.selfWindowId
+                    chrome.windows.remove(selfWindowId)
+                  })
+                }}>
+                <IconArrowRight />
+              </Button>
+            }
           />
         )}
       />

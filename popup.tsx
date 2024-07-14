@@ -33,6 +33,9 @@ function IndexPopup() {
         url: "./sidepanel.html"
       },
       (window) => {
+        chrome.storage.session.set({
+          selfWindowId: window.id
+        })
         console.log("created window", window)
       }
     )

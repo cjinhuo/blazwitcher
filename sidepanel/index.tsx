@@ -9,13 +9,19 @@ import Search from "./search"
 import { ItemType } from "./types"
 import { traversal } from "./utils"
 
+const { Header, Footer, Content } = Layout
 const Container = styled(Layout)`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
 `
-const { Header, Footer, Content } = Layout
+const ContentWrapper = styled(Content)`
+  flex: 1;
+  overflow-y: scroll;
+  padding: 0;
+`
+
 export default function SidePanel() {
   const [list, setList] = useState<ListItemType[]>([])
   useEffect(() => {
@@ -43,9 +49,9 @@ export default function SidePanel() {
       <Header style={{ flex: "0 0 50px" }}>
         <Search onSearch={handleSearch}></Search>
       </Header>
-      <Content style={{ flex: "1", overflow: "scroll" }}>
-        {/* <List list={list}></List> */}
-      </Content>
+      <ContentWrapper>
+        <List list={list}></List>
+      </ContentWrapper>
       <Footer style={{ flex: "0 0 30px" }}>footer</Footer>
     </Container>
   )
