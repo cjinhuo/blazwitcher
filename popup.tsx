@@ -15,7 +15,7 @@ function IndexPopup() {
     // })
 
     const SEARCH_WINDOW_WIDTH = 900
-    const SEARCH_WINDOW_HEIGHT = 560
+    const SEARCH_WINDOW_HEIGHT = 500
     console.log(
       "(window.screen.availHeight - SEARCH_WINDOW_HEIGHT) / 2",
       window.screen.availHeight,
