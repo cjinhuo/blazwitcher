@@ -4,7 +4,7 @@ import { Layout } from "@douyinfe/semi-ui"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 
-import { MAIN_CONTENT_CLASS } from "~shared/constants"
+import { MAIN_CONTENT_CLASS, MAIN_WINDOW } from "~shared/constants"
 import { ItemType, type ListItemType } from "~shared/types"
 
 import List from "./list"
@@ -26,22 +26,19 @@ const ContentWrapper = styled(Content)`
 export default function SidePanel() {
   const [list, setList] = useState<ListItemType[]>([])
   useEffect(() => {
-    const port = chrome.runtime.connect({ name: "sidepanel" })
-    port.postMessage({ type: "POPUP_OPENED" })
-
-    // Listen for messages from the background script
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      if (message.type === "DATA_FROM_BACKGROUND") {
-        console.log("side panel get", message)
-      }
+    const port = chrome.runtime.connect({ name: MAIN_WINDOW })
+    port.onMessage.addListener((message) => {
+      console.log("message from bg", message)
     })
 
-    chrome.tabs.query({}, (tabs) => {
-      console.log("sidepanel", tabs)
-      const data = tabs.map((item) => ({ itemType: ItemType.Tab, data: item }))
-      setList(data)
-    })
-    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {})
+    // chrome.tabs.query({}, (tabs) => {
+    //   console.log("sidepanel", tabs)
+    //   const data = tabs.map((item) => ({ itemType: ItemType.Tab, data: item }))
+    //   setList(data)
+    // })
+    return () => {
+      port.disconnect()
+    }
   }, [])
   const handleSearch = (value: string) => {}
   return (

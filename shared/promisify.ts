@@ -1,6 +1,6 @@
 /* global chrome */
 
-export const tabsQuery = promisifyChromeMethod(
+export const tabsQuery = promisifyChromeMethod<chrome.tabs.Tab[]>(
   chrome.tabs.query.bind(chrome.tabs)
 )
 export const tabsUpdate = promisifyChromeMethod(
