@@ -9,16 +9,13 @@ import {
 } from "react"
 import styled from "styled-components"
 
-import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS } from "./constants"
 import {
-  ItemType,
-  type BookmarkItemType,
-  type HistoryItemType,
-  type ItemTypeSet,
-  type ListItemType,
-  type TabItemType
-} from "./types"
-import { isTabItem, scrollIntoViewIfNeeded } from "./utils"
+  LIST_ITEM_ACTIVE_CLASS,
+  MAIN_CONTENT_CLASS,
+  SELF_WINDOW_ID_KEY
+} from "../shared/constants"
+import { ItemType, type ListItemType } from "../shared/types"
+import { isTabItem, scrollIntoViewIfNeeded } from "../shared/utils"
 
 const ListItemWrapper = styled(ListComponent.Item)`
   &:hover {
@@ -41,9 +38,9 @@ const setScrollTopIfNeeded = () => {
 }
 
 const closeCurrentWindow = () => {
-  chrome.storage.session.get("selfWindowId", (result) => {
-    const selfWindowId = result.selfWindowId
-    chrome.windows.remove(selfWindowId)
+  chrome.storage.session.get(SELF_WINDOW_ID_KEY, (result) => {
+    const selfWindowId = result[SELF_WINDOW_ID_KEY]
+    selfWindowId && chrome.windows.remove(selfWindowId)
   })
 }
 

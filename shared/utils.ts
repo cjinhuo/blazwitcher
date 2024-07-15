@@ -62,3 +62,20 @@ export function isHistoryItem(
 ): item is ListItemType<ItemType.History> {
   return item.itemType === ItemType.History
 }
+
+
+// todo 需要做一个每次首次都不需要等待的节流函数
+export function throttle(delay: number) {
+  let timer = undefined
+  return function (fn: Function, ...args) {
+    if (timer) return
+    if (timer === undefined) {
+      fn.apply(this, args)
+      timer = null
+    }
+    timer = setTimeout(() => {
+      fn.apply(this, args)
+      timer = null
+    }, delay)
+  }
+}

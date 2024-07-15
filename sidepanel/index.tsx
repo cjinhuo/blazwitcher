@@ -4,11 +4,11 @@ import { Layout } from "@douyinfe/semi-ui"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
 
-import { MAIN_CONTENT_CLASS } from "./constants"
+import { MAIN_CONTENT_CLASS } from "~shared/constants"
+import { ItemType, type ListItemType } from "~shared/types"
+
 import List from "./list"
 import Search from "./search"
-import { ItemType, type ListItemType } from "./types"
-import { traversal } from "./utils"
 
 const { Header, Footer, Content } = Layout
 const Container = styled(Layout)`
@@ -26,20 +26,24 @@ const ContentWrapper = styled(Content)`
 export default function SidePanel() {
   const [list, setList] = useState<ListItemType[]>([])
   useEffect(() => {
-    chrome.bookmarks.getTree((originalBookmarks) => {
-      // Traversal bookmarks
-      const result = traversal(originalBookmarks)
+    const port = chrome.runtime.connect({ name: "sidepanel" })
+    port.postMessage({ type: "POPUP_OPENED" })
+
+    // Listen for messages from the background script
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.type === "DATA_FROM_BACKGROUND") {
+        console.log("side panel get", message)
+      }
     })
+
     chrome.tabs.query({}, (tabs) => {
       console.log("sidepanel", tabs)
       const data = tabs.map((item) => ({ itemType: ItemType.Tab, data: item }))
       setList(data)
     })
-    console.log("sidepanel", chrome.tabs)
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {})
   }, [])
-  const handleSearch = (value: string) => {
-    console.log("search", value)
-  }
+  const handleSearch = (value: string) => {}
   return (
     <Container>
       <Header style={{ flex: "0 0 50px" }}>

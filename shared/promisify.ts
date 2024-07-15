@@ -21,7 +21,7 @@ export const getPlatformInfo = promisifyChromeMethod(
 export const actionSetTitle = promisifyChromeMethod(
   chrome.action.setTitle.bind(chrome.action)
 )
-export const windowsGetCurrent = promisifyChromeMethod<Window>(
+export const getCurrentWindow = promisifyChromeMethod<chrome.windows.Window>(
   chrome.windows.getCurrent.bind(chrome.windows)
 )
 export const storageGet = promisifyChromeMethod(
@@ -29,6 +29,10 @@ export const storageGet = promisifyChromeMethod(
 )
 export const storageSet = promisifyChromeMethod(
   chrome.storage.session.set.bind(chrome.storage.session)
+)
+
+export const getBookmarksTree = promisifyChromeMethod<chrome.bookmarks.BookmarkTreeNode>(
+  chrome.bookmarks.getTree.bind(chrome.bookmarks)
 )
 
 function promisifyChromeMethod<T = any>(method: Function) {
