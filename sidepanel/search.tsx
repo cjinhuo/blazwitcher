@@ -27,7 +27,6 @@ export default function Search({ onSearch }: SearchProps) {
 
   const handleInputChange = (value: string) => {
     setInputValue(value)
-
     onSearch(value)
   }
 

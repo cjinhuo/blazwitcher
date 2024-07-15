@@ -9,13 +9,14 @@ import {
 } from "react"
 import styled from "styled-components"
 
+import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS } from "../shared/constants"
+import { type ListItemType } from "../shared/types"
 import {
-  LIST_ITEM_ACTIVE_CLASS,
-  MAIN_CONTENT_CLASS,
-  SELF_WINDOW_ID_KEY
-} from "../shared/constants"
-import { ItemType, type ListItemType } from "../shared/types"
-import { isTabItem, scrollIntoViewIfNeeded } from "../shared/utils"
+  activeTab,
+  closeCurrentWindow,
+  isTabItem,
+  scrollIntoViewIfNeeded
+} from "../shared/utils"
 
 const ListItemWrapper = styled(ListComponent.Item)`
   &:hover {
@@ -35,19 +36,6 @@ const setScrollTopIfNeeded = () => {
   ) as HTMLElement
   if (!activeItem) return
   scrollIntoViewIfNeeded(activeItem, mainContent)
-}
-
-const closeCurrentWindow = () => {
-  chrome.storage.session.get(SELF_WINDOW_ID_KEY, (result) => {
-    const selfWindowId = result[SELF_WINDOW_ID_KEY]
-    selfWindowId && chrome.windows.remove(selfWindowId)
-  })
-}
-
-const activeTab = (item: ListItemType<ItemType.Tab>) => {
-  chrome.tabs.update(item.data.id, {
-    active: true
-  })
 }
 
 export default function List({ list }: { list: ListItemType[] }) {
@@ -74,7 +62,7 @@ export default function List({ list }: { list: ListItemType[] }) {
     const item = list[activeIndex]
     if (isTabItem(item)) {
       activeTab(item)
-      console.log("enter", item)
+      closeCurrentWindow()
     }
   }, [activeIndex, list])
 

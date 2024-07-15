@@ -1,11 +1,12 @@
 import "./sidepanel.css"
 
 import { Layout } from "@douyinfe/semi-ui"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 
 import { MAIN_CONTENT_CLASS, MAIN_WINDOW } from "~shared/constants"
 import { ItemType, type ListItemType } from "~shared/types"
+import { isTabItem } from "~shared/utils"
 
 import List from "./list"
 import Search from "./search"
@@ -24,23 +25,27 @@ const ContentWrapper = styled(Content)`
 `
 
 export default function SidePanel() {
+  const originalList = useRef<ListItemType[]>([])
   const [list, setList] = useState<ListItemType[]>([])
   useEffect(() => {
     const port = chrome.runtime.connect({ name: MAIN_WINDOW })
-    port.onMessage.addListener((message) => {
-      console.log("message from bg", message)
+    port.onMessage.addListener((processedList) => {
+      console.log("processedList", processedList)
+      setList(processedList)
+      originalList.current = processedList
     })
 
-    // chrome.tabs.query({}, (tabs) => {
-    //   console.log("sidepanel", tabs)
-    //   const data = tabs.map((item) => ({ itemType: ItemType.Tab, data: item }))
-    //   setList(data)
-    // })
     return () => {
       port.disconnect()
     }
   }, [])
-  const handleSearch = (value: string) => {}
+  const handleSearch = (value: string) => {
+    setList(
+      originalList.current.filter((item) => {
+        return item.data.searchTarget.includes(value)
+      })
+    )
+  }
   return (
     <Container>
       <Header style={{ flex: "0 0 50px" }}>

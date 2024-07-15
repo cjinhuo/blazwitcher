@@ -31,7 +31,7 @@ export const storageSet = promisifyChromeMethod(
   chrome.storage.session.set.bind(chrome.storage.session)
 )
 
-export const getBookmarksTree = promisifyChromeMethod<chrome.bookmarks.BookmarkTreeNode>(
+export const getBookmarksTree = promisifyChromeMethod<chrome.bookmarks.BookmarkTreeNode[]>(
   chrome.bookmarks.getTree.bind(chrome.bookmarks)
 )
 

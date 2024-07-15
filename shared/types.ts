@@ -1,6 +1,13 @@
-export interface TabItemType extends chrome.tabs.Tab {}
-export interface BookmarkItemType extends chrome.bookmarks.BookmarkTreeNode {}
-export interface HistoryItemType extends chrome.history.HistoryItem {}
+export interface TabItemType extends chrome.tabs.Tab {
+  searchTarget: string
+}
+export interface BookmarkItemType extends chrome.bookmarks.BookmarkTreeNode {
+  searchTarget: string
+  folderName: string
+}
+export interface HistoryItemType extends chrome.history.HistoryItem {
+  searchTarget: string
+}
 
 
 export interface ItemTypeSet {
