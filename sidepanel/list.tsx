@@ -40,13 +40,16 @@ const setScrollTopIfNeeded = () => {
   scrollIntoViewIfNeeded(activeItem, mainContent)
 }
 
-const activeTab = (item: ListItemType<ItemType.Tab>) => {
-  chrome.tabs.update(item.data.id, {
-    active: true
-  })
+const closeCurrentWindow = () => {
   chrome.storage.session.get("selfWindowId", (result) => {
     const selfWindowId = result.selfWindowId
     chrome.windows.remove(selfWindowId)
+  })
+}
+
+const activeTab = (item: ListItemType<ItemType.Tab>) => {
+  chrome.tabs.update(item.data.id, {
+    active: true
   })
 }
 
@@ -97,6 +100,10 @@ export default function List({ list }: { list: ListItemType[] }) {
         case 13: // KeyCode.ENTER
           event.preventDefault()
           handleEnterEvent()
+          break
+        case 27: // KeyCode.ESC
+          event.preventDefault()
+          closeCurrentWindow()
           break
         default:
           break

@@ -31,11 +31,15 @@
     "host_permissions": [
       "https://*/*"
     ],
+    "action": {
+      "default_title": "Show The window"
+    },
     "permissions": [
       "tabs",
       "bookmarks",
       "history",
-      "storage"
+      "storage",
+      "windows"
     ]
   }
 }

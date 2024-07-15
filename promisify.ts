@@ -6,9 +6,6 @@ export const tabsQuery = promisifyChromeMethod(
 export const tabsUpdate = promisifyChromeMethod(
   chrome.tabs.update.bind(chrome.tabs)
 )
-export const executeScript = promisifyChromeMethod(
-  chrome.scripting.executeScript.bind(chrome.scripting)
-)
 export const sendMessageToTab = promisifyChromeMethod(
   chrome.tabs.sendMessage.bind(chrome.tabs)
 )
@@ -24,7 +21,7 @@ export const getPlatformInfo = promisifyChromeMethod(
 export const actionSetTitle = promisifyChromeMethod(
   chrome.action.setTitle.bind(chrome.action)
 )
-export const windowsGetCurrent = promisifyChromeMethod(
+export const windowsGetCurrent = promisifyChromeMethod<Window>(
   chrome.windows.getCurrent.bind(chrome.windows)
 )
 export const storageGet = promisifyChromeMethod(
@@ -33,13 +30,10 @@ export const storageGet = promisifyChromeMethod(
 export const storageSet = promisifyChromeMethod(
   chrome.storage.session.set.bind(chrome.storage.session)
 )
-export const chromeSearch = promisifyChromeMethod(
-  chrome.search.query.bind(chrome.search)
-)
 
-function promisifyChromeMethod(method) {
-  return (...args) =>
-    new Promise((resolve, reject) => {
+function promisifyChromeMethod<T = any>(method: Function) {
+  return (...args: any[]) =>
+    new Promise<T>((resolve, reject) => {
       method(...args, (result) => {
         if (chrome.runtime.lastError) {
           reject(

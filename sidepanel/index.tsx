@@ -29,11 +29,6 @@ export default function SidePanel() {
     chrome.bookmarks.getTree((originalBookmarks) => {
       // Traversal bookmarks
       const result = traversal(originalBookmarks)
-      // console.log(
-      //   result.filter((item) => {
-      //     return item.searchTarget.includes("yunwei")
-      //   })
-      // )
     })
     chrome.tabs.query({}, (tabs) => {
       console.log("sidepanel", tabs)

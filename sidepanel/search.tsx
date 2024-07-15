@@ -35,6 +35,7 @@ export default function Search({ onSearch }: SearchProps) {
       <InputContainer>
         <InputWrapper
           prefix={<IconSearch />}
+          autoFocus
           showClear
           size="large"
           value={inputValue}
