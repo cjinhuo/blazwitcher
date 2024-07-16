@@ -3,21 +3,16 @@ import pinyin from "tiny-pinyin";
 
 
 import { getBookmarksTree, tabsQuery } from "./promisify";
-import { ItemType, type BookmarkItemType, type ListItemType } from "./types";
-import { isChineseChar } from "./utils";
+import { ItemType, type BookmarkItemType, type ListItemType, type TabItemType } from "./types";
+import { faviconURL, isChineseChar } from "./utils";
 
 
 export async function tabsProcessing() {
-  let processedTabs: ListItemType[] = []
-  const currentTabs = await tabsQuery({})
-  processedTabs = currentTabs.map((tab) => ({
-    itemType: ItemType.Tab,
-    data: processTabItem(tab)
-  }))
+  let processedTabs = await tabsQuery({})
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.log("onUpdated", tabId, changeInfo, tab)
   })
-  return () => processedTabs
+  return () => processedTabs.map((tab) => ({ itemType: ItemType.Tab, data: processTabItem(tab) }))
 }
 
 function processTabItem(tab: chrome.tabs.Tab) {
@@ -31,10 +26,10 @@ function processTabItem(tab: chrome.tabs.Tab) {
 }
 
 export async function bookmarksProcessing() {
-  let processedBookmarks = []
   const bookmarkTreeNode = await getBookmarksTree()
-  const allBookmarks = traversalBookmarkTreeNode(bookmarkTreeNode)
-  return () => processedBookmarks
+  let processedBookmarks = traversalBookmarkTreeNode(bookmarkTreeNode)
+
+  return () => processedBookmarks.map((bookmark) => ({ itemType: ItemType.Bookmark, data: bookmark }))
 }
 
 
@@ -52,8 +47,10 @@ export const traversalBookmarkTreeNode = (
       const chineseChars = Array.from(rest.title).filter((char) =>
         isChineseChar(char)
       )
+      // get favicon from chrome://favicon/ + url ,from https://stackoverflow.com/questions/10301636/how-can-i-get-the-bookmark-icon-in-chrome
       result.push({
         ...rest,
+        favIconUrl: faviconURL(rest.url),
         searchTarget: `${rest.title} ${pinyin.convertToPinyin(chineseChars.join(""), "", true)} ${rest.url.replace(/^https?:\/\//, "")}`,
         folderName: parent?.title ?? "root"
       })
@@ -67,7 +64,8 @@ export async function dataProcessing() {
   const getBookmarks = await bookmarksProcessing()
   return () => {
     const tabs = getTabs()
-    // const bookmarks = getBookmarks()
-    return tabs
+    const bookmarks = getBookmarks()
+    console.log("bookmarks", bookmarks)
+    return bookmarks
   }
 }

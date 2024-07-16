@@ -4,9 +4,11 @@ export interface TabItemType extends chrome.tabs.Tab {
 export interface BookmarkItemType extends chrome.bookmarks.BookmarkTreeNode {
   searchTarget: string
   folderName: string
+  favIconUrl: string
 }
 export interface HistoryItemType extends chrome.history.HistoryItem {
   searchTarget: string
+  favIconUrl: string
 }
 
 

@@ -37,9 +37,10 @@
     "permissions": [
       "tabs",
       "bookmarks",
-      "history",
       "storage",
-      "windows"
+      "windows",
+      "favicon",
+      "<all_urls>"
     ]
   }
 }

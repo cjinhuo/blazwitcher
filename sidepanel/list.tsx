@@ -1,5 +1,5 @@
 import { IconArrowRight } from "@douyinfe/semi-icons"
-import { Button, List as ListComponent } from "@douyinfe/semi-ui"
+import { Button, Image, List as ListComponent } from "@douyinfe/semi-ui"
 import {
   useCallback,
   useEffect,
@@ -106,7 +106,9 @@ export default function List({ list }: { list: ListItemType[] }) {
         renderItem={(item, index) => (
           <ListItemWrapper
             className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ""}
-            header={<>header</>}
+            header={
+              <img width={20} height={20} src={item.data.favIconUrl}></img>
+            }
             main={
               <div>
                 <span
