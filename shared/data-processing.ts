@@ -65,7 +65,7 @@ export async function dataProcessing() {
   return () => {
     const tabs = getTabs()
     const bookmarks = getBookmarks()
-    console.log("bookmarks", bookmarks)
-    return bookmarks
+    console.log("tabs", tabs, bookmarks)
+    return [...tabs, ...bookmarks]
   }
 }

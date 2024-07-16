@@ -1,4 +1,5 @@
 import { SELF_WINDOW_ID_KEY } from "./constants";
+import { storageGet, storageRemove } from "./promisify";
 import { ItemType, type ListItemType } from "./types";
 
 
@@ -54,12 +55,15 @@ export function throttle(delay: number) {
 
 
 
-export const closeCurrentWindow = () => {
-  chrome.storage.session.get(SELF_WINDOW_ID_KEY, (result) => {
-    const selfWindowId = result[SELF_WINDOW_ID_KEY]
-    selfWindowId && chrome.windows.remove(selfWindowId)
-  })
+export const closeCurrentWindowAndClearStorage = async () => {
+  const storage = await storageGet(SELF_WINDOW_ID_KEY)
+  const selfWindowId = storage[SELF_WINDOW_ID_KEY]
+  if (selfWindowId) {
+    await storageRemove(SELF_WINDOW_ID_KEY)
+    chrome.windows.remove(selfWindowId).catch(() => {})
+  }
 }
+
 
 export const activeTab = (item: ListItemType<ItemType.Tab>) => {
   chrome.tabs.update(item.data.id, {
@@ -71,6 +75,6 @@ export const activeTab = (item: ListItemType<ItemType.Tab>) => {
 export function faviconURL(u:string) {
   const url = new URL(chrome.runtime.getURL("/_favicon/"))
   url.searchParams.set("pageUrl", u)
-  url.searchParams.set("size", "32")
+  url.searchParams.set("size", "24")
   return url.toString()
 }

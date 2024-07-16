@@ -1,11 +1,19 @@
-import { SELF_WINDOW_ID_KEY } from "./constants"
-import { getCurrentWindow } from "./promisify"
+import { SELF_WINDOW_ID_KEY } from "./constants";
+import { getCurrentWindow, storageGet, storageSet } from "./promisify";
+
 
 const SEARCH_WINDOW_WIDTH = 900
 const SEARCH_WINDOW_HEIGHT = 500
 
 export function weakUpWindowIfActiveByUser() {
   chrome.action.onClicked.addListener(async () => {
+    const storage = await storageGet(SELF_WINDOW_ID_KEY)
+    if (storage[SELF_WINDOW_ID_KEY]) {
+      chrome.windows.get(Number(storage[SELF_WINDOW_ID_KEY]), (window) => {
+        chrome.windows.update(window.id, { focused: true })
+      })
+      return
+    }
     const currentWindow = await getCurrentWindow()
     chrome.windows.create(
       {
@@ -20,7 +28,7 @@ export function weakUpWindowIfActiveByUser() {
         url: "./sidepanel.html"
       },
       (window) => {
-        chrome.storage.session.set({
+        storageSet({
           [SELF_WINDOW_ID_KEY]: window.id
         })
       }

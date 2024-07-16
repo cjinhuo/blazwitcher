@@ -6,9 +6,7 @@ import styled from "styled-components"
 const SearchContainer = styled.div`
   width: 100%;
   height: 100%;
-`
-const InputContainer = styled.div`
-  padding: 4px;
+  padding: 6px;
 `
 const InputWrapper = styled(Input)`
   background-color: var(--color-linear-bg-start) !important;
@@ -16,7 +14,7 @@ const InputWrapper = styled(Input)`
 `
 const Divider = styled.div`
   width: 100%;
-  height: 2px;
+  height: 1px;
   background-color: var(--color-neutral-8);
 `
 interface SearchProps {
@@ -32,16 +30,14 @@ export default function Search({ onSearch }: SearchProps) {
 
   return (
     <SearchContainer>
-      <InputContainer>
-        <InputWrapper
-          prefix={<IconSearch />}
-          autoFocus
-          showClear
-          size="large"
-          value={inputValue}
-          onChange={handleInputChange}
-          placeholder="input words to perform fuzzy search"></InputWrapper>
-      </InputContainer>
+      <InputWrapper
+        prefix={<IconSearch />}
+        autoFocus
+        showClear
+        size="large"
+        value={inputValue}
+        onChange={handleInputChange}
+        placeholder="input words to perform fuzzy search"></InputWrapper>
       <Divider></Divider>
     </SearchContainer>
   )

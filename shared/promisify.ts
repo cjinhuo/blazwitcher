@@ -24,11 +24,15 @@ export const actionSetTitle = promisifyChromeMethod(
 export const getCurrentWindow = promisifyChromeMethod<chrome.windows.Window>(
   chrome.windows.getCurrent.bind(chrome.windows)
 )
-export const storageGet = promisifyChromeMethod(
+export const storageGet = promisifyChromeMethod<{ [key: string]: any }>(
   chrome.storage.session.get.bind(chrome.storage.session)
 )
 export const storageSet = promisifyChromeMethod(
   chrome.storage.session.set.bind(chrome.storage.session)
+)
+
+export const storageRemove = promisifyChromeMethod(
+  chrome.storage.session.remove.bind(chrome.storage.session)
 )
 
 export const getBookmarksTree = promisifyChromeMethod<chrome.bookmarks.BookmarkTreeNode[]>(

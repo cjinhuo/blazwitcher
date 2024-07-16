@@ -1,5 +1,4 @@
-import { IconArrowRight } from "@douyinfe/semi-icons"
-import { Button, Image, List as ListComponent } from "@douyinfe/semi-ui"
+import { List as ListComponent } from "@douyinfe/semi-ui"
 import {
   useCallback,
   useEffect,
@@ -13,17 +12,52 @@ import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS } from "../shared/constants"
 import { type ListItemType } from "../shared/types"
 import {
   activeTab,
-  closeCurrentWindow,
+  closeCurrentWindowAndClearStorage,
+  isBookmarkItem,
   isTabItem,
   scrollIntoViewIfNeeded
 } from "../shared/utils"
+import { HOST_CLASS, IMAGE_CLASS, RenderItem, TITLE_CLASS } from "./style"
+
+const ListContainer = styled.div`
+  padding: 6px;
+  .semi-list-item-body-main {
+    width: 100%;
+    overflow: hidden;
+  }
+  .semi-list-item-body {
+    overflow: hidden;
+  }
+`
 
 const ListItemWrapper = styled(ListComponent.Item)`
+  border-radius: 6px;
   &:hover {
-    background-color: deepskyblue;
+    background-color: var(--color-neutral-5);
+    .${IMAGE_CLASS} {
+      background-color: var(--color-neutral-10);
+    }
+    .${TITLE_CLASS} {
+      color: var(--color-neutral-9);
+    }
+    .${HOST_CLASS} {
+      color: var(--color-neutral-6);
+    }
   }
   &.${LIST_ITEM_ACTIVE_CLASS} {
-    background-color: deepskyblue;
+    background-color: var(--color-neutral-2);
+    .${IMAGE_CLASS} {
+      background-color: var(--color-neutral-10);
+    }
+    .${TITLE_CLASS} {
+      color: var(--color-neutral-9);
+    }
+    .${HOST_CLASS} {
+      color: var(--color-neutral-6);
+    }
+  }
+  &.semi-list-item {
+    height: 50px;
   }
 `
 
@@ -62,7 +96,10 @@ export default function List({ list }: { list: ListItemType[] }) {
     const item = list[activeIndex]
     if (isTabItem(item)) {
       activeTab(item)
-      closeCurrentWindow()
+      closeCurrentWindowAndClearStorage()
+    } else if (isBookmarkItem(item)) {
+      window.open(item.data.url)
+      closeCurrentWindowAndClearStorage()
     }
   }, [activeIndex, list])
 
@@ -88,7 +125,7 @@ export default function List({ list }: { list: ListItemType[] }) {
           break
         case 27: // KeyCode.ESC
           event.preventDefault()
-          closeCurrentWindow()
+          closeCurrentWindowAndClearStorage()
           break
         default:
           break
@@ -96,43 +133,25 @@ export default function List({ list }: { list: ListItemType[] }) {
     }
     window.addEventListener("keydown", keydownHandler)
     return () => {
+      console.log("teststtse")
       window.removeEventListener("keydown", keydownHandler)
     }
   }, [changeActiveIndex, handleEnterEvent])
   return (
-    <div>
+    <ListContainer>
       <ListComponent
+        grid={{
+          gutter: [0, 8],
+          span: 24
+        }}
         dataSource={list}
         renderItem={(item, index) => (
           <ListItemWrapper
             className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ""}
-            header={
-              <img width={20} height={20} src={item.data.favIconUrl}></img>
-            }
-            main={
-              <div>
-                <span
-                  style={{
-                    color: "var(--semi-color-text-0)",
-                    fontWeight: 500
-                  }}>
-                  {item.data.title}
-                </span>
-              </div>
-            }
-            extra={
-              <Button
-                onClick={() => {
-                  if (isTabItem(item)) {
-                    activeTab(item)
-                  }
-                }}>
-                <IconArrowRight />
-              </Button>
-            }
+            main={<RenderItem item={item}></RenderItem>}
           />
         )}
       />
-    </div>
+    </ListContainer>
   )
 }

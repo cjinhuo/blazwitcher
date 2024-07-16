@@ -6,7 +6,11 @@ import styled from "styled-components"
 
 import { MAIN_CONTENT_CLASS, MAIN_WINDOW } from "~shared/constants"
 import { ItemType, type ListItemType } from "~shared/types"
-import { isTabItem } from "~shared/utils"
+import {
+  closeCurrentWindowAndClearStorage,
+  isBookmarkItem,
+  isTabItem
+} from "~shared/utils"
 
 import List from "./list"
 import Search from "./search"
@@ -35,16 +39,27 @@ export default function SidePanel() {
       originalList.current = processedList
     })
 
-    return () => {
+    window.addEventListener("unload", function () {
+      port.postMessage({ type: "close" })
       port.disconnect()
-    }
+    })
   }, [])
   const handleSearch = (value: string) => {
-    setList(
-      originalList.current.filter((item) => {
-        return item.data.searchTarget.includes(value)
-      })
+    const tabs: ListItemType<ItemType.Tab>[] = []
+    const bookmarks: ListItemType<ItemType.Bookmark>[] = []
+    for (const item of originalList.current) {
+      if (!item.data.searchTarget.includes(value)) continue
+      if (isTabItem(item)) {
+        tabs.push(item)
+      }
+      if (isBookmarkItem(item)) {
+        bookmarks.push(item)
+      }
+    }
+    tabs.sort((a, b) =>
+      a.data.lastAccessed ? b.data.lastAccessed - a.data.lastAccessed : -1
     )
+    setList([...tabs, ...bookmarks])
   }
   return (
     <Container>
