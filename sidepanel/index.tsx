@@ -5,12 +5,8 @@ import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 
 import { MAIN_CONTENT_CLASS, MAIN_WINDOW } from "~shared/constants"
-import { ItemType, type ListItemType } from "~shared/types"
-import {
-  closeCurrentWindowAndClearStorage,
-  isBookmarkItem,
-  isTabItem
-} from "~shared/utils"
+import { ItemType, type ListItemType, type TabItemType } from "~shared/types"
+import { isBookmarkItem, isTabItem } from "~shared/utils"
 
 import List from "./list"
 import Search from "./search"
@@ -28,6 +24,31 @@ const ContentWrapper = styled(Content)`
   padding: 0;
 `
 
+const orderList = (list: ListItemType[]) => {
+  const activeTabs: ListItemType<ItemType.Tab>[] = []
+  const inactiveTabs: ListItemType<ItemType.Tab>[] = []
+  const bookmarks: ListItemType<ItemType.Bookmark>[] = []
+  for (const item of list) {
+    if (isTabItem(item)) {
+      item.data.active ? activeTabs.push(item) : inactiveTabs.push(item)
+    }
+    if (isBookmarkItem(item)) {
+      bookmarks.push(item)
+    }
+  }
+  const compareFn = (
+    a: ListItemType<ItemType.Tab>,
+    b: ListItemType<ItemType.Tab>
+  ) => (a.data.lastAccessed ? b.data.lastAccessed - a.data.lastAccessed : -1)
+
+  const excludedTabs = activeTabs
+    .filter((item) => !item.data.url.includes(chrome.runtime.id))
+    .toSorted(compareFn)
+
+  inactiveTabs.sort(compareFn)
+  return [...excludedTabs, ...inactiveTabs, ...bookmarks.slice(0, 30)]
+}
+
 export default function SidePanel() {
   const originalList = useRef<ListItemType[]>([])
   const [list, setList] = useState<ListItemType[]>([])
@@ -35,7 +56,7 @@ export default function SidePanel() {
     const port = chrome.runtime.connect({ name: MAIN_WINDOW })
     port.onMessage.addListener((processedList) => {
       console.log("processedList", processedList)
-      setList(processedList)
+      setList(orderList(processedList))
       originalList.current = processedList
     })
 
@@ -45,21 +66,13 @@ export default function SidePanel() {
     })
   }, [])
   const handleSearch = (value: string) => {
-    const tabs: ListItemType<ItemType.Tab>[] = []
-    const bookmarks: ListItemType<ItemType.Bookmark>[] = []
-    for (const item of originalList.current) {
-      if (!item.data.searchTarget.includes(value)) continue
-      if (isTabItem(item)) {
-        tabs.push(item)
-      }
-      if (isBookmarkItem(item)) {
-        bookmarks.push(item)
-      }
-    }
-    tabs.sort((a, b) =>
-      a.data.lastAccessed ? b.data.lastAccessed - a.data.lastAccessed : -1
+    setList(
+      orderList(
+        originalList.current.filter((item) =>
+          item.data.searchTarget.includes(value)
+        )
+      )
     )
-    setList([...tabs, ...bookmarks])
   }
   return (
     <Container>

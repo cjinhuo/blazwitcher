@@ -15,7 +15,7 @@ export const tabsReload = promisifyChromeMethod(
 export const tabsRemove = promisifyChromeMethod(
   chrome.tabs.remove.bind(chrome.tabs)
 )
-export const getPlatformInfo = promisifyChromeMethod(
+export const getPlatformInfo = promisifyChromeMethod<chrome.runtime.PlatformInfo>(
   chrome.runtime.getPlatformInfo.bind(chrome.runtime)
 )
 export const actionSetTitle = promisifyChromeMethod(
@@ -38,6 +38,7 @@ export const storageRemove = promisifyChromeMethod(
 export const getBookmarksTree = promisifyChromeMethod<chrome.bookmarks.BookmarkTreeNode[]>(
   chrome.bookmarks.getTree.bind(chrome.bookmarks)
 )
+
 
 function promisifyChromeMethod<T = any>(method: Function) {
   return (...args: any[]) =>

@@ -16,6 +16,8 @@ html {
   --color-linear-bg-start: rgb(255, 255, 255);
   --color-linear-bg-end: rgb(230, 236, 242, 0);
   --color-link-href: rgb(90, 160, 223);
+
+  --bg-selected-item: rgb(1, 75, 220);
 }
 
 

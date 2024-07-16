@@ -7,12 +7,11 @@ import { ItemType, type BookmarkItemType, type ListItemType, type TabItemType } 
 import { faviconURL, isChineseChar } from "./utils";
 
 
+
 export async function tabsProcessing() {
   let processedTabs = await tabsQuery({})
-  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    console.log("onUpdated", tabId, changeInfo, tab)
-  })
-  return () => processedTabs.map((tab) => ({ itemType: ItemType.Tab, data: processTabItem(tab) }))
+  // filter the tabs that start with chrome://
+  return processedTabs.filter(item => !item.url.startsWith("chrome://")).map((tab) => ({ itemType: ItemType.Tab, data: processTabItem(tab) }))
 }
 
 function processTabItem(tab: chrome.tabs.Tab) {
@@ -60,12 +59,12 @@ export const traversalBookmarkTreeNode = (
 }
 
 export async function dataProcessing() {
-  const getTabs = await tabsProcessing()
   const getBookmarks = await bookmarksProcessing()
-  return () => {
-    const tabs = getTabs()
+  return async () => {
+    // because the tabs data not really too large, so we can use sync calculation. 
+    // And it would be changed very frequently so listen the update of it is not a good idea.
+    const tabs = await tabsProcessing()
     const bookmarks = getBookmarks()
-    console.log("tabs", tabs, bookmarks)
     return [...tabs, ...bookmarks]
   }
 }

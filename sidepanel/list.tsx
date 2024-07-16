@@ -33,7 +33,7 @@ const ListContainer = styled.div`
 const ListItemWrapper = styled(ListComponent.Item)`
   border-radius: 6px;
   &:hover {
-    background-color: var(--color-neutral-5);
+    background-color: var(--bg-selected-item);
     .${IMAGE_CLASS} {
       background-color: var(--color-neutral-10);
     }
@@ -133,7 +133,6 @@ export default function List({ list }: { list: ListItemType[] }) {
     }
     window.addEventListener("keydown", keydownHandler)
     return () => {
-      console.log("teststtse")
       window.removeEventListener("keydown", keydownHandler)
     }
   }, [changeActiveIndex, handleEnterEvent])

@@ -1,4 +1,6 @@
 import { Button } from "@douyinfe/semi-ui"
+import chromeIcon from "data-base64:~assets/chrome-icon.svg"
+import { useMemo } from "react"
 import styled from "styled-components"
 
 import type { BookmarkItemType, ListItemType, TabItemType } from "~shared/types"
@@ -28,7 +30,11 @@ const OperationContainer = styled.div`
 export const RenderIcon = ({ iconUrl }: { iconUrl: string }) => {
   return (
     <ImageContainer className={IMAGE_CLASS}>
-      <img src={iconUrl} width={20} height={20}></img>
+      <img
+        src={iconUrl || chromeIcon}
+        onError={(e) => (e.currentTarget.src = chromeIcon)}
+        width={20}
+        height={20}></img>
     </ImageContainer>
   )
 }
@@ -62,13 +68,11 @@ const HostDiv = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 `
-export const RenderTitle = ({
-  title,
-  host
-}: {
-  title: string
-  host: string
-}) => {
+export const RenderTitle = ({ title, url }: { title: string; url: string }) => {
+  const host = useMemo(() => {
+    const urlObj = new URL(url)
+    return urlObj.host
+  }, [url])
   return (
     <TitleContainer>
       <TitleDiv className={TITLE_CLASS}>{title}</TitleDiv>
@@ -89,7 +93,7 @@ export const RenderTab = ({ data }: { data: TabItemType }) => {
   return (
     <ContentContainer>
       <RenderIcon iconUrl={data.favIconUrl} />
-      <RenderTitle title={data.title} host={data.url}></RenderTitle>
+      <RenderTitle title={data.title} url={data.url}></RenderTitle>
       <RenderOperation></RenderOperation>
     </ContentContainer>
   )
@@ -99,7 +103,7 @@ export const RenderBookmark = ({ data }: { data: BookmarkItemType }) => {
   return (
     <ContentContainer>
       <RenderIcon iconUrl={data.favIconUrl} />
-      <RenderTitle title={data.title} host={data.url}></RenderTitle>
+      <RenderTitle title={data.title} url={data.url}></RenderTitle>
       <RenderOperation></RenderOperation>
     </ContentContainer>
   )
