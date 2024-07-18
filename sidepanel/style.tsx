@@ -1,9 +1,15 @@
-import { Button } from "@douyinfe/semi-ui"
 import chromeIcon from "data-base64:~assets/chrome-icon.svg"
 import { useMemo } from "react"
+import BookmarkSvg from "react:~assets/bookmark.svg"
+import TabSvg from "react:~assets/tab.svg"
 import styled from "styled-components"
 
-import type { BookmarkItemType, ListItemType, TabItemType } from "~shared/types"
+import {
+  ItemType,
+  type BookmarkItemType,
+  type ListItemType,
+  type TabItemType
+} from "~shared/types"
 import { isBookmarkItem, isTabItem } from "~shared/utils"
 
 const ContentContainer = styled.div`
@@ -41,6 +47,7 @@ export const RenderIcon = ({ iconUrl }: { iconUrl: string }) => {
 
 export const TITLE_CLASS = "title-text"
 export const HOST_CLASS = "host-text"
+export const SVG_CLASS = "svg-icon"
 const TitleContainer = styled.div`
   height: 40px;
   flex: 1;
@@ -49,6 +56,7 @@ const TitleContainer = styled.div`
   justify-content: space-between;
   padding: 0 4px;
   overflow: hidden;
+  user-select: none;
 `
 const TitleDiv = styled.div`
   font-size: 14px;
@@ -63,20 +71,63 @@ const HostDiv = styled.div`
   font-size: 10px;
   height: 14px;
   flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   color: var(--color-neutral-4);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `
-export const RenderTitle = ({ title, url }: { title: string; url: string }) => {
+
+const ActiveStatus = styled.div`
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: green;
+`
+
+const LabelContainer = styled.div`
+  margin-left: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 30px;
+`
+
+const BookmarkLabel = () => {
+  return (
+    <LabelContainer>
+      <BookmarkSvg className={SVG_CLASS}></BookmarkSvg>
+    </LabelContainer>
+  )
+}
+
+const TabLabel = ({ active }: { active: boolean }) => {
+  return (
+    <LabelContainer>
+      {/* <Tooltip content="Opened Tab"> */}
+      {active && <ActiveStatus></ActiveStatus>}
+      <TabSvg className={SVG_CLASS}></TabSvg>
+      {/* </Tooltip> */}
+    </LabelContainer>
+  )
+}
+
+export const RenderTitle = ({ item }: { item: ListItemType }) => {
   const host = useMemo(() => {
-    const urlObj = new URL(url)
+    const urlObj = new URL(item.data.url)
     return urlObj.host
-  }, [url])
+  }, [item.data.url])
   return (
     <TitleContainer>
-      <TitleDiv className={TITLE_CLASS}>{title}</TitleDiv>
-      <HostDiv className={HOST_CLASS}>{host}</HostDiv>
+      <TitleDiv className={TITLE_CLASS}>{item.data.title}</TitleDiv>
+      <HostDiv className={HOST_CLASS}>
+        <span>{host}</span>
+        {isTabItem(item) ? (
+          <TabLabel active={item.data.active}></TabLabel>
+        ) : (
+          <BookmarkLabel></BookmarkLabel>
+        )}
+        {/* <ActiveStatus></ActiveStatus> */}
+      </HostDiv>
     </TitleContainer>
   )
 }
@@ -89,21 +140,21 @@ const RenderOperation = () => {
   )
 }
 
-export const RenderTab = ({ data }: { data: TabItemType }) => {
+export const RenderTab = ({ item }: { item: ListItemType }) => {
   return (
     <ContentContainer>
-      <RenderIcon iconUrl={data.favIconUrl} />
-      <RenderTitle title={data.title} url={data.url}></RenderTitle>
+      <RenderIcon iconUrl={item.data.favIconUrl} />
+      <RenderTitle item={item}></RenderTitle>
       <RenderOperation></RenderOperation>
     </ContentContainer>
   )
 }
 
-export const RenderBookmark = ({ data }: { data: BookmarkItemType }) => {
+export const RenderBookmark = ({ item }: { item: ListItemType }) => {
   return (
     <ContentContainer>
-      <RenderIcon iconUrl={data.favIconUrl} />
-      <RenderTitle title={data.title} url={data.url}></RenderTitle>
+      <RenderIcon iconUrl={item.data.favIconUrl} />
+      <RenderTitle item={item}></RenderTitle>
       <RenderOperation></RenderOperation>
     </ContentContainer>
   )
@@ -111,8 +162,8 @@ export const RenderBookmark = ({ data }: { data: BookmarkItemType }) => {
 
 export const RenderItem = ({ item }: { item: ListItemType }) => {
   if (isTabItem(item)) {
-    return <RenderTab data={item.data} />
+    return <RenderTab item={item} />
   } else if (isBookmarkItem(item)) {
-    return <RenderBookmark data={item.data} />
+    return <RenderBookmark item={item} />
   } else return <div>{item.data.title}</div>
 }

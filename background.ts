@@ -1,10 +1,25 @@
-import { MAIN_WINDOW } from "~shared/constants"
-import { dataProcessing } from "~shared/data-processing"
-import { weakUpWindowIfActiveByUser } from "~shared/open-window"
-import { closeCurrentWindowAndClearStorage } from "~shared/utils"
+import { CONTEXT_MENU_SHORTCUT, MAIN_WINDOW } from "~shared/constants";
+import { dataProcessing } from "~shared/data-processing";
+import { weakUpWindowIfActiveByUser } from "~shared/open-window";
+import { closeCurrentWindowAndClearStorage } from "~shared/utils";
+
+
 
 async function main() {
   weakUpWindowIfActiveByUser()
+  chrome.contextMenus.create(
+    {
+      ...CONTEXT_MENU_SHORTCUT,
+      contexts: ["action"]
+    },
+    () => {
+      chrome.contextMenus.onClicked.addListener((info) => {
+        if (info.menuItemId === CONTEXT_MENU_SHORTCUT.id) {
+          chrome.tabs.create({ url: "chrome://extensions/shortcuts" })
+        }
+      })
+    }
+  )
   // It can not be an sync calculation, since maybe the bookmarks data of user is way too large.
   const getProcessedData = await dataProcessing()
   chrome.runtime.onConnect.addListener(async (port) => {

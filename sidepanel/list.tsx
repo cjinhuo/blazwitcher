@@ -17,7 +17,13 @@ import {
   isTabItem,
   scrollIntoViewIfNeeded
 } from "../shared/utils"
-import { HOST_CLASS, IMAGE_CLASS, RenderItem, TITLE_CLASS } from "./style"
+import {
+  HOST_CLASS,
+  IMAGE_CLASS,
+  RenderItem,
+  SVG_CLASS,
+  TITLE_CLASS
+} from "./style"
 
 const ListContainer = styled.div`
   padding: 6px;
@@ -32,8 +38,11 @@ const ListContainer = styled.div`
 
 const ListItemWrapper = styled(ListComponent.Item)`
   border-radius: 6px;
+  .${SVG_CLASS} {
+    fill: var(--color-neutral-3);
+  }
   &:hover {
-    background-color: var(--bg-selected-item);
+    background-color: var(--color-neutral-3);
     .${IMAGE_CLASS} {
       background-color: var(--color-neutral-10);
     }
@@ -42,6 +51,9 @@ const ListItemWrapper = styled(ListComponent.Item)`
     }
     .${HOST_CLASS} {
       color: var(--color-neutral-6);
+    }
+    .${SVG_CLASS} {
+      fill: var(--color-neutral-7);
     }
   }
   &.${LIST_ITEM_ACTIVE_CLASS} {
@@ -54,6 +66,9 @@ const ListItemWrapper = styled(ListComponent.Item)`
     }
     .${HOST_CLASS} {
       color: var(--color-neutral-6);
+    }
+    .${SVG_CLASS} {
+      fill: var(--color-neutral-7);
     }
   }
   &.semi-list-item {
@@ -76,6 +91,11 @@ export default function List({ list }: { list: ListItemType[] }) {
   const [activeIndex, setActiveIndex] = useState(0)
   const i = useRef(0)
 
+  useEffect(() => {
+    setActiveIndex(0)
+    i.current = 0
+  }, [list])
+
   const changeActiveIndex = useCallback(
     (offset: number) => {
       let currentIndex = i.current
@@ -94,13 +114,7 @@ export default function List({ list }: { list: ListItemType[] }) {
 
   const handleEnterEvent = useCallback(() => {
     const item = list[activeIndex]
-    if (isTabItem(item)) {
-      activeTab(item)
-      closeCurrentWindowAndClearStorage()
-    } else if (isBookmarkItem(item)) {
-      window.open(item.data.url)
-      closeCurrentWindowAndClearStorage()
-    }
+    activeTab(item)
   }, [activeIndex, list])
 
   useLayoutEffect(() => {
@@ -147,6 +161,7 @@ export default function List({ list }: { list: ListItemType[] }) {
         renderItem={(item, index) => (
           <ListItemWrapper
             className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ""}
+            onClick={() => activeTab(item)}
             main={<RenderItem item={item}></RenderItem>}
           />
         )}

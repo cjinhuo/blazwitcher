@@ -1,8 +1,8 @@
 {
-  "name": "tab-search",
-  "displayName": "Tab search",
+  "name": "pure-search",
+  "displayName": "Pure Search",
   "version": "0.0.1",
-  "description": "tag search",
+  "description": "A Pure Chrome Extension Of Searching Tabs, Bookmarks And Histories Which Also Supports Fuzzy Search Of Pinyin.",
   "author": "cjinhuo@qq.com",
   "scripts": {
     "dev": "plasmo dev",
@@ -42,7 +42,8 @@
       "bookmarks",
       "storage",
       "windows",
-      "favicon"
+      "favicon",
+      "contextMenus"
     ]
   }
 }

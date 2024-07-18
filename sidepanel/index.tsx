@@ -5,13 +5,14 @@ import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 
 import { MAIN_CONTENT_CLASS, MAIN_WINDOW } from "~shared/constants"
-import { ItemType, type ListItemType, type TabItemType } from "~shared/types"
+import { ItemType, type ListItemType } from "~shared/types"
 import { isBookmarkItem, isTabItem } from "~shared/utils"
 
+import Footer from "./footer"
 import List from "./list"
 import Search from "./search"
 
-const { Header, Footer, Content } = Layout
+const { Header, Content } = Layout
 const Container = styled(Layout)`
   width: 100%;
   height: 100%;
@@ -46,7 +47,7 @@ const orderList = (list: ListItemType[]) => {
     .toSorted(compareFn)
 
   inactiveTabs.sort(compareFn)
-  return [...excludedTabs, ...inactiveTabs, ...bookmarks.slice(0, 30)]
+  return [...excludedTabs, ...inactiveTabs, ...bookmarks.slice(0, 20)]
 }
 
 export default function SidePanel() {
@@ -82,7 +83,7 @@ export default function SidePanel() {
       <ContentWrapper className={MAIN_CONTENT_CLASS}>
         <List list={list}></List>
       </ContentWrapper>
-      <Footer style={{ flex: "0 0 30px" }}>footer</Footer>
+      <Footer />
     </Container>
   )
 }
