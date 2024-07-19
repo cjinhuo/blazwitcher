@@ -21,7 +21,7 @@ async function main() {
     }
   )
   // It can not be an sync calculation, since maybe the bookmarks data of user is way too large.
-  const getProcessedData = await dataProcessing()
+  const getProcessedData = dataProcessing()
   chrome.runtime.onConnect.addListener(async (port) => {
     if (port.name === MAIN_WINDOW) {
       // 第一版简单点，background 实时计算 tabs 和 bookmarks 数据，在用户打开 window 时，同步发送过去

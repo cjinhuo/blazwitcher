@@ -13,3 +13,7 @@ export const CONTEXT_MENU_SHORTCUT = {
   id: 'open_shortcut',
   title: 'Set Keyboard Shortcuts',
 }
+
+// config
+export const DEFAULT_HISTORY_TIME_RANGE = 60 * 60 * 12 * 1000
+export const DEFAULT_HISTORY_MAX_RESULTS = 200

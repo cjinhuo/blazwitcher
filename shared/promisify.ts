@@ -18,6 +18,10 @@ export const tabsRemove = promisifyChromeMethod(
 export const getPlatformInfo = promisifyChromeMethod<chrome.runtime.PlatformInfo>(
   chrome.runtime.getPlatformInfo.bind(chrome.runtime)
 )
+
+export const getDisplayInfo = promisifyChromeMethod<chrome.system.display.DisplayInfo[]>(
+  chrome.system.display.getInfo.bind(chrome.system.display)
+)
 export const actionSetTitle = promisifyChromeMethod(
   chrome.action.setTitle.bind(chrome.action)
 )

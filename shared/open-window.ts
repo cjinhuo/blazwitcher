@@ -1,5 +1,5 @@
 import { SELF_WINDOW_ID_KEY } from "./constants";
-import { getCurrentWindow, storageGet, storageSet } from "./promisify";
+import { getCurrentWindow, getDisplayInfo, storageGet, storageSet } from "./promisify";
 
 
 const SEARCH_WINDOW_WIDTH = 900
@@ -15,14 +15,28 @@ export function weakUpWindowIfActiveByUser() {
       return
     }
     const currentWindow = await getCurrentWindow()
+    const displays = await getDisplayInfo()
+    // find the display that the current window is in
+    const focusedDisplay = displays.find((display) => {
+      const { width, height, left, top } = display.bounds
+      return (
+        currentWindow.left >= left &&
+        currentWindow.left < left + width &&
+        currentWindow.top >= top &&
+        currentWindow.top < top + height
+      )
+    })
+    const { width, height, left, top } = focusedDisplay.bounds
     chrome.windows.create(
       {
         width: SEARCH_WINDOW_WIDTH,
         height: SEARCH_WINDOW_HEIGHT,
-        // use width instead of availWidth could make it looks more centered
-        // todo 弹出窗口不在当前屏幕，会在主屏幕，和 left 有关系，需要计算当前窗口距离最左侧（屏幕）的距离，可能横跨多个屏幕
-        left: Math.floor((currentWindow.width - SEARCH_WINDOW_WIDTH) / 2),
-        top: Math.floor((currentWindow.height - SEARCH_WINDOW_HEIGHT) / 2),
+        left: Math.floor(
+          (width - SEARCH_WINDOW_WIDTH) / 2 + left
+        ),
+        top: Math.floor(
+          (height - SEARCH_WINDOW_HEIGHT) / 2 + top
+        ),
         focused: true,
         type: "popup",
         url: "./sidepanel.html"

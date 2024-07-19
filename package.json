@@ -40,9 +40,11 @@
     "permissions": [
       "tabs",
       "bookmarks",
+      "history",
       "storage",
       "windows",
       "favicon",
+      "system.display",
       "contextMenus"
     ]
   }
