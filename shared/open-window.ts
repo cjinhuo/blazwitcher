@@ -15,6 +15,16 @@ export function weakUpWindowIfActiveByUser() {
       return
     }
     const currentWindow = await getCurrentWindow()
+    // if (currentWindow.state === 'fullscreen') {
+    //   debugger
+    //   chrome.sidePanel.setOptions({
+    //     path: './sidepanel.html',
+    //   })
+    //   chrome.sidePanel.open({
+    //     tabId: currentWindow.id,
+    //   })
+    //   return
+    // }
     const displays = await getDisplayInfo()
     // find the display that the current window is in
     const focusedDisplay = displays.find((display) => {

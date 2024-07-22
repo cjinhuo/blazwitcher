@@ -122,22 +122,24 @@ export default function List({ list }: { list: ListItemType[] }) {
   }, [activeIndex])
 
   useEffect(() => {
-    let keydownHandler = (event) => {
-      let key = event.keyCode
+    let keydownHandler = (event: KeyboardEvent) => {
+      let key = event.code
+      console.log("key", key, event)
       switch (key) {
-        case 38: // KeyCode.UP
+        case "ArrowUp":
           event.preventDefault()
           changeActiveIndex(-1)
           break
-        case 40: // KeyCode.DOWN
+        case "Tab":
+        case "ArrowDown":
           event.preventDefault()
           changeActiveIndex(1)
           break
-        case 13: // KeyCode.ENTER
+        case "Enter":
           event.preventDefault()
           handleEnterEvent()
           break
-        case 27: // KeyCode.ESC
+        case "Escape": // KeyCode.ESC
           event.preventDefault()
           closeCurrentWindowAndClearStorage()
           break

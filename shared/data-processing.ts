@@ -22,7 +22,7 @@ function processTabItem(tab: chrome.tabs.Tab) {
   )
   return {
     ...tab,
-    searchTarget: `${tab.title} ${pinyin.convertToPinyin(chineseChars.join(""), "", true)} ${tab.url.replace(/^https?:\/\//, "")}`
+    searchTarget: `${tab.title.toLowerCase()} ${pinyin.convertToPinyin(chineseChars.join(""), "", true)} ${tab.url.replace(/^https?:\/\//, "")}`
   }
 }
 
@@ -47,7 +47,7 @@ function processHistoryItem(history: chrome.history.HistoryItem) {
   )
   return {
     ...history,
-    searchTarget: `${history.title} ${pinyin.convertToPinyin(chineseChars.join(""), "", true)} ${history.url.replace(/^https?:\/\//, "")}`,
+    searchTarget: `${history.title.toLowerCase()} ${pinyin.convertToPinyin(chineseChars.join(""), "", true)} ${history.url.replace(/^https?:\/\//, "")}`,
     faviconURL: faviconURL(history.url)
   }
 }
@@ -83,7 +83,7 @@ export const traversalBookmarkTreeNode = (
       result.push({
         ...rest,
         favIconUrl: faviconURL(rest.url),
-        searchTarget: `${rest.title} ${pinyin.convertToPinyin(chineseChars.join(""), "", true)} ${rest.url.replace(/^https?:\/\//, "")}`,
+        searchTarget: `${rest.title.toLowerCase()} ${pinyin.convertToPinyin(chineseChars.join(""), "", true)} ${rest.url.replace(/^https?:\/\//, "")}`,
         folderName: parent?.title ?? "root"
       })
     }
