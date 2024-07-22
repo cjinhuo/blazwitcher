@@ -122,9 +122,8 @@ export default function List({ list }: { list: ListItemType[] }) {
   }, [activeIndex])
 
   useEffect(() => {
-    let keydownHandler = (event: KeyboardEvent) => {
-      let key = event.code
-      console.log("key", key, event)
+    const keydownHandler = (event: KeyboardEvent) => {
+      const key = event.code
       switch (key) {
         case "ArrowUp":
           event.preventDefault()

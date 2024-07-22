@@ -1,6 +1,7 @@
 import chromeIcon from "data-base64:~assets/chrome-icon.svg"
 import { useMemo } from "react"
 import BookmarkSvg from "react:~assets/bookmark.svg"
+import HistorySvg from "react:~assets/history.svg"
 import TabSvg from "react:~assets/tab.svg"
 import styled from "styled-components"
 
@@ -103,13 +104,17 @@ const BookmarkLabel = () => {
 const TabLabel = ({ active }: { active: boolean }) => {
   return (
     <LabelContainer>
-      {/* <Tooltip content="Opened Tab"> */}
       {active && <ActiveStatus></ActiveStatus>}
       <TabSvg className={SVG_CLASS}></TabSvg>
-      {/* </Tooltip> */}
     </LabelContainer>
   )
 }
+
+const HistoryLabel = () => (
+  <LabelContainer>
+    <HistorySvg className={SVG_CLASS}></HistorySvg>
+  </LabelContainer>
+)
 
 export const RenderTitle = ({ item }: { item: ListItemType }) => {
   const host = useMemo(() => {
@@ -123,8 +128,10 @@ export const RenderTitle = ({ item }: { item: ListItemType }) => {
         <span>{host}</span>
         {isTabItem(item) ? (
           <TabLabel active={item.data.active}></TabLabel>
-        ) : (
+        ) : isBookmarkItem(item) ? (
           <BookmarkLabel></BookmarkLabel>
+        ) : (
+          <HistoryLabel></HistoryLabel>
         )}
         {/* <ActiveStatus></ActiveStatus> */}
       </HostDiv>
@@ -165,5 +172,5 @@ export const RenderItem = ({ item }: { item: ListItemType }) => {
     return <RenderTab item={item} />
   } else if (isBookmarkItem(item)) {
     return <RenderBookmark item={item} />
-  } else return <div>{item.data.title}</div>
+  } else return <RenderBookmark item={item} />
 }

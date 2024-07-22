@@ -4,9 +4,14 @@ import { Layout } from "@douyinfe/semi-ui"
 import { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
 
-import { MAIN_CONTENT_CLASS, MAIN_WINDOW } from "~shared/constants"
+import {
+  DEFAULT_BOOKMARK_DISPLAY_COUNT,
+  DEFAULT_HISTORY_DISPLAY_COUNT,
+  MAIN_CONTENT_CLASS,
+  MAIN_WINDOW
+} from "~shared/constants"
 import { ItemType, type ListItemType } from "~shared/types"
-import { isBookmarkItem, isTabItem } from "~shared/utils"
+import { isBookmarkItem, isHistoryItem, isTabItem } from "~shared/utils"
 
 import Footer from "./footer"
 import List from "./list"
@@ -29,12 +34,14 @@ const orderList = (list: ListItemType[]) => {
   const activeTabs: ListItemType<ItemType.Tab>[] = []
   const inactiveTabs: ListItemType<ItemType.Tab>[] = []
   const bookmarks: ListItemType<ItemType.Bookmark>[] = []
+  const histories: ListItemType<ItemType.History>[] = []
   for (const item of list) {
     if (isTabItem(item)) {
       item.data.active ? activeTabs.push(item) : inactiveTabs.push(item)
-    }
-    if (isBookmarkItem(item)) {
+    } else if (isBookmarkItem(item)) {
       bookmarks.push(item)
+    } else if (isHistoryItem(item)) {
+      histories.push(item)
     }
   }
   const compareFn = (
@@ -47,7 +54,12 @@ const orderList = (list: ListItemType[]) => {
     .toSorted(compareFn)
 
   inactiveTabs.sort(compareFn)
-  return [...excludedTabs, ...inactiveTabs, ...bookmarks.slice(0, 20)]
+  return [
+    ...excludedTabs,
+    ...inactiveTabs,
+    ...bookmarks.slice(0, DEFAULT_BOOKMARK_DISPLAY_COUNT),
+    ...histories.slice(0, DEFAULT_HISTORY_DISPLAY_COUNT)
+  ]
 }
 
 export default function SidePanel() {
@@ -67,13 +79,11 @@ export default function SidePanel() {
     })
   }, [])
   const handleSearch = (value: string) => {
-    setList(
-      orderList(
-        originalList.current.filter((item) =>
-          item.data.searchTarget.includes(value)
-        )
-      )
+    const finalList = originalList.current.filter((item) =>
+      item.data.searchTarget.includes(value)
     )
+    console.log("finalList", finalList)
+    setList(orderList(finalList))
   }
   return (
     <Container>

@@ -12,6 +12,9 @@ export const sendMessageToTab = promisifyChromeMethod(
 export const tabsReload = promisifyChromeMethod(
   chrome.tabs.reload.bind(chrome.tabs)
 )
+
+export const historySearch = promisifyChromeMethod<chrome.history.HistoryItem[]>(chrome.history.search.bind(chrome.history))
+
 export const tabsRemove = promisifyChromeMethod(
   chrome.tabs.remove.bind(chrome.tabs)
 )

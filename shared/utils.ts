@@ -75,7 +75,7 @@ export const activeTab = (item: ListItemType) => {
       }
     )
     closeCurrentWindowAndClearStorage()
-  } else if (isBookmarkItem(item)) {
+  } else {
     window.open(item.data.url)
     closeCurrentWindowAndClearStorage()
   }

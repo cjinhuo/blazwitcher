@@ -14,6 +14,10 @@ export const CONTEXT_MENU_SHORTCUT = {
   title: 'Set Keyboard Shortcuts',
 }
 
+export const ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000
+
 // config
-export const DEFAULT_HISTORY_TIME_RANGE = 60 * 60 * 12 * 1000
+export const DEFAULT_HISTORY_MAX_DAYS = 14
 export const DEFAULT_HISTORY_MAX_RESULTS = 200
+export const DEFAULT_BOOKMARK_DISPLAY_COUNT = 20
+export const DEFAULT_HISTORY_DISPLAY_COUNT = 20
