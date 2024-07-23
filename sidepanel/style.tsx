@@ -2,6 +2,8 @@ import chromeIcon from "data-base64:~assets/chrome-icon.svg"
 import { useMemo } from "react"
 import BookmarkSvg from "react:~assets/bookmark.svg"
 import HistorySvg from "react:~assets/history.svg"
+import NewWindow from "react:~assets/new-window.svg"
+import RightArrow from "react:~assets/right-arrow.svg"
 import TabSvg from "react:~assets/tab.svg"
 import styled from "styled-components"
 
@@ -27,11 +29,6 @@ const ImageContainer = styled.div`
   align-items: center;
   justify-content: center;
   background-color: var(--color-neutral-8);
-`
-
-const OperationContainer = styled.div`
-  width: 40px;
-  height: 40px;
 `
 
 export const RenderIcon = ({ iconUrl }: { iconUrl: string }) => {
@@ -139,38 +136,43 @@ export const RenderTitle = ({ item }: { item: ListItemType }) => {
   )
 }
 
-const RenderOperation = () => {
+const OperationContainer = styled.div`
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const OperationLinkIcon = styled.div`
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-neutral-9);
+  svg {
+    fill: var(--color-neutral-3);
+  }
+`
+export const OPERATION_CLASS = "operation-container"
+const RenderOperation = ({ item }: { item: ListItemType }) => {
   return (
-    <OperationContainer>
-      {/* <Button type="secondary" icon={<IconCamera />} aria-label="截屏" /> */}
+    <OperationContainer className={OPERATION_CLASS}>
+      <OperationLinkIcon>
+        {isTabItem(item) ? <RightArrow></RightArrow> : <NewWindow></NewWindow>}
+      </OperationLinkIcon>
     </OperationContainer>
   )
 }
 
-export const RenderTab = ({ item }: { item: ListItemType }) => {
-  return (
-    <ContentContainer>
-      <RenderIcon iconUrl={item.data.favIconUrl} />
-      <RenderTitle item={item}></RenderTitle>
-      <RenderOperation></RenderOperation>
-    </ContentContainer>
-  )
-}
-
-export const RenderBookmark = ({ item }: { item: ListItemType }) => {
-  return (
-    <ContentContainer>
-      <RenderIcon iconUrl={item.data.favIconUrl} />
-      <RenderTitle item={item}></RenderTitle>
-      <RenderOperation></RenderOperation>
-    </ContentContainer>
-  )
-}
-
 export const RenderItem = ({ item }: { item: ListItemType }) => {
-  if (isTabItem(item)) {
-    return <RenderTab item={item} />
-  } else if (isBookmarkItem(item)) {
-    return <RenderBookmark item={item} />
-  } else return <RenderBookmark item={item} />
+  return (
+    <ContentContainer>
+      <RenderIcon iconUrl={item.data.favIconUrl} />
+      <RenderTitle item={item}></RenderTitle>
+      <RenderOperation item={item}></RenderOperation>
+    </ContentContainer>
+  )
 }

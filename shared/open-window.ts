@@ -2,7 +2,7 @@ import { SELF_WINDOW_ID_KEY } from "./constants";
 import { getCurrentWindow, getDisplayInfo, storageGet, storageSet } from "./promisify";
 
 
-const SEARCH_WINDOW_WIDTH = 900
+const SEARCH_WINDOW_WIDTH = 800
 const SEARCH_WINDOW_HEIGHT = 500
 
 export function weakUpWindowIfActiveByUser() {

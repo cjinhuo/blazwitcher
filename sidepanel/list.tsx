@@ -13,13 +13,12 @@ import { type ListItemType } from "../shared/types"
 import {
   activeTab,
   closeCurrentWindowAndClearStorage,
-  isBookmarkItem,
-  isTabItem,
   scrollIntoViewIfNeeded
 } from "../shared/utils"
 import {
   HOST_CLASS,
   IMAGE_CLASS,
+  OPERATION_CLASS,
   RenderItem,
   SVG_CLASS,
   TITLE_CLASS
@@ -41,6 +40,9 @@ const ListItemWrapper = styled(ListComponent.Item)`
   .${SVG_CLASS} {
     fill: var(--color-neutral-3);
   }
+  .${OPERATION_CLASS} {
+    visibility: hidden;
+  }
   &:hover {
     background-color: var(--color-neutral-3);
     .${IMAGE_CLASS} {
@@ -54,6 +56,9 @@ const ListItemWrapper = styled(ListComponent.Item)`
     }
     .${SVG_CLASS} {
       fill: var(--color-neutral-7);
+    }
+    .${OPERATION_CLASS} {
+      visibility: visible;
     }
   }
   &.${LIST_ITEM_ACTIVE_CLASS} {
@@ -69,6 +74,9 @@ const ListItemWrapper = styled(ListComponent.Item)`
     }
     .${SVG_CLASS} {
       fill: var(--color-neutral-7);
+    }
+    .${OPERATION_CLASS} {
+      visibility: visible;
     }
   }
   &.semi-list-item {
