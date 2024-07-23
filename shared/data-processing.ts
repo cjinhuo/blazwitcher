@@ -57,8 +57,12 @@ function processHistoryItem(history: chrome.history.HistoryItem) {
   }
 }
 
-// 默认搜索最近 200 条历史记录，一天一天的向前遍历，最大遍历 30 天
-
+/**
+ * 
+ * @param count the max number of results
+ * @param maxDays the max number of days we would retrieve
+ * @returns 
+ */
 async function retrieveRecentHistories(
   count = DEFAULT_HISTORY_MAX_RESULTS,
   maxDays = DEFAULT_HISTORY_MAX_DAYS
