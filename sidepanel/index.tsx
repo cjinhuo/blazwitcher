@@ -35,12 +35,15 @@ const orderList = (list: ListItemType[]) => {
   const inactiveTabs: ListItemType<ItemType.Tab>[] = []
   const bookmarks: ListItemType<ItemType.Bookmark>[] = []
   const histories: ListItemType<ItemType.History>[] = []
+  const tabTitleSet = new Set()
   for (const item of list) {
+    const { title } = item.data
     if (isTabItem(item)) {
       item.data.active ? activeTabs.push(item) : inactiveTabs.push(item)
-    } else if (isBookmarkItem(item)) {
+      tabTitleSet.add(title)
+    } else if (isBookmarkItem(item) && !tabTitleSet.has(title)) {
       bookmarks.push(item)
-    } else if (isHistoryItem(item)) {
+    } else if (isHistoryItem(item) && !tabTitleSet.has(title)) {
       histories.push(item)
     }
   }
@@ -57,8 +60,8 @@ const orderList = (list: ListItemType[]) => {
   return [
     ...excludedTabs,
     ...inactiveTabs,
-    ...bookmarks.slice(0, DEFAULT_BOOKMARK_DISPLAY_COUNT),
-    ...histories.slice(0, DEFAULT_HISTORY_DISPLAY_COUNT)
+    ...histories.slice(0, DEFAULT_HISTORY_DISPLAY_COUNT),
+    ...bookmarks.slice(0, DEFAULT_BOOKMARK_DISPLAY_COUNT)
   ]
 }
 
@@ -80,7 +83,7 @@ export default function SidePanel() {
   }, [])
   const handleSearch = (value: string) => {
     const finalList = originalList.current.filter((item) =>
-      item.data.searchTarget.includes(value)
+      value.split(" ").every((v) => item.data.searchTarget.includes(v))
     )
     console.log("finalList", finalList)
     setList(orderList(finalList))

@@ -5,7 +5,13 @@ A pure Chrome Extension for searching tabs, bookmarks, and history with support 
 ## install
 
 
-## fuzzy searching with pinyin
+
+## searching
+click the icon in the extension bar and type pinyin or specific word to fuzzy search.
+
+![landing](./docs/landing.gif)
+
+
 
 
 ## shortcut
