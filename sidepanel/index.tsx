@@ -69,17 +69,23 @@ export default function SidePanel() {
   const originalList = useRef<ListItemType[]>([])
   const [list, setList] = useState<ListItemType[]>([])
   useEffect(() => {
+    let portConnectStatus = false
     const port = chrome.runtime.connect({ name: MAIN_WINDOW })
     port.onMessage.addListener((processedList) => {
+      portConnectStatus = true
       console.log("processedList", processedList)
       setList(orderList(processedList))
       originalList.current = processedList
     })
 
-    window.addEventListener("unload", function () {
+    const postMessageToCloseWindow = () => {
+      if (!portConnectStatus) return
       port.postMessage({ type: "close" })
       port.disconnect()
-    })
+      portConnectStatus = false
+    }
+    window.addEventListener("unload", postMessageToCloseWindow)
+    window.addEventListener("blur", postMessageToCloseWindow)
   }, [])
   const handleSearch = (value: string) => {
     const finalList = originalList.current.filter((item) =>
