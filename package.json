@@ -1,8 +1,8 @@
 {
   "name": "pure-search",
-  "displayName": "Pure Search",
+  "displayName": "Search and Switcher in Blazing Speed",
   "version": "0.0.1",
-  "description": "A Pure Chrome Extension Of Searching Tabs, Bookmarks And Histories Which Also Supports Fuzzy Search Of Pinyin.",
+  "description": "A local tool for searching tabs, bookmarks, and history, with support for fuzzy Pinyin search.",
   "author": "cjinhuo@qq.com",
   "scripts": {
     "dev": "plasmo dev",
@@ -32,7 +32,8 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "https://*/*",
+      "http://*/*"
     ],
     "commands": {
       "_execute_action": {

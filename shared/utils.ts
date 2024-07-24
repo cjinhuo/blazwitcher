@@ -59,7 +59,9 @@ export const closeCurrentWindowAndClearStorage = async () => {
   const selfWindowId = storage[SELF_WINDOW_ID_KEY]
   if (selfWindowId) {
     await storageRemove(SELF_WINDOW_ID_KEY)
-    chrome.windows.remove(selfWindowId).catch(() => {})
+    chrome.windows.get(selfWindowId).then((window) => {
+      chrome.windows.remove(selfWindowId).catch(() => {})
+    }).catch(() => {})
   }
 }
 
