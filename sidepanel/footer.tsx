@@ -1,4 +1,3 @@
-import { IconGithubLogo } from "@douyinfe/semi-icons"
 import styled from "styled-components"
 
 const FooterContainer = styled.div`

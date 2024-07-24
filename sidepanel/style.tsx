@@ -7,12 +7,7 @@ import RightArrow from "react:~assets/right-arrow.svg"
 import TabSvg from "react:~assets/tab.svg"
 import styled from "styled-components"
 
-import {
-  ItemType,
-  type BookmarkItemType,
-  type ListItemType,
-  type TabItemType
-} from "~shared/types"
+import { type ListItemType } from "~shared/types"
 import { isBookmarkItem, isTabItem } from "~shared/utils"
 
 const ContentContainer = styled.div`

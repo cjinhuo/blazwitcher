@@ -3,6 +3,7 @@
 
 * {
   box-sizing: border-box;
+  font-family: "SourceCodePro",monospace !important;
 }
 html, body {
   width: 100%;
@@ -10,11 +11,11 @@ html, body {
   scroll-behavior: smooth;
   margin: 0;
   padding: 0;
-  font-family: 'robot mono', "RobotoMono", monospace;
+  
 }
 @font-face {
-  font-family: 'robot mono', "RobotoMono", monospace;
-  src:url("./RobotoMono.ttf") format("ttf");
+  font-family: "SourceCodePro",monospace;
+  src:url("data-base64:~assets/SourceCodePro.ttf") format("ttf");
 }
 body {
   	background-color: var(--color-normal-bg);

@@ -1,6 +1,6 @@
 {
   "name": "pure-search",
-  "displayName": "Search and Switcher in Blazing Speed",
+  "displayName": "Blazwitcher: Search and Switcher in Blazing Speed",
   "version": "0.0.1",
   "description": "A local tool for searching tabs, bookmarks, and history, with support for fuzzy Pinyin search.",
   "author": "cjinhuo@qq.com",

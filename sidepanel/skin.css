@@ -41,11 +41,6 @@ html {
   --color-link-href: rgb(90, 160, 223);
 }
 
-/* ::selection {
-  color: var(--color-neutral-9);
-  background-color: var(--color-normal-bg-reverse);
-} */
-
 /* scrollbar */
 ::-webkit-scrollbar {
   width: 0px;
