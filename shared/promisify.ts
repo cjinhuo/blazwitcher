@@ -31,6 +31,11 @@ export const actionSetTitle = promisifyChromeMethod(
 export const getCurrentWindow = promisifyChromeMethod<chrome.windows.Window>(
   chrome.windows.getCurrent.bind(chrome.windows)
 )
+
+export const getWindowById = promisifyChromeMethod<chrome.windows.Window>(
+  chrome.windows.get.bind(chrome.windows)
+)
+
 export const storageGet = promisifyChromeMethod<{ [key: string]: any }>(
   chrome.storage.session.get.bind(chrome.storage.session)
 )

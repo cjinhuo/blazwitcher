@@ -1,6 +1,11 @@
-import { SELF_WINDOW_ID_KEY } from "./constants";
-import { getCurrentWindow, getDisplayInfo, storageGet, storageSet } from "./promisify";
-
+import { SELF_WINDOW_ID_KEY } from "./constants"
+import {
+  getCurrentWindow,
+  getDisplayInfo,
+  getWindowById,
+  storageGet,
+  storageSet
+} from "./promisify"
 
 const SEARCH_WINDOW_WIDTH = 800
 const SEARCH_WINDOW_HEIGHT = 500
@@ -8,10 +13,11 @@ const SEARCH_WINDOW_HEIGHT = 500
 async function activeWindow() {
   const storage = await storageGet(SELF_WINDOW_ID_KEY)
   if (storage[SELF_WINDOW_ID_KEY]) {
-    chrome.windows.get(Number(storage[SELF_WINDOW_ID_KEY]), (window) => {
-      chrome.windows.update(window.id, { focused: true })
-    })
-    return
+    try {
+      const _window = await getWindowById(Number(storage[SELF_WINDOW_ID_KEY]))
+      chrome.windows.update(_window.id, { focused: true })
+      return
+    } catch (error) {}
   }
   const currentWindow = await getCurrentWindow()
   // if (currentWindow.state === 'fullscreen') {
@@ -57,7 +63,7 @@ async function activeWindow() {
 export function weakUpWindowIfActiveByUser() {
   chrome.action.onClicked.addListener(activeWindow)
   chrome.commands.onCommand.addListener((command) => {
-    if (command === '_execute_action') {
+    if (command === "_execute_action") {
       activeWindow()
     }
   })

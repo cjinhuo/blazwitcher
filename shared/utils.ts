@@ -1,6 +1,7 @@
-import { SELF_WINDOW_ID_KEY } from "./constants"
-import { storageGet, storageRemove } from "./promisify"
-import { ItemType, type ListItemType } from "./types"
+import { SELF_WINDOW_ID_KEY } from "./constants";
+import { getWindowById, storageGet, storageRemove } from "./promisify";
+import { ItemType, type ListItemType } from "./types";
+
 
 export function isChineseChar(char) {
   const chineseCharRegex = /[\u4E00-\u9FFF]/
@@ -59,9 +60,11 @@ export const closeCurrentWindowAndClearStorage = async () => {
   const selfWindowId = storage[SELF_WINDOW_ID_KEY]
   if (selfWindowId) {
     await storageRemove(SELF_WINDOW_ID_KEY)
-    chrome.windows.get(selfWindowId).then((window) => {
+    try {
+      await getWindowById(selfWindowId)
       chrome.windows.remove(selfWindowId).catch(() => {})
-    }).catch(() => {})
+    } catch (error) { 
+    }
   }
 }
 
