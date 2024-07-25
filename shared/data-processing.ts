@@ -37,7 +37,9 @@ export function bookmarksProcessing() {
     processedBookmarks = traversalBookmarkTreeNode(bookmarks)
   })
   // todo 订阅 delete add 事件
-  chrome.bookmarks.onChanged.addListener((changes) => {})
+  chrome.bookmarks.onChanged.addListener((id,changeInfo) => {
+    console.log('onChanged', id, changeInfo)
+  })
 
   return () =>
     processedBookmarks.map((bookmark) => ({
