@@ -85,7 +85,7 @@ export default function SidePanel() {
       portConnectStatus = false
     }
     window.addEventListener("unload", postMessageToCloseWindow)
-    window.addEventListener("blur", postMessageToCloseWindow)
+    // window.addEventListener("blur", postMessageToCloseWindow)
   }, [])
   const handleSearch = (value: string) => {
     const finalList = originalList.current.filter((item) =>

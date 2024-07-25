@@ -27,7 +27,7 @@ function processTabItem(tab: chrome.tabs.Tab) {
   )
   return {
     ...tab,
-    searchTarget: `${tab.title.toLowerCase()} ${pinyin.convertToPinyin(chineseChars.join(""), "", true)} ${tab.url.replace(/^https?:\/\//, "")}`
+    searchTarget: `${tab.title.toLowerCase()} ${pinyin.convertToPinyin(chineseChars.join(""), " ", true)} ${tab.url.replace(/^https?:\/\//, "")}`
   }
 }
 
