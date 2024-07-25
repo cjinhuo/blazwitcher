@@ -1,17 +1,8 @@
-import pinyin from "tiny-pinyin"
+import { DEFAULT_HISTORY_MAX_DAYS, DEFAULT_HISTORY_MAX_RESULTS, ONE_DAY_MILLISECONDS } from "./constants";
+import { getBookmarksById, getBookmarksTree, historySearch, tabsQuery } from "./promisify";
+import { ItemType, type BookmarkItemType, type HistoryItemType } from "./types";
+import { faviconURL, transformToSearchTarget } from "./utils";
 
-import {
-  DEFAULT_HISTORY_MAX_DAYS,
-  DEFAULT_HISTORY_MAX_RESULTS,
-  ONE_DAY_MILLISECONDS
-} from "./constants"
-import { getBookmarksTree, historySearch, tabsQuery } from "./promisify"
-import {
-  ItemType,
-  type BookmarkItemType,
-  type HistoryItemType,
-} from "./types"
-import { faviconURL, isChineseChar } from "./utils"
 
 export async function tabsProcessing() {
   let processedTabs = await tabsQuery({})
@@ -22,12 +13,9 @@ export async function tabsProcessing() {
 }
 
 function processTabItem(tab: chrome.tabs.Tab) {
-  const chineseChars = Array.from(tab.title).filter((char) =>
-    isChineseChar(char)
-  )
   return {
     ...tab,
-    searchTarget: `${tab.title.toLowerCase()} ${pinyin.convertToPinyin(chineseChars.join(""), " ", true)} ${tab.url.replace(/^https?:\/\//, "")}`
+    searchTarget: transformToSearchTarget(tab.title, tab.url),
   }
 }
 
@@ -36,9 +24,30 @@ export function bookmarksProcessing() {
   getBookmarksTree().then((bookmarks) => {
     processedBookmarks = traversalBookmarkTreeNode(bookmarks)
   })
-  
+
   chrome.bookmarks.onChanged.addListener((id,changeInfo) => {
-    console.log('onChanged', id, changeInfo)
+    const index = processedBookmarks.findIndex((bookmark) => bookmark.id === id)
+    // only update when bookmark are changed, not folder
+    if (~index && changeInfo.url) {
+      processedBookmarks[index].url = changeInfo.url
+      processedBookmarks[index] = processedBookmarkItem(processedBookmarks[index])
+    }
+  })
+
+  chrome.bookmarks.onCreated.addListener(async (id, bookmark) => {
+    if (bookmark.url) {
+      let folderName = 'root'
+      if (bookmark.parentId) {
+        const parentBookmark = await getBookmarksById(bookmark.parentId)
+        folderName = parentBookmark[0].title
+      }
+      processedBookmarks.push(processedBookmarkItem(bookmark, folderName))
+    }
+  })
+
+  chrome.bookmarks.onRemoved.addListener((id, removeInfo) => {
+    const index = processedBookmarks.findIndex((bookmark) => bookmark.id === id)
+    index && processedBookmarks.splice(index, 1)
   })
 
   return () =>
@@ -49,13 +58,19 @@ export function bookmarksProcessing() {
 }
 
 function processHistoryItem(history: chrome.history.HistoryItem) {
-  const chineseChars = Array.from(history.title).filter((char) =>
-    isChineseChar(char)
-  )
   return {
     ...history,
-    searchTarget: `${history.title.toLowerCase()} ${pinyin.convertToPinyin(chineseChars.join(""), "", true)} ${history.url.replace(/^https?:\/\//, "")}`,
+    searchTarget: transformToSearchTarget(history.title, history.url),
     favIconUrl: faviconURL(history.url)
+  }
+}
+
+function processedBookmarkItem(bookmark: chrome.bookmarks.BookmarkTreeNode, folderName = 'root') {
+  return {
+    ...bookmark,
+    searchTarget: transformToSearchTarget(bookmark.title, bookmark.url),
+    favIconUrl: faviconURL(bookmark.url),
+    folderName
   }
 }
 
@@ -95,6 +110,7 @@ export function historyProcessing() {
     }))
 }
 
+
 export const traversalBookmarkTreeNode = (
   bookmarks: chrome.bookmarks.BookmarkTreeNode[],
   result: BookmarkItemType[] = [],
@@ -106,16 +122,8 @@ export const traversalBookmarkTreeNode = (
       traversalBookmarkTreeNode(children, result, rest)
     }
     if (rest.url) {
-      const chineseChars = Array.from(rest.title).filter((char) =>
-        isChineseChar(char)
-      )
       // get favicon from chrome://favicon/ + url ,from https://stackoverflow.com/questions/10301636/how-can-i-get-the-bookmark-icon-in-chrome
-      result.push({
-        ...rest,
-        favIconUrl: faviconURL(rest.url),
-        searchTarget: `${rest.title.toLowerCase()} ${pinyin.convertToPinyin(chineseChars.join(""), "", true)} ${rest.url.replace(/^https?:\/\//, "")}`,
-        folderName: parent?.title ?? "root"
-      })
+      result.push(processedBookmarkItem(rest, parent?.title))
     }
   })
   return result

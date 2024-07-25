@@ -37,7 +37,7 @@ export default function Search({ onSearch }: SearchProps) {
         size="large"
         value={inputValue}
         onChange={handleInputChange}
-        placeholder="Type to search with fuzzy matching"></InputWrapper>
+        placeholder="Type to search"></InputWrapper>
       <Divider></Divider>
     </SearchContainer>
   )

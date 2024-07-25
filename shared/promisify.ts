@@ -51,6 +51,9 @@ export const getBookmarksTree = promisifyChromeMethod<chrome.bookmarks.BookmarkT
   chrome.bookmarks.getTree.bind(chrome.bookmarks)
 )
 
+export const getBookmarksById = promisifyChromeMethod<chrome.bookmarks.BookmarkTreeNode[]>(
+  chrome.bookmarks.get.bind(chrome.bookmarks.get)
+)
 
 function promisifyChromeMethod<T = any>(method: Function) {
   return (...args: any[]) =>
