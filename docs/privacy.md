@@ -1,0 +1,23 @@
+Blazwitcher Privacy Policy
+Welcome to our product. Blazwitcher (including services provided by App and other products, hereinafter referred to as "products and services") is developed and operated by Blazwitcher (hereinafter referred to as "we"). Ensuring the security and privacy of user data is our top priority. This privacy policy outlines the data we collect and how it is processed when you access and use our products and services.
+Please make sure to read this privacy policy carefully and thoroughly before continuing to use our products, and fully understand all the rules and key points. Once you choose to use our products, it will be deemed that you agree to all the contents of this privacy policy and agree to our collection and use of your relevant information in accordance with it. If you have any questions about this policy during the reading process, you can contact our customer service for consultation. Please contact us via qq1443970739@gmail.com or through the feedback methods in the product. If you do not agree with the relevant agreement or any of its terms, you should stop using our products and services.
+This privacy policy helps you understand the following content:
+How we collect and use your personal information;
+How we store and protect your personal information;
+How we share, transfer, and disclose your personal information publicly;
+1. How we collect and use your personal information
+Personal information refers to various information recorded electronically or in other ways that can identify a specific natural person or reflect the activities of a specific natural person independently or in combination with other information. We comply with the "Cybersecurity Law of the People's Republic of China" and the "Information Security Technology Personal Information Security Specification" (GB/T 35273-2017) and other relevant laws and regulations, and strictly follow the principles of legitimacy, fairness, and necessity to collect and use your personal information during the process of providing services and/or products to you.
+2. How we store and protect your personal information
+As a general rule, we only retain your personal information for the period necessary to achieve the purpose of information collection. We will retain your personal information for the time strictly necessary for managing the relationship with you (for example, when you open an account or obtain services from our products). Due to legal obligations or for the purpose of proving certain rights or contracts that meet applicable statutes of limitations, we may need to retain your archived personal information beyond the aforementioned period and will not be able to delete it upon your request.
+3. How we share, transfer, and publicly disclose your personal information
+When necessary to manage our daily business activities and pursue legitimate interests to better serve customers, we will use your personal information compliantly and appropriately. Considering our business and various aspects, we use this data solely and do not share it with any third party.
+We may share your personal information externally in accordance with legal and regulatory requirements or mandatory requests from government authorities. When we receive such disclosure requests, we will require the necessary legal documents, such as subpoenas or investigation letters, to be provided. We firmly believe in maintaining transparency to the extent permitted by law regarding the information requested from us.
+In the following circumstances, sharing, transferring, or publicly disclosing your personal information does not require your prior authorization and consent:
+Directly related to national security or national defense security;
+Directly related to criminal investigation, prosecution, trial, and execution of judgments;
+Necessary for protecting your or others' significant legal rights and interests, such as life and property, but it is difficult to obtain your consent;
+Personal information that you voluntarily disclose to the public;
+Personal information collected from legally publicly disclosed information, such as legal news reports, government information disclosure, and other channels;
+Necessary for signing and fulfilling contracts as required by the personal information subject;
+Necessary for maintaining the safe and stable operation of the provided products or services, such as discovering and handling product or service failures;
+Other circumstances stipulated by laws and regulations.
