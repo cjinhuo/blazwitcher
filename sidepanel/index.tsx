@@ -85,11 +85,13 @@ export default function SidePanel() {
       portConnectStatus = false
     }
     window.addEventListener("unload", postMessageToCloseWindow)
-    // window.addEventListener("blur", postMessageToCloseWindow)
+    window.addEventListener("blur", postMessageToCloseWindow)
   }, [])
   const handleSearch = (value: string) => {
-    const finalList = originalList.current.filter((item) =>
-      value.split(" ").every((v) => item.data.searchTarget.includes(v))
+    const finalList = originalList.current.filter(
+      (item) =>
+        value.split(" ").every((v) => item.data.searchTarget.includes(v))
+      // indexOf
     )
     console.log("finalList", finalList)
     setList(orderList(finalList))

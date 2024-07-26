@@ -97,5 +97,5 @@ export function faviconURL(u: string) {
 
 export const transformToSearchTarget = (title: string, url: string) => {
   const chineseChars = Array.from(title).filter(isChineseChar).join('')
-  return `${title.toLowerCase()} ${pinyin.convertToPinyin(chineseChars, " ", true)} ${url.replace(/^https?:\/\//, "")}`
+  return `${title.toLowerCase()} ${pinyin.convertToPinyin(chineseChars, "", true)} ${url.replace(/^https?:\/\//, "")}`
 }
