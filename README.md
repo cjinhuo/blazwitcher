@@ -1,6 +1,6 @@
 <div align="center">
     <a href="#" target="_blank">
-    <img src="./docs/1400_560.png" alt="mito-logo" height="90">
+      <img src="./docs/1400_560.png" alt="logo" height="100">
     </a>
     <p>A local Chrome Extension for searching tabs, bookmarks, and history</p>
 </div>

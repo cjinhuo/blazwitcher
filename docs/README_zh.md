@@ -1,6 +1,6 @@
 <div align="center">
     <a href="#" target="_blank">
-    <img src="./1400_560.png" alt="mito-logo" height="90">
+    <img src="./1400_560.png" alt="logo" height="100">
     </a>
     <p>一个用于搜索标签，书签和历史的浏览器插件</p>
 </div>
