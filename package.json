@@ -7,9 +7,11 @@
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
-    "package": "plasmo package"
+    "package": "plasmo package",
+    "commit": "git add . && git cz"
   },
   "dependencies": {
+    "@commitlint/config-conventional": "^19.2.2",
     "@douyinfe/semi-icons": "^2.62.0",
     "@douyinfe/semi-ui": "^2.62.0",
     "plasmo": "0.88.0",
@@ -24,11 +26,17 @@
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
+    "cz-git": "^1.9.4",
     "path-browserify": "^1.0.0",
     "prettier": "3.2.4",
     "process": "^0.11.10",
     "typescript": "5.3.3",
     "url": "^0.11.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-git"
+    }
   },
   "manifest": {
     "host_permissions": [
