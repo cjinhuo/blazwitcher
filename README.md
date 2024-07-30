@@ -2,15 +2,16 @@
 A pure Chrome Extension for searching tabs, bookmarks, and history with support for fuzzy **Pinyin** search.
 
 # Quick Start
-## install
-
+## Install Instruction
+**Google Chrome**
+1.  visit [Chrome Extension Store](https://chrome.google.com/webstore/detail/fjgablnemienkegdnbihhemebmmonihg)
+2.  Add it to your browser
 
 
 ## searching
 Click the icon in the extension bar then type pinyin or specific word to fuzzy search.
 
 ![landing](./docs/landing.gif)
-
 
 
 ## shortcut
