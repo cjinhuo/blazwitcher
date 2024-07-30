@@ -20,27 +20,29 @@ async function activeWindow() {
     } catch (error) {}
   }
   const currentWindow = await getCurrentWindow()
-  // if (currentWindow.state === 'fullscreen') {
-  //   debugger
-  //   chrome.sidePanel.setOptions({
-  //     path: './sidepanel.html',
-  //   })
-  //   chrome.sidePanel.open({
-  //     tabId: currentWindow.id,
-  //   })
-  //   return
-  // }
   const displays = await getDisplayInfo()
   // find the display that the current window is in
   const focusedDisplay = displays.find((display) => {
     const { width, height, left, top } = display.bounds
+    // strict bounds detection
     return (
       currentWindow.left >= left &&
       currentWindow.left < left + width &&
       currentWindow.top >= top &&
       currentWindow.top < top + height
     )
+  }) || displays.find((display) => {
+    const { width, height, left, top } = display.bounds
+    //  loose bounds detection
+    return (
+      currentWindow.left >= left &&
+      currentWindow.left < left + width ||
+      currentWindow.top >= top &&
+      currentWindow.top < top + height
+    )
   })
+  
+  // if focusedDisplay is not found, just lower the standard about bounds
   const { width, height, left, top } = focusedDisplay.bounds
   chrome.windows.create(
     {
