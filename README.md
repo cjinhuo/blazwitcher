@@ -2,14 +2,14 @@
     <a href="#" target="_blank">
     <img src="./docs/1400_560.png" alt="mito-logo" height="90">
     </a>
-    <p>A local tool for searching tabs, bookmarks, and history</p>
+    <p>A local Chrome Extension for searching tabs, bookmarks, and history</p>
 </div>
 
 
 # Overview
 [中文 README](./docs/README_zh.md)
 
-Blazwitcher is a local tool for searching tabs, bookmarks, and history, with support for fuzzy **Pinyin** search. It is also the perfect solution for those who work with multiple tabs open and want to switch the correct tab or create a new tab from history or bookmarks quickly without the hassle of manually operation.
+Blazwitcher is a local Chrome Extension for searching tabs, bookmarks, and history, with support for fuzzy **Pinyin** search. It is also the perfect solution for those who work with multiple tabs open and want to switch the correct tab or create a new tab from history or bookmarks quickly without the hassle of manually operation.
 
 ## Features
 - Tab Search: Search across all Chrome tabs you opened
