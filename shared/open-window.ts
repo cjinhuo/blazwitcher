@@ -20,6 +20,13 @@ async function activeWindow() {
     } catch (error) {}
   }
   const currentWindow = await getCurrentWindow()
+  currentWindow.left = 0
+  // there is a bug in "window" platform. When the window state is maximized, the left and top are not correct. 
+  // Normally speaking left and top should be 0. But they are -7 in this case.So reset the left and top to 0 to fix it.
+  if (currentWindow.state === "maximized") {
+    currentWindow.left >= -10 && currentWindow.left < 0 && (currentWindow.left = 0)
+    currentWindow.top >= -10 && currentWindow.top < 0 && (currentWindow.top = 0)
+  }
   const displays = await getDisplayInfo()
   // find the display that the current window is in
   const focusedDisplay = displays.find((display) => {
@@ -40,7 +47,7 @@ async function activeWindow() {
       currentWindow.top >= top &&
       currentWindow.top < top + height
     )
-  })
+  }) || displays.pop()
   
   // if focusedDisplay is not found, just lower the standard about bounds
   const { width, height, left, top } = focusedDisplay.bounds
