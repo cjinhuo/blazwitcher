@@ -1,4 +1,3 @@
-import Tooltip from "@douyinfe/semi-ui/lib/es/tooltip/index"
 import chromeIcon from "data-base64:~assets/chrome-icon.svg"
 import { useMemo } from "react"
 import BookmarkSvg from "react:~assets/bookmark.svg"
@@ -11,6 +10,7 @@ import styled from "styled-components"
 import { type ListItemType } from "~shared/types"
 import { isBookmarkItem, isTabItem } from "~shared/utils"
 
+export const VISIBILITY_CLASS = "list-visibility"
 const ContentContainer = styled.div`
   display: flex;
   padding: 0 5px;
@@ -91,14 +91,24 @@ const SVGDivContainer = styled.div`
   height: 16px;
 `
 
-export const TooltipWrap = styled(Tooltip)`
-  &.semi-tooltip-wrapper {
-    padding: 0 2px;
-    font-size: 12px;
-    border-radius: 2px;
-    background-color: var(--color-neutral-8);
-    color: var(--color-neutral-2);
-  }
+// export const TooltipWrap = styled(Tooltip)`
+//   &.semi-tooltip-wrapper {
+//     padding: 0 2px;
+//     font-size: 12px;
+//     border-radius: 2px;
+//     background-color: var(--color-neutral-8);
+//     color: var(--color-neutral-2);
+//   }
+// `
+const SvgTag = styled.div`
+  height: 13px;
+  padding: 2px;
+  line-height: 9px;
+  font-size: 10px;
+  border-radius: 2px;
+  background-color: var(--color-neutral-7);
+  color: var(--color-neutral-2);
+  margin-left: 4px;
 `
 
 const SvgContainer = ({
@@ -108,25 +118,20 @@ const SvgContainer = ({
   children: React.ReactNode
   content: string
 }) => (
-  <TooltipWrap
-    content={content}
-    showArrow={false}
-    position="right"
-    mouseEnterDelay={50}>
+  <>
     <SVGDivContainer>
       <>{children}</>
     </SVGDivContainer>
-  </TooltipWrap>
+    <SvgTag className={VISIBILITY_CLASS}>{content}</SvgTag>
+  </>
 )
 
 const BookmarkLabel = () => {
   return (
     <LabelContainer>
-      <Tooltip content="Bookmark">
-        <SvgContainer content="bookmark">
-          <BookmarkSvg className={SVG_CLASS}></BookmarkSvg>
-        </SvgContainer>
-      </Tooltip>
+      <SvgContainer content="Bookmark">
+        <BookmarkSvg className={SVG_CLASS}></BookmarkSvg>
+      </SvgContainer>
     </LabelContainer>
   )
 }
@@ -144,7 +149,7 @@ const TabLabel = ({ active }: { active: boolean }) => {
 
 const HistoryLabel = () => (
   <LabelContainer>
-    <SvgContainer content="history">
+    <SvgContainer content="History">
       <HistorySvg className={SVG_CLASS}></HistorySvg>
     </SvgContainer>
   </LabelContainer>
@@ -193,10 +198,10 @@ const OperationLinkIcon = styled.div`
     fill: var(--color-neutral-3);
   }
 `
-export const OPERATION_CLASS = "operation-container"
+
 const RenderOperation = ({ item }: { item: ListItemType }) => {
   return (
-    <OperationContainer className={OPERATION_CLASS}>
+    <OperationContainer className={VISIBILITY_CLASS}>
       <OperationLinkIcon>
         {isTabItem(item) ? <RightArrow></RightArrow> : <NewWindow></NewWindow>}
       </OperationLinkIcon>

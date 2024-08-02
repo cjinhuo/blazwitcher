@@ -18,10 +18,10 @@ import {
 import {
   HOST_CLASS,
   IMAGE_CLASS,
-  OPERATION_CLASS,
   RenderItem,
   SVG_CLASS,
-  TITLE_CLASS
+  TITLE_CLASS,
+  VISIBILITY_CLASS
 } from "./style"
 
 const ListContainer = styled.div`
@@ -40,7 +40,7 @@ const ListItemWrapper = styled(ListComponent.Item)`
   .${SVG_CLASS} {
     fill: var(--color-neutral-3);
   }
-  .${OPERATION_CLASS} {
+  .${VISIBILITY_CLASS} {
     visibility: hidden;
   }
   &:hover {
@@ -57,7 +57,7 @@ const ListItemWrapper = styled(ListComponent.Item)`
     .${SVG_CLASS} {
       fill: var(--color-neutral-7);
     }
-    .${OPERATION_CLASS} {
+    .${VISIBILITY_CLASS} {
       visibility: visible;
     }
   }
@@ -75,7 +75,7 @@ const ListItemWrapper = styled(ListComponent.Item)`
     .${SVG_CLASS} {
       fill: var(--color-neutral-7);
     }
-    .${OPERATION_CLASS} {
+    .${VISIBILITY_CLASS} {
       visibility: visible;
     }
   }
