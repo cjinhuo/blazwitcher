@@ -1,3 +1,4 @@
+import Tooltip from "@douyinfe/semi-ui/lib/es/tooltip/index"
 import chromeIcon from "data-base64:~assets/chrome-icon.svg"
 import { useMemo } from "react"
 import BookmarkSvg from "react:~assets/bookmark.svg"
@@ -49,7 +50,7 @@ const TitleContainer = styled.div`
   justify-content: space-between;
   padding: 0 4px;
   overflow: hidden;
-  user-select: none;
+  /* user-select: none; */
 `
 const TitleDiv = styled.div`
   font-size: 14px;
@@ -85,10 +86,47 @@ const LabelContainer = styled.div`
   width: 30px;
 `
 
+const SVGDivContainer = styled.div`
+  width: 16px;
+  height: 16px;
+`
+
+export const TooltipWrap = styled(Tooltip)`
+  &.semi-tooltip-wrapper {
+    padding: 0 2px;
+    font-size: 12px;
+    border-radius: 2px;
+    background-color: var(--color-neutral-8);
+    color: var(--color-neutral-2);
+  }
+`
+
+const SvgContainer = ({
+  children,
+  content
+}: {
+  children: React.ReactNode
+  content: string
+}) => (
+  <TooltipWrap
+    content={content}
+    showArrow={false}
+    position="right"
+    mouseEnterDelay={50}>
+    <SVGDivContainer>
+      <>{children}</>
+    </SVGDivContainer>
+  </TooltipWrap>
+)
+
 const BookmarkLabel = () => {
   return (
     <LabelContainer>
-      <BookmarkSvg className={SVG_CLASS}></BookmarkSvg>
+      <Tooltip content="Bookmark">
+        <SvgContainer content="bookmark">
+          <BookmarkSvg className={SVG_CLASS}></BookmarkSvg>
+        </SvgContainer>
+      </Tooltip>
     </LabelContainer>
   )
 }
@@ -97,14 +135,18 @@ const TabLabel = ({ active }: { active: boolean }) => {
   return (
     <LabelContainer>
       {active && <ActiveStatus></ActiveStatus>}
-      <TabSvg className={SVG_CLASS}></TabSvg>
+      <SvgContainer content="Tab">
+        <TabSvg className={SVG_CLASS}></TabSvg>
+      </SvgContainer>
     </LabelContainer>
   )
 }
 
 const HistoryLabel = () => (
   <LabelContainer>
-    <HistorySvg className={SVG_CLASS}></HistorySvg>
+    <SvgContainer content="history">
+      <HistorySvg className={SVG_CLASS}></HistorySvg>
+    </SvgContainer>
   </LabelContainer>
 )
 
