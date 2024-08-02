@@ -11,7 +11,12 @@ import {
   MAIN_WINDOW
 } from "~shared/constants"
 import { ItemType, type ListItemType } from "~shared/types"
-import { isBookmarkItem, isHistoryItem, isTabItem } from "~shared/utils"
+import {
+  isBookmarkItem,
+  isDarkMode,
+  isHistoryItem,
+  isTabItem
+} from "~shared/utils"
 
 import Footer from "./footer"
 import List from "./list"
@@ -85,7 +90,11 @@ export default function SidePanel() {
       portConnectStatus = false
     }
     window.addEventListener("unload", postMessageToCloseWindow)
-    window.addEventListener("blur", postMessageToCloseWindow)
+    // window.addEventListener("blur", postMessageToCloseWindow)
+    if (isDarkMode()) {
+      document.body.classList.add("dark")
+      document.body.setAttribute("theme-mode", "dark")
+    }
   }, [])
   const handleSearch = (value: string) => {
     const finalList = originalList.current.filter(
