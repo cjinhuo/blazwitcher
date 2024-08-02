@@ -90,7 +90,9 @@ export default function SidePanel() {
       portConnectStatus = false
     }
     window.addEventListener("unload", postMessageToCloseWindow)
-    // window.addEventListener("blur", postMessageToCloseWindow)
+    if (process.env.NODE_ENV === "production") {
+      window.addEventListener("blur", postMessageToCloseWindow)
+    }
     if (isDarkMode()) {
       document.body.classList.add("dark")
       document.body.setAttribute("theme-mode", "dark")
