@@ -1,13 +1,26 @@
-export interface TabItemType extends chrome.tabs.Tab {
-  searchTarget: string
+export type Matrix = [number, number][]
+
+export interface SourceMappingData {
+  pinyinString: string
+  boundary: Matrix
+  originalIndices: number[]
+  originalString: string
+  originalLength: number
 }
-export interface BookmarkItemType extends chrome.bookmarks.BookmarkTreeNode {
+
+interface BaseItemType {
+  titleBoundaryMapping: SourceMappingData
   searchTarget: string
+  hitRanges?: Matrix
+}
+export interface TabItemType extends chrome.tabs.Tab, BaseItemType {
+  titleBoundaryMapping: SourceMappingData
+}
+export interface BookmarkItemType extends chrome.bookmarks.BookmarkTreeNode,BaseItemType {
   folderName: string
   favIconUrl: string
 }
-export interface HistoryItemType extends chrome.history.HistoryItem {
-  searchTarget: string
+export interface HistoryItemType extends chrome.history.HistoryItem, BaseItemType {
   favIconUrl: string
 }
 

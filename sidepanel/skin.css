@@ -1,3 +1,4 @@
+
 html {
   --color-neutral-1: #171717;
   --color-neutral-2: #262626;
@@ -18,6 +19,10 @@ html {
   --color-link-href: rgb(90, 160, 223);
 
   --bg-selected-item: rgb(1, 75, 220);
+
+  --highlight-bg: rgb(35, 141, 255);
+  --highlight-selected-bg: rgb(65, 157, 255);
+  --highlight-text: var(--color-neutral-9);
 }
 
 
@@ -39,6 +44,10 @@ html {
   --color-linear-bg-start: rgb(6, 12, 18);
   --color-linear-bg-end: rgb(230, 236, 242, 0.06);
   --color-link-href: rgb(90, 160, 223);
+
+  --highlight-selected-bg: rgb(35, 141, 255);
+  --highlight-bg: rgb(65, 157, 255);
+  --highlight-text: var(--color-neutral-2);
 }
 
 /* scrollbar */

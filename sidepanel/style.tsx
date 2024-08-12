@@ -10,6 +10,8 @@ import styled from "styled-components"
 import { type ListItemType } from "~shared/types"
 import { isBookmarkItem, isTabItem } from "~shared/utils"
 
+import HighlightText from "./highlight-text"
+
 export const VISIBILITY_CLASS = "list-visibility"
 const ContentContainer = styled.div`
   display: flex;
@@ -39,7 +41,6 @@ export const RenderIcon = ({ iconUrl }: { iconUrl: string }) => {
   )
 }
 
-export const TITLE_CLASS = "title-text"
 export const HOST_CLASS = "host-text"
 export const SVG_CLASS = "svg-icon"
 const TitleContainer = styled.div`
@@ -51,14 +52,6 @@ const TitleContainer = styled.div`
   padding: 0 4px;
   overflow: hidden;
   /* user-select: none; */
-`
-const TitleDiv = styled.div`
-  font-size: 14px;
-  color: var(--color-neutral-2);
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `
 
 const HostDiv = styled.div`
@@ -75,7 +68,8 @@ const ActiveStatus = styled.div`
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: green;
+  margin-right: 4px;
+  background-color: #0bc40b;
 `
 
 const LabelContainer = styled.div`
@@ -83,7 +77,6 @@ const LabelContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 30px;
 `
 
 const SVGDivContainer = styled.div`
@@ -156,13 +149,14 @@ const HistoryLabel = () => (
 )
 
 export const RenderTitle = ({ item }: { item: ListItemType }) => {
+  const { data } = item
   const host = useMemo(() => {
-    const urlObj = new URL(item.data.url)
+    const urlObj = new URL(data.url)
     return urlObj.host
-  }, [item.data.url])
+  }, [data.url])
   return (
     <TitleContainer>
-      <TitleDiv className={TITLE_CLASS}>{item.data.title}</TitleDiv>
+      <HighlightText item={item}></HighlightText>
       <HostDiv className={HOST_CLASS}>
         <span>{host}</span>
         {isTabItem(item) ? (

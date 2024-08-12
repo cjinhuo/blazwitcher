@@ -15,12 +15,12 @@ import {
   closeCurrentWindowAndClearStorage,
   scrollIntoViewIfNeeded
 } from "../shared/utils"
+import { HIGHLIGHT_TEXT_CLASS, NORMAL_TEXT_CLASS } from "./highlight-text"
 import {
   HOST_CLASS,
   IMAGE_CLASS,
   RenderItem,
   SVG_CLASS,
-  TITLE_CLASS,
   VISIBILITY_CLASS
 } from "./style"
 
@@ -48,8 +48,11 @@ const ListItemWrapper = styled(ListComponent.Item)`
     .${IMAGE_CLASS} {
       background-color: var(--color-neutral-10);
     }
-    .${TITLE_CLASS} {
+    .${NORMAL_TEXT_CLASS} {
       color: var(--color-neutral-9);
+    }
+    .${HIGHLIGHT_TEXT_CLASS} {
+      background-color: var(--highlight-selected-bg);
     }
     .${HOST_CLASS} {
       color: var(--color-neutral-6);
@@ -66,8 +69,11 @@ const ListItemWrapper = styled(ListComponent.Item)`
     .${IMAGE_CLASS} {
       background-color: var(--color-neutral-10);
     }
-    .${TITLE_CLASS} {
+    .${NORMAL_TEXT_CLASS} {
       color: var(--color-neutral-9);
+    }
+    .${HIGHLIGHT_TEXT_CLASS} {
+      background-color: var(--highlight-selected-bg);
     }
     .${HOST_CLASS} {
       color: var(--color-neutral-6);
