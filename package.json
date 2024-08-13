@@ -1,7 +1,7 @@
 {
   "name": "blazwitcher",
   "displayName": "Blazwitcher: Search and Switcher in Blazing Speed",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Blazwitcher is a local tool for searching tabs, bookmarks, and history, with support for fuzzy Pinyin search.",
   "author": "cjinhuo@qq.com",
   "scripts": {
@@ -18,7 +18,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "styled-components": "^6.1.11",
-    "text-search-engine": "0.0.1-beta.2",
+    "text-search-engine": "1.0.0",
     "tiny-pinyin": "^1.3.2"
   },
   "devDependencies": {

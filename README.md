@@ -13,7 +13,7 @@ Blazwitcher is a local [Chrome Extension](https://chromewebstore.google.com/deta
 
 ## Features
 - Fuzzy Pinyin Search: support fuzzy search which be very kind for Chinese(rely on [text-search-engine](https://github.com/cjinhuo/text-search-engine))
-- Intuitive Ordering: The search results are descended by the weight value returned by the [text-search-engine](https://github.com/cjinhuo/text-search-engine)  and the last time it was used, allowing you to locate your target faster.
+- Intuitive Ordering: The search results are descended by the weight value returned by the [text-search-engine](https://github.com/cjinhuo/text-search-engine) and the last time it was used, allowing you to locate your target faster.
 - Tab Search: Search across all Chrome tabs you opened
 - History Search: Search the last 200 history item
 - Bookmark Search: Search across all your bookmarks

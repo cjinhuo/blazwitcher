@@ -7,8 +7,8 @@ import {
   storageSet
 } from "./promisify"
 
-const SEARCH_WINDOW_WIDTH = 800
-const SEARCH_WINDOW_HEIGHT = 500
+const SEARCH_WINDOW_WIDTH = 750
+const SEARCH_WINDOW_HEIGHT = 495
 
 async function activeWindow() {
   const storage = await storageGet(SELF_WINDOW_ID_KEY)
@@ -20,7 +20,6 @@ async function activeWindow() {
     } catch (error) {}
   }
   const currentWindow = await getCurrentWindow()
-  currentWindow.left = 0
   // there is a bug in "window" platform. When the window state is maximized, the left and top are not correct. 
   // Normally speaking left and top should be 0. But they are -7 in this case.So reset the left and top to 0 to fix it.
   if (currentWindow.state === "maximized") {
