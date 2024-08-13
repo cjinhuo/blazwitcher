@@ -12,7 +12,7 @@
 Blazwitcher is a local [Chrome Extension](https://chromewebstore.google.com/detail/blazwitcher-search-and-sw/fjgablnemienkegdnbihhemebmmonihg?hl=en-US) for searching tabs, bookmarks, and history, with support for fuzzy **Pinyin** search. It is also the perfect solution for those who work with multiple tabs open and want to switch the correct tab or create a new tab from history or bookmarks quickly without the hassle of manually operation.
 
 ## Features
-- Fuzzy Pinyin Search: support fuzzy search which be very kind for Chinese(rely on [text-search-engine](https://github.com/cjinhuo/text-search-engine))
+- Fuzzy Pinyin Search: Supports Chinese and English mixed fuzzy search, pinyin is supported by default which's very kind for Chinese(rely on [text-search-engine](https://github.com/cjinhuo/text-search-engine)).
 - Intuitive Ordering: The search results are descended by the weight value returned by the [text-search-engine](https://github.com/cjinhuo/text-search-engine) and the last time it was used, allowing you to locate your target faster.
 - Tab Search: Search across all Chrome tabs you opened
 - History Search: Search the last 200 history item
@@ -34,7 +34,7 @@ Those people who are looking for quick action and speed, like:
 
 ## searching
 Click the icon in the extension bar then type pinyin or specific word to fuzzy search.
-![landing](./docs/landing.gif)
+![landing](./docs/landing.png)
 
 ## shortcut
 The default **shortcut key** to active Blazwitcher Extension is `Command+.(Command+Period)` on Mac, and `Ctrl+.(Ctrl+Period)` on Windows. Of course, you could visit [chrome://extensions/shortcuts](chrome://extensions/shortcuts) to modify it to suit your habits.

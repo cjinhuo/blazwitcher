@@ -6,8 +6,7 @@
   "author": "cjinhuo@qq.com",
   "scripts": {
     "dev": "plasmo dev ",
-    "build": "plasmo build",
-    "package": "plasmo package",
+    "package": "plasmo build && plasmo package",
     "commit": "git add . && git cz"
   },
   "dependencies": {
