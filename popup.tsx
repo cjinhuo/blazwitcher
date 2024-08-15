@@ -19,7 +19,6 @@ function IndexPopup() {
         chrome.storage.session.set({
           selfWindowId: window.id
         })
-        console.log("created window", window)
       }
     )
   }, [])

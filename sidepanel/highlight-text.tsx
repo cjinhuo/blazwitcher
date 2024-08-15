@@ -46,14 +46,14 @@ export default function HighlightText({ item }: PropsType) {
       Renders.push(
         <div
           className={NORMAL_TEXT_CLASS}
-          key={`${id}-${currentIndex}${start}`}>
+          key={`${id}-${currentIndex}-${start}`}>
           {/* replace with \u00A0 to avoid ignore space character by browser */}
           {data.title.slice(currentIndex, start).replace(/ /g, "\u00A0")}
         </div>
       )
     }
     Renders.push(
-      <div className={HIGHLIGHT_TEXT_CLASS} key={`${id}-${start}${end + 1}`}>
+      <div className={HIGHLIGHT_TEXT_CLASS} key={`${id}-${start}-${end + 1}`}>
         {data.title.slice(start, end + 1).replace(/ /g, "\u00A0")}
       </div>
     )
@@ -63,7 +63,7 @@ export default function HighlightText({ item }: PropsType) {
     Renders.push(
       <div
         className={NORMAL_TEXT_CLASS}
-        key={`${id}-${currentIndex}${data.title.length}`}>
+        key={`${id}-${currentIndex}-${data.title.length}`}>
         {data.title
           .slice(currentIndex, data.title.length)
           .replace(/ /g, "\u00A0")}

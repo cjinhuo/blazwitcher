@@ -30,8 +30,8 @@ importers:
         specifier: ^6.1.11
         version: 6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       text-search-engine:
-        specifier: 1.0.0
-        version: 1.0.0
+        specifier: 1.1.0
+        version: 1.1.0
       tiny-pinyin:
         specifier: ^1.3.2
         version: 1.3.2
@@ -3387,8 +3387,8 @@ packages:
   text-decoder@1.1.1:
     resolution: {integrity: sha512-8zll7REEv4GDD3x4/0pW+ppIxSNs7H1J10IKFZsuOMscumCdM2a+toDGLPA3T+1+fLBql4zbt5z83GEQGGV5VA==}
 
-  text-search-engine@1.0.0:
-    resolution: {integrity: sha512-7gqkB5Pw9cpJzeh4t0Q95Su3LENe1vxtx8ZEFZpNzqIZefHPQQ9B1f/cRosJ9OiAHaV+MQq+hKrSxBXk9IV2iw==}
+  text-search-engine@1.1.0:
+    resolution: {integrity: sha512-m3GDl/O8CxqlPcKE/Y5wkr+4L+vy0LaIMM85+wU2WUnlEuenbwcLjJgAJGIBrmQjfv4q0koVkT1jwpJbc1vD3w==}
 
   thenify-all@1.6.0:
     resolution: {integrity: sha512-RNxQH/qI8/t3thXJDwcstUO4zeqo64+Uy/+sNVRBx4Xn2OX+OZ9oP+iJnNFqplFra2ZUVeKCSa2oVWi3T4uVmA==}
@@ -7732,7 +7732,7 @@ snapshots:
     dependencies:
       b4a: 1.6.6
 
-  text-search-engine@1.0.0: {}
+  text-search-engine@1.1.0: {}
 
   thenify-all@1.6.0:
     dependencies:

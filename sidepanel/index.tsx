@@ -41,15 +41,25 @@ const orderList = (list: ListItemType[]) => {
   const tabs: ListItemType<ItemType.Tab>[] = []
   const bookmarks: ListItemType<ItemType.Bookmark>[] = []
   const histories: ListItemType<ItemType.History>[] = []
-  const tabTitleSet = new Set()
+  const set = new Set()
   for (const item of list) {
-    const { title } = item.data
+    const { title, url } = item.data
+    const hasSameItemInTabs = () => {
+      if (set.has(title) || (url && set.has(url))) {
+        return true
+      }
+      set.add(title)
+      set.add(url)
+      return false
+    }
+
     if (isTabItem(item)) {
       tabs.push(item)
-      tabTitleSet.add(title)
-    } else if (isBookmarkItem(item) && !tabTitleSet.has(title)) {
+      set.add(title)
+      set.add(url)
+    } else if (isBookmarkItem(item) && !hasSameItemInTabs()) {
       bookmarks.push(item)
-    } else if (isHistoryItem(item) && !tabTitleSet.has(title)) {
+    } else if (isHistoryItem(item) && !hasSameItemInTabs()) {
       histories.push(item)
     }
   }
