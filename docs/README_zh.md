@@ -6,7 +6,7 @@
 </div>
 
 # 概述
-Blazwitcher 是一个[浏览器插件](https://chrome.google.com/webstore/detail/fjgablnemienkegdnbihhemebmmonihg)，用于搜索标签，书签和历史，支持模糊拼音搜索。对于那些打开多个选项卡并希望切换正确的选项卡或从历史记录或书签中快速创建新选项卡而无需手动操作的人来说，这也是一个完美的解决方案。
+Blazwitcher 是一个[浏览器插件](https://chrome.google.com/webstore/detail/fjgablnemienkegdnbihhemebmmonihg)，用于搜索标签，书签和历史，支持模糊拼音搜索。对于那些打开多个选项卡并希望切换正确的选项卡或从历史记录或书签中快速创建新选项卡而不想通过手动寻找的人来说，这也是一个完美的解决方案。
 
 # #特性
 - 模糊拼音搜索: 支持中英文混合模糊搜索，默认支持拼音，对国人友好(依赖于[文本搜索引擎](https://github.com/cjinhuo/text-search-engine))
