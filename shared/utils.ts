@@ -1,5 +1,3 @@
-import pinyin from "tiny-pinyin";
-
 import { SELF_WINDOW_ID_KEY } from "./constants";
 import { getWindowById, storageGet, storageRemove } from "./promisify";
 import { ItemType, type ListItemType } from "./types";
@@ -95,10 +93,6 @@ export function faviconURL(u: string) {
   return url.toString()
 }
 
-export const transformToSearchTarget = (title: string, url: string) => {
-  const chineseChars = Array.from(title).filter(isChineseChar).join('')
-  return `${title.toLowerCase()} ${pinyin.convertToPinyin(chineseChars, "", true)} ${url.replace(/^https?:\/\//, "")}`
-}
 
 export function isDarkMode() {
    return window.matchMedia &&

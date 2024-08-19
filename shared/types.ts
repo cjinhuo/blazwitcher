@@ -10,7 +10,6 @@ export interface SourceMappingData {
 
 interface BaseItemType {
   titleBoundaryMapping: SourceMappingData
-  searchTarget: string
   hitRanges?: Matrix
 }
 export interface TabItemType extends chrome.tabs.Tab, BaseItemType {

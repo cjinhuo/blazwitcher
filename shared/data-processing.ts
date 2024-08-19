@@ -2,7 +2,7 @@ import { extractBoundaryMapping } from "text-search-engine";
 import { DEFAULT_HISTORY_MAX_DAYS, DEFAULT_HISTORY_MAX_RESULTS, ONE_DAY_MILLISECONDS } from "./constants";
 import { getBookmarksById, getBookmarksTree, historySearch, tabsQuery } from "./promisify";
 import { ItemType, type BookmarkItemType, type HistoryItemType } from "./types";
-import { faviconURL, transformToSearchTarget } from "./utils";
+import { faviconURL } from "./utils";
 
 
 export async function tabsProcessing() {
@@ -16,7 +16,6 @@ export async function tabsProcessing() {
 function processTabItem(tab: chrome.tabs.Tab) {
   return {
     ...tab,
-    searchTarget: transformToSearchTarget(tab.title, tab.url),
     titleBoundaryMapping: extractBoundaryMapping(tab.title.toLocaleLowerCase())
   }
 }
@@ -62,7 +61,6 @@ export function bookmarksProcessing() {
 function processHistoryItem(history: chrome.history.HistoryItem) {
   return {
     ...history,
-    searchTarget: transformToSearchTarget(history.title, history.url),
     titleBoundaryMapping: extractBoundaryMapping(history.title.toLocaleLowerCase()),
     favIconUrl: faviconURL(history.url)
   }
@@ -71,7 +69,6 @@ function processHistoryItem(history: chrome.history.HistoryItem) {
 function processedBookmarkItem(bookmark: chrome.bookmarks.BookmarkTreeNode, folderName = 'root') {
   return {
     ...bookmark,
-    searchTarget: transformToSearchTarget(bookmark.title, bookmark.url),
     titleBoundaryMapping: extractBoundaryMapping(bookmark.title.toLocaleLowerCase()),
     favIconUrl: faviconURL(bookmark.url),
     folderName
