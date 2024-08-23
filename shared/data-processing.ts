@@ -99,16 +99,12 @@ async function retrieveRecentHistories(
   return data
 }
 
-export function historyProcessing() {
-  let processedHistory: HistoryItemType[] = []
-  retrieveRecentHistories().then((data) => {
-    processedHistory = data
-  })
-  return () =>
-    processedHistory.map((item) => ({
-      itemType: ItemType.History,
-      data: item
-    }))
+export async function historyProcessing() {
+  const processedHistory = await retrieveRecentHistories()
+  return processedHistory.map((item) => ({
+    itemType: ItemType.History,
+    data: item
+  }))
 }
 
 
@@ -131,16 +127,16 @@ export const traversalBookmarkTreeNode = (
 }
 
 export function dataProcessing() {
-  // Since the bookmarks may be too large, we should use async callback to get.
   // Just don't effect the main thread
+  // Since the bookmarks may be too large, we should use async callback to get.
   const getBookmarks = bookmarksProcessing()
-  const getHistory = historyProcessing()
   return async () => {
     // because the tabs data not really too large, so we can use sync calculation.
     // And it would be changed very frequently so listening the update of it is not a good idea.
-    const tabs = await tabsProcessing()
     const bookmarks = getBookmarks()
-    const history = getHistory()
-    return [...tabs, ...bookmarks, ...history]
+    const tabs = await tabsProcessing()
+    const history = await historyProcessing()
+    // prioritize tabs over history、history over bookmarks
+    return [...tabs, ...history, ...bookmarks]
   }
 }
