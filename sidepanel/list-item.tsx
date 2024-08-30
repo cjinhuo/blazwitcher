@@ -7,7 +7,13 @@ import RightArrow from "react:~assets/right-arrow.svg"
 import TabSvg from "react:~assets/tab.svg"
 import styled from "styled-components"
 
-import { type ListItemType } from "~shared/types"
+import { timeAgo } from "~shared/time"
+import {
+  type BookmarkItemType,
+  type HistoryItemType,
+  type ListItemType,
+  type TabItemType
+} from "~shared/types"
 import { isBookmarkItem, isTabItem } from "~shared/utils"
 
 import HighlightText from "./highlight-text"
@@ -54,10 +60,11 @@ const TitleContainer = styled.div`
   /* user-select: none; */
 `
 
-const HostDiv = styled.div`
+const SecondaryContainer = styled.div`
   font-size: 10px;
   height: 14px;
   flex: 1;
+  width: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -68,7 +75,6 @@ const ActiveStatus = styled.div`
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  margin-right: 4px;
   background-color: #0bc40b;
 `
 
@@ -76,12 +82,7 @@ const LabelContainer = styled.div`
   margin-left: 6px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-`
-
-const SVGDivContainer = styled.div`
-  width: 16px;
-  height: 16px;
+  gap: 4px;
 `
 
 // export const TooltipWrap = styled(Tooltip)`
@@ -93,62 +94,53 @@ const SVGDivContainer = styled.div`
 //     color: var(--color-neutral-2);
 //   }
 // `
-const SvgTag = styled.div`
+const Tag = styled.div`
   height: 13px;
   padding: 2px;
   line-height: 9px;
   font-size: 10px;
   border-radius: 2px;
-  background-color: var(--color-neutral-7);
+  background-color: var(--color-neutral-8);
   color: var(--color-neutral-2);
-  margin-left: 4px;
 `
 
-const SvgContainer = ({
-  children,
-  content
-}: {
-  children: React.ReactNode
-  content: string
-}) => (
-  <>
-    <SVGDivContainer>
-      <>{children}</>
-    </SVGDivContainer>
-    <SvgTag className={VISIBILITY_CLASS}>{content}</SvgTag>
-  </>
-)
-
-const BookmarkLabel = () => {
+const BookmarkLabel = ({ data }: { data: BookmarkItemType }) => {
   return (
     <LabelContainer>
-      <SvgContainer content="Bookmark">
-        <BookmarkSvg className={SVG_CLASS}></BookmarkSvg>
-      </SvgContainer>
+      <BookmarkSvg className={SVG_CLASS}></BookmarkSvg>
+      <Tag>{data.folderName}</Tag>
     </LabelContainer>
   )
 }
 
-const TabLabel = ({ active }: { active: boolean }) => {
+const TabLabel = ({ data }: { data: TabItemType }) => {
+  console.log(data.title, data.lastAccessed)
   return (
     <LabelContainer>
-      {active && <ActiveStatus></ActiveStatus>}
-      <SvgContainer content="Tab">
-        <TabSvg className={SVG_CLASS}></TabSvg>
-      </SvgContainer>
+      <TabSvg className={SVG_CLASS}></TabSvg>
+      {data.active && (
+        <>
+          <ActiveStatus></ActiveStatus>
+          <Tag>Active</Tag>
+        </>
+      )}
+      {data.active ||
+        (data.lastAccessed && <Tag>{timeAgo(data.lastAccessed)}</Tag>)}
     </LabelContainer>
   )
 }
 
-const HistoryLabel = () => (
-  <LabelContainer>
-    <SvgContainer content="History">
+const HistoryLabel = ({ data }: { data: HistoryItemType }) => {
+  console.log("data.lastVisitTime", data.lastVisitTime)
+  return (
+    <LabelContainer>
       <HistorySvg className={SVG_CLASS}></HistorySvg>
-    </SvgContainer>
-  </LabelContainer>
-)
+      {data.lastVisitTime && <Tag>visited {timeAgo(data.lastVisitTime)}</Tag>}
+    </LabelContainer>
+  )
+}
 
-export const RenderTitle = ({ item }: { item: ListItemType }) => {
+export const RenderContent = ({ item }: { item: ListItemType }) => {
   const { data } = item
   const host = useMemo(() => {
     const urlObj = new URL(data.url)
@@ -156,18 +148,21 @@ export const RenderTitle = ({ item }: { item: ListItemType }) => {
   }, [data.url])
   return (
     <TitleContainer>
-      <HighlightText item={item}></HighlightText>
-      <HostDiv className={HOST_CLASS}>
-        <span>{host}</span>
+      <HighlightText
+        content={data.title}
+        hitRanges={data.hitRanges}
+        id={data.id}
+      />
+      <SecondaryContainer>
+        <HighlightText content={host} style={{ fontSize: "10px" }} />
         {isTabItem(item) ? (
-          <TabLabel active={item.data.active}></TabLabel>
+          <TabLabel data={item.data}></TabLabel>
         ) : isBookmarkItem(item) ? (
-          <BookmarkLabel></BookmarkLabel>
+          <BookmarkLabel data={item.data}></BookmarkLabel>
         ) : (
-          <HistoryLabel></HistoryLabel>
+          <HistoryLabel data={item.data as HistoryItemType}></HistoryLabel>
         )}
-        {/* <ActiveStatus></ActiveStatus> */}
-      </HostDiv>
+      </SecondaryContainer>
     </TitleContainer>
   )
 }
@@ -207,7 +202,7 @@ export const RenderItem = ({ item }: { item: ListItemType }) => {
   return (
     <ContentContainer>
       <RenderIcon iconUrl={item.data.favIconUrl} />
-      <RenderTitle item={item}></RenderTitle>
+      <RenderContent item={item}></RenderContent>
       <RenderOperation item={item}></RenderOperation>
     </ContentContainer>
   )

@@ -136,6 +136,7 @@ export function dataProcessing() {
     const bookmarks = getBookmarks()
     const tabs = await tabsProcessing()
     const history = await historyProcessing()
+    console.log('tabs', tabs)
     // prioritize tabs over history、history over bookmarks
     return [...tabs, ...history, ...bookmarks]
   }

@@ -68,6 +68,11 @@ const orderList = (list: ListItemType[]) => {
     b: ListItemType<ItemType.Tab>
   ) => (a.data.lastAccessed ? b.data.lastAccessed - a.data.lastAccessed : -1)
 
+  const compareForLastVisitTime = (
+    a: ListItemType<ItemType.History>,
+    b: ListItemType<ItemType.History>
+  ) => (a.data.lastVisitTime ? b.data.lastVisitTime - a.data.lastVisitTime : -1)
+
   const compareForHitRangeLength = (a: ListItemType, b: ListItemType) => {
     if (a.data.hitRanges && b.data.hitRanges) {
       return a.data.hitRanges.length - b.data.hitRanges.length
@@ -75,12 +80,19 @@ const orderList = (list: ListItemType[]) => {
     return 0
   }
 
+  const compareForActiveStatus = (
+    a: ListItemType<ItemType.Tab>,
+    _b: ListItemType<ItemType.Tab>
+  ) => (a.data.active ? -1 : 1)
+
   return [
     ...tabs
       .filter((item) => !item.data.url.includes(chrome.runtime.id))
       .toSorted(compareForLastAccess)
-      .toSorted(compareForHitRangeLength),
+      .toSorted(compareForHitRangeLength)
+      .toSorted(compareForActiveStatus),
     ...histories
+      .toSorted(compareForLastVisitTime)
       .toSorted(compareForHitRangeLength)
       .slice(0, DEFAULT_HISTORY_DISPLAY_COUNT),
     ...bookmarks

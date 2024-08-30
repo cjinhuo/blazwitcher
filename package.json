@@ -47,11 +47,11 @@
           "default": "Ctrl+Period",
           "mac": "Command+Period"
         },
-        "description": "Active The Window"
+        "description": "Blazwitcher"
       }
     },
     "action": {
-      "default_title": "Active The Window"
+      "default_title": "Blazwitcher"
     },
     "permissions": [
       "tabs",

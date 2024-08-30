@@ -1,12 +1,12 @@
 import styled from "styled-components"
 
-import type { ListItemType } from "~shared/types"
+import type { Matrix } from "~shared/types"
 
 export const HIGHLIGHT_TEXT_CLASS = "hg-text"
 export const NORMAL_TEXT_CLASS = "nm-text"
 const HighlightTextContainer = styled.div`
   display: flex;
-  width: 100%;
+  max-width: 100%;
   font-size: 14px;
   font-weight: 500;
   overflow: hidden;
@@ -25,48 +25,57 @@ const HighlightTextContainer = styled.div`
     padding: 0 2px;
   }
 `
+
 type PropsType = {
-  item: ListItemType
+  content: string
+  hitRanges?: Matrix
+  style?: React.CSSProperties
+  id?: string | number
 }
-export default function HighlightText({ item }: PropsType) {
-  if (!item.data.hitRanges || !item.data.hitRanges.length) {
+export default function HighlightText({
+  content,
+  hitRanges,
+  id,
+  style
+}: PropsType) {
+  if (!hitRanges || !hitRanges.length) {
     return (
-      <HighlightTextContainer>
-        <div className={NORMAL_TEXT_CLASS}>{item.data.title}</div>
+      <HighlightTextContainer style={style}>
+        <div className={NORMAL_TEXT_CLASS}>{content}</div>
       </HighlightTextContainer>
     )
   }
-  const { data } = item
-  const id = data.id || Math.random().toString()
-  const hitRanges = data.hitRanges.sort((a, b) => a[0] - b[0])
+  const uuid = id || Math.random().toString()
   const Renders = []
   let currentIndex = 0
-  hitRanges.forEach(([start, end]) => {
-    if (currentIndex < start) {
+  hitRanges
+    .sort((a, b) => a[0] - b[0])
+    .forEach(([start, end]) => {
+      if (currentIndex < start) {
+        Renders.push(
+          <div
+            className={NORMAL_TEXT_CLASS}
+            key={`${uuid}-${currentIndex}-${start}`}>
+            {/* replace with \u00A0 to avoid ignore space character by browser */}
+            {content.slice(currentIndex, start).replace(/ /g, "\u00A0")}
+          </div>
+        )
+      }
       Renders.push(
         <div
-          className={NORMAL_TEXT_CLASS}
-          key={`${id}-${currentIndex}-${start}`}>
-          {/* replace with \u00A0 to avoid ignore space character by browser */}
-          {data.title.slice(currentIndex, start).replace(/ /g, "\u00A0")}
+          className={HIGHLIGHT_TEXT_CLASS}
+          key={`${uuid}-${start}-${end + 1}`}>
+          {content.slice(start, end + 1).replace(/ /g, "\u00A0")}
         </div>
       )
-    }
-    Renders.push(
-      <div className={HIGHLIGHT_TEXT_CLASS} key={`${id}-${start}-${end + 1}`}>
-        {data.title.slice(start, end + 1).replace(/ /g, "\u00A0")}
-      </div>
-    )
-    currentIndex = end + 1
-  })
-  if (currentIndex < data.title.length) {
+      currentIndex = end + 1
+    })
+  if (currentIndex < content.length) {
     Renders.push(
       <div
         className={NORMAL_TEXT_CLASS}
-        key={`${id}-${currentIndex}-${data.title.length}`}>
-        {data.title
-          .slice(currentIndex, data.title.length)
-          .replace(/ /g, "\u00A0")}
+        key={`${uuid}-${currentIndex}-${content.length}`}>
+        {content.slice(currentIndex, content.length).replace(/ /g, "\u00A0")}
       </div>
     )
   }

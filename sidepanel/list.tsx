@@ -22,7 +22,7 @@ import {
   RenderItem,
   SVG_CLASS,
   VISIBILITY_CLASS
-} from "./style"
+} from "./list-item"
 
 const ListContainer = styled.div`
   padding: 6px;
