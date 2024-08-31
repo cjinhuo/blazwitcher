@@ -12,18 +12,12 @@ import {
   MAIN_WINDOW
 } from "~shared/constants"
 import { ItemType, type ListItemType } from "~shared/types"
-import {
-  isBookmarkItem,
-  isDarkMode,
-  isHistoryItem,
-  isTabItem
-} from "~shared/utils"
+import { isBookmarkItem, isDarkMode, isHistoryItem, isTabItem } from "~shared/utils"
 
 import Footer from "./footer"
 import List from "./list"
 import Search from "./search"
 
-window["TextSearchEngine"] = TextSearchEngine
 const { Header, Content } = Layout
 const Container = styled(Layout)`
   width: 100%;
@@ -63,15 +57,11 @@ const orderList = (list: ListItemType[]) => {
       histories.push(item)
     }
   }
-  const compareForLastAccess = (
-    a: ListItemType<ItemType.Tab>,
-    b: ListItemType<ItemType.Tab>
-  ) => (a.data.lastAccessed ? b.data.lastAccessed - a.data.lastAccessed : -1)
+  const compareForLastAccess = (a: ListItemType<ItemType.Tab>, b: ListItemType<ItemType.Tab>) =>
+    a.data.lastAccessed ? b.data.lastAccessed - a.data.lastAccessed : -1
 
-  const compareForLastVisitTime = (
-    a: ListItemType<ItemType.History>,
-    b: ListItemType<ItemType.History>
-  ) => (a.data.lastVisitTime ? b.data.lastVisitTime - a.data.lastVisitTime : -1)
+  const compareForLastVisitTime = (a: ListItemType<ItemType.History>, b: ListItemType<ItemType.History>) =>
+    a.data.lastVisitTime ? b.data.lastVisitTime - a.data.lastVisitTime : -1
 
   const compareForHitRangeLength = (a: ListItemType, b: ListItemType) => {
     if (a.data.hitRanges && b.data.hitRanges) {
@@ -80,10 +70,8 @@ const orderList = (list: ListItemType[]) => {
     return 0
   }
 
-  const compareForActiveStatus = (
-    a: ListItemType<ItemType.Tab>,
-    _b: ListItemType<ItemType.Tab>
-  ) => (a.data.active ? -1 : 1)
+  const compareForActiveStatus = (a: ListItemType<ItemType.Tab>, _b: ListItemType<ItemType.Tab>) =>
+    a.data.active ? -1 : 1
 
   return [
     ...tabs
@@ -95,9 +83,7 @@ const orderList = (list: ListItemType[]) => {
       .toSorted(compareForLastVisitTime)
       .toSorted(compareForHitRangeLength)
       .slice(0, DEFAULT_HISTORY_DISPLAY_COUNT),
-    ...bookmarks
-      .toSorted(compareForHitRangeLength)
-      .slice(0, DEFAULT_BOOKMARK_DISPLAY_COUNT)
+    ...bookmarks.toSorted(compareForHitRangeLength).slice(0, DEFAULT_BOOKMARK_DISPLAY_COUNT)
   ].toSorted(compareForHitRangeLength)
 }
 
@@ -133,14 +119,14 @@ export default function SidePanel() {
     }
   }, [])
   const handleSearch = (value: string) => {
-    if (!value || value.trim() === "")
-      return setList(orderList(originalList.current))
+    if (!value || value.trim() === "") return setList(orderList(originalList.current))
     const finalList = originalList.current.reduce((acc, item) => {
-      const hitRanges = TextSearchEngine.searchSentenceByBoundaryMapping(
-        item.data.titleBoundaryMapping,
-        value
-      )
-      hitRanges && acc.push({ ...item, data: { ...item.data, hitRanges } })
+      const hitRanges = TextSearchEngine.searchSentenceByBoundaryMapping(item.data.titleBoundaryMapping, value)
+      hitRanges &&
+        acc.push({
+          ...item,
+          data: { ...item.data, hitRanges: TextSearchEngine.mergeSpacesWithRanges(item.data.title, hitRanges) }
+        })
       return acc
     }, [])
     setList(orderList(finalList))

@@ -1,6 +1,6 @@
 import { SELF_WINDOW_ID_KEY } from "./constants";
 import { getWindowById, storageGet, storageRemove } from "./promisify";
-import { ItemType, type ListItemType } from "./types";
+import { ItemType, type ListItemType, type Matrix } from "./types";
 
 
 export function isChineseChar(char) {
@@ -97,4 +97,31 @@ export function faviconURL(u: string) {
 export function isDarkMode() {
    return window.matchMedia &&
      window.matchMedia("(prefers-color-scheme: dark)").matches
+}
+
+
+/**
+ * merge all blank spaces within hit ranges
+ * @param source required, the source string you want to search
+ * @param rawHitRanges required
+ * @returns
+ */
+export function mergeSpacesWithRanges(source: string, rawHitRanges: Matrix) {
+  if (rawHitRanges.length === 1) return rawHitRanges
+  const hitRanges: Matrix = [rawHitRanges[0]]
+  let [lastStart, lastEnd] = rawHitRanges[0]
+  for (let i = 1; i < rawHitRanges.length; i++) {
+    const [start, end] = rawHitRanges[i]
+    const gap = source.slice(lastEnd + 1, start)
+
+    // between two ranges, there is a blank space
+    if (!gap.trim().length) {
+      hitRanges[hitRanges.length - 1] = [lastStart, end]
+    } else {
+      lastStart = start
+      hitRanges.push([start, end])
+    }
+    lastEnd = end
+  }
+  return hitRanges
 }
