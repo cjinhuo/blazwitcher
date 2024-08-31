@@ -91,7 +91,9 @@ const Tag = styled.div`
   font-size: 10px;
   border-radius: 4px;
   background-color: var(--color-neutral-8);
-  color: var(--color-neutral-2);
+  /* 字体颜色比 title 少一个级*/
+  color: var(--color-neutral-4);
+  text-wrap: nowrap;
 `
 
 const BookmarkLabel = ({ data }: { data: BookmarkItemType }) => {

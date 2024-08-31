@@ -22,18 +22,18 @@ const ListContainer = styled.div`
 const ListItemWrapper = styled(ListComponent.Item)`
   border-radius: 6px;
   .${SVG_CLASS} {
-    fill: var(--color-neutral-3);
+    fill: var(--color-neutral-4);
   }
   .${VISIBILITY_CLASS} {
     visibility: hidden;
   }
   &:hover {
-    background-color: var(--color-neutral-3);
+    background-color: var(--color-neutral-4);
     .${IMAGE_CLASS} {
       background-color: var(--color-neutral-10);
     }
     .${NORMAL_TEXT_CLASS} {
-      color: var(--color-neutral-9);
+      color: var(--color-neutral-8);
     }
     .${HIGHLIGHT_TEXT_CLASS} {
       background-color: var(--highlight-selected-bg);
@@ -49,12 +49,12 @@ const ListItemWrapper = styled(ListComponent.Item)`
     }
   }
   &.${LIST_ITEM_ACTIVE_CLASS} {
-    background-color: var(--color-neutral-2);
+    background-color: var(--color-neutral-3);
     .${IMAGE_CLASS} {
       background-color: var(--color-neutral-10);
     }
     .${NORMAL_TEXT_CLASS} {
-      color: var(--color-neutral-9);
+      color: var(--color-neutral-8);
     }
     .${HIGHLIGHT_TEXT_CLASS} {
       background-color: var(--highlight-selected-bg);
