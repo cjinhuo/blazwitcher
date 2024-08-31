@@ -14,6 +14,13 @@ export const CONTEXT_MENU_SHORTCUT = {
   title: 'Set Keyboard Shortcuts',
 }
 
+export const CONTEXT_MENU_HOMEPAGE = {
+  id: 'open_homepage',
+  title: 'Open Homepage',
+}
+
+export const GITHUB_URL = 'https://github.com/cjinhuo/blazwitcher'
+
 export const ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000
 
 // config

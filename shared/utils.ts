@@ -17,7 +17,7 @@ export function scrollIntoViewIfNeeded(
   if (elementRect.top < containerRect.top) {
     container.scrollTop -= containerRect.top - elementRect.top
   } else if (elementRect.bottom > containerRect.bottom) {
-    container.scrollTop += elementRect.bottom - containerRect.bottom
+    container.scrollTop += elementRect.bottom - containerRect.bottom + 4 // '+4' is for having margins with Footer Component
   }
 }
 

@@ -22,11 +22,7 @@ function IndexPopup() {
       }
     )
   }, [])
-  return (
-    <div>
-      <img src="chrome://favicon/https://github.com/XanderXu/SceneKit-AR-VR-information" />
-    </div>
-  )
+  return <div>{/* <img src="chrome://favicon/https://github.com/XanderXu/SceneKit-AR-VR-information" /> */}</div>
 }
 
 export default IndexPopup

@@ -1,28 +1,12 @@
 import { List as ListComponent } from "@douyinfe/semi-ui"
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState
-} from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 import styled from "styled-components"
 
 import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS } from "../shared/constants"
 import { type ListItemType } from "../shared/types"
-import {
-  activeTab,
-  closeCurrentWindowAndClearStorage,
-  scrollIntoViewIfNeeded
-} from "../shared/utils"
+import { activeTab, closeCurrentWindowAndClearStorage, scrollIntoViewIfNeeded } from "../shared/utils"
 import { HIGHLIGHT_TEXT_CLASS, NORMAL_TEXT_CLASS } from "./highlight-text"
-import {
-  HOST_CLASS,
-  IMAGE_CLASS,
-  RenderItem,
-  SVG_CLASS,
-  VISIBILITY_CLASS
-} from "./list-item"
+import { HOST_CLASS, IMAGE_CLASS, RenderItem, SVG_CLASS, VISIBILITY_CLASS } from "./list-item"
 
 const ListContainer = styled.div`
   padding: 6px;
@@ -91,12 +75,8 @@ const ListItemWrapper = styled(ListComponent.Item)`
 `
 
 const setScrollTopIfNeeded = () => {
-  const mainContent = document.querySelector(
-    `.${MAIN_CONTENT_CLASS}`
-  ) as HTMLElement
-  const activeItem = document.querySelector(
-    `.${LIST_ITEM_ACTIVE_CLASS}`
-  ) as HTMLElement
+  const mainContent = document.querySelector(`.${MAIN_CONTENT_CLASS}`) as HTMLElement
+  const activeItem = document.querySelector(`.${LIST_ITEM_ACTIVE_CLASS}`) as HTMLElement
   if (!activeItem) return
   scrollIntoViewIfNeeded(activeItem, mainContent)
 }

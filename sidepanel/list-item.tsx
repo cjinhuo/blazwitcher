@@ -8,12 +8,7 @@ import TabSvg from "react:~assets/tab.svg"
 import styled from "styled-components"
 
 import { timeAgo } from "~shared/time"
-import {
-  type BookmarkItemType,
-  type HistoryItemType,
-  type ListItemType,
-  type TabItemType
-} from "~shared/types"
+import { type BookmarkItemType, type HistoryItemType, type ListItemType, type TabItemType } from "~shared/types"
 import { isBookmarkItem, isTabItem } from "~shared/utils"
 
 import HighlightText from "./highlight-text"
@@ -38,11 +33,7 @@ const ImageContainer = styled.div`
 export const RenderIcon = ({ iconUrl }: { iconUrl: string }) => {
   return (
     <ImageContainer className={IMAGE_CLASS}>
-      <img
-        src={iconUrl || chromeIcon}
-        onError={(e) => (e.currentTarget.src = chromeIcon)}
-        width={20}
-        height={20}></img>
+      <img src={iconUrl || chromeIcon} onError={(e) => (e.currentTarget.src = chromeIcon)} width={20} height={20}></img>
     </ImageContainer>
   )
 }
@@ -62,7 +53,7 @@ const TitleContainer = styled.div`
 
 const SecondaryContainer = styled.div`
   font-size: 10px;
-  height: 14px;
+  height: 20px;
   flex: 1;
   width: 100%;
   display: flex;
@@ -82,7 +73,7 @@ const LabelContainer = styled.div`
   margin-left: 6px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 `
 
 // export const TooltipWrap = styled(Tooltip)`
@@ -95,11 +86,10 @@ const LabelContainer = styled.div`
 //   }
 // `
 const Tag = styled.div`
-  height: 13px;
-  padding: 2px;
-  line-height: 9px;
+  padding: 3px;
+  line-height: 12px;
   font-size: 10px;
-  border-radius: 2px;
+  border-radius: 4px;
   background-color: var(--color-neutral-8);
   color: var(--color-neutral-2);
 `
@@ -124,8 +114,7 @@ const TabLabel = ({ data }: { data: TabItemType }) => {
           <Tag>Active</Tag>
         </>
       )}
-      {data.active ||
-        (data.lastAccessed && <Tag>{timeAgo(data.lastAccessed)}</Tag>)}
+      {data.active || (data.lastAccessed && <Tag>{timeAgo(data.lastAccessed)}</Tag>)}
     </LabelContainer>
   )
 }
@@ -135,7 +124,7 @@ const HistoryLabel = ({ data }: { data: HistoryItemType }) => {
   return (
     <LabelContainer>
       <HistorySvg className={SVG_CLASS}></HistorySvg>
-      {data.lastVisitTime && <Tag>visited {timeAgo(data.lastVisitTime)}</Tag>}
+      {data.lastVisitTime && <Tag>{timeAgo(data.lastVisitTime)}</Tag>}
     </LabelContainer>
   )
 }
@@ -148,11 +137,7 @@ export const RenderContent = ({ item }: { item: ListItemType }) => {
   }, [data.url])
   return (
     <TitleContainer>
-      <HighlightText
-        content={data.title}
-        hitRanges={data.hitRanges}
-        id={data.id}
-      />
+      <HighlightText content={data.title} hitRanges={data.hitRanges} id={data.id} />
       <SecondaryContainer>
         <HighlightText content={host} style={{ fontSize: "10px" }} />
         {isTabItem(item) ? (
@@ -191,9 +176,7 @@ const OperationLinkIcon = styled.div`
 const RenderOperation = ({ item }: { item: ListItemType }) => {
   return (
     <OperationContainer className={VISIBILITY_CLASS}>
-      <OperationLinkIcon>
-        {isTabItem(item) ? <RightArrow></RightArrow> : <NewWindow></NewWindow>}
-      </OperationLinkIcon>
+      <OperationLinkIcon>{isTabItem(item) ? <RightArrow></RightArrow> : <NewWindow></NewWindow>}</OperationLinkIcon>
     </OperationContainer>
   )
 }
