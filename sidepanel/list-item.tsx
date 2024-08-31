@@ -100,7 +100,7 @@ const BookmarkLabel = ({ data }: { data: BookmarkItemType }) => {
   return (
     <LabelContainer>
       <BookmarkSvg className={SVG_CLASS}></BookmarkSvg>
-      <Tag>{data.folderName}</Tag>
+      {data.folderName.trim().length !== 0 && <Tag>{data.folderName}</Tag>}
     </LabelContainer>
   )
 }

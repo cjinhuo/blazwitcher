@@ -37,7 +37,7 @@ export function bookmarksProcessing() {
 
   chrome.bookmarks.onCreated.addListener(async (id, bookmark) => {
     if (bookmark.url) {
-      let folderName = 'root'
+      let folderName = ''
       if (bookmark.parentId) {
         const parentBookmark = await getBookmarksById(bookmark.parentId)
         folderName = parentBookmark[0].title
