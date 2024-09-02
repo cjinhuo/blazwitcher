@@ -14,7 +14,7 @@ const FooterContainer = styled.div`
 `
 const SvgContainer = styled.div`
   cursor: pointer;
-  height: 16px;
+  display: flex;
   > svg {
     stroke: var(--color-neutral-5);
     stroke-width: 3px;
