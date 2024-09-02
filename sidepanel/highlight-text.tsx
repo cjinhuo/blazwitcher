@@ -68,5 +68,5 @@ export default function HighlightText({ content, hitRanges, id, style }: PropsTy
       </div>
     )
   }
-  return <HighlightTextContainer>{...Renders}</HighlightTextContainer>
+  return <HighlightTextContainer style={style}>{...Renders}</HighlightTextContainer>
 }

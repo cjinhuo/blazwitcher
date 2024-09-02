@@ -86,10 +86,11 @@ const LabelContainer = styled.div`
 //   }
 // `
 const Tag = styled.div`
-  padding: 3px;
-  line-height: 12px;
-  font-size: 10px;
-  border-radius: 4px;
+  padding: 0 2px;
+  line-height: 14px;
+  /* 比如 domain 少一个像素 */
+  font-size: 9px;
+  border-radius: 2px;
   background-color: var(--color-neutral-8);
   /* 字体颜色比 title 少一个级*/
   color: var(--color-neutral-4);
