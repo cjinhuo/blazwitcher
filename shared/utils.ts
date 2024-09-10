@@ -1,4 +1,4 @@
-import { SELF_WINDOW_ID_KEY } from "./constants";
+import { SELF_WINDOW_ID_KEY, LAST_ACTIVE_WINDOW_ID_KEY } from "./constants";
 import { getWindowById, storageGet, storageRemove } from "./promisify";
 import { ItemType, type ListItemType, type Matrix } from "./types";
 
@@ -56,8 +56,9 @@ export function throttle(delay: number) {
 }
 
 export const closeCurrentWindowAndClearStorage = async () => {
-  const storage = await storageGet(SELF_WINDOW_ID_KEY)
+  const storage = await storageGet()
   const selfWindowId = storage[SELF_WINDOW_ID_KEY]
+  await storageRemove(LAST_ACTIVE_WINDOW_ID_KEY)
   if (selfWindowId) {
     await storageRemove(SELF_WINDOW_ID_KEY)
     try {
@@ -68,7 +69,7 @@ export const closeCurrentWindowAndClearStorage = async () => {
   }
 }
 
-export const activeTab = (item: ListItemType) => {
+export const activeTab = async (item: ListItemType) => {
   if (isTabItem(item)) {
     chrome.tabs.update(
       item.data.id,
@@ -79,11 +80,13 @@ export const activeTab = (item: ListItemType) => {
         chrome.windows.update(tab.windowId, { focused: true })
       }
     )
-    closeCurrentWindowAndClearStorage()
   } else {
-    window.open(item.data.url)
-    closeCurrentWindowAndClearStorage()
+    const storage = await storageGet()
+    const lastActiveWindowId = storage[LAST_ACTIVE_WINDOW_ID_KEY]
+    chrome.tabs.create({ url: item.data.url, windowId: lastActiveWindowId })
+    chrome.windows.update(lastActiveWindowId, { focused: true })
   }
+  closeCurrentWindowAndClearStorage()
 }
 
 export function faviconURL(u: string) {
