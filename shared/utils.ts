@@ -1,4 +1,4 @@
-import { SELF_WINDOW_ID_KEY, LAST_ACTIVE_WINDOW_ID_KEY } from "./constants";
+import { LAST_ACTIVE_WINDOW_ID_KEY, SELF_WINDOW_ID_KEY, SELF_WINDOW_STATE } from "./constants";
 import { getWindowById, storageGet, storageRemove } from "./promisify";
 import { ItemType, type ListItemType, type Matrix } from "./types";
 
@@ -58,8 +58,13 @@ export function throttle(delay: number) {
 export const closeCurrentWindowAndClearStorage = async () => {
   const storage = await storageGet()
   const selfWindowId = storage[SELF_WINDOW_ID_KEY]
+  const selfWindowState = storage[SELF_WINDOW_STATE]
   await storageRemove(LAST_ACTIVE_WINDOW_ID_KEY)
+  const cb = () => {}
   if (selfWindowId) {
+    if (selfWindowState === 'fullscreen') {
+      // todo 如果是全屏则添加延迟回调
+    }
     await storageRemove(SELF_WINDOW_ID_KEY)
     try {
       await getWindowById(selfWindowId)
@@ -71,22 +76,18 @@ export const closeCurrentWindowAndClearStorage = async () => {
 
 export const activeTab = async (item: ListItemType) => {
   if (isTabItem(item)) {
-    chrome.tabs.update(
-      item.data.id,
-      {
-        active: true
-      },
-      (tab) => {
-        chrome.windows.update(tab.windowId, { focused: true })
-      }
-    )
+    await chrome.windows.update(item.data.windowId, { focused: true })
+    await chrome.tabs.update(item.data.id, { active: true })
   } else {
     const storage = await storageGet()
     const lastActiveWindowId = storage[LAST_ACTIVE_WINDOW_ID_KEY]
-    chrome.tabs.create({ url: item.data.url, windowId: lastActiveWindowId })
-    chrome.windows.update(lastActiveWindowId, { focused: true })
+    await chrome.windows.update(lastActiveWindowId, { focused: true }) 
+    await chrome.tabs.create({ url: item.data.url, windowId: lastActiveWindowId })
   }
-  closeCurrentWindowAndClearStorage()
+  setTimeout(() => {
+    closeCurrentWindowAndClearStorage()
+    // 硬编码，延迟关闭，才能在
+  }, 100)
 }
 
 export function faviconURL(u: string) {

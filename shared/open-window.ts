@@ -1,4 +1,4 @@
-import { SELF_WINDOW_ID_KEY, LAST_ACTIVE_WINDOW_ID_KEY } from "./constants"
+import { LAST_ACTIVE_WINDOW_ID_KEY, SELF_WINDOW_ID_KEY, SELF_WINDOW_STATE } from "./constants"
 import {
   getCurrentWindow,
   getDisplayInfo,
@@ -51,7 +51,7 @@ async function activeWindow() {
 
   // if focusedDisplay is not found, just lower the standard about bounds
   const { width, height, left, top } = focusedDisplay.bounds
-  chrome.windows.create(
+  const _window = await  chrome.windows.create(
     {
       width: SEARCH_WINDOW_WIDTH,
       height: SEARCH_WINDOW_HEIGHT,
@@ -60,13 +60,12 @@ async function activeWindow() {
       focused: true,
       type: "popup",
       url: "./sidepanel.html"
-    },
-    (window) => {
-      storageSet({
-        [SELF_WINDOW_ID_KEY]: window.id
-      })
     }
   )
+  storageSet({
+      [SELF_WINDOW_ID_KEY]: _window.id,
+      [SELF_WINDOW_STATE]: _window.state
+  })
 }
 
 export function weakUpWindowIfActiveByUser() {
