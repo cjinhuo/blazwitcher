@@ -9,7 +9,7 @@ export async function tabsProcessing() {
   let processedTabs = await tabsQuery({})
   // filter the tabs that start with chrome://
   return processedTabs
-    .filter((item) => !item.url.startsWith("chrome://"))
+    .filter((item) => !(item.url.startsWith("chrome://") || !item.url || !item.title))
     .map((tab) => ({ itemType: ItemType.Tab, data: processTabItem(tab) }))
 }
 
@@ -136,7 +136,6 @@ export function dataProcessing() {
     const bookmarks = getBookmarks()
     const tabs = await tabsProcessing()
     const history = await historyProcessing()
-    console.log('tabs', tabs)
     // prioritize tabs over history、history over bookmarks
     return [...tabs, ...history, ...bookmarks]
   }
