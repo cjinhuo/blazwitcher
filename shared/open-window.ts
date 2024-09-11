@@ -1,4 +1,4 @@
-import { SELF_WINDOW_ID_KEY } from "./constants"
+import { SELF_WINDOW_ID_KEY, LAST_ACTIVE_WINDOW_ID_KEY } from "./constants"
 import {
   getCurrentWindow,
   getDisplayInfo,
@@ -20,7 +20,8 @@ async function activeWindow() {
     } catch (error) {}
   }
   const currentWindow = await getCurrentWindow()
-  // there is a bug in "window" platform. When the window state is maximized, the left and top are not correct. 
+  await storageSet({ [LAST_ACTIVE_WINDOW_ID_KEY]: currentWindow.id })
+  // there is a bug in "window" platform. When the window state is maximized, the left and top are not correct.
   // Normally speaking left and top should be 0. But they are -7 in this case.So reset the left and top to 0 to fix it.
   if (currentWindow.state === "maximized") {
     currentWindow.left >= -10 && currentWindow.left < 0 && (currentWindow.left = 0)
@@ -29,25 +30,25 @@ async function activeWindow() {
   const displays = await getDisplayInfo()
   // find the display that the current window is in
   const focusedDisplay = displays.find((display) => {
-    const { width, height, left, top } = display.bounds
-    // strict bounds detection
-    return (
-      currentWindow.left >= left &&
-      currentWindow.left < left + width &&
-      currentWindow.top >= top &&
-      currentWindow.top < top + height
-    )
+      const { width, height, left, top } = display.bounds
+      // strict bounds detection
+      return (
+        currentWindow.left >= left &&
+        currentWindow.left < left + width &&
+        currentWindow.top >= top &&
+        currentWindow.top < top + height
+      )
   }) || displays.find((display) => {
-    const { width, height, left, top } = display.bounds
-    //  loose bounds detection
-    return (
+      const { width, height, left, top } = display.bounds
+      //  loose bounds detection
+      return (
       currentWindow.left >= left &&
       currentWindow.left < left + width ||
       currentWindow.top >= top &&
       currentWindow.top < top + height
-    )
+      )
   }) || displays.pop()
-  
+
   // if focusedDisplay is not found, just lower the standard about bounds
   const { width, height, left, top } = focusedDisplay.bounds
   chrome.windows.create(

@@ -4,6 +4,7 @@ export const LIST_ITEM_ACTIVE_CLASS = "list-item__active"
 
 // local storage key
 export const SELF_WINDOW_ID_KEY = "selfWindowId"
+export const LAST_ACTIVE_WINDOW_ID_KEY = "lastActiveWindowId"
 
 // message type
 export const MAIN_WINDOW = "MAIN_WINDOW"
