@@ -20,6 +20,7 @@
     "text-search-engine": "1.2.0"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.8",
     "@ianvs/prettier-plugin-sort-imports": "4.1.1",
     "@types/chrome": "0.0.268",
     "@types/node": "20.11.5",
