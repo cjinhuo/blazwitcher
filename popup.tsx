@@ -1,5 +1,5 @@
 function Popup() {
-  return <></>
+	return <></>
 }
 
 export default Popup

@@ -1,24 +1,24 @@
 // class name
-export const MAIN_CONTENT_CLASS = "main-content"
-export const LIST_ITEM_ACTIVE_CLASS = "list-item__active"
+export const MAIN_CONTENT_CLASS = 'main-content'
+export const LIST_ITEM_ACTIVE_CLASS = 'list-item__active'
 
 // local storage key
-export const SELF_WINDOW_ID_KEY = "selfWindowId"
+export const SELF_WINDOW_ID_KEY = 'selfWindowId'
 export const SELF_WINDOW_STATE = 'selfWindowState'
-export const LAST_ACTIVE_WINDOW_ID_KEY = "lastActiveWindowId"
+export const LAST_ACTIVE_WINDOW_ID_KEY = 'lastActiveWindowId'
 
 // message type
-export const MAIN_WINDOW = "MAIN_WINDOW"
+export const MAIN_WINDOW = 'MAIN_WINDOW'
 
 // context menu
 export const CONTEXT_MENU_SHORTCUT = {
-  id: 'open_shortcut',
-  title: 'Set Keyboard Shortcuts',
+	id: 'open_shortcut',
+	title: 'Set Keyboard Shortcuts',
 }
 
 export const CONTEXT_MENU_HOMEPAGE = {
-  id: 'open_homepage',
-  title: 'Open Homepage',
+	id: 'open_homepage',
+	title: 'Open Homepage',
 }
 
 export const GITHUB_URL = 'https://github.com/cjinhuo/blazwitcher'

@@ -1,7 +1,7 @@
-import GithubSvg from "react:~assets/github.svg"
-import styled from "styled-components"
+import GithubSvg from 'react:~assets/github.svg'
+import styled from 'styled-components'
 
-import { GITHUB_URL } from "~shared/constants"
+import { GITHUB_URL } from '~shared/constants'
 
 const FooterContainer = styled.div`
   flex: 0 0 20px;
@@ -26,11 +26,11 @@ const SvgContainer = styled.div`
   }
 `
 export default function Footer() {
-  return (
-    <FooterContainer>
-      <SvgContainer onClick={() => window.open(GITHUB_URL)}>
-        <GithubSvg style={{ width: "16px", height: "16px" }}></GithubSvg>
-      </SvgContainer>
-    </FooterContainer>
-  )
+	return (
+		<FooterContainer>
+			<SvgContainer onClick={() => window.open(GITHUB_URL)}>
+				<GithubSvg style={{ width: '16px', height: '16px' }} />
+			</SvgContainer>
+		</FooterContainer>
+	)
 }

@@ -1,25 +1,25 @@
-import chromeIcon from "data-base64:~assets/chrome-icon.svg"
-import { useMemo } from "react"
-import BookmarkSvg from "react:~assets/bookmark.svg"
-import HistorySvg from "react:~assets/history.svg"
-import NewWindow from "react:~assets/new-window.svg"
-import RightArrow from "react:~assets/right-arrow.svg"
-import TabSvg from "react:~assets/tab.svg"
-import styled from "styled-components"
+import chromeIcon from 'data-base64:~assets/chrome-icon.svg'
+import BookmarkSvg from 'react:~assets/bookmark.svg'
+import HistorySvg from 'react:~assets/history.svg'
+import NewWindow from 'react:~assets/new-window.svg'
+import RightArrow from 'react:~assets/right-arrow.svg'
+import TabSvg from 'react:~assets/tab.svg'
+import { useMemo } from 'react'
+import styled from 'styled-components'
 
-import { timeAgo } from "~shared/time"
-import { type BookmarkItemType, type HistoryItemType, type ListItemType, type TabItemType } from "~shared/types"
-import { isBookmarkItem, isTabItem } from "~shared/utils"
+import { timeAgo } from '~shared/time'
+import type { BookmarkItemType, HistoryItemType, ListItemType, TabItemType } from '~shared/types'
+import { isBookmarkItem, isTabItem } from '~shared/utils'
 
-import HighlightText from "./highlight-text"
+import HighlightText from './highlight-text'
 
-export const VISIBILITY_CLASS = "list-visibility"
+export const VISIBILITY_CLASS = 'list-visibility'
 const ContentContainer = styled.div`
   display: flex;
   padding: 0 5px;
   width: 100%;
 `
-export const IMAGE_CLASS = "image-container"
+export const IMAGE_CLASS = 'image-container'
 const ImageContainer = styled.div`
   width: 40px;
   height: 40px;
@@ -31,15 +31,23 @@ const ImageContainer = styled.div`
 `
 
 export const RenderIcon = ({ iconUrl }: { iconUrl: string }) => {
-  return (
-    <ImageContainer className={IMAGE_CLASS}>
-      <img src={iconUrl || chromeIcon} onError={(e) => (e.currentTarget.src = chromeIcon)} width={20} height={20}></img>
-    </ImageContainer>
-  )
+	return (
+		<ImageContainer className={IMAGE_CLASS}>
+			<img
+				src={iconUrl || chromeIcon}
+				onError={(e) => {
+					e.currentTarget.src = chromeIcon
+				}}
+				width={20}
+				height={20}
+				alt='icon'
+			></img>
+		</ImageContainer>
+	)
 }
 
-export const HOST_CLASS = "host-text"
-export const SVG_CLASS = "svg-icon"
+export const HOST_CLASS = 'host-text'
+export const SVG_CLASS = 'svg-icon'
 const TitleContainer = styled.div`
   height: 40px;
   flex: 1;
@@ -98,59 +106,59 @@ const Tag = styled.div`
 `
 
 const BookmarkLabel = ({ data }: { data: BookmarkItemType }) => {
-  return (
-    <LabelContainer>
-      <BookmarkSvg className={SVG_CLASS}></BookmarkSvg>
-      {data.folderName.trim().length !== 0 && <Tag>{data.folderName}</Tag>}
-    </LabelContainer>
-  )
+	return (
+		<LabelContainer>
+			<BookmarkSvg className={SVG_CLASS}></BookmarkSvg>
+			{data.folderName.trim().length !== 0 && <Tag>{data.folderName}</Tag>}
+		</LabelContainer>
+	)
 }
 
 const TabLabel = ({ data }: { data: TabItemType }) => {
-  return (
-    <LabelContainer>
-      <TabSvg className={SVG_CLASS}></TabSvg>
-      {data.active && (
-        <>
-          <ActiveStatus></ActiveStatus>
-          <Tag>Active</Tag>
-        </>
-      )}
-      {data.active || (data.lastAccessed && <Tag>{timeAgo(data.lastAccessed)}</Tag>)}
-    </LabelContainer>
-  )
+	return (
+		<LabelContainer>
+			<TabSvg className={SVG_CLASS}></TabSvg>
+			{data.active && (
+				<>
+					<ActiveStatus></ActiveStatus>
+					<Tag>Active</Tag>
+				</>
+			)}
+			{data.active || (data.lastAccessed && <Tag>{timeAgo(data.lastAccessed)}</Tag>)}
+		</LabelContainer>
+	)
 }
 
 const HistoryLabel = ({ data }: { data: HistoryItemType }) => {
-  return (
-    <LabelContainer>
-      <HistorySvg className={SVG_CLASS}></HistorySvg>
-      {data.lastVisitTime && <Tag>{timeAgo(data.lastVisitTime)}</Tag>}
-    </LabelContainer>
-  )
+	return (
+		<LabelContainer>
+			<HistorySvg className={SVG_CLASS}></HistorySvg>
+			{data.lastVisitTime && <Tag>{timeAgo(data.lastVisitTime)}</Tag>}
+		</LabelContainer>
+	)
 }
 
 export const RenderContent = ({ item }: { item: ListItemType }) => {
-  const { data } = item
-  const host = useMemo(() => {
-    const urlObj = new URL(data.url)
-    return urlObj.host
-  }, [data.url])
-  return (
-    <TitleContainer>
-      <HighlightText content={data.title} hitRanges={data.hitRanges} id={data.id} />
-      <SecondaryContainer>
-        <HighlightText content={host} style={{ fontSize: "10px" }} />
-        {isTabItem(item) ? (
-          <TabLabel data={item.data}></TabLabel>
-        ) : isBookmarkItem(item) ? (
-          <BookmarkLabel data={item.data}></BookmarkLabel>
-        ) : (
-          <HistoryLabel data={item.data as HistoryItemType}></HistoryLabel>
-        )}
-      </SecondaryContainer>
-    </TitleContainer>
-  )
+	const { data } = item
+	const host = useMemo(() => {
+		const urlObj = new URL(data.url)
+		return urlObj.host
+	}, [data.url])
+	return (
+		<TitleContainer>
+			<HighlightText content={data.title} hitRanges={data.hitRanges} id={data.id} />
+			<SecondaryContainer>
+				<HighlightText content={host} style={{ fontSize: '10px' }} />
+				{isTabItem(item) ? (
+					<TabLabel data={item.data}></TabLabel>
+				) : isBookmarkItem(item) ? (
+					<BookmarkLabel data={item.data}></BookmarkLabel>
+				) : (
+					<HistoryLabel data={item.data as HistoryItemType}></HistoryLabel>
+				)}
+			</SecondaryContainer>
+		</TitleContainer>
+	)
 }
 
 const OperationContainer = styled.div`
@@ -175,19 +183,19 @@ const OperationLinkIcon = styled.div`
 `
 
 const RenderOperation = ({ item }: { item: ListItemType }) => {
-  return (
-    <OperationContainer className={VISIBILITY_CLASS}>
-      <OperationLinkIcon>{isTabItem(item) ? <RightArrow></RightArrow> : <NewWindow></NewWindow>}</OperationLinkIcon>
-    </OperationContainer>
-  )
+	return (
+		<OperationContainer className={VISIBILITY_CLASS}>
+			<OperationLinkIcon>{isTabItem(item) ? <RightArrow></RightArrow> : <NewWindow></NewWindow>}</OperationLinkIcon>
+		</OperationContainer>
+	)
 }
 
 export const RenderItem = ({ item }: { item: ListItemType }) => {
-  return (
-    <ContentContainer>
-      <RenderIcon iconUrl={item.data.favIconUrl} />
-      <RenderContent item={item}></RenderContent>
-      <RenderOperation item={item}></RenderOperation>
-    </ContentContainer>
-  )
+	return (
+		<ContentContainer>
+			<RenderIcon iconUrl={item.data.favIconUrl} />
+			<RenderContent item={item}></RenderContent>
+			<RenderOperation item={item}></RenderOperation>
+		</ContentContainer>
+	)
 }
