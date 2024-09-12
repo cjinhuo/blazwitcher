@@ -107,7 +107,6 @@ const BookmarkLabel = ({ data }: { data: BookmarkItemType }) => {
 }
 
 const TabLabel = ({ data }: { data: TabItemType }) => {
-  console.log(data.title, data.lastAccessed)
   return (
     <LabelContainer>
       <TabSvg className={SVG_CLASS}></TabSvg>
@@ -123,7 +122,6 @@ const TabLabel = ({ data }: { data: TabItemType }) => {
 }
 
 const HistoryLabel = ({ data }: { data: HistoryItemType }) => {
-  console.log("data.lastVisitTime", data.lastVisitTime)
   return (
     <LabelContainer>
       <HistorySvg className={SVG_CLASS}></HistorySvg>

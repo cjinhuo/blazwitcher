@@ -17,5 +17,3 @@ export function timeAgo(lastAccessed: number) {
     }
   }
 }
-
-// console.log(timeAgo(1725007196539.729)); 

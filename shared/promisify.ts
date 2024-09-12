@@ -3,9 +3,7 @@
 export const tabsQuery = promisifyChromeMethod<chrome.tabs.Tab[]>(
   chrome.tabs.query.bind(chrome.tabs)
 )
-export const tabsUpdate = promisifyChromeMethod(
-  chrome.tabs.update.bind(chrome.tabs)
-)
+
 export const sendMessageToTab = promisifyChromeMethod(
   chrome.tabs.sendMessage.bind(chrome.tabs)
 )

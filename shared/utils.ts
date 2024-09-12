@@ -1,4 +1,4 @@
-import { SELF_WINDOW_ID_KEY, LAST_ACTIVE_WINDOW_ID_KEY } from "./constants";
+import { LAST_ACTIVE_WINDOW_ID_KEY, SELF_WINDOW_ID_KEY, SELF_WINDOW_STATE } from "./constants";
 import { getWindowById, storageGet, storageRemove } from "./promisify";
 import { ItemType, type ListItemType, type Matrix } from "./types";
 
@@ -58,33 +58,26 @@ export function throttle(delay: number) {
 export const closeCurrentWindowAndClearStorage = async () => {
   const storage = await storageGet()
   const selfWindowId = storage[SELF_WINDOW_ID_KEY]
+  const selfWindowState = storage[SELF_WINDOW_STATE]
   await storageRemove(LAST_ACTIVE_WINDOW_ID_KEY)
   if (selfWindowId) {
+    // 修复全屏状态下切换无法切换到正确窗口的问题
+    selfWindowState === 'fullscreen' && await sleep(100) 
     await storageRemove(SELF_WINDOW_ID_KEY)
-    try {
-      await getWindowById(selfWindowId)
-      chrome.windows.remove(selfWindowId).catch(() => {})
-    } catch (error) { 
-    }
+    await getWindowById(selfWindowId)
+    chrome.windows.remove(selfWindowId).catch(() => {})
   }
 }
 
 export const activeTab = async (item: ListItemType) => {
   if (isTabItem(item)) {
-    chrome.tabs.update(
-      item.data.id,
-      {
-        active: true
-      },
-      (tab) => {
-        chrome.windows.update(tab.windowId, { focused: true })
-      }
-    )
+    await chrome.windows.update(item.data.windowId, { focused: true })
+    await chrome.tabs.update(item.data.id, { active: true })
   } else {
     const storage = await storageGet()
     const lastActiveWindowId = storage[LAST_ACTIVE_WINDOW_ID_KEY]
-    chrome.tabs.create({ url: item.data.url, windowId: lastActiveWindowId })
-    chrome.windows.update(lastActiveWindowId, { focused: true })
+    await chrome.windows.update(lastActiveWindowId, { focused: true }) 
+    await chrome.tabs.create({ url: item.data.url, windowId: lastActiveWindowId })
   }
   closeCurrentWindowAndClearStorage()
 }
@@ -94,6 +87,10 @@ export function faviconURL(u: string) {
   url.searchParams.set("pageUrl", u)
   url.searchParams.set("size", "24")
   return url.toString()
+}
+
+export function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 
