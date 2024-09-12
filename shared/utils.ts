@@ -60,17 +60,12 @@ export const closeCurrentWindowAndClearStorage = async () => {
   const selfWindowId = storage[SELF_WINDOW_ID_KEY]
   const selfWindowState = storage[SELF_WINDOW_STATE]
   await storageRemove(LAST_ACTIVE_WINDOW_ID_KEY)
-  const cb = () => {}
   if (selfWindowId) {
-    if (selfWindowState === 'fullscreen') {
-      // todo 如果是全屏则添加延迟回调
-    }
+    // 修复全屏状态下切换无法切换到正确窗口的问题
+    selfWindowState === 'fullscreen' && await sleep(100) 
     await storageRemove(SELF_WINDOW_ID_KEY)
-    try {
-      await getWindowById(selfWindowId)
-      chrome.windows.remove(selfWindowId).catch(() => {})
-    } catch (error) { 
-    }
+    await getWindowById(selfWindowId)
+    chrome.windows.remove(selfWindowId).catch(() => {})
   }
 }
 
@@ -84,10 +79,7 @@ export const activeTab = async (item: ListItemType) => {
     await chrome.windows.update(lastActiveWindowId, { focused: true }) 
     await chrome.tabs.create({ url: item.data.url, windowId: lastActiveWindowId })
   }
-  setTimeout(() => {
-    closeCurrentWindowAndClearStorage()
-    // 硬编码，延迟关闭，才能在
-  }, 100)
+  closeCurrentWindowAndClearStorage()
 }
 
 export function faviconURL(u: string) {
@@ -95,6 +87,10 @@ export function faviconURL(u: string) {
   url.searchParams.set("pageUrl", u)
   url.searchParams.set("size", "24")
   return url.toString()
+}
+
+export function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 
