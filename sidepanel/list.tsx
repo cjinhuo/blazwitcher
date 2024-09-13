@@ -2,11 +2,11 @@ import { List as ListComponent } from '@douyinfe/semi-ui'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS } from '../shared/constants'
-import type { ListItemType } from '../shared/types'
-import { activeTab, closeCurrentWindowAndClearStorage, scrollIntoViewIfNeeded } from '../shared/utils'
-import { HIGHLIGHT_TEXT_CLASS, NORMAL_TEXT_CLASS } from './highlight-text'
-import { HOST_CLASS, IMAGE_CLASS, RenderItem, SVG_CLASS, VISIBILITY_CLASS } from './list-item'
+import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS } from "../shared/constants"
+import { type ListItemType } from "../shared/types"
+import { activeTab, closeCurrentWindowAndClearStorage, handleClickItem, scrollIntoViewIfNeeded } from "../shared/utils"
+import { HIGHLIGHT_TEXT_CLASS, NORMAL_TEXT_CLASS } from "./highlight-text"
+import { HOST_CLASS, IMAGE_CLASS, RenderItem, SVG_CLASS, VISIBILITY_CLASS } from "./list-item"
 
 const ListContainer = styled.div`
   padding: 6px;
@@ -81,7 +81,9 @@ const setScrollTopIfNeeded = () => {
 	scrollIntoViewIfNeeded(activeItem, mainContent)
 }
 
-export default function List({ list }: { list: ListItemType[] }) {
+export default function List({ list ,handleOriginalList}: { list: ListItemType[] ,handleOriginalList: (params:{type:'add' | 'remove'}) => void}) {
+
+
 	const [activeIndex, setActiveIndex] = useState(0)
 	const i = useRef(0)
 
@@ -118,52 +120,52 @@ export default function List({ list }: { list: ListItemType[] }) {
 		setScrollTopIfNeeded()
 	}, [activeIndex])
 
-	useEffect(() => {
-		const keydownHandler = (event: KeyboardEvent) => {
-			const key = event.code
-			switch (key) {
-				case 'ArrowUp':
-					event.preventDefault()
-					changeActiveIndex(-1)
-					break
-				case 'Tab':
-				case 'ArrowDown':
-					event.preventDefault()
-					changeActiveIndex(1)
-					break
-				case 'Enter':
-					event.preventDefault()
-					handleEnterEvent()
-					break
-				case 'Escape': // KeyCode.ESC
-					event.preventDefault()
-					closeCurrentWindowAndClearStorage()
-					break
-				default:
-					break
-			}
-		}
-		window.addEventListener('keydown', keydownHandler)
-		return () => {
-			window.removeEventListener('keydown', keydownHandler)
-		}
-	}, [changeActiveIndex, handleEnterEvent])
-	return (
-		<ListContainer>
-			<ListComponent
-				grid={{
-					gutter: [0, 8],
-					span: 24,
-				}}
-				dataSource={list}
-				renderItem={(item, index) => (
-					<ListItemWrapper
-						className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ''}
-						onClick={() => activeTab(item)}
-						main={<RenderItem item={item} />}
-					/>
-				)}
-			/>
-		</ListContainer>
-	)
+  useEffect(() => {
+    const keydownHandler = (event: KeyboardEvent) => {
+      const key = event.code
+      switch (key) {
+        case "ArrowUp":
+          event.preventDefault()
+          changeActiveIndex(-1)
+          break
+        case "Tab":
+        case "ArrowDown":
+          event.preventDefault()
+          changeActiveIndex(1)
+          break
+        case "Enter":
+          event.preventDefault()
+          handleEnterEvent()
+          break
+        case "Escape": // KeyCode.ESC
+          event.preventDefault()
+          closeCurrentWindowAndClearStorage()
+          break
+        default:
+          break
+      }
+    }
+    window.addEventListener("keydown", keydownHandler)
+    return () => {
+      window.removeEventListener("keydown", keydownHandler)
+    }
+  }, [changeActiveIndex, handleEnterEvent])
+  return (
+    <ListContainer>
+      <ListComponent
+        grid={{
+          gutter: [0, 8],
+          span: 24
+        }}
+        dataSource={list}
+        renderItem={(item, index) => (
+          <ListItemWrapper
+            className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ""}
+            onClick={(event) => handleClickItem(item,event,handleOriginalList)}
+            main={<RenderItem item={item}></RenderItem>}
+          />
+        )}
+      />
+    </ListContainer>
+  )
 }

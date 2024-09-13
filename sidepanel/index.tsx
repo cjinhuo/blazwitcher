@@ -1,7 +1,7 @@
 import './sidepanel.css'
 
 import { Layout } from '@douyinfe/semi-ui'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import {
@@ -131,13 +131,31 @@ export default function SidePanel() {
 		}, [])
 		setList(orderList(finalList))
 	}
+	const handleOriginalList = useCallback(({type,item}:{type:string,item:ListItemType}) => {
+		const handler ={
+			add:()=>{
+				const newList:ListItemType[] = originalList.current.concat(item)
+				setList(orderList(newList))
+				originalList.current = [...newList]
+			},
+			remove:()=>{
+				const newList:ListItemType[] = originalList.current.filter(i=>i.data.id !== item.data.id)
+				setList(orderList(newList))
+				console.log('newList',item.data.id,newList)
+				console.log('list find',item.data.id,list.find(it=>it.data.id === item.data.id))
+
+				originalList.current = [...newList]
+			}
+		}
+		handler[type] && handler[type]()
+	},[])
 	return (
 		<Container>
 			<Header style={{ flex: '0 0 50px' }}>
 				<Search onSearch={handleSearch}></Search>
 			</Header>
 			<ContentWrapper className={MAIN_CONTENT_CLASS}>
-				<List list={list}></List>
+				<List list={list} handleOriginalList={handleOriginalList}></List>
 			</ContentWrapper>
 			<Footer />
 		</Container>

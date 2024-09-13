@@ -73,7 +73,33 @@ export const activeTab = async (item: ListItemType) => {
 	}
 	closeCurrentWindowAndClearStorage()
 }
+export const handleClickItem = (item: ListItemType, event?: any,handler?:any) => {
+  const target = event?.target?.closest('svg[data-name]') || null
+  const operatorName = target?.dataset?.name || ''
+  const handleOperator = {
+    linkTo: () => {
+      activeTab(item)
+    },
+    find: () => {
+      const url = `chrome://bookmarks/?q=${item.data.title}`
+      chrome.tabs.create({ url});
+    },
+    remove: () => {
+      chrome.history.deleteUrl({url: item.data.url})
+      handler && handler({type:'remove',item})
 
+    },
+    close:()=>{
+      !isNaN(+item.data.id) && chrome.tabs.remove(+item.data.id)
+      handler && handler({type:'remove',item})
+    }
+  }
+  if (operatorName) {
+    handleOperator[operatorName] && handleOperator[operatorName](item)
+  } else {
+    activeTab(item)
+  }
+}
 export function faviconURL(u: string) {
 	const url = new URL(chrome.runtime.getURL('/_favicon/'))
 	url.searchParams.set('pageUrl', u)

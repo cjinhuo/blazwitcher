@@ -1,11 +1,14 @@
-import chromeIcon from 'data-base64:~assets/chrome-icon.svg'
-import BookmarkSvg from 'react:~assets/bookmark.svg'
-import HistorySvg from 'react:~assets/history.svg'
-import NewWindow from 'react:~assets/new-window.svg'
-import RightArrow from 'react:~assets/right-arrow.svg'
-import TabSvg from 'react:~assets/tab.svg'
-import { useMemo } from 'react'
-import styled from 'styled-components'
+import chromeIcon from "data-base64:~assets/chrome-icon.svg"
+import { useMemo } from "react"
+import BookmarkSvg from "react:~assets/bookmark.svg"
+import DeleteIcon from "react:~assets/delete.svg"
+import FindIcon from "react:~assets/find.svg"
+import CloseIcon from "react:~assets/close.svg"
+import HistorySvg from "react:~assets/history.svg"
+import NewWindow from "react:~assets/new-window.svg"
+import RightArrow from "react:~assets/right-arrow.svg"
+import TabSvg from "react:~assets/tab.svg"
+import styled from "styled-components"
 
 import { timeAgo } from '~shared/time'
 import type { BookmarkItemType, HistoryItemType, ListItemType, TabItemType } from '~shared/types'
@@ -162,32 +165,83 @@ export const RenderContent = ({ item }: { item: ListItemType }) => {
 }
 
 const OperationContainer = styled.div`
-  width: 40px;
+  /* width: 40px; */
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
 `
-
-const OperationLinkIcon = styled.div`
-  width: 36px;
+const OprationButtonWrapper = styled.div`
+  padding: 0 8px;
+  margin-right: 16px;
+  width: 96px;
   height: 36px;
-  border-radius: 4px;
   display: flex;
+  justify-content: flex-end;
+  gap:18px;
   align-items: center;
-  justify-content: center;
-  background-color: var(--color-neutral-9);
-  svg {
-    fill: var(--color-neutral-3);
+
+  .btns {
+    width: 18px;
+    height: 18px;
+    /* background-color: var(--color-neutral-9); */
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.08);
+      opacity: 0.88;
+    }
+    svg {
+      fill: #fff;
+    }
   }
 `
+// const OperationLinkIcon = styled.div`
+//   width: 36px;
+//   height: 36px;
+//   border-radius: 4px;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   background-color: var(--color-neutral-9);
+//   svg {
+//     fill: var(--color-neutral-3);
+//     width: 20px;
+//   }
+// `
 
 const RenderOperation = ({ item }: { item: ListItemType }) => {
-	return (
-		<OperationContainer className={VISIBILITY_CLASS}>
-			<OperationLinkIcon>{isTabItem(item) ? <RightArrow></RightArrow> : <NewWindow></NewWindow>}</OperationLinkIcon>
-		</OperationContainer>
-	)
+  return (
+    <OperationContainer className={VISIBILITY_CLASS}>
+      <OprationButtonWrapper>
+        {
+          <>
+            <div className="btns" title="跳转">
+              <NewWindow data-name="linkTo"></NewWindow>
+            </div>
+            {isBookmarkItem(item) ? (
+              <div className="btns" title="查找">
+                <FindIcon data-name="find"></FindIcon>
+              </div>
+            ) : null}
+            {!isTabItem(item) ? (
+              <div className="btns" title="删除">
+                <DeleteIcon data-name="remove"></DeleteIcon>
+              </div>
+            ) : (
+              <div className="btns" title="关闭">
+                <CloseIcon data-name="close"></CloseIcon>
+              </div>
+            )}
+          </>
+        }
+      </OprationButtonWrapper>
+      {/* <OperationLinkIcon>{isTabItem(item) ? <RightArrow></RightArrow> : <NewWindow></NewWindow>}</OperationLinkIcon> */}
+    </OperationContainer>
+  )
 }
 
 export const RenderItem = ({ item }: { item: ListItemType }) => {
