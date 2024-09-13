@@ -1,5 +1,5 @@
 import { LAST_ACTIVE_WINDOW_ID_KEY, SELF_WINDOW_ID_KEY, SELF_WINDOW_STATE } from './constants'
-import { getWindowById, storageGet, storageRemove } from './promisify'
+import { storageGet, storageRemove } from './promisify'
 import { ItemType, type ListItemType, type Matrix } from './types'
 
 export function isChineseChar(char) {
@@ -51,11 +51,12 @@ export const closeCurrentWindowAndClearStorage = async () => {
 	const selfWindowState = storage[SELF_WINDOW_STATE]
 	await storageRemove(LAST_ACTIVE_WINDOW_ID_KEY)
 	if (selfWindowId) {
-		// 修复全屏状态下切换无法切换到正确窗口的问题
+		// repair the problem that switching in full-screen state cannot switch to the correct window
 		selfWindowState === 'fullscreen' && (await sleep(100))
 		await storageRemove(SELF_WINDOW_ID_KEY)
 		try {
-			chrome.windows.remove(selfWindowId).catch(() => {})
+			// the target window may not exist, then throw an error
+			await chrome.windows.remove(selfWindowId)
 		} catch (error) {}
 	}
 }
@@ -86,30 +87,4 @@ export function sleep(ms: number) {
 
 export function isDarkMode() {
 	return window.matchMedia?.('(prefers-color-scheme: dark)').matches
-}
-
-/**
- * merge all blank spaces within hit ranges
- * @param source required, the source string you want to search
- * @param rawHitRanges required
- * @returns
- */
-export function mergeSpacesWithRanges(source: string, rawHitRanges: Matrix) {
-	if (rawHitRanges.length === 1) return rawHitRanges
-	const hitRanges: Matrix = [rawHitRanges[0]]
-	let [lastStart, lastEnd] = rawHitRanges[0]
-	for (let i = 1; i < rawHitRanges.length; i++) {
-		const [start, end] = rawHitRanges[i]
-		const gap = source.slice(lastEnd + 1, start)
-
-		// between two ranges, there is a blank space
-		if (!gap.trim().length) {
-			hitRanges[hitRanges.length - 1] = [lastStart, end]
-		} else {
-			lastStart = start
-			hitRanges.push([start, end])
-		}
-		lastEnd = end
-	}
-	return hitRanges
 }
