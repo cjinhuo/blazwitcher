@@ -54,8 +54,9 @@ export const closeCurrentWindowAndClearStorage = async () => {
 		// 修复全屏状态下切换无法切换到正确窗口的问题
 		selfWindowState === 'fullscreen' && (await sleep(100))
 		await storageRemove(SELF_WINDOW_ID_KEY)
-		await getWindowById(selfWindowId)
-		chrome.windows.remove(selfWindowId).catch(() => {})
+		try {
+			chrome.windows.remove(selfWindowId).catch(() => {})
+		} catch (error) {}
 	}
 }
 
