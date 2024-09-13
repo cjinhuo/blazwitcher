@@ -4,8 +4,6 @@ import { HighlightClasses, HighlightWithRanges, type HighlightWithRangesProps } 
 export const HIGHLIGHT_TEXT_CLASS = HighlightClasses.highlight
 export const NORMAL_TEXT_CLASS = HighlightClasses.normal
 const HighlightWithRangesWrapper = styled(HighlightWithRanges)`
-  display: flex;
-  max-width: 100%;
   .${HIGHLIGHT_TEXT_CLASS} {
     color: var(--color-neutral-3);
   }

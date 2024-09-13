@@ -148,7 +148,7 @@ export const RenderContent = ({ item }: { item: ListItemType }) => {
 		<TitleContainer>
 			<HighlightText source={data.title} hitRanges={data.hitRanges} id={String(data.id)} />
 			<SecondaryContainer>
-				<HighlightText source={host} containerStyle={{ fontSize: '10px' }} />
+				<HighlightText source={host} containerStyle={{ fontSize: '10px', fontWeight: '400' }} />
 				{isTabItem(item) ? (
 					<TabLabel data={item.data}></TabLabel>
 				) : isBookmarkItem(item) ? (
