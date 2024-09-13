@@ -3,16 +3,20 @@ import { HighlightClasses, HighlightWithRanges, type HighlightWithRangesProps } 
 
 export const HIGHLIGHT_TEXT_CLASS = HighlightClasses.highlight
 export const NORMAL_TEXT_CLASS = HighlightClasses.normal
-const HighlightWithRangesWrapper = styled(HighlightWithRanges)`
-  .${HIGHLIGHT_TEXT_CLASS} {
+const HighlightWithRangesWrapper = styled.div`
+  .${NORMAL_TEXT_CLASS} {
     color: var(--color-neutral-3);
   }
-  .${NORMAL_TEXT_CLASS} {
+  .${HIGHLIGHT_TEXT_CLASS} {
     color: var(--highlight-text);
     background-color: var(--highlight-bg);
   }
 `
 
 export default function HighlightText(props: HighlightWithRangesProps) {
-	return <HighlightWithRangesWrapper {...props}></HighlightWithRangesWrapper>
+	return (
+		<HighlightWithRangesWrapper>
+			<HighlightWithRanges {...props} />
+		</HighlightWithRangesWrapper>
+	)
 }
