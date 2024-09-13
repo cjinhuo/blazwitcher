@@ -3,7 +3,6 @@ import './sidepanel.css'
 import { Layout } from '@douyinfe/semi-ui'
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import * as TextSearchEngine from 'text-search-engine'
 
 import {
 	DEFAULT_BOOKMARK_DISPLAY_COUNT,
@@ -14,6 +13,7 @@ import {
 import type { ItemType, ListItemType } from '~shared/types'
 import { isBookmarkItem, isDarkMode, isHistoryItem, isTabItem } from '~shared/utils'
 
+import { mergeSpacesWithRanges, searchSentenceByBoundaryMapping } from 'text-search-engine'
 import Footer from './footer'
 import List from './list'
 import Search from './search'
@@ -121,11 +121,11 @@ export default function SidePanel() {
 	const handleSearch = (value: string) => {
 		if (!value || value.trim() === '') return setList(orderList(originalList.current))
 		const finalList = originalList.current.reduce((acc, item) => {
-			const hitRanges = TextSearchEngine.searchSentenceByBoundaryMapping(item.data.titleBoundaryMapping, value)
+			const hitRanges = searchSentenceByBoundaryMapping(item.data.titleBoundaryMapping, value)
 			hitRanges &&
 				acc.push({
 					...item,
-					data: { ...item.data, hitRanges: TextSearchEngine.mergeSpacesWithRanges(item.data.title, hitRanges) },
+					data: { ...item.data, hitRanges: mergeSpacesWithRanges(item.data.title, hitRanges) },
 				})
 			return acc
 		}, [])
