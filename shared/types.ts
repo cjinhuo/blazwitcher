@@ -39,3 +39,18 @@ export interface ListItemType<T extends ItemType = ItemType> {
 	itemType: T
 	data: ItemTypeSet[T]
 }
+
+export enum DataNameType {
+	linkTo = 'linkTo',
+	find = 'find',
+	remove = 'remove',
+	close = 'close',
+	add = 'add',
+}
+
+export enum ListItemBtnNameType {
+	linkTo = '跳转',
+	find = '查找',
+	remove = '删除',
+	close = '关闭',
+}

@@ -1,6 +1,6 @@
 import { LAST_ACTIVE_WINDOW_ID_KEY, SELF_WINDOW_ID_KEY, SELF_WINDOW_STATE } from './constants'
 import { storageGet, storageRemove } from './promisify'
-import { ItemType, type ListItemType, type Matrix } from './types'
+import { DataNameType, ItemType, type ListItemType, type Matrix } from './types'
 
 export function isChineseChar(char) {
 	const chineseCharRegex = /[\u4E00-\u9FFF]/
@@ -73,7 +73,31 @@ export const activeTab = async (item: ListItemType) => {
 	}
 	closeCurrentWindowAndClearStorage()
 }
-
+type HandleListType = (params: { type: 'add' | 'remove'; item: ListItemType }) => void
+export const handleClickItem = (item: ListItemType, operatorName?: string, handler?: HandleListType) => {
+	const handleOperator = {
+		[DataNameType.linkTo]: () => {
+			activeTab(item)
+		},
+		[DataNameType.find]: () => {
+			const url = `chrome://bookmarks/?q=${item.data.title}`
+			chrome.tabs.create({ url })
+		},
+		[DataNameType.remove]: () => {
+			chrome.history.deleteUrl({ url: item.data.url })
+			handler?.({ type: 'remove', item })
+		},
+		close: () => {
+			!Number.isNaN(+item.data.id) && chrome.tabs.remove(+item.data.id)
+			handler?.({ type: 'remove', item })
+		},
+	}
+	if (operatorName) {
+		handleOperator[operatorName]?.(item)
+	} else {
+		activeTab(item)
+	}
+}
 export function faviconURL(u: string) {
 	const url = new URL(chrome.runtime.getURL('/_favicon/'))
 	url.searchParams.set('pageUrl', u)

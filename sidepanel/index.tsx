@@ -1,7 +1,7 @@
 import './sidepanel.css'
 
 import { Layout } from '@douyinfe/semi-ui'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import {
@@ -10,7 +10,7 @@ import {
 	MAIN_CONTENT_CLASS,
 	MAIN_WINDOW,
 } from '~shared/constants'
-import type { ItemType, ListItemType } from '~shared/types'
+import { DataNameType, type ItemType, type ListItemType } from '~shared/types'
 import { isBookmarkItem, isDarkMode, isHistoryItem, isTabItem } from '~shared/utils'
 
 import { mergeSpacesWithRanges, searchSentenceByBoundaryMapping } from 'text-search-engine'
@@ -131,6 +131,21 @@ export default function SidePanel() {
 		}, [])
 		setList(orderList(finalList))
 	}
+	const handleOriginalList = useCallback(({ type, item }: { type: string; item: ListItemType }) => {
+		const handler = {
+			[DataNameType.add]: () => {
+				const newList: ListItemType[] = originalList.current.concat(item)
+				setList(orderList(newList))
+				originalList.current = [...newList]
+			},
+			[DataNameType.remove]: () => {
+				const newList: ListItemType[] = originalList.current.filter((i) => i.data.id !== item.data.id)
+				setList(orderList(newList))
+				originalList.current = [...newList]
+			},
+		}
+		handler[type]?.()
+	}, [])
 	return (
 		<Container>
 			<Header style={{ flex: '0 0 50px' }}>
