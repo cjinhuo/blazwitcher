@@ -1,16 +1,28 @@
 import chromeIcon from 'data-base64:~assets/chrome-icon.svg'
 import BookmarkSvg from 'react:~assets/bookmark.svg'
+import CloseIcon from 'react:~assets/close.svg'
+import DeleteIcon from 'react:~assets/delete.svg'
+import FindIcon from 'react:~assets/find.svg'
 import HistorySvg from 'react:~assets/history.svg'
 import NewWindow from 'react:~assets/new-window.svg'
-import RightArrow from 'react:~assets/right-arrow.svg'
+// import RightArrow from 'react:~assets/right-arrow.svg'
 import TabSvg from 'react:~assets/tab.svg'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { timeAgo } from '~shared/time'
-import type { BookmarkItemType, HistoryItemType, ListItemType, TabItemType } from '~shared/types'
+import {
+	type BookmarkItemType,
+	DataNameType,
+	type HistoryItemType,
+	ItemType,
+	ListItemBtnNameType,
+	type ListItemType,
+	type TabItemType,
+} from '~shared/types'
 import { isBookmarkItem, isTabItem } from '~shared/utils'
 
+import type { isHistoryItem } from '../shared/utils'
 import HighlightText from './highlight-text'
 
 export const VISIBILITY_CLASS = 'list-visibility'
@@ -168,7 +180,34 @@ const OperationContainer = styled.div`
   align-items: center;
   justify-content: center;
 `
+const OprationButtonWrapper = styled.div`
+  padding: 0 8px;
+  margin-right: 16px;
+  width: 96px;
+  height: 36px;
+  display: flex;
+  justify-content: flex-end;
+  gap:18px;
+  align-items: center;
 
+  .btns {
+    width: 18px;
+    height: 18px;
+    /* background-color: var(--color-neutral-9); */
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+      cursor: pointer;
+      transform: scale(1.08);
+      opacity: 0.88;
+    }
+    svg {
+      fill: #fff;
+    }
+  }
+`
 const OperationLinkIcon = styled.div`
   width: 36px;
   height: 36px;
@@ -182,10 +221,84 @@ const OperationLinkIcon = styled.div`
   }
 `
 
+const TabItemOperators = ({ item }: { item: ListItemType }) => {
+	return (
+		<>
+			<div className='btns' title={ListItemBtnNameType.linkTo}>
+				<NewWindow data-name={DataNameType.linkTo}></NewWindow>
+			</div>
+			<div className='btns' title={ListItemBtnNameType.close}>
+				<CloseIcon data-name={DataNameType.close}></CloseIcon>
+			</div>
+		</>
+	)
+}
+const BookmarkItemOperators = ({ item }: { item: ListItemType }) => {
+	return (
+		<>
+			<div className='btns' title={ListItemBtnNameType.linkTo}>
+				<NewWindow data-name={DataNameType.linkTo}></NewWindow>
+			</div>
+			<div className='btns' title={ListItemBtnNameType.find}>
+				<FindIcon data-name={DataNameType.find}></FindIcon>
+			</div>
+		</>
+	)
+}
+const HistoryItemOperators = ({ item }: { item: ListItemType }) => {
+	return (
+		<>
+			<div className='btns' title={ListItemBtnNameType.linkTo}>
+				<NewWindow data-name={DataNameType.linkTo}></NewWindow>
+			</div>
+			<div className='btns' title={ListItemBtnNameType.remove}>
+				<DeleteIcon data-name={DataNameType.remove}></DeleteIcon>
+			</div>
+		</>
+	)
+}
+
+const RenderOperationButton = ({ item, handler }: { item: ListItemType; handle?: () => void }) => {
+	switch (item.itemType) {
+		case ItemType.Bookmark:
+			return (
+				<BookmarkItemOperators
+					item={item}
+					onClick={() => {
+						handler(item, ItemType.Bookmark)
+					}}
+				></BookmarkItemOperators>
+			)
+		case ItemType.History:
+			return (
+				<HistoryItemOperators
+					item={item}
+					onClick={() => {
+						handler(item, ItemType.History)
+					}}
+				></HistoryItemOperators>
+			)
+		case ItemType.Tab:
+			return (
+				<TabItemOperators
+					item={item}
+					onClick={() => {
+						handler(item, ItemType.Tab)
+					}}
+				></TabItemOperators>
+			)
+		default:
+			console.warn(`Unknown item type: ${item.itemType}`)
+			return null
+	}
+}
 const RenderOperation = ({ item }: { item: ListItemType }) => {
 	return (
 		<OperationContainer className={VISIBILITY_CLASS}>
-			<OperationLinkIcon>{isTabItem(item) ? <RightArrow></RightArrow> : <NewWindow></NewWindow>}</OperationLinkIcon>
+			<OprationButtonWrapper>
+				<RenderOperationButton item={item} handler={() => {}} />
+			</OprationButtonWrapper>
+			{/* <OperationLinkIcon>{isTabItem(item) ? <RightArrow></RightArrow> : <NewWindow></NewWindow>}</OperationLinkIcon> */}
 		</OperationContainer>
 	)
 }
