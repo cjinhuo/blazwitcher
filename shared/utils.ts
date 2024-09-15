@@ -61,17 +61,44 @@ export const closeCurrentWindowAndClearStorage = async () => {
 	}
 }
 
-export const activeTab = async (item: ListItemType) => {
-	if (isTabItem(item)) {
-		await chrome.windows.update(item.data.windowId, { focused: true })
-		await chrome.tabs.update(item.data.id, { active: true })
-	} else {
-		const storage = await storageGet()
-		const lastActiveWindowId = storage[LAST_ACTIVE_WINDOW_ID_KEY]
-		await chrome.windows.update(lastActiveWindowId, { focused: true })
-		await chrome.tabs.create({ url: item.data.url, windowId: lastActiveWindowId })
-	}
+export const activeTab = async (item: ListItemType<ItemType.Tab>) => {
+	await chrome.windows.update(item.data.windowId, { focused: true })
+	await chrome.tabs.update(item.data.id, { active: true })
 	closeCurrentWindowAndClearStorage()
+}
+
+export const createTabWithUrl = async (url: string) => {
+	const storage = await storageGet()
+	const lastActiveWindowId = storage[LAST_ACTIVE_WINDOW_ID_KEY]
+	// need to focus the last active window to fix the bug of switching abort in arc browser
+	await chrome.windows.update(lastActiveWindowId, { focused: true })
+	await chrome.tabs.create({ url, windowId: lastActiveWindowId })
+	closeCurrentWindowAndClearStorage()
+}
+
+export const handleClickItem = async (item: ListItemType) => {
+	isTabItem(item) ? await activeTab(item) : await createTabWithUrl(item.data.url)
+}
+
+export const closeTab = async (item: ListItemType<ItemType.Tab>) => {
+	await chrome.tabs.remove(item.data.id)
+}
+
+export const deleteItem = async (item: ListItemType) => {
+	if (isHistoryItem(item)) {
+		return await chrome.history.deleteUrl({ url: item.data.url })
+	}
+}
+
+export const queryInNewTab = async (item: ListItemType) => {
+	const q = item.data.url || item.data.title
+	let url = ''
+	if (isBookmarkItem(item)) {
+		url = `chrome://bookmarks/?q=${q}`
+	} else if (isHistoryItem(item)) {
+		url = `chrome://history/?q=${q}`
+	}
+	await createTabWithUrl(url)
 }
 
 export function faviconURL(u: string) {

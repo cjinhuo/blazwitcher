@@ -1,8 +1,6 @@
 import chromeIcon from 'data-base64:~assets/chrome-icon.svg'
 import BookmarkSvg from 'react:~assets/bookmark.svg'
 import HistorySvg from 'react:~assets/history.svg'
-import NewWindow from 'react:~assets/new-window.svg'
-import RightArrow from 'react:~assets/right-arrow.svg'
 import TabSvg from 'react:~assets/tab.svg'
 import { useMemo } from 'react'
 import styled from 'styled-components'
@@ -12,6 +10,7 @@ import type { BookmarkItemType, HistoryItemType, ListItemType, TabItemType } fro
 import { isBookmarkItem, isTabItem } from '~shared/utils'
 
 import HighlightText from './highlight-text'
+import { RenderOperation } from './operation'
 
 export const VISIBILITY_CLASS = 'list-visibility'
 const ContentContainer = styled.div`
@@ -84,15 +83,6 @@ const LabelContainer = styled.div`
   gap: 6px;
 `
 
-// export const TooltipWrap = styled(Tooltip)`
-//   &.semi-tooltip-wrapper {
-//     padding: 0 2px;
-//     font-size: 12px;
-//     border-radius: 2px;
-//     background-color: var(--color-neutral-8);
-//     color: var(--color-neutral-2);
-//   }
-// `
 const Tag = styled.div`
   padding: 0 2px;
   line-height: 14px;
@@ -158,35 +148,6 @@ export const RenderContent = ({ item }: { item: ListItemType }) => {
 				)}
 			</SecondaryContainer>
 		</TitleContainer>
-	)
-}
-
-const OperationContainer = styled.div`
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const OperationLinkIcon = styled.div`
-  width: 36px;
-  height: 36px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--color-neutral-9);
-  svg {
-    fill: var(--color-neutral-3);
-  }
-`
-
-const RenderOperation = ({ item }: { item: ListItemType }) => {
-	return (
-		<OperationContainer className={VISIBILITY_CLASS}>
-			<OperationLinkIcon>{isTabItem(item) ? <RightArrow></RightArrow> : <NewWindow></NewWindow>}</OperationLinkIcon>
-		</OperationContainer>
 	)
 }
 
