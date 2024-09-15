@@ -13,6 +13,7 @@
 		"@commitlint/config-conventional": "^19.2.2",
 		"@douyinfe/semi-icons": "^2.62.0",
 		"@douyinfe/semi-ui": "^2.62.0",
+		"jotai": "^2.9.3",
 		"plasmo": "0.89.1",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
@@ -38,7 +39,10 @@
 		}
 	},
 	"manifest": {
-		"host_permissions": ["https://*/*", "http://*/*"],
+		"host_permissions": [
+			"https://*/*",
+			"http://*/*"
+		],
 		"commands": {
 			"_execute_action": {
 				"suggested_key": {

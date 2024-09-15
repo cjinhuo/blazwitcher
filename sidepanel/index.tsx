@@ -1,7 +1,8 @@
 import './sidepanel.css'
 
 import { Layout } from '@douyinfe/semi-ui'
-import { useEffect, useRef, useState } from 'react'
+import { useAtom } from 'jotai'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import {
@@ -14,6 +15,7 @@ import type { ItemType, ListItemType } from '~shared/types'
 import { isBookmarkItem, isDarkMode, isHistoryItem, isTabItem } from '~shared/utils'
 
 import { mergeSpacesWithRanges, searchSentenceByBoundaryMapping } from 'text-search-engine'
+import { OriginalListAtom } from './atom'
 import Footer from './footer'
 import List from './list'
 import Search from './search'
@@ -88,8 +90,9 @@ const orderList = (list: ListItemType[]) => {
 }
 
 export default function SidePanel() {
-	const originalList = useRef<ListItemType[]>([])
-	const [list, setList] = useState<ListItemType[]>([])
+	const [originalList, setOriginalList] = useAtom(OriginalListAtom)
+	const [searchValue, setSearchValue] = useState('')
+
 	useEffect(() => {
 		let portConnectStatus = false
 		const port = chrome.runtime.connect({ name: MAIN_WINDOW })
@@ -98,8 +101,7 @@ export default function SidePanel() {
 			if (process.env.NODE_ENV !== 'production') {
 				console.log('processedList', processedList)
 			}
-			setList(orderList(processedList))
-			originalList.current = processedList
+			setOriginalList(processedList)
 		})
 
 		const postMessageToCloseWindow = () => {
@@ -112,25 +114,31 @@ export default function SidePanel() {
 		if (process.env.NODE_ENV === 'production') {
 			window.addEventListener('blur', postMessageToCloseWindow)
 		}
-		// todo 移到 index.html 更响应更快
+
 		if (isDarkMode()) {
 			document.body.classList.add('dark')
 			document.body.setAttribute('theme-mode', 'dark')
 		}
-	}, [])
-	const handleSearch = (value: string) => {
-		if (!value || value.trim() === '') return setList(orderList(originalList.current))
-		const finalList = originalList.current.reduce((acc, item) => {
-			const hitRanges = searchSentenceByBoundaryMapping(item.data.titleBoundaryMapping, value)
-			hitRanges &&
-				acc.push({
-					...item,
-					data: { ...item.data, hitRanges: mergeSpacesWithRanges(item.data.title, hitRanges) },
-				})
-			return acc
-		}, [])
-		setList(orderList(finalList))
-	}
+	}, [setOriginalList])
+
+	const list = useMemo(() => {
+		let filteredList = originalList
+		if (searchValue.trim() !== '') {
+			filteredList = originalList.reduce((acc, item) => {
+				const hitRanges = searchSentenceByBoundaryMapping(item.data.titleBoundaryMapping, searchValue)
+				hitRanges &&
+					acc.push({
+						...item,
+						data: { ...item.data, hitRanges: mergeSpacesWithRanges(item.data.title, hitRanges) },
+					})
+				return acc
+			}, [])
+		}
+		return orderList(filteredList)
+	}, [searchValue, originalList])
+
+	const handleSearch = (value: string) => setSearchValue(value)
+
 	return (
 		<Container>
 			<Header style={{ flex: '0 0 50px' }}>

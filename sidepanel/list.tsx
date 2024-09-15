@@ -4,7 +4,14 @@ import styled from 'styled-components'
 
 import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS } from '../shared/constants'
 import type { ListItemType } from '../shared/types'
-import { activeTab, closeCurrentWindowAndClearStorage, scrollIntoViewIfNeeded } from '../shared/utils'
+import {
+	activeTab,
+	closeCurrentWindowAndClearStorage,
+	createTabWithUrl,
+	handleClickItem,
+	isTabItem,
+	scrollIntoViewIfNeeded,
+} from '../shared/utils'
 import { HIGHLIGHT_TEXT_CLASS, NORMAL_TEXT_CLASS } from './highlight-text'
 import { HOST_CLASS, IMAGE_CLASS, RenderItem, SVG_CLASS, VISIBILITY_CLASS } from './list-item'
 import { OPERATION_ICON_CLASS } from './operation'
@@ -122,8 +129,7 @@ export default function List({ list }: { list: ListItemType[] }) {
 	)
 
 	const handleEnterEvent = useCallback(() => {
-		const item = list[activeIndex]
-		activeTab(item)
+		handleClickItem(list[activeIndex])
 	}, [activeIndex, list])
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -172,7 +178,7 @@ export default function List({ list }: { list: ListItemType[] }) {
 				renderItem={(item, index) => (
 					<ListItemWrapper
 						className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ''}
-						onClick={() => activeTab(item)}
+						onClick={() => handleClickItem(item)}
 						main={<RenderItem item={item} />}
 					/>
 				)}

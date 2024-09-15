@@ -49,9 +49,9 @@ export enum OperationItemPropertyTypes {
 }
 
 export const OperationItemTitleMap = {
-	[OperationItemPropertyTypes.open]: 'open a new window',
+	[OperationItemPropertyTypes.open]: 'open new window',
 	[OperationItemPropertyTypes.switch]: 'switch to tab',
 	[OperationItemPropertyTypes.query]: 'query',
-	[OperationItemPropertyTypes.delete]: 'delete',
-	[OperationItemPropertyTypes.close]: 'close',
+	[OperationItemPropertyTypes.delete]: 'delete from history',
+	[OperationItemPropertyTypes.close]: 'close tab',
 }
