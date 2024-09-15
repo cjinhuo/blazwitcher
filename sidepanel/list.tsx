@@ -4,14 +4,7 @@ import styled from 'styled-components'
 
 import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS } from '../shared/constants'
 import type { ListItemType } from '../shared/types'
-import {
-	activeTab,
-	closeCurrentWindowAndClearStorage,
-	createTabWithUrl,
-	handleClickItem,
-	isTabItem,
-	scrollIntoViewIfNeeded,
-} from '../shared/utils'
+import { closeCurrentWindowAndClearStorage, handleClickItem, scrollIntoViewIfNeeded } from '../shared/utils'
 import { HIGHLIGHT_TEXT_CLASS, NORMAL_TEXT_CLASS } from './highlight-text'
 import { HOST_CLASS, IMAGE_CLASS, RenderItem, SVG_CLASS, VISIBILITY_CLASS } from './list-item'
 import { OPERATION_ICON_CLASS } from './operation'

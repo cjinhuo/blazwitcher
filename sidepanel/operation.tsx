@@ -3,20 +3,12 @@ import DeleteIcon from 'react:~assets/delete.svg'
 import NewWindow from 'react:~assets/new-window.svg'
 import QueryIcon from 'react:~assets/query.svg'
 import RightArrow from 'react:~assets/right-arrow.svg'
-import { useAtom, useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import { useCallback } from 'react'
 import React from 'react'
 import styled from 'styled-components'
 import { ItemType, type ListItemType, OperationItemPropertyTypes, OperationItemTitleMap } from '~shared/types'
-import {
-	closeTab,
-	deleteItem,
-	handleClickItem,
-	isBookmarkItem,
-	isHistoryItem,
-	isTabItem,
-	queryInNewTab,
-} from '~shared/utils'
+import { deleteItem, handleClickItem, isTabItem, queryInNewTab } from '~shared/utils'
 import { OriginalListAtom } from './atom'
 export const OPERATION_ICON_CLASS = 'operation-icon'
 
@@ -46,7 +38,6 @@ const IconContainer = styled.div`
 
 const OperationContainer = styled.div`
   padding: 0 6px;
-  /* max-width: 92px; // gap(16) * 2 + icon(16) * 2 + padding(8) * 2 */
   gap:16px;
   height: 36px;
   display: flex;
