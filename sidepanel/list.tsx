@@ -7,6 +7,7 @@ import type { ListItemType } from '../shared/types'
 import { activeTab, closeCurrentWindowAndClearStorage, scrollIntoViewIfNeeded } from '../shared/utils'
 import { HIGHLIGHT_TEXT_CLASS, NORMAL_TEXT_CLASS } from './highlight-text'
 import { HOST_CLASS, IMAGE_CLASS, RenderItem, SVG_CLASS, VISIBILITY_CLASS } from './list-item'
+import { OPERATION_ICON_CLASS } from './operation'
 
 const ListContainer = styled.div`
   padding: 6px;
@@ -47,6 +48,12 @@ const ListItemWrapper = styled(ListComponent.Item)`
     .${VISIBILITY_CLASS} {
       visibility: visible;
     }
+		.${OPERATION_ICON_CLASS} {
+		  fill: var(--color-neutral-7);
+      > path {
+      fill: var(--color-neutral-7);
+      }
+	  }
   }
   &.${LIST_ITEM_ACTIVE_CLASS} {
     background-color: var(--color-neutral-3);
@@ -68,6 +75,12 @@ const ListItemWrapper = styled(ListComponent.Item)`
     .${VISIBILITY_CLASS} {
       visibility: visible;
     }
+		.${OPERATION_ICON_CLASS} {
+		  fill: var(--color-neutral-7);
+      > path {
+      fill: var(--color-neutral-7);
+      }
+	  }
   }
   &.semi-list-item {
     height: 50px;

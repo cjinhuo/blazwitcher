@@ -74,6 +74,13 @@ export const activeTab = async (item: ListItemType) => {
 	closeCurrentWindowAndClearStorage()
 }
 
+export const closeTab = async (item: ListItemType) => {
+	if (isTabItem(item)) {
+		await chrome.tabs.remove(item.data.id)
+		closeCurrentWindowAndClearStorage()
+	}
+}
+
 export function faviconURL(u: string) {
 	const url = new URL(chrome.runtime.getURL('/_favicon/'))
 	url.searchParams.set('pageUrl', u)

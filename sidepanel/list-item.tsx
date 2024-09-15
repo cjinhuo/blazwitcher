@@ -12,6 +12,7 @@ import type { BookmarkItemType, HistoryItemType, ListItemType, TabItemType } fro
 import { isBookmarkItem, isTabItem } from '~shared/utils'
 
 import HighlightText from './highlight-text'
+import { RenderOperation } from './operation'
 
 export const VISIBILITY_CLASS = 'list-visibility'
 const ContentContainer = styled.div`
@@ -182,13 +183,13 @@ const OperationLinkIcon = styled.div`
   }
 `
 
-const RenderOperation = ({ item }: { item: ListItemType }) => {
-	return (
-		<OperationContainer className={VISIBILITY_CLASS}>
-			<OperationLinkIcon>{isTabItem(item) ? <RightArrow></RightArrow> : <NewWindow></NewWindow>}</OperationLinkIcon>
-		</OperationContainer>
-	)
-}
+// const RenderOperation = ({ item }: { item: ListItemType }) => {
+// 	return (
+// 		<OperationContainer className={VISIBILITY_CLASS}>
+// 			<OperationLinkIcon>{isTabItem(item) ? <RightArrow></RightArrow> : <NewWindow></NewWindow>}</OperationLinkIcon>
+// 		</OperationContainer>
+// 	)
+// }
 
 export const RenderItem = ({ item }: { item: ListItemType }) => {
 	return (

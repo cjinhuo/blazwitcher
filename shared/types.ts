@@ -39,3 +39,19 @@ export interface ListItemType<T extends ItemType = ItemType> {
 	itemType: T
 	data: ItemTypeSet[T]
 }
+
+export enum OperationItemPropertyTypes {
+	open = 'open',
+	switch = 'switch',
+	query = 'query',
+	delete = 'delete',
+	close = 'close',
+}
+
+export const OperationItemTitleMap = {
+	[OperationItemPropertyTypes.open]: 'open a new window',
+	[OperationItemPropertyTypes.switch]: 'switch to tab',
+	[OperationItemPropertyTypes.query]: 'query',
+	[OperationItemPropertyTypes.delete]: 'delete',
+	[OperationItemPropertyTypes.close]: 'close',
+}
