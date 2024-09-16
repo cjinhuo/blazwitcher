@@ -1,6 +1,6 @@
 import { IconSearch } from '@douyinfe/semi-icons'
 import { Input } from '@douyinfe/semi-ui'
-import { useState, useRef } from 'react'
+import { useRef, useState } from 'react'
 import styled from 'styled-components'
 
 const SearchContainer = styled.div`
@@ -22,25 +22,25 @@ interface SearchProps {
 }
 export default function Search({ onSearch }: SearchProps) {
 	const [inputValue, setInputValue] = useState('')
-  const isCompisingRef = useRef(false)
+	const isCompositionRef = useRef(false)
 
-  const handleCompositionStart = () => {
-    isCompisingRef.current = true
-  }
+	const handleCompositionStart = () => {
+		isCompositionRef.current = true
+	}
 
-  const handleCompositionEnd = () => {
-    isCompisingRef.current = false
-  }
+	const handleCompositionEnd = () => {
+		isCompositionRef.current = false
+	}
 
 	const handleInputChange = (value: string) => {
 		setInputValue(value)
-    if (isCompisingRef.current) {
-      const searchTerms = value.split("'").filter((term) => term.trim())
-      const fornattedValue = searchTerms.length > 1 ? searchTerms.join(' ') : value
-      onSearch(fornattedValue.toLowerCase())
-    } else {
-      onSearch(value.toLowerCase())
-    }
+		const formattedValue = isCompositionRef.current
+			? value
+					.split("'")
+					.filter((item) => item.trim())
+					.join('')
+			: value
+		onSearch(formattedValue.toLowerCase())
 	}
 
 	return (
@@ -52,8 +52,8 @@ export default function Search({ onSearch }: SearchProps) {
 				size='large'
 				value={inputValue}
 				onChange={handleInputChange}
-        onCompositionStart={handleCompositionStart}
-        onCompositionEnd={handleCompositionEnd}
+				onCompositionStart={handleCompositionStart}
+				onCompositionEnd={handleCompositionEnd}
 				placeholder='Type to search'
 			/>
 			<Divider />
