@@ -1,6 +1,6 @@
 import { IconSearch } from '@douyinfe/semi-icons'
 import { Input } from '@douyinfe/semi-ui'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import styled from 'styled-components'
 
 const SearchContainer = styled.div`
@@ -22,10 +22,25 @@ interface SearchProps {
 }
 export default function Search({ onSearch }: SearchProps) {
 	const [inputValue, setInputValue] = useState('')
+	const isCompositionRef = useRef(false)
+
+	const handleCompositionStart = () => {
+		isCompositionRef.current = true
+	}
+
+	const handleCompositionEnd = () => {
+		isCompositionRef.current = false
+	}
 
 	const handleInputChange = (value: string) => {
 		setInputValue(value)
-		onSearch(value.toLowerCase())
+		const formattedValue = isCompositionRef.current
+			? value
+					.split("'")
+					.filter((item) => item.trim())
+					.join('')
+			: value
+		onSearch(formattedValue.toLowerCase())
 	}
 
 	return (
@@ -37,6 +52,8 @@ export default function Search({ onSearch }: SearchProps) {
 				size='large'
 				value={inputValue}
 				onChange={handleInputChange}
+				onCompositionStart={handleCompositionStart}
+				onCompositionEnd={handleCompositionEnd}
 				placeholder='Type to search'
 			/>
 			<Divider />
