@@ -1,7 +1,7 @@
 {
 	"name": "blazwitcher",
 	"displayName": "Blazwitcher: Search and Switcher in Blazing Speed",
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"description": "Blazwitcher is a local tool for searching tabs, bookmarks, and history, with support for fuzzy Pinyin search.",
 	"author": "cjinhuo@qq.com",
 	"scripts": {
