@@ -28,12 +28,10 @@ const IconContainer = styled.div`
     svg {
       pointer-events: none;
     }
-    .${OPERATION_ICON_CLASS} {
-		  fill: var(--color-neutral-2);
-      > path {
-      fill: var(--color-neutral-2);
-      }
-	  }
+		fill: var(--color-neutral-2);
+    > path {
+    	fill: var(--color-neutral-2);
+    }
     `
 
 const OperationContainer = styled.div`
