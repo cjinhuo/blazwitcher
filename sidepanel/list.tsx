@@ -132,24 +132,18 @@ export default function List({ list }: { list: ListItemType[] }) {
 
 	useEffect(() => {
 		const keydownHandler = (event: KeyboardEvent) => {
-			event.preventDefault()
-			const key = event.code
-			switch (key) {
-				case 'ArrowUp':
-					changeActiveIndex(-1)
-					break
-				case 'Tab':
-				case 'ArrowDown':
-					changeActiveIndex(1)
-					break
-				case 'Enter':
-					handleEnterEvent()
-					break
-				case 'Escape': // KeyCode.ESC
-					closeCurrentWindowAndClearStorage()
-					break
-				default:
-					break
+			const keyActions: { [key: string]: () => void } = {
+				ArrowUp: () => changeActiveIndex(-1),
+				Tab: () => changeActiveIndex(1),
+				ArrowDown: () => changeActiveIndex(1),
+				Enter: handleEnterEvent,
+				Escape: closeCurrentWindowAndClearStorage,
+			}
+
+			const action = keyActions[event.code]
+			if (action) {
+				event.preventDefault()
+				action()
 			}
 		}
 		window.addEventListener('keydown', keydownHandler)
