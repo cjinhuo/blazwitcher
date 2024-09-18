@@ -1,10 +1,10 @@
 import { List as ListComponent } from '@douyinfe/semi-ui'
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS } from '../shared/constants'
 import type { ListItemType } from '../shared/types'
-import { closeCurrentWindowAndClearStorage, handleClickItem, scrollIntoViewIfNeeded } from '../shared/utils'
+import { closeCurrentWindowAndClearStorage, handleClickItem } from '../shared/utils'
 import { HIGHLIGHT_TEXT_CLASS, NORMAL_TEXT_CLASS } from './highlight-text'
 import { HOST_CLASS, IMAGE_CLASS, RenderItem, SVG_CLASS, VISIBILITY_CLASS } from './list-item'
 import { OPERATION_ICON_CLASS } from './operation'
@@ -86,6 +86,15 @@ const ListItemWrapper = styled(ListComponent.Item)`
     height: 50px;
   }
 `
+function scrollIntoViewIfNeeded(element: HTMLElement, container: HTMLElement) {
+	const containerRect = container.getBoundingClientRect()
+	const elementRect = element.getBoundingClientRect()
+	if (elementRect.top < containerRect.top) {
+		container.scrollTop -= containerRect.top - elementRect.top
+	} else if (elementRect.bottom > containerRect.bottom) {
+		container.scrollTop += elementRect.bottom - containerRect.bottom + 4 // '+4' is for having margins with Footer Component
+	}
+}
 
 const setScrollTopIfNeeded = () => {
 	const mainContent = document.querySelector(`.${MAIN_CONTENT_CLASS}`) as HTMLElement
@@ -96,27 +105,25 @@ const setScrollTopIfNeeded = () => {
 
 export default function List({ list }: { list: ListItemType[] }) {
 	const [activeIndex, setActiveIndex] = useState(0)
-	const i = useRef(0)
+	const listRef = useRef<HTMLDivElement>(null)
+	const activeItemRef = useRef<HTMLDivElement>(null)
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		// reset active index
 		setActiveIndex(0)
-		i.current = 0
 	}, [list])
 
 	const changeActiveIndex = useCallback(
 		(offset: number) => {
-			const currentIndex = i.current
-			let index = currentIndex + offset
-			if (index < 0) {
-				index = list.length - 1
-			}
-			if (index >= list.length) {
-				index = 0
-			}
-			i.current = index
-			setActiveIndex(index)
+			setActiveIndex((prevIndex) => {
+				let newIndex = prevIndex + offset
+				if (newIndex < 0) {
+					newIndex = list.length - 1
+				}
+				if (newIndex >= list.length) {
+					newIndex = 0
+				}
+				return newIndex
+			})
 		},
 		[list]
 	)
@@ -125,31 +132,35 @@ export default function List({ list }: { list: ListItemType[] }) {
 		handleClickItem(list[activeIndex])
 	}, [activeIndex, list])
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useLayoutEffect(() => {
-		setScrollTopIfNeeded()
+	useEffect(() => {
+		if (listRef.current && activeItemRef.current) {
+			console.log('activeItemRef.current', activeItemRef.current)
+			const listRect = listRef.current.getBoundingClientRect()
+			const activeItemRect = activeItemRef.current.getBoundingClientRect()
+			console.log('activeItemRect', activeItemRect)
+			console.log('listRect', listRect)
+			if (activeItemRect.top < listRect.top) {
+				listRef.current.scrollTop -= listRect.top - activeItemRect.top
+			} else if (activeItemRect.bottom > listRect.bottom) {
+				listRef.current.scrollTop += activeItemRect.bottom - listRect.bottom + 4 // '+4' is for having margins with Footer Component
+			}
+		}
 	}, [activeIndex])
 
 	useEffect(() => {
 		const keydownHandler = (event: KeyboardEvent) => {
-			event.preventDefault()
-			const key = event.code
-			switch (key) {
-				case 'ArrowUp':
-					changeActiveIndex(-1)
-					break
-				case 'Tab':
-				case 'ArrowDown':
-					changeActiveIndex(1)
-					break
-				case 'Enter':
-					handleEnterEvent()
-					break
-				case 'Escape': // KeyCode.ESC
-					closeCurrentWindowAndClearStorage()
-					break
-				default:
-					break
+			const keyActions: { [key: string]: () => void } = {
+				ArrowUp: () => changeActiveIndex(-1),
+				Tab: () => changeActiveIndex(1),
+				ArrowDown: () => changeActiveIndex(1),
+				Enter: handleEnterEvent,
+				Escape: closeCurrentWindowAndClearStorage,
+			}
+
+			const action = keyActions[event.code]
+			if (action) {
+				event.preventDefault()
+				action()
 			}
 		}
 		window.addEventListener('keydown', keydownHandler)
@@ -158,7 +169,7 @@ export default function List({ list }: { list: ListItemType[] }) {
 		}
 	}, [changeActiveIndex, handleEnterEvent])
 	return (
-		<ListContainer>
+		<ListContainer ref={listRef}>
 			<ListComponent
 				grid={{
 					gutter: [0, 8],
@@ -167,9 +178,10 @@ export default function List({ list }: { list: ListItemType[] }) {
 				dataSource={list}
 				renderItem={(item, index) => (
 					<ListItemWrapper
+						// ref={index === activeIndex ? activeItemRef : null}
 						className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ''}
 						onClick={() => handleClickItem(item)}
-						main={<RenderItem item={item} />}
+						main={<RenderItem ref={index === activeIndex ? activeItemRef : null} item={item} />}
 					/>
 				)}
 			/>

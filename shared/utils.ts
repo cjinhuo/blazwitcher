@@ -7,16 +7,6 @@ export function isChineseChar(char) {
 	return chineseCharRegex.test(char)
 }
 
-export function scrollIntoViewIfNeeded(element: HTMLElement, container: HTMLElement) {
-	const containerRect = container.getBoundingClientRect()
-	const elementRect = element.getBoundingClientRect()
-	if (elementRect.top < containerRect.top) {
-		container.scrollTop -= containerRect.top - elementRect.top
-	} else if (elementRect.bottom > containerRect.bottom) {
-		container.scrollTop += elementRect.bottom - containerRect.bottom + 4 // '+4' is for having margins with Footer Component
-	}
-}
-
 export function isTabItem(item: ListItemType): item is ListItemType<ItemType.Tab> {
 	return item.itemType === ItemType.Tab
 }

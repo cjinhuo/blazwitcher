@@ -9,6 +9,7 @@ import { timeAgo } from '~shared/time'
 import type { BookmarkItemType, HistoryItemType, ListItemType, TabItemType } from '~shared/types'
 import { isBookmarkItem, isTabItem } from '~shared/utils'
 
+import React from 'react'
 import HighlightText from './highlight-text'
 import { RenderOperation } from './operation'
 
@@ -151,12 +152,14 @@ export const RenderContent = ({ item }: { item: ListItemType }) => {
 	)
 }
 
-export const RenderItem = ({ item }: { item: ListItemType }) => {
+export const RenderItem = React.forwardRef<HTMLDivElement, { item: ListItemType }>(({ item }, ref) => {
 	return (
-		<ContentContainer>
+		<ContentContainer ref={ref}>
 			<RenderIcon iconUrl={item.data.favIconUrl} />
-			<RenderContent item={item}></RenderContent>
-			<RenderOperation item={item}></RenderOperation>
+			<RenderContent item={item} />
+			<RenderOperation item={item} />
 		</ContentContainer>
 	)
-}
+})
+
+RenderItem.displayName = 'RenderItem'
