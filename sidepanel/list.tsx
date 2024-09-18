@@ -1,5 +1,5 @@
 import { List as ListComponent } from '@douyinfe/semi-ui'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS } from '../shared/constants'
@@ -10,7 +10,9 @@ import { HOST_CLASS, IMAGE_CLASS, RenderItem, SVG_CLASS, VISIBILITY_CLASS } from
 import { OPERATION_ICON_CLASS } from './operation'
 
 const ListContainer = styled.div`
-  padding: 6px;
+	height: 100%;
+	overflow-y: scroll;
+  padding: 2px 6px;
   .semi-list-item-body-main {
     width: 100%;
     overflow: hidden;
@@ -87,20 +89,15 @@ const ListItemWrapper = styled(ListComponent.Item)`
   }
 `
 function scrollIntoViewIfNeeded(element: HTMLElement, container: HTMLElement) {
+	if (!element || !container) return
 	const containerRect = container.getBoundingClientRect()
 	const elementRect = element.getBoundingClientRect()
+	console.log(elementRect, containerRect)
 	if (elementRect.top < containerRect.top) {
-		container.scrollTop -= containerRect.top - elementRect.top
+		container.scrollTop -= containerRect.top - elementRect.top + 4
 	} else if (elementRect.bottom > containerRect.bottom) {
-		container.scrollTop += elementRect.bottom - containerRect.bottom + 4 // '+4' is for having margins with Footer Component
+		container.scrollTop += elementRect.bottom - containerRect.bottom + 8 // '+4' is for having margins with Footer Component
 	}
-}
-
-const setScrollTopIfNeeded = () => {
-	const mainContent = document.querySelector(`.${MAIN_CONTENT_CLASS}`) as HTMLElement
-	const activeItem = document.querySelector(`.${LIST_ITEM_ACTIVE_CLASS}`) as HTMLElement
-	if (!activeItem) return
-	scrollIntoViewIfNeeded(activeItem, mainContent)
 }
 
 export default function List({ list }: { list: ListItemType[] }) {
@@ -108,6 +105,7 @@ export default function List({ list }: { list: ListItemType[] }) {
 	const listRef = useRef<HTMLDivElement>(null)
 	const activeItemRef = useRef<HTMLDivElement>(null)
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		setActiveIndex(0)
 	}, [list])
@@ -132,20 +130,10 @@ export default function List({ list }: { list: ListItemType[] }) {
 		handleClickItem(list[activeIndex])
 	}, [activeIndex, list])
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		if (listRef.current && activeItemRef.current) {
-			console.log('activeItemRef.current', activeItemRef.current)
-			const listRect = listRef.current.getBoundingClientRect()
-			const activeItemRect = activeItemRef.current.getBoundingClientRect()
-			console.log('activeItemRect', activeItemRect)
-			console.log('listRect', listRect)
-			if (activeItemRect.top < listRect.top) {
-				listRef.current.scrollTop -= listRect.top - activeItemRect.top
-			} else if (activeItemRect.bottom > listRect.bottom) {
-				listRef.current.scrollTop += activeItemRect.bottom - listRect.bottom + 4 // '+4' is for having margins with Footer Component
-			}
-		}
-	}, [activeIndex])
+		scrollIntoViewIfNeeded(activeItemRef.current, listRef.current)
+	}, [activeItemRef.current, listRef.current])
 
 	useEffect(() => {
 		const keydownHandler = (event: KeyboardEvent) => {
@@ -168,22 +156,26 @@ export default function List({ list }: { list: ListItemType[] }) {
 			window.removeEventListener('keydown', keydownHandler)
 		}
 	}, [changeActiveIndex, handleEnterEvent])
+
+	const memoizedRenderItem = useCallback(
+		(item: ListItemType, index: number) => (
+			<ListItemWrapper
+				className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ''}
+				onClick={() => handleClickItem(item)}
+				main={<RenderItem ref={index === activeIndex ? activeItemRef : null} item={item} />}
+			/>
+		),
+		[activeIndex]
+	)
 	return (
 		<ListContainer ref={listRef}>
 			<ListComponent
 				grid={{
-					gutter: [0, 8],
+					gutter: [0, 4],
 					span: 24,
 				}}
 				dataSource={list}
-				renderItem={(item, index) => (
-					<ListItemWrapper
-						// ref={index === activeIndex ? activeItemRef : null}
-						className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ''}
-						onClick={() => handleClickItem(item)}
-						main={<RenderItem ref={index === activeIndex ? activeItemRef : null} item={item} />}
-					/>
-				)}
+				renderItem={memoizedRenderItem}
 			/>
 		</ListContainer>
 	)

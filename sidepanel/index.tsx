@@ -29,7 +29,7 @@ const Container = styled(Layout)`
 `
 const ContentWrapper = styled(Content)`
   flex: 1;
-  overflow-y: scroll;
+	overflow: hidden;
   padding: 0;
 `
 
