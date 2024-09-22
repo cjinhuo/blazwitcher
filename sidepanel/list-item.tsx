@@ -11,10 +11,31 @@ import { isBookmarkItem, isTabItem } from '~shared/utils'
 import HighlightText from './highlight-text'
 import { RenderOperation } from './operation'
 
-const ContentContainer = styled.div`
+interface ContentContainerProps {
+	$tabGroup?: chrome.tabGroups.TabGroup | null
+}
+const ContentContainer = styled.div<ContentContainerProps>`
   display: flex;
   padding: 0 5px;
   width: 100%;
+  border-left: ${(props) => (props.$tabGroup ? `4px solid ${props.$tabGroup.color}` : 'none')};
+  ${(props) =>
+		props.$tabGroup?.title &&
+		`
+    &:hover {
+      &::after {
+        content: "${props.$tabGroup.title}";
+        position: absolute;
+        padding: 0 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 72px;
+        color: ${props.$tabGroup.color};
+        font-weight: 500;
+        z-index: 1;
+      }
+    }
+  `}
 `
 export const IMAGE_CLASS = 'image-container'
 const ImageContainer = styled.div`
@@ -93,6 +114,8 @@ const Tag = styled.div`
   text-wrap: nowrap;
 `
 
+const Con = styled.div`color: red;`
+
 const BookmarkLabel = ({ data }: { data: BookmarkItemType }) => {
 	return (
 		<LabelContainer>
@@ -150,8 +173,9 @@ export const RenderContent = ({ item }: { item: ListItemType }) => {
 }
 
 export const RenderItem = ({ item }: { item: ListItemType }) => {
+	console.log('item', item)
 	return (
-		<ContentContainer>
+		<ContentContainer $tabGroup={item.data?.tabGroup}>
 			<RenderIcon iconUrl={item.data.favIconUrl} />
 			<RenderContent item={item}></RenderContent>
 			<RenderOperation item={item}></RenderOperation>

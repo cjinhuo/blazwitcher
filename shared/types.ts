@@ -20,7 +20,10 @@ interface BaseItemType {
 	hostHitRanges?: Matrix
 	groupNameHitRanges?: Matrix
 }
-export interface TabItemType extends chrome.tabs.Tab, BaseItemType {}
+export interface TabItemType extends chrome.tabs.Tab, BaseItemType {
+	titleBoundaryMapping: SourceMappingData
+	tabGroup: chrome.tabGroups.TabGroup | null
+}
 export interface BookmarkItemType extends chrome.bookmarks.BookmarkTreeNode, BaseItemType {
 	folderName: string
 	folderNameHitRanges?: Matrix

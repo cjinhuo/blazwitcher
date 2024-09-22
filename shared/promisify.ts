@@ -39,6 +39,10 @@ export const getBookmarksById = promisifyChromeMethod<chrome.bookmarks.BookmarkT
 	chrome.bookmarks.get.bind(chrome.bookmarks.get)
 )
 
+export const getTabGroupById = promisifyChromeMethod<chrome.tabGroups.TabGroup>(
+	chrome.tabGroups.get.bind(chrome.tabGroups)
+)
+
 function promisifyChromeMethod<T = any>(method: (...args: any[]) => void) {
 	return (...args: any[]) =>
 		new Promise<T>((resolve, reject) => {

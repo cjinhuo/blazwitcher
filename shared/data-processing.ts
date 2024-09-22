@@ -1,22 +1,35 @@
 import { DEFAULT_HISTORY_MAX_DAYS, DEFAULT_HISTORY_MAX_RESULTS, ONE_DAY_MILLISECONDS } from './constants'
-import { getBookmarksById, getBookmarksTree, historySearch, tabsQuery } from './promisify'
+import { getBookmarksById, getBookmarksTree, getTabGroupById, historySearch, tabsQuery } from './promisify'
 import { type BookmarkItemType, type HistoryItemType, ItemType } from './types'
 import { faviconURL, getCompositeSourceAndHost } from './utils'
 
 export async function tabsProcessing() {
 	const processedTabs = await tabsQuery({})
 	// filter the tabs that start with chrome://
-	return processedTabs
-		.filter((item) => !(item.url.startsWith('chrome://') || !item.url || !item.title))
-		.map((tab) => ({ itemType: ItemType.Tab, data: processTabItem(tab) }))
+	const filteredTabs = processedTabs.filter((item) => !(item.url.startsWith('chrome://') || !item.url || !item.title))
+	const tabs = await Promise.all(
+		filteredTabs.map(async (tab) => ({
+			itemType: ItemType.Tab,
+			data: {
+				...tab,
+				tabGroup: await tabGroupProcessing(tab.groupId), // 等待 tabGroupProcessing 的结果
+				titleBoundaryMapping: extractBoundaryMapping(tab.title.toLocaleLowerCase()),
+			},
+		}))
+	)
+	return tabs
 }
 
 function processTabItem(tab: chrome.tabs.Tab) {
 	return {
 		...tab,
-		...getCompositeSourceAndHost(tab.title, tab.url),
-		favIconUrl: faviconURL(tab.url),
+		titleBoundaryMapping: extractBoundaryMapping(tab.title.toLocaleLowerCase()),
 	}
+}
+
+function tabGroupProcessing(groupId: number) {
+	if (groupId === -1) return null
+	return getTabGroupById(groupId)
 }
 
 export function bookmarksProcessing() {
