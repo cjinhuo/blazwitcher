@@ -8,13 +8,14 @@ import styled from 'styled-components'
 import {
 	DEFAULT_BOOKMARK_DISPLAY_COUNT,
 	DEFAULT_HISTORY_DISPLAY_COUNT,
+	DEFAULT_STRICTNESS_COEFFICIENT,
 	MAIN_CONTENT_CLASS,
 	MAIN_WINDOW,
 } from '~shared/constants'
 import type { ItemType, ListItemType } from '~shared/types'
 import { isBookmarkItem, isDarkMode, isHistoryItem, isTabItem } from '~shared/utils'
 
-import { mergeSpacesWithRanges, searchSentenceByBoundaryMapping } from 'text-search-engine'
+import { isStrictnessSatisfied, mergeSpacesWithRanges, searchSentenceByBoundaryMapping } from 'text-search-engine'
 import { OriginalListAtom } from './atom'
 import Footer from './footer'
 import List from './list'
@@ -126,11 +127,14 @@ export default function SidePanel() {
 		if (searchValue.trim() !== '') {
 			filteredList = originalList.reduce((acc, item) => {
 				const hitRanges = searchSentenceByBoundaryMapping(item.data.titleBoundaryMapping, searchValue)
-				hitRanges &&
-					acc.push({
-						...item,
-						data: { ...item.data, hitRanges: mergeSpacesWithRanges(item.data.title, hitRanges) },
-					})
+				if (hitRanges) {
+					const mergedHitRanges = mergeSpacesWithRanges(item.data.title, hitRanges)
+					isStrictnessSatisfied(DEFAULT_STRICTNESS_COEFFICIENT, searchValue, mergedHitRanges) &&
+						acc.push({
+							...item,
+							data: { ...item.data, hitRanges: mergeSpacesWithRanges(item.data.title, hitRanges) },
+						})
+				}
 				return acc
 			}, [])
 		}

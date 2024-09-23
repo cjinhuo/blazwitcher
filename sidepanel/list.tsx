@@ -127,7 +127,9 @@ export default function List({ list }: { list: ListItemType[] }) {
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useLayoutEffect(() => {
-		setScrollTopIfNeeded()
+		setTimeout(() => {
+			setScrollTopIfNeeded()
+		}, 16)
 	}, [activeIndex])
 
 	useEffect(() => {
