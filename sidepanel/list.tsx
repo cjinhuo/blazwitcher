@@ -2,13 +2,13 @@ import { List as ListComponent } from '@douyinfe/semi-ui'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
+import { useAtomValue } from 'jotai'
 import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS, VISIBILITY_CLASS } from '../shared/constants'
 import type { ListItemType } from '../shared/types'
 import { closeCurrentWindowAndClearStorage, handleClickItem, scrollIntoViewIfNeeded } from '../shared/utils'
 import { CompositionAtom } from './atom'
 import { HIGHLIGHT_TEXT_CLASS, NORMAL_TEXT_CLASS } from './highlight-text'
 import { HOST_CLASS, IMAGE_CLASS, RenderItem, SVG_CLASS } from './list-item'
-import { OPERATION_ICON_CLASS } from './operation'
 
 const ListContainer = styled.div`
   padding: 6px;
@@ -49,12 +49,6 @@ const ListItemWrapper = styled(ListComponent.Item)`
     .${VISIBILITY_CLASS} {
       visibility: visible;
     }
-    .${OPERATION_ICON_CLASS} {
-      fill: var(--color-neutral-7);
-      > path {
-        fill: var(--color-neutral-7);
-      }
-    }
   }
   &.${LIST_ITEM_ACTIVE_CLASS} {
     background-color: var(--color-neutral-3);
@@ -76,12 +70,6 @@ const ListItemWrapper = styled(ListComponent.Item)`
     .${VISIBILITY_CLASS} {
       visibility: visible;
     }
-    .${OPERATION_ICON_CLASS} {
-      fill: var(--color-neutral-7);
-      > path {
-        fill: var(--color-neutral-7);
-      }
-    }
   }
   &.semi-list-item {
     height: 50px;
@@ -89,92 +77,92 @@ const ListItemWrapper = styled(ListComponent.Item)`
 `
 
 const setScrollTopIfNeeded = () => {
-  const mainContent = document.querySelector(`.${MAIN_CONTENT_CLASS}`) as HTMLElement
-  const activeItem = document.querySelector(`.${LIST_ITEM_ACTIVE_CLASS}`) as HTMLElement
-  if (!activeItem) return
-  scrollIntoViewIfNeeded(activeItem, mainContent)
+	const mainContent = document.querySelector(`.${MAIN_CONTENT_CLASS}`) as HTMLElement
+	const activeItem = document.querySelector(`.${LIST_ITEM_ACTIVE_CLASS}`) as HTMLElement
+	if (!activeItem) return
+	scrollIntoViewIfNeeded(activeItem, mainContent)
 }
 
 export default function List({ list }: { list: ListItemType[] }) {
-  const isComposition = useAtomValue(CompositionAtom)
-  const [activeIndex, setActiveIndex] = useState(0)
-  const i = useRef(0)
+	const isComposition = useAtomValue(CompositionAtom)
+	const [activeIndex, setActiveIndex] = useState(0)
+	const i = useRef(0)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    // reset active index
-    setActiveIndex(0)
-    i.current = 0
-  }, [list])
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		// reset active index
+		setActiveIndex(0)
+		i.current = 0
+	}, [list])
 
-  const changeActiveIndex = useCallback(
-    (offset: number) => {
-      const currentIndex = i.current
-      let index = currentIndex + offset
-      if (index < 0) {
-        index = list.length - 1
-      }
-      if (index >= list.length) {
-        index = 0
-      }
-      i.current = index
-      setActiveIndex(index)
-    },
-    [list]
-  )
+	const changeActiveIndex = useCallback(
+		(offset: number) => {
+			const currentIndex = i.current
+			let index = currentIndex + offset
+			if (index < 0) {
+				index = list.length - 1
+			}
+			if (index >= list.length) {
+				index = 0
+			}
+			i.current = index
+			setActiveIndex(index)
+		},
+		[list]
+	)
 
-  const handleEnterEvent = useCallback(() => {
-    handleClickItem(list[activeIndex])
-  }, [activeIndex, list])
+	const handleEnterEvent = useCallback(() => {
+		handleClickItem(list[activeIndex])
+	}, [activeIndex, list])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useLayoutEffect(() => {
-    setTimeout(() => {
-      setScrollTopIfNeeded()
-    }, 16)
-  }, [activeIndex])
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useLayoutEffect(() => {
+		setTimeout(() => {
+			setScrollTopIfNeeded()
+		}, 16)
+	}, [activeIndex])
 
-  const keydownHandler = useCallback(
-    (event: KeyboardEvent) => {
-      const keyActions: { [key: string]: () => void } = {
-        ArrowUp: () => changeActiveIndex(-1),
-        Tab: () => changeActiveIndex(1),
-        ArrowDown: () => changeActiveIndex(1),
-        Enter: handleEnterEvent,
-        Escape: closeCurrentWindowAndClearStorage,
-      }
+	const keydownHandler = useCallback(
+		(event: KeyboardEvent) => {
+			const keyActions: { [key: string]: () => void } = {
+				ArrowUp: () => changeActiveIndex(-1),
+				Tab: () => changeActiveIndex(1),
+				ArrowDown: () => changeActiveIndex(1),
+				Enter: handleEnterEvent,
+				Escape: closeCurrentWindowAndClearStorage,
+			}
 
-      const action = keyActions[event.code]
-      if (action) {
-        event.preventDefault()
-        action()
-      }
-    },
-    [changeActiveIndex, handleEnterEvent]
-  )
+			const action = keyActions[event.code]
+			if (action) {
+				event.preventDefault()
+				action()
+			}
+		},
+		[changeActiveIndex, handleEnterEvent]
+	)
 
-  useEffect(() => {
-    // only listen to keydown when not in composition（type chinese）
-    !isComposition && window.addEventListener('keydown', keydownHandler)
-    return () => window.removeEventListener('keydown', keydownHandler)
-  }, [isComposition, keydownHandler])
+	useEffect(() => {
+		// only listen to keydown when not in composition（type chinese）
+		!isComposition && window.addEventListener('keydown', keydownHandler)
+		return () => window.removeEventListener('keydown', keydownHandler)
+	}, [isComposition, keydownHandler])
 
-  return (
-    <ListContainer>
-      <ListComponent
-        grid={{
-          gutter: [0, 8],
-          span: 24,
-        }}
-        dataSource={list}
-        renderItem={(item, index) => (
-          <ListItemWrapper
-            className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ''}
-            onClick={() => handleClickItem(item)}
-            main={<RenderItem item={item} />}
-          />
-        )}
-      />
-    </ListContainer>
-  )
+	return (
+		<ListContainer>
+			<ListComponent
+				grid={{
+					gutter: [0, 8],
+					span: 24,
+				}}
+				dataSource={list}
+				renderItem={(item, index) => (
+					<ListItemWrapper
+						className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ''}
+						onClick={() => handleClickItem(item)}
+						main={<RenderItem item={item} />}
+					/>
+				)}
+			/>
+		</ListContainer>
+	)
 }

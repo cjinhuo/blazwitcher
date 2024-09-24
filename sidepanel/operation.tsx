@@ -14,30 +14,42 @@ import { OriginalListAtom } from './atom'
 export const OPERATION_ICON_CLASS = 'operation-icon'
 
 const IconContainer = styled.div`
-    width: 16px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
     border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0.9;
+		border: 1px solid var(--color-neutral-6);
+		background-color: transparent;
     cursor: pointer;
+		
     &:hover {
       transform: scale(1.08);
-      opacity: 1;
+			transition: 0.05s;
+			border: 1px solid var(--color-neutral-7);
+			svg {
+				fill: var(--color-neutral-7);
+				> path {
+					fill: var(--color-neutral-7);
+				}
+			}
     }
+
     svg {
+			width: 16px;
+			height: 16px;
       pointer-events: none;
-    }
-		fill: var(--color-neutral-2);
-    > path {
-    	fill: var(--color-neutral-2);
+			fill: var(--color-neutral-6);
+      > path {
+        fill: var(--color-neutral-6);
+      }
     }
     `
 
 const OperationContainer = styled.div`
-  padding: 0 6px;
-  gap:16px;
+  padding: 0 2px;
+  gap: 10px;
   height: 36px;
   display: flex;
   justify-content: space-between;
