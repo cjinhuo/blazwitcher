@@ -2,9 +2,11 @@ import { List as ListComponent } from '@douyinfe/semi-ui'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
+import { useAtomValue } from 'jotai'
 import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS } from '../shared/constants'
 import type { ListItemType } from '../shared/types'
 import { closeCurrentWindowAndClearStorage, handleClickItem, scrollIntoViewIfNeeded } from '../shared/utils'
+import { CompositionAtom } from './atom'
 import { HIGHLIGHT_TEXT_CLASS, NORMAL_TEXT_CLASS } from './highlight-text'
 import { HOST_CLASS, IMAGE_CLASS, RenderItem, SVG_CLASS, VISIBILITY_CLASS } from './list-item'
 import { OPERATION_ICON_CLASS } from './operation'
@@ -95,6 +97,7 @@ const setScrollTopIfNeeded = () => {
 }
 
 export default function List({ list }: { list: ListItemType[] }) {
+	const isComposition = useAtomValue(CompositionAtom)
 	const [activeIndex, setActiveIndex] = useState(0)
 	const i = useRef(0)
 
@@ -132,8 +135,8 @@ export default function List({ list }: { list: ListItemType[] }) {
 		}, 16)
 	}, [activeIndex])
 
-	useEffect(() => {
-		const keydownHandler = (event: KeyboardEvent) => {
+	const keydownHandler = useCallback(
+		(event: KeyboardEvent) => {
 			const keyActions: { [key: string]: () => void } = {
 				ArrowUp: () => changeActiveIndex(-1),
 				Tab: () => changeActiveIndex(1),
@@ -147,12 +150,16 @@ export default function List({ list }: { list: ListItemType[] }) {
 				event.preventDefault()
 				action()
 			}
-		}
-		window.addEventListener('keydown', keydownHandler)
-		return () => {
-			window.removeEventListener('keydown', keydownHandler)
-		}
-	}, [changeActiveIndex, handleEnterEvent])
+		},
+		[changeActiveIndex, handleEnterEvent]
+	)
+
+	useEffect(() => {
+		// only listen to keydown when not in composition（type chinese）
+		!isComposition && window.addEventListener('keydown', keydownHandler)
+		return () => window.removeEventListener('keydown', keydownHandler)
+	}, [isComposition, keydownHandler])
+
 	return (
 		<ListContainer>
 			<ListComponent
