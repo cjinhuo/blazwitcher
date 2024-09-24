@@ -1,5 +1,12 @@
 # blazwitcher
 
+## 0.1.10
+
+### Patch Changes
+
+- 4598a09: optimize operation button styles
+- 8c56975: only listen to keydown event when not in composition(typing chinese in pinyin)
+
 ## 0.1.9
 
 ### Patch Changes
