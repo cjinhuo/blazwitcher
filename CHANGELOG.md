@@ -1,5 +1,11 @@
 # blazwitcher
 
+## 0.1.9
+
+### Patch Changes
+
+- 977844c: add strictness coefficient to filter out results that are not highly relevant to the search value
+
 ## 0.1.7
 
 ### Patch Changes
