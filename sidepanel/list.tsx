@@ -3,13 +3,12 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import styled from 'styled-components'
 
 import { useAtomValue } from 'jotai'
-import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS } from '../shared/constants'
+import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS, VISIBILITY_CLASS } from '../shared/constants'
 import type { ListItemType } from '../shared/types'
 import { closeCurrentWindowAndClearStorage, handleClickItem, scrollIntoViewIfNeeded } from '../shared/utils'
 import { CompositionAtom } from './atom'
 import { HIGHLIGHT_TEXT_CLASS, NORMAL_TEXT_CLASS } from './highlight-text'
-import { HOST_CLASS, IMAGE_CLASS, RenderItem, SVG_CLASS, VISIBILITY_CLASS } from './list-item'
-import { OPERATION_ICON_CLASS } from './operation'
+import { HOST_CLASS, IMAGE_CLASS, RenderItem, SVG_CLASS } from './list-item'
 
 const ListContainer = styled.div`
   padding: 6px;
@@ -50,12 +49,6 @@ const ListItemWrapper = styled(ListComponent.Item)`
     .${VISIBILITY_CLASS} {
       visibility: visible;
     }
-		.${OPERATION_ICON_CLASS} {
-		  fill: var(--color-neutral-7);
-      > path {
-      fill: var(--color-neutral-7);
-      }
-	  }
   }
   &.${LIST_ITEM_ACTIVE_CLASS} {
     background-color: var(--color-neutral-3);
@@ -77,12 +70,6 @@ const ListItemWrapper = styled(ListComponent.Item)`
     .${VISIBILITY_CLASS} {
       visibility: visible;
     }
-		.${OPERATION_ICON_CLASS} {
-		  fill: var(--color-neutral-7);
-      > path {
-      fill: var(--color-neutral-7);
-      }
-	  }
   }
   &.semi-list-item {
     height: 50px;
