@@ -7,6 +7,7 @@ import { useAtom } from 'jotai'
 import { useCallback } from 'react'
 import React from 'react'
 import styled from 'styled-components'
+import { VISIBILITY_CLASS } from '~shared/constants'
 import { ItemType, type ListItemType, OperationItemPropertyTypes, OperationItemTitleMap } from '~shared/types'
 import { deleteItem, handleClickItem, isTabItem, queryInNewTab } from '~shared/utils'
 import { OriginalListAtom } from './atom'
@@ -44,7 +45,11 @@ const OperationContainer = styled.div`
 `
 
 const IconWithName = ({ children, name }: { children: React.ReactNode; name: OperationItemPropertyTypes }) => (
-	<IconContainer className={OPERATION_ICON_CLASS} title={OperationItemTitleMap[name]} data-name={name}>
+	<IconContainer
+		className={`${OPERATION_ICON_CLASS} ${VISIBILITY_CLASS}`}
+		title={OperationItemTitleMap[name]}
+		data-name={name}
+	>
 		{children}
 	</IconContainer>
 )

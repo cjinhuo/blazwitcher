@@ -12,7 +12,6 @@ import { isBookmarkItem, isTabItem } from '~shared/utils'
 import HighlightText from './highlight-text'
 import { RenderOperation } from './operation'
 
-export const VISIBILITY_CLASS = 'list-visibility'
 const ContentContainer = styled.div`
   display: flex;
   padding: 0 5px;
