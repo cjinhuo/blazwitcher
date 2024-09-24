@@ -1,7 +1,9 @@
 import { IconSearch } from '@douyinfe/semi-icons'
 import { Input } from '@douyinfe/semi-ui'
-import { useRef, useState } from 'react'
+import { useAtom } from 'jotai'
+import { useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
+import { CompositionAtom } from './atom'
 
 const SearchContainer = styled.div`
   width: 100%;
@@ -22,26 +24,29 @@ interface SearchProps {
 }
 export default function Search({ onSearch }: SearchProps) {
 	const [inputValue, setInputValue] = useState('')
-	const isCompositionRef = useRef(false)
+	const [isComposition, setIsComposition] = useAtom(CompositionAtom)
 
 	const handleCompositionStart = () => {
-		isCompositionRef.current = true
+		setIsComposition(true)
 	}
 
 	const handleCompositionEnd = () => {
-		isCompositionRef.current = false
+		setIsComposition(false)
 	}
 
-	const handleInputChange = (value: string) => {
-		setInputValue(value)
-		const formattedValue = isCompositionRef.current
-			? value
-					.split("'")
-					.filter((item) => item.trim())
-					.join('')
-			: value
-		onSearch(formattedValue.toLowerCase())
-	}
+	const handleInputChange = useCallback(
+		(value: string) => {
+			setInputValue(value)
+			const formattedValue = isComposition
+				? value
+						.split("'")
+						.filter((item) => item.trim())
+						.join('')
+				: value
+			onSearch(formattedValue.toLowerCase())
+		},
+		[isComposition, onSearch]
+	)
 
 	return (
 		<SearchContainer>
