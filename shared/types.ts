@@ -11,10 +11,11 @@ export interface SourceMappingData {
 interface BaseItemType {
 	titleBoundaryMapping: SourceMappingData
 	hitRanges?: Matrix
+	hostBoundaryMapping: SourceMappingData
+	hostHitRanges?: Matrix
+	host: string
 }
-export interface TabItemType extends chrome.tabs.Tab, BaseItemType {
-	titleBoundaryMapping: SourceMappingData
-}
+export interface TabItemType extends chrome.tabs.Tab, BaseItemType {}
 export interface BookmarkItemType extends chrome.bookmarks.BookmarkTreeNode, BaseItemType {
 	folderName: string
 	favIconUrl: string

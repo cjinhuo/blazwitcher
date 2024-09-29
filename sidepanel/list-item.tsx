@@ -129,15 +129,15 @@ const HistoryLabel = ({ data }: { data: HistoryItemType }) => {
 
 export const RenderContent = ({ item }: { item: ListItemType }) => {
 	const { data } = item
-	const host = useMemo(() => {
-		const urlObj = new URL(data.url)
-		return urlObj.host
-	}, [data.url])
 	return (
 		<TitleContainer>
 			<HighlightText source={data.title} hitRanges={data.hitRanges} id={String(data.id)} />
 			<SecondaryContainer>
-				<HighlightText source={host} containerStyle={{ fontSize: '10px', fontWeight: '400' }} />
+				<HighlightText
+					source={data.host}
+					hitRanges={data.hostHitRanges}
+					containerStyle={{ fontSize: '10px', fontWeight: '400' }}
+				/>
 				{isTabItem(item) ? (
 					<TabLabel data={item.data}></TabLabel>
 				) : isBookmarkItem(item) ? (

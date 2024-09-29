@@ -13,9 +13,13 @@ export async function tabsProcessing() {
 }
 
 function processTabItem(tab: chrome.tabs.Tab) {
+	const host = new URL(tab.url).host
 	return {
 		...tab,
 		titleBoundaryMapping: extractBoundaryMapping(tab.title.toLocaleLowerCase()),
+		hostBoundaryMapping: extractBoundaryMapping(host),
+		host,
+		favIconUrl: faviconURL(tab.url),
 	}
 }
 
@@ -58,17 +62,23 @@ export function bookmarksProcessing() {
 }
 
 function processHistoryItem(history: chrome.history.HistoryItem) {
+	const host = new URL(history.url).host
 	return {
 		...history,
 		titleBoundaryMapping: extractBoundaryMapping(history.title.toLocaleLowerCase()),
+		hostBoundaryMapping: extractBoundaryMapping(host),
+		host,
 		favIconUrl: faviconURL(history.url),
 	}
 }
 
-function processedBookmarkItem(bookmark: chrome.bookmarks.BookmarkTreeNode, folderName = 'root') {
+function processedBookmarkItem(bookmark: chrome.bookmarks.BookmarkTreeNode, folderName = '') {
+	const host = new URL(bookmark.url).host
 	return {
 		...bookmark,
 		titleBoundaryMapping: extractBoundaryMapping(bookmark.title.toLocaleLowerCase()),
+		hostBoundaryMapping: extractBoundaryMapping(host),
+		host,
 		favIconUrl: faviconURL(bookmark.url),
 		folderName,
 	}
@@ -106,16 +116,16 @@ export async function historyProcessing() {
 export const traversalBookmarkTreeNode = (
 	bookmarks: chrome.bookmarks.BookmarkTreeNode[],
 	result: BookmarkItemType[] = [],
-	parent?: chrome.bookmarks.BookmarkTreeNode
+	parentFolderName?: string
 ) => {
 	for (const bookmark of bookmarks) {
 		const { children, ...rest } = bookmark
 		if (children) {
-			traversalBookmarkTreeNode(children, result, rest)
+			traversalBookmarkTreeNode(children, result, parentFolderName ? `${parentFolderName} / ${rest.title}` : rest.title)
 		}
 		if (rest.url) {
 			// get favicon from chrome://favicon/ + url ,from https://stackoverflow.com/questions/10301636/how-can-i-get-the-bookmark-icon-in-chrome
-			result.push(processedBookmarkItem(rest, parent?.title))
+			result.push(processedBookmarkItem(rest, parentFolderName))
 		}
 	}
 	return result
