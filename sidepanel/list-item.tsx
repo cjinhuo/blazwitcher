@@ -6,36 +6,26 @@ import styled from 'styled-components'
 
 import { timeAgo } from '~shared/time'
 import type { BookmarkItemType, HistoryItemType, ListItemType, TabItemType } from '~shared/types'
-import { isBookmarkItem, isTabItem } from '~shared/utils'
+import { isBookmarkItem, isDarkMode, isTabItem } from '~shared/utils'
 
+import { tabGroupColorMap } from '~shared/constants'
 import HighlightText from './highlight-text'
 import { RenderOperation } from './operation'
 
 interface ContentContainerProps {
 	$tabGroup?: chrome.tabGroups.TabGroup | null
 }
+
+const colorMap = isDarkMode() ? tabGroupColorMap.dark : tabGroupColorMap.light
+const fontColorMap = isDarkMode() ? tabGroupColorMap.darkFont : tabGroupColorMap.lightFont
+
 const ContentContainer = styled.div<ContentContainerProps>`
   display: flex;
-  padding: 0 5px;
+  padding: 5px;
   width: 100%;
-  border-left: ${(props) => (props.$tabGroup ? `4px solid ${props.$tabGroup.color}` : 'none')};
-  ${(props) =>
-		props.$tabGroup?.title &&
-		`
-    &:hover {
-      &::after {
-        content: "${props.$tabGroup.title}";
-        position: absolute;
-        padding: 0 4px;
-        top: 50%;
-        transform: translateY(-50%);
-        right: 72px;
-        color: ${props.$tabGroup.color};
-        font-weight: 500;
-        z-index: 1;
-      }
-    }
-  `}
+	height: 50px;
+	border-radius: 6px;
+  border-left: ${(props) => (props.$tabGroup ? `4px solid ${colorMap[props.$tabGroup.color]}` : 'none')};
 `
 export const IMAGE_CLASS = 'image-container'
 const ImageContainer = styled.div`
@@ -77,6 +67,29 @@ const TitleContainer = styled.div`
   /* user-select: none; */
 `
 
+const TabGroup = styled.div<ContentContainerProps>`
+  background-color: ${(props) => colorMap[props.$tabGroup.color]};
+  color: ${(props) => fontColorMap[props.$tabGroup.color]};
+  padding: 0 4px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 500;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 15%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, ${(props) => colorMap[props.$tabGroup.color]});
+  }
+`
+
 const SecondaryContainer = styled.div`
   font-size: 10px;
   height: 20px;
@@ -114,8 +127,6 @@ const Tag = styled.div`
   text-wrap: nowrap;
 `
 
-const Con = styled.div`color: red;`
-
 const BookmarkLabel = ({ data }: { data: BookmarkItemType }) => {
 	return (
 		<LabelContainer>
@@ -129,6 +140,7 @@ const TabLabel = ({ data }: { data: TabItemType }) => {
 	return (
 		<LabelContainer>
 			<TabSvg className={SVG_CLASS}></TabSvg>
+			{data.tabGroup && <TabGroup $tabGroup={data.tabGroup}>{data.tabGroup.title}</TabGroup>}
 			{data.active && (
 				<>
 					<ActiveStatus></ActiveStatus>
@@ -173,7 +185,6 @@ export const RenderContent = ({ item }: { item: ListItemType }) => {
 }
 
 export const RenderItem = ({ item }: { item: ListItemType }) => {
-	console.log('item', item)
 	return (
 		<ContentContainer $tabGroup={item.data?.tabGroup}>
 			<RenderIcon iconUrl={item.data.favIconUrl} />

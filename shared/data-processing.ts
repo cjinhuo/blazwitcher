@@ -7,23 +7,17 @@ export async function tabsProcessing() {
 	const processedTabs = await tabsQuery({})
 	// filter the tabs that start with chrome://
 	const filteredTabs = processedTabs.filter((item) => !(item.url.startsWith('chrome://') || !item.url || !item.title))
-	const tabs = await Promise.all(
-		filteredTabs.map(async (tab) => ({
-			itemType: ItemType.Tab,
-			data: {
-				...tab,
-				tabGroup: await tabGroupProcessing(tab.groupId), // 等待 tabGroupProcessing 的结果
-				titleBoundaryMapping: extractBoundaryMapping(tab.title.toLocaleLowerCase()),
-			},
-		}))
+	return await Promise.all(
+		filteredTabs.map(async (tab) => ({ itemType: ItemType.Tab, data: await processTabItem(tab) }))
 	)
-	return tabs
 }
 
-function processTabItem(tab: chrome.tabs.Tab) {
+async function processTabItem(tab: chrome.tabs.Tab) {
 	return {
 		...tab,
-		titleBoundaryMapping: extractBoundaryMapping(tab.title.toLocaleLowerCase()),
+		tabGroup: await tabGroupProcessing(tab.groupId),
+		...getCompositeSourceAndHost(tab.title, tab.url),
+		favIconUrl: faviconURL(tab.url),
 	}
 }
 
