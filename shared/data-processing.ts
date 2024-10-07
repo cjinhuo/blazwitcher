@@ -1,8 +1,7 @@
-import { extractBoundaryMapping } from 'text-search-engine'
 import { DEFAULT_HISTORY_MAX_DAYS, DEFAULT_HISTORY_MAX_RESULTS, ONE_DAY_MILLISECONDS } from './constants'
 import { getBookmarksById, getBookmarksTree, historySearch, tabsQuery } from './promisify'
 import { type BookmarkItemType, type HistoryItemType, ItemType } from './types'
-import { faviconURL } from './utils'
+import { faviconURL, getCompositeSourceAndHost } from './utils'
 
 export async function tabsProcessing() {
 	const processedTabs = await tabsQuery({})
@@ -13,12 +12,9 @@ export async function tabsProcessing() {
 }
 
 function processTabItem(tab: chrome.tabs.Tab) {
-	const host = new URL(tab.url).host
 	return {
 		...tab,
-		titleBoundaryMapping: extractBoundaryMapping(tab.title.toLocaleLowerCase()),
-		hostBoundaryMapping: extractBoundaryMapping(host),
-		host,
+		...getCompositeSourceAndHost(tab.title, tab.url),
 		favIconUrl: faviconURL(tab.url),
 	}
 }
@@ -62,23 +58,17 @@ export function bookmarksProcessing() {
 }
 
 function processHistoryItem(history: chrome.history.HistoryItem) {
-	const host = new URL(history.url).host
 	return {
 		...history,
-		titleBoundaryMapping: extractBoundaryMapping(history.title.toLocaleLowerCase()),
-		hostBoundaryMapping: extractBoundaryMapping(host),
-		host,
+		...getCompositeSourceAndHost(history.title, history.url),
 		favIconUrl: faviconURL(history.url),
 	}
 }
 
 function processedBookmarkItem(bookmark: chrome.bookmarks.BookmarkTreeNode, folderName = '') {
-	const host = new URL(bookmark.url).host
 	return {
 		...bookmark,
-		titleBoundaryMapping: extractBoundaryMapping(bookmark.title.toLocaleLowerCase()),
-		hostBoundaryMapping: extractBoundaryMapping(host),
-		host,
+		...getCompositeSourceAndHost(bookmark.title, bookmark.url),
 		favIconUrl: faviconURL(bookmark.url),
 		folderName,
 	}
