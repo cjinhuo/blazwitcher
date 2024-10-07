@@ -2,7 +2,6 @@ import chromeIcon from 'data-base64:~assets/chrome-icon.svg'
 import BookmarkSvg from 'react:~assets/bookmark.svg'
 import HistorySvg from 'react:~assets/history.svg'
 import TabSvg from 'react:~assets/tab.svg'
-import { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { timeAgo } from '~shared/time'
@@ -131,12 +130,12 @@ export const RenderContent = ({ item }: { item: ListItemType }) => {
 	const { data } = item
 	return (
 		<TitleContainer>
-			<HighlightText source={data.title} hitRanges={data.hitRanges} id={String(data.id)} />
+			<HighlightText source={data.title} hitRanges={data.titleHitRanges} id={String(data.id)} />
 			<SecondaryContainer>
 				<HighlightText
 					source={data.host}
 					hitRanges={data.hostHitRanges}
-					containerStyle={{ fontSize: '10px', fontWeight: '400' }}
+					containerStyle={{ fontSize: '10px', fontWeight: '400', minHeight: '16px', lineHeight: '16px' }}
 				/>
 				{isTabItem(item) ? (
 					<TabLabel data={item.data}></TabLabel>

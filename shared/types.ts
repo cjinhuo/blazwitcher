@@ -9,15 +9,21 @@ export interface SourceMappingData {
 }
 
 interface BaseItemType {
-	titleBoundaryMapping: SourceMappingData
-	hitRanges?: Matrix
-	hostBoundaryMapping: SourceMappingData
-	hostHitRanges?: Matrix
+	// a set of title,host,folderName and group
+	compositeSource: string
+	compositeBoundaryMapping: SourceMappingData
+	compositeHitRanges?: Matrix
+
 	host: string
+
+	titleHitRanges?: Matrix
+	hostHitRanges?: Matrix
+	groupNameHitRanges?: Matrix
 }
 export interface TabItemType extends chrome.tabs.Tab, BaseItemType {}
 export interface BookmarkItemType extends chrome.bookmarks.BookmarkTreeNode, BaseItemType {
 	folderName: string
+	folderNameHitRanges?: Matrix
 	favIconUrl: string
 }
 export interface HistoryItemType extends chrome.history.HistoryItem, BaseItemType {
