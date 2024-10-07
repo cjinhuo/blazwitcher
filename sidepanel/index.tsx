@@ -13,9 +13,14 @@ import {
 	MAIN_WINDOW,
 } from '~shared/constants'
 import type { ItemType, ListItemType } from '~shared/types'
-import { isBookmarkItem, isDarkMode, isHistoryItem, isTabItem } from '~shared/utils'
+import { isBookmarkItem, isDarkMode, isHistoryItem, isTabItem, splitCompositeHitRanges } from '~shared/utils'
 
-import { isStrictnessSatisfied, mergeSpacesWithRanges, searchSentenceByBoundaryMapping } from 'text-search-engine'
+import {
+	type Matrix,
+	isStrictnessSatisfied,
+	mergeSpacesWithRanges,
+	searchSentenceByBoundaryMapping,
+} from 'text-search-engine'
 import { OriginalListAtom } from './atom'
 import Footer from './footer'
 import List from './list'
@@ -67,8 +72,8 @@ const orderList = (list: ListItemType[]) => {
 		a.data.lastVisitTime ? b.data.lastVisitTime - a.data.lastVisitTime : -1
 
 	const compareForHitRangeLength = (a: ListItemType, b: ListItemType) => {
-		if (a.data.hitRanges && b.data.hitRanges) {
-			return a.data.hitRanges.length - b.data.hitRanges.length
+		if (a.data.compositeHitRanges && b.data.compositeHitRanges) {
+			return a.data.compositeHitRanges.length - b.data.compositeHitRanges.length
 		}
 		return 0
 	}
@@ -125,15 +130,21 @@ export default function SidePanel() {
 	const list = useMemo(() => {
 		let filteredList = originalList
 		if (searchValue.trim() !== '') {
-			filteredList = originalList.reduce((acc, item) => {
-				const hitRanges = searchSentenceByBoundaryMapping(item.data.titleBoundaryMapping, searchValue)
+			filteredList = originalList.reduce<ListItemType[]>((acc, item) => {
+				let hitRanges: Matrix | undefined
+				hitRanges = searchSentenceByBoundaryMapping(item.data.compositeBoundaryMapping, searchValue)
 				if (hitRanges) {
-					const mergedHitRanges = mergeSpacesWithRanges(item.data.title, hitRanges)
-					isStrictnessSatisfied(DEFAULT_STRICTNESS_COEFFICIENT, searchValue, mergedHitRanges) &&
+					const mergedHitRanges = mergeSpacesWithRanges(item.data.compositeSource, hitRanges)
+					if (isStrictnessSatisfied(DEFAULT_STRICTNESS_COEFFICIENT, searchValue, mergedHitRanges)) {
+						const [titleHitRanges, hostHitRanges] = splitCompositeHitRanges(mergedHitRanges, [
+							item.data.title.length,
+							item.data.host.length,
+						])
 						acc.push({
 							...item,
-							data: { ...item.data, hitRanges: mergeSpacesWithRanges(item.data.title, hitRanges) },
+							data: { ...item.data, compositeHitRanges: mergedHitRanges, titleHitRanges, hostHitRanges },
 						})
+					}
 				}
 				return acc
 			}, [])

@@ -1,3 +1,4 @@
+import { extractBoundaryMapping } from 'text-search-engine'
 import { LAST_ACTIVE_WINDOW_ID_KEY, SELF_WINDOW_ID_KEY, SELF_WINDOW_STATE } from './constants'
 import { storageGet, storageRemove } from './promisify'
 import { ItemType, type ListItemType, type Matrix } from './types'
@@ -114,4 +115,66 @@ export function sleep(ms: number) {
 
 export function isDarkMode() {
 	return window.matchMedia?.('(prefers-color-scheme: dark)').matches
+}
+
+export function getCompositeSourceAndHost(title?: string, url?: string) {
+	const host = new URL(url).host
+	const compositeSource = `${title.toLocaleLowerCase().trim()}${host}`
+	return {
+		compositeSource,
+		host,
+		compositeBoundaryMapping: extractBoundaryMapping(compositeSource),
+	}
+}
+
+/**
+ * 将复合命中范围根据 source 长度拆分为多个 range
+ * @param compositeHitRanges
+ * @param compositeSourceLengths
+ */
+export function splitCompositeHitRanges(compositeHitRanges: Matrix, compositeSourceLengths: number[]) {
+	if (compositeHitRanges.length < 1) return [compositeHitRanges]
+	const result: (Matrix | undefined)[] = []
+	const temp: Matrix = []
+	let hitRangeIndex = 0
+	let sourceIndex = 0
+	let cumulativeSourceLength = compositeSourceLengths[sourceIndex]
+	let currentRange = compositeHitRanges[hitRangeIndex]
+	const append = (increaseSourceIndex = true) => {
+		if (temp.length > 0) {
+			// 减去前面累加 source 的长度
+			const gap = compositeSourceLengths.slice(0, result.length).reduce((a, b) => a + b, 0)
+			result.push([...temp.map(([a, b]) => [a - gap, b - gap] as [number, number])])
+			temp.length = 0
+		} else {
+			result.push(undefined)
+		}
+		if (increaseSourceIndex) {
+			cumulativeSourceLength += compositeSourceLengths[++sourceIndex]
+		}
+	}
+	while (hitRangeIndex < compositeHitRanges.length && sourceIndex < compositeSourceLengths.length) {
+		const [start, end] = currentRange
+		const _index = cumulativeSourceLength - 1
+		if (_index < start) {
+			append()
+		} else if (_index >= start && _index < end) {
+			temp.push([start, _index])
+			currentRange = [_index + 1, end]
+			append()
+		} else if (_index === end) {
+			temp.push(currentRange)
+			currentRange = compositeHitRanges[++hitRangeIndex]
+			append()
+		} else {
+			// cumulativeSourceLength > end
+			temp.push(currentRange)
+			currentRange = compositeHitRanges[++hitRangeIndex]
+		}
+	}
+	if (compositeSourceLengths.length - sourceIndex > 0) {
+		append(false)
+		result.push(...Array(compositeSourceLengths.length - sourceIndex - 1).fill(undefined))
+	}
+	return result
 }

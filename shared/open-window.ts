@@ -66,7 +66,11 @@ async function activeWindow() {
 }
 
 export function weakUpWindowIfActiveByUser() {
-	chrome.runtime.onInstalled.addListener(activeWindow)
+	chrome.runtime.onInstalled.addListener((detail) => {
+		if (detail.reason === 'install') {
+			activeWindow()
+		}
+	})
 	chrome.action.onClicked.addListener(activeWindow)
 	chrome.commands.onCommand.addListener((command) => {
 		if (command === '_execute_action') {
