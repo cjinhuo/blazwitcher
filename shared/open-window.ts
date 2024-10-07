@@ -1,9 +1,11 @@
 import { LAST_ACTIVE_WINDOW_ID_KEY, SELF_WINDOW_ID_KEY, SELF_WINDOW_STATE } from './constants'
 import { getCurrentWindow, getDisplayInfo, getWindowById, storageGet, storageSet } from './promisify'
 
-const SEARCH_WINDOW_WIDTH = 750
-const SEARCH_WINDOW_HEIGHT = 495
+// const SEARCH_WINDOW_WIDTH = 750
+// const SEARCH_WINDOW_HEIGHT = 495
 
+const SEARCH_WINDOW_WIDTH = 640
+const SEARCH_WINDOW_HEIGHT = 400
 async function activeWindow() {
 	const storage = await storageGet(SELF_WINDOW_ID_KEY)
 	if (storage[SELF_WINDOW_ID_KEY]) {

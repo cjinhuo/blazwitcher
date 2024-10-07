@@ -1,5 +1,11 @@
 # blazwitcher
 
+## 0.2.0
+
+### Minor Changes
+
+- 27d2199: support hybrid searching which include host and title
+
 ## 0.1.10
 
 ### Patch Changes
