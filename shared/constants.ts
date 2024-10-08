@@ -55,28 +55,6 @@ export const tabGroupColorMap = {
 		cyan: '#78D9EC',
 		orange: '#FBA65C',
 	},
-	lightFont: {
-		grey: 'var(--color-neutral-3)',
-		blue: 'var(--color-neutral-3)',
-		red: 'var(--color-neutral-3)',
-		yellow: 'var(--color-neutral-10)',
-		green: 'var(--color-neutral-3)',
-		pink: 'var(--color-neutral-3)',
-		purple: 'var(--color-neutral-3)',
-		cyan: 'var(--color-neutral-3)',
-		orange: 'var(--color-neutral-10)',
-	},
-	darkFont: {
-		grey: 'var(--color-neutral-10)',
-		blue: 'var(--color-neutral-10)',
-		red: 'var(--color-neutral-10)',
-		yellow: 'var(--color-neutral-10)',
-		green: 'var(--color-neutral-10)',
-		pink: 'var(--color-neutral-10)',
-		purple: 'var(--color-neutral-10)',
-		cyan: 'var(--color-neutral-10)',
-		orange: 'var(--color-neutral-10)',
-	},
 }
 
 // search
