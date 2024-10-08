@@ -17,7 +17,6 @@ interface ContentContainerProps {
 }
 
 const colorMap = isDarkMode() ? tabGroupColorMap.dark : tabGroupColorMap.light
-const fontColor = isDarkMode() ? 'var(--color-neutral-10)' : 'var(--color-neutral-3)'
 
 const ContentContainer = styled.div<ContentContainerProps>`
   display: flex;
@@ -69,7 +68,9 @@ const TitleContainer = styled.div`
 
 const TabGroup = styled.div<ContentContainerProps>`
   background-color: ${(props) => colorMap[props.$tabGroup.color]};
-  color: ${fontColor};
+  color: var(--color-neutral-10);
+	height: 16px;
+	line-height: 16px;
   padding: 0 4px;
   border-radius: 4px;
   font-size: 9px;
