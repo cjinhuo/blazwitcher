@@ -1,5 +1,11 @@
 # blazwitcher
 
+## 0.2.1
+
+### Patch Changes
+
+- 50bb1b6: feat: add tabGroup title and color
+
 ## 0.2.0
 
 ### Minor Changes
