@@ -6,15 +6,25 @@ import styled from 'styled-components'
 
 import { timeAgo } from '~shared/time'
 import type { BookmarkItemType, HistoryItemType, ListItemType, TabItemType } from '~shared/types'
-import { isBookmarkItem, isTabItem } from '~shared/utils'
+import { isBookmarkItem, isDarkMode, isTabItem } from '~shared/utils'
 
+import { tabGroupColorMap } from '~shared/constants'
 import HighlightText from './highlight-text'
 import { RenderOperation } from './operation'
 
-const ContentContainer = styled.div`
+interface ContentContainerProps {
+	$tabGroup?: chrome.tabGroups.TabGroup | null
+}
+
+const colorMap = isDarkMode() ? tabGroupColorMap.dark : tabGroupColorMap.light
+
+const ContentContainer = styled.div<ContentContainerProps>`
   display: flex;
-  padding: 0 5px;
+  padding: 5px;
   width: 100%;
+	height: 50px;
+	border-radius: 6px;
+  border-left: ${(props) => (props.$tabGroup ? `4px solid ${colorMap[props.$tabGroup.color]}` : 'none')};
 `
 export const IMAGE_CLASS = 'image-container'
 const ImageContainer = styled.div`
@@ -54,6 +64,31 @@ const TitleContainer = styled.div`
   padding: 0 4px;
   overflow: hidden;
   /* user-select: none; */
+`
+
+const TabGroup = styled.div<ContentContainerProps>`
+  background-color: ${(props) => colorMap[props.$tabGroup.color]};
+  color: var(--color-neutral-10);
+	height: 16px;
+	line-height: 16px;
+  padding: 0 4px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 500;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 15%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, ${(props) => colorMap[props.$tabGroup.color]});
+  }
 `
 
 const SecondaryContainer = styled.div`
@@ -106,6 +141,7 @@ const TabLabel = ({ data }: { data: TabItemType }) => {
 	return (
 		<LabelContainer>
 			<TabSvg className={SVG_CLASS}></TabSvg>
+			{data.tabGroup && <TabGroup $tabGroup={data.tabGroup}>{data.tabGroup.title}</TabGroup>}
 			{data.active && (
 				<>
 					<ActiveStatus></ActiveStatus>
@@ -151,7 +187,7 @@ export const RenderContent = ({ item }: { item: ListItemType }) => {
 
 export const RenderItem = ({ item }: { item: ListItemType }) => {
 	return (
-		<ContentContainer>
+		<ContentContainer $tabGroup={item.data?.tabGroup}>
 			<RenderIcon iconUrl={item.data.favIconUrl} />
 			<RenderContent item={item}></RenderContent>
 			<RenderOperation item={item}></RenderOperation>

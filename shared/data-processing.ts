@@ -1,22 +1,29 @@
 import { DEFAULT_HISTORY_MAX_DAYS, DEFAULT_HISTORY_MAX_RESULTS, ONE_DAY_MILLISECONDS } from './constants'
-import { getBookmarksById, getBookmarksTree, historySearch, tabsQuery } from './promisify'
+import { getBookmarksById, getBookmarksTree, getTabGroupById, historySearch, tabsQuery } from './promisify'
 import { type BookmarkItemType, type HistoryItemType, ItemType } from './types'
 import { faviconURL, getCompositeSourceAndHost } from './utils'
 
 export async function tabsProcessing() {
 	const processedTabs = await tabsQuery({})
 	// filter the tabs that start with chrome://
-	return processedTabs
-		.filter((item) => !(item.url.startsWith('chrome://') || !item.url || !item.title))
-		.map((tab) => ({ itemType: ItemType.Tab, data: processTabItem(tab) }))
+	const filteredTabs = processedTabs.filter((item) => !(item.url.startsWith('chrome://') || !item.url || !item.title))
+	return await Promise.all(
+		filteredTabs.map(async (tab) => ({ itemType: ItemType.Tab, data: await processTabItem(tab) }))
+	)
 }
 
-function processTabItem(tab: chrome.tabs.Tab) {
+async function processTabItem(tab: chrome.tabs.Tab) {
 	return {
 		...tab,
+		tabGroup: await tabGroupProcessing(tab.groupId),
 		...getCompositeSourceAndHost(tab.title, tab.url),
 		favIconUrl: faviconURL(tab.url),
 	}
+}
+
+function tabGroupProcessing(groupId: number) {
+	if (groupId === -1) return null
+	return getTabGroupById(groupId)
 }
 
 export function bookmarksProcessing() {
