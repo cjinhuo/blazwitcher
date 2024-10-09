@@ -16,6 +16,8 @@ Blazwitcher 是一个[浏览器插件](https://chrome.google.com/webstore/detail
 - 书签搜索: 搜索你所有的书签
 - 切换和快速创建标签:  只需按下'enter'键来切换或打开你想要的标签
 
+![landing](./landing.png)
+
 ## 适用人群
 那些追求快捷操作和速度的人群，如：
 - 🧑‍💻 程序员 
@@ -29,9 +31,11 @@ Blazwitcher 是一个[浏览器插件](https://chrome.google.com/webstore/detail
 1.  访问[Chrome 扩展商店](https://chrome.google.com/webstore/detail/ᾋfjgablnemienkegdnbihhemebmmonihg)
 2.  将其添加到浏览器中
 
-# #搜索
-单击扩展栏中的图标，然后键入拼音或特定单词模糊搜索。
-![landing](landing.png)
 
-# #快捷方式
+## 快捷方式
 激活 Blazwitcher 扩展的默认快捷键是Mac上的`Command+.(Command+Period)`，Windows上的`Ctrl+.(Ctrl+Period)`。当然，你可以访问 [chrome://extensions/shortcuts](chrome://extensions/shortcuts) 来修改它以适应你的习惯。
+
+# 📞 联系
+欢迎提 issue，你可以加我微信或者邮件联系我，如果你有好的建议(备注: blazwitcher)
+* wx：cjinhuo
+* email: cjinhuo@qq.com

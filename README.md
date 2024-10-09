@@ -19,6 +19,8 @@ Blazwitcher is a local [Chrome Extension](https://chromewebstore.google.com/deta
 - Bookmark Search: Search across all your bookmarks
 - Switch and create tab rapidly: Just key down 'enter' to switch or open the tab you want rapidly
 
+![landing](./docs/landing.png)
+
 ## Ideal For
 Those people who are looking for quick action and speed, like:
 - 🧑‍💻 Programers
@@ -32,9 +34,11 @@ Those people who are looking for quick action and speed, like:
 1.  visit [Chrome Extension Store](https://chromewebstore.google.com/detail/blazwitcher-search-and-sw/fjgablnemienkegdnbihhemebmmonihg?hl=en-US)
 2.  Add it to your browser
 
-## searching
-Click the icon in the extension bar then type pinyin or specific word to fuzzy search.
-![landing](./docs/landing.png)
 
 ## shortcut
 The default **shortcut key** to active Blazwitcher Extension is `Command+.(Command+Period)` on Mac, and `Ctrl+.(Ctrl+Period)` on Windows. Of course, you could visit [chrome://extensions/shortcuts](chrome://extensions/shortcuts) to modify it to suit your habits.
+
+# 📞 contact
+welcome to raise issue, you can contact me on wx or email if you have some good suggestion(notes: text-search-engine)
+* wx: cjinhuo
+* email: cjinhuo@qq.com
