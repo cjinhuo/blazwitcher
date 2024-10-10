@@ -88,6 +88,9 @@ export default function List({ list }: { list: ListItemType[] }) {
 	const [activeIndex, setActiveIndex] = useState(0)
 	const i = useRef(0)
 
+	const timer = useRef<NodeJS.Timeout>()
+	const accumluatedOffset = useRef(0)
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		// reset active index
@@ -110,6 +113,26 @@ export default function List({ list }: { list: ListItemType[] }) {
 		},
 		[list]
 	)
+	const debounceChangeAvtiveIndex = useCallback(() => {
+		if (timer.current) {
+			clearTimeout(timer.current)
+		}
+
+		timer.current = setTimeout(() => {
+			if (accumluatedOffset.current !== 0) {
+				changeActiveIndex(accumluatedOffset.current)
+				accumluatedOffset.current = 0
+			}
+		}, 16)
+	}, [changeActiveIndex])
+
+	const keyActionsChangeIndex = useCallback(
+		(offset: number) => {
+			accumluatedOffset.current += offset
+			debounceChangeAvtiveIndex()
+		},
+		[debounceChangeAvtiveIndex]
+	)
 
 	const handleEnterEvent = useCallback(() => {
 		handleClickItem(list[activeIndex])
@@ -117,17 +140,15 @@ export default function List({ list }: { list: ListItemType[] }) {
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useLayoutEffect(() => {
-		setTimeout(() => {
-			setScrollTopIfNeeded()
-		}, 16)
+		setScrollTopIfNeeded()
 	}, [activeIndex])
 
 	const keydownHandler = useCallback(
 		(event: KeyboardEvent) => {
 			const keyActions: { [key: string]: () => void } = {
-				ArrowUp: () => changeActiveIndex(-1),
-				Tab: () => changeActiveIndex(1),
-				ArrowDown: () => changeActiveIndex(1),
+				ArrowUp: () => keyActionsChangeIndex(-1),
+				Tab: () => keyActionsChangeIndex(1),
+				ArrowDown: () => keyActionsChangeIndex(1),
 				Enter: handleEnterEvent,
 				Escape: closeCurrentWindowAndClearStorage,
 			}
@@ -138,7 +159,7 @@ export default function List({ list }: { list: ListItemType[] }) {
 				action()
 			}
 		},
-		[changeActiveIndex, handleEnterEvent]
+		[handleEnterEvent, keyActionsChangeIndex]
 	)
 
 	useEffect(() => {
@@ -146,6 +167,13 @@ export default function List({ list }: { list: ListItemType[] }) {
 		!isComposition && window.addEventListener('keydown', keydownHandler)
 		return () => window.removeEventListener('keydown', keydownHandler)
 	}, [isComposition, keydownHandler])
+
+	// 组件卸载时清除定时器
+	useEffect(() => {
+		if (timer.current) {
+			clearTimeout(timer.current)
+		}
+	}, [])
 
 	return (
 		<ListContainer>
