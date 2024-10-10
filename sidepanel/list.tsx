@@ -89,7 +89,7 @@ export default function List({ list }: { list: ListItemType[] }) {
 	const i = useRef(0)
 
 	const timer = useRef<NodeJS.Timeout>()
-	const accumluatedOffset = useRef(0)
+	const accumulatedOffset = useRef(0)
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -113,25 +113,25 @@ export default function List({ list }: { list: ListItemType[] }) {
 		},
 		[list]
 	)
-	const debounceChangeAvtiveIndex = useCallback(() => {
+	const debounceChangeActiveIndex = useCallback(() => {
 		if (timer.current) {
 			clearTimeout(timer.current)
 		}
 
 		timer.current = setTimeout(() => {
-			if (accumluatedOffset.current !== 0) {
-				changeActiveIndex(accumluatedOffset.current)
-				accumluatedOffset.current = 0
+			if (accumulatedOffset.current !== 0) {
+				changeActiveIndex(accumulatedOffset.current)
+				accumulatedOffset.current = 0
 			}
 		}, 16)
 	}, [changeActiveIndex])
 
 	const keyActionsChangeIndex = useCallback(
 		(offset: number) => {
-			accumluatedOffset.current += offset
-			debounceChangeAvtiveIndex()
+			accumulatedOffset.current += offset
+			debounceChangeActiveIndex()
 		},
-		[debounceChangeAvtiveIndex]
+		[debounceChangeActiveIndex]
 	)
 
 	const handleEnterEvent = useCallback(() => {
@@ -170,11 +170,7 @@ export default function List({ list }: { list: ListItemType[] }) {
 
 	// 组件卸载时清除定时器
 	useEffect(() => {
-		return () => {
-			if (timer.current) {
-				clearTimeout(timer.current)
-			}
-		}
+		return () => timer.current && clearTimeout(timer.current)
 	}, [])
 
 	return (
