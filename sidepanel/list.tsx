@@ -170,8 +170,10 @@ export default function List({ list }: { list: ListItemType[] }) {
 
 	// 组件卸载时清除定时器
 	useEffect(() => {
-		if (timer.current) {
-			clearTimeout(timer.current)
+		return () => {
+			if (timer.current) {
+				clearTimeout(timer.current)
+			}
 		}
 	}, [])
 
