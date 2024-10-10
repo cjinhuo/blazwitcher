@@ -187,7 +187,7 @@ export const RenderContent = ({ item }: { item: ListItemType }) => {
 
 export const RenderItem = ({ item }: { item: ListItemType }) => {
 	return (
-		<ContentContainer $tabGroup={item.data?.tabGroup}>
+		<ContentContainer $tabGroup={isTabItem(item) && item.data?.tabGroup}>
 			<RenderIcon iconUrl={item.data.favIconUrl} />
 			<RenderContent item={item}></RenderContent>
 			<RenderOperation item={item}></RenderOperation>

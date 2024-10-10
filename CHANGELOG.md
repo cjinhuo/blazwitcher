@@ -1,5 +1,12 @@
 # blazwitcher
 
+## 0.2.2
+
+### Patch Changes
+
+- 6ab84e8: feat: add debounce when change active tab
+- 487b209: Determine if chrome.tabGroups exists to adapt for 360 Browser
+
 ## 0.2.1
 
 ### Patch Changes
