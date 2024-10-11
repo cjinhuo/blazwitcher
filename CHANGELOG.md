@@ -1,5 +1,11 @@
 # blazwitcher
 
+## 0.2.3
+
+### Patch Changes
+
+- upgrade text-search-engine to 1.4.2
+
 ## 0.2.2
 
 ### Patch Changes
