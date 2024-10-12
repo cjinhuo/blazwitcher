@@ -130,9 +130,9 @@ export default function SidePanel() {
 	const list = useMemo(() => {
 		let filteredList = originalList
 		const conditions = searchParser(searchValue??"")
-		filteredList = conditions.tab? originalList.filter((item) => item.itemType =='tab'):filteredList
-		filteredList = conditions.history? originalList.filter((item) => item.itemType =='history'):filteredList
-		filteredList = conditions.bookmark? originalList.filter((item) => item.itemType =='bookmark'):filteredList
+		filteredList = conditions.tab? filteredList.filter((item) => item.itemType =='tab'):filteredList
+		filteredList = conditions.history? filteredList.filter((item) => item.itemType =='history'):filteredList
+		filteredList = conditions.bookmark? filteredList.filter((item) => item.itemType =='bookmark'):filteredList
 		if (conditions.keyword && conditions.keyword.trim() !== '') {
 			filteredList = filteredList.reduce<ListItemType[]>((acc, item) => {
 				let hitRanges: Matrix | undefined 
