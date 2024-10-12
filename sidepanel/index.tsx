@@ -13,7 +13,7 @@ import {
 	MAIN_WINDOW,
 } from '~shared/constants'
 import type { ItemType, ListItemType } from '~shared/types'
-import { isBookmarkItem, isDarkMode, isHistoryItem, isTabItem, splitCompositeHitRanges } from '~shared/utils'
+import { isBookmarkItem, isDarkMode, isHistoryItem, isTabItem, splitCompositeHitRanges,searchParser } from '~shared/utils'
 
 import {
 	type Matrix,
@@ -129,13 +129,17 @@ export default function SidePanel() {
 
 	const list = useMemo(() => {
 		let filteredList = originalList
-		if (searchValue.trim() !== '') {
-			filteredList = originalList.reduce<ListItemType[]>((acc, item) => {
-				let hitRanges: Matrix | undefined
-				hitRanges = searchSentenceByBoundaryMapping(item.data.compositeBoundaryMapping, searchValue)
+		const conditions = searchParser(searchValue??"")
+		filteredList = conditions.tab? originalList.filter((item) => item.itemType =='tab'):filteredList
+		filteredList = conditions.history? originalList.filter((item) => item.itemType =='history'):filteredList
+		filteredList = conditions.bookmark? originalList.filter((item) => item.itemType =='bookmark'):filteredList
+		if (conditions.keyword && conditions.keyword.trim() !== '') {
+			filteredList = filteredList.reduce<ListItemType[]>((acc, item) => {
+				let hitRanges: Matrix | undefined 
+				hitRanges = searchSentenceByBoundaryMapping(item.data.compositeBoundaryMapping, conditions.keyword)
 				if (hitRanges) {
 					const mergedHitRanges = mergeSpacesWithRanges(item.data.compositeSource, hitRanges)
-					if (isStrictnessSatisfied(DEFAULT_STRICTNESS_COEFFICIENT, searchValue, mergedHitRanges)) {
+					if (isStrictnessSatisfied(DEFAULT_STRICTNESS_COEFFICIENT, conditions.keyword, mergedHitRanges)) {
 						const [titleHitRanges, hostHitRanges] = splitCompositeHitRanges(mergedHitRanges, [
 							item.data.title.length,
 							item.data.host.length,

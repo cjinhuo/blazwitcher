@@ -178,3 +178,38 @@ export function splitCompositeHitRanges(compositeHitRanges: Matrix, compositeSou
 	}
 	return result
 }
+
+
+const CondtionParserMap = {
+	't': 'tab',
+	'k': 'keyword',
+	'h': 'history',
+	'b': 'bookmark'
+};
+/**
+ * 解析参数，支持 /t /k /h /b的参数规范
+ * @param input 
+ * @returns 
+ */
+export const searchParser = (input:string) => {
+    const conditions = {};
+    const regex = /\/(\w+):?(\S*)/g; 
+    let match;
+    while ((match = regex.exec(input)) !== null) {
+        const paramPrefix = match[1];
+        const value = match[2] ? match[2] : true; 
+        if (CondtionParserMap[paramPrefix]) {
+            conditions[CondtionParserMap[paramPrefix]] = value === true ? true : value;
+        }
+    }
+    const lastKeyword = input.split(/\s+/).filter(part => !part.startsWith('/')).join(" ");
+    if (lastKeyword) {
+        conditions['keyword'] = lastKeyword; 
+    }
+    return conditions as {
+		tab?:boolean ,
+		keyword?:string,
+		history?:boolean,
+		bookmark?:boolean,
+	}
+};
