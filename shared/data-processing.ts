@@ -73,9 +73,10 @@ function processHistoryItem(history: chrome.history.HistoryItem) {
 }
 
 function processedBookmarkItem(bookmark: chrome.bookmarks.BookmarkTreeNode, folderName = '') {
+	const folder = folderName?.split("/").pop()
 	return {
 		...bookmark,
-		...getCompositeSourceAndHost(bookmark.title, bookmark.url),
+		...getCompositeSourceAndHost(`${bookmark.title} ${folder}`, bookmark.url),
 		favIconUrl: faviconURL(bookmark.url),
 		folderName,
 	}
