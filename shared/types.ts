@@ -70,7 +70,8 @@ export const OperationItemTitleMap = {
 
 export interface CommandPlugin {
 	command: string
-	alias: string
-	dataProcessing?: (data: ListItemType) => ListItemType
+	alias?: string
+	placeholder: string
+	dataProcessing?: (data: ListItemType[]) => ListItemType[]
 	render?: () => React.ReactNode
 }

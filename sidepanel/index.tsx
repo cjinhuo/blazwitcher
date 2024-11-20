@@ -31,6 +31,7 @@ import {
 import Footer from './footer'
 import useOriginalList from './hooks/useOriginalList'
 import List from './list'
+import { RenderItem } from './list-item'
 import Search from './search'
 
 const { Header, Content } = Layout
@@ -132,7 +133,7 @@ export default function SidePanel() {
 				return acc
 			}, [])
 		}
-		return <List list={orderList(filteredList)}></List>
+		return <List list={orderList(filteredList)} RenderItem={RenderItem}></List>
 	}, [searchValue, originalList])
 
 	const handleSearch = (value: string) => setSearchValue(value)

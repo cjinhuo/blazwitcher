@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { timeAgo } from '~shared/time'
 import type { BookmarkItemType, HistoryItemType, ListItemType, TabItemType } from '~shared/types'
-import { isBookmarkItem, isDarkMode, isTabItem } from '~shared/utils'
+import { handleClickItem, isBookmarkItem, isDarkMode, isTabItem } from '~shared/utils'
 
 import { tabGroupColorMap } from '~shared/constants'
 import HighlightText from './highlight-text'
@@ -187,7 +187,7 @@ export const RenderContent = ({ item }: { item: ListItemType }) => {
 
 export const RenderItem = ({ item }: { item: ListItemType }) => {
 	return (
-		<ContentContainer $tabGroup={isTabItem(item) && item.data?.tabGroup}>
+		<ContentContainer onClick={() => handleClickItem(item)} $tabGroup={isTabItem(item) && item.data?.tabGroup}>
 			<RenderIcon iconUrl={item.data.favIconUrl} />
 			<RenderContent item={item}></RenderContent>
 			<RenderOperation item={item}></RenderOperation>

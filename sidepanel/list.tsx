@@ -8,7 +8,7 @@ import type { ListItemType } from '../shared/types'
 import { closeCurrentWindowAndClearStorage, handleClickItem, scrollIntoViewIfNeeded } from '../shared/utils'
 import { CompositionAtom } from './atom'
 import { HIGHLIGHT_TEXT_CLASS, NORMAL_TEXT_CLASS } from './highlight-text'
-import { HOST_CLASS, IMAGE_CLASS, RenderItem, SVG_CLASS } from './list-item'
+import { HOST_CLASS, IMAGE_CLASS, SVG_CLASS } from './list-item'
 
 const ListContainer = styled.div`
   padding: 6px;
@@ -83,7 +83,13 @@ const setScrollTopIfNeeded = () => {
 	scrollIntoViewIfNeeded(activeItem, mainContent)
 }
 
-export default function List({ list }: { list: ListItemType[] }) {
+interface ListProps<T = ListItemType> {
+	list: T[]
+	// 通过 props 传进来就可以在外面控制如何渲染和点击事件
+	RenderItem: React.FC<{ item: T }>
+}
+
+export default function List({ list, RenderItem }: ListProps) {
 	const isComposition = useAtomValue(CompositionAtom)
 	const [activeIndex, setActiveIndex] = useState(0)
 	const i = useRef(0)
@@ -184,9 +190,6 @@ export default function List({ list }: { list: ListItemType[] }) {
 				renderItem={(item, index) => (
 					<ListItemWrapper
 						className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ''}
-						// todo 在 onclick 中添加回调用来区分是普通 item 还是插件的 item
-						onClick={() => handleClickItem(item)}
-						// todo RenderItem 替换成插件组件
 						main={<RenderItem item={item} />}
 					/>
 				)}
