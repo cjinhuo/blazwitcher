@@ -15,9 +15,11 @@
 		"@douyinfe/semi-icons": "^2.62.0",
 		"@douyinfe/semi-ui": "^2.62.0",
 		"jotai": "^2.9.3",
+		"observable-hooks": "^4.2.4",
 		"plasmo": "0.89.3",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
+		"rxjs": "8.0.0-alpha.14",
 		"styled-components": "^6.1.11",
 		"text-search-engine": "1.4.2"
 	},

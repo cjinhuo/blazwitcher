@@ -20,6 +20,9 @@ importers:
       jotai:
         specifier: ^2.9.3
         version: 2.9.3(@types/react@18.2.48)(react@18.2.0)
+      observable-hooks:
+        specifier: ^4.2.4
+        version: 4.2.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@8.0.0-alpha.14)
       plasmo:
         specifier: 0.89.3
         version: 0.89.3(@swc/core@1.6.13(@swc/helpers@0.5.11))(@swc/helpers@0.5.11)(lodash@4.17.21)(postcss@8.4.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -29,6 +32,9 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
+      rxjs:
+        specifier: 8.0.0-alpha.14
+        version: 8.0.0-alpha.14
       styled-components:
         specifier: ^6.1.11
         version: 6.1.11(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -3122,6 +3128,13 @@ packages:
     resolution: {integrity: sha512-IRZSRuzJiynemAXPYtPe5BoI/RESNYR7TYm50MC5Mqbd3Jmw5y790sErYw3V6SryFJD64b74qQQs9wn5Bg/k3g==}
     engines: {node: '>= 0.4'}
 
+  observable-hooks@4.2.4:
+    resolution: {integrity: sha512-FdTQgyw1h5bG/QHCBIqctdBSnv9VARJCEilgpV6L2qlw1yeLqFIwPm4U15dMtl5kDmNN0hSt+Nl6iYbLFwEcQA==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+      rxjs: '>=6.0.0'
+
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
 
@@ -3460,6 +3473,9 @@ packages:
 
   rxjs@7.8.1:
     resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
+
+  rxjs@8.0.0-alpha.14:
+    resolution: {integrity: sha512-oRCzFwbAMbo0+dVUeGUCCEf339mW7CESFvVDG3RTncD6yMtV2XoubFMpKEhBd2a9d04EpHl8QSz84/V/agG6bw==}
 
   safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
@@ -7664,6 +7680,12 @@ snapshots:
 
   object-inspect@1.13.2: {}
 
+  observable-hooks@4.2.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(rxjs@8.0.0-alpha.14):
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      rxjs: 8.0.0-alpha.14
+
   once@1.4.0:
     dependencies:
       wrappy: 1.0.2
@@ -8105,6 +8127,8 @@ snapshots:
   rxjs@7.8.1:
     dependencies:
       tslib: 2.6.3
+
+  rxjs@8.0.0-alpha.14: {}
 
   safe-buffer@5.2.1: {}
 

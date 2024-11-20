@@ -184,7 +184,9 @@ export default function List({ list }: { list: ListItemType[] }) {
 				renderItem={(item, index) => (
 					<ListItemWrapper
 						className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ''}
+						// todo 在 onclick 中添加回调用来区分是普通 item 还是插件的 item
 						onClick={() => handleClickItem(item)}
+						// todo RenderItem 替换成插件组件
 						main={<RenderItem item={item} />}
 					/>
 				)}

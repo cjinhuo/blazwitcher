@@ -117,6 +117,13 @@ export function isDarkMode() {
 	return window.matchMedia?.('(prefers-color-scheme: dark)').matches
 }
 
+export function setDarkTheme() {
+	if (isDarkMode()) {
+		document.body.classList.add('dark')
+		document.body.setAttribute('theme-mode', 'dark')
+	}
+}
+
 export function getCompositeSourceAndHost(title?: string, url?: string) {
 	const host = new URL(url).host
 	const compositeSource = `${title.toLocaleLowerCase().trim()}${host}`

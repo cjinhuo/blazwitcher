@@ -1,3 +1,5 @@
+import type React from 'react'
+
 export type Matrix = [number, number][]
 
 export interface SourceMappingData {
@@ -64,4 +66,11 @@ export const OperationItemTitleMap = {
 	[OperationItemPropertyTypes.query]: 'query',
 	[OperationItemPropertyTypes.delete]: 'delete from history',
 	[OperationItemPropertyTypes.close]: 'close tab',
+}
+
+export interface CommandPlugin {
+	command: string
+	alias: string
+	dataProcessing?: (data: ListItemType) => ListItemType
+	render?: () => React.ReactNode
 }

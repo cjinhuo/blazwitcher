@@ -13,7 +13,14 @@ import {
 	MAIN_WINDOW,
 } from '~shared/constants'
 import type { ItemType, ListItemType } from '~shared/types'
-import { isBookmarkItem, isDarkMode, isHistoryItem, isTabItem, splitCompositeHitRanges } from '~shared/utils'
+import {
+	isBookmarkItem,
+	isDarkMode,
+	isHistoryItem,
+	isTabItem,
+	setDarkTheme,
+	splitCompositeHitRanges,
+} from '~shared/utils'
 
 import {
 	type Matrix,
@@ -21,8 +28,8 @@ import {
 	mergeSpacesWithRanges,
 	searchSentenceByBoundaryMapping,
 } from 'text-search-engine'
-import { OriginalListAtom } from './atom'
 import Footer from './footer'
+import useOriginalList from './hooks/useOriginalList'
 import List from './list'
 import Search from './search'
 
@@ -96,38 +103,14 @@ const orderList = (list: ListItemType[]) => {
 }
 
 export default function SidePanel() {
-	const [originalList, setOriginalList] = useAtom(OriginalListAtom)
+	const originalList = useOriginalList()
 	const [searchValue, setSearchValue] = useState('')
 
 	useEffect(() => {
-		let portConnectStatus = false
-		const port = chrome.runtime.connect({ name: MAIN_WINDOW })
-		port.onMessage.addListener((processedList) => {
-			portConnectStatus = true
-			if (process.env.NODE_ENV !== 'production') {
-				console.log('processedList', processedList)
-			}
-			setOriginalList(processedList)
-		})
+		setDarkTheme()
+	}, [])
 
-		const postMessageToCloseWindow = () => {
-			if (!portConnectStatus) return
-			port.postMessage({ type: 'close' })
-			port.disconnect()
-			portConnectStatus = false
-		}
-		window.addEventListener('unload', postMessageToCloseWindow)
-		if (process.env.NODE_ENV === 'production') {
-			window.addEventListener('blur', postMessageToCloseWindow)
-		}
-
-		if (isDarkMode()) {
-			document.body.classList.add('dark')
-			document.body.setAttribute('theme-mode', 'dark')
-		}
-	}, [setOriginalList])
-
-	const list = useMemo(() => {
+	const RenderList = useMemo(() => {
 		let filteredList = originalList
 		if (searchValue.trim() !== '') {
 			filteredList = originalList.reduce<ListItemType[]>((acc, item) => {
@@ -149,7 +132,7 @@ export default function SidePanel() {
 				return acc
 			}, [])
 		}
-		return orderList(filteredList)
+		return <List list={orderList(filteredList)}></List>
 	}, [searchValue, originalList])
 
 	const handleSearch = (value: string) => setSearchValue(value)
@@ -159,9 +142,7 @@ export default function SidePanel() {
 			<Header style={{ flex: '0 0 50px' }}>
 				<Search onSearch={handleSearch}></Search>
 			</Header>
-			<ContentWrapper className={MAIN_CONTENT_CLASS}>
-				<List list={list}></List>
-			</ContentWrapper>
+			<ContentWrapper className={MAIN_CONTENT_CLASS}>{RenderList}</ContentWrapper>
 			<Footer />
 		</Container>
 	)
