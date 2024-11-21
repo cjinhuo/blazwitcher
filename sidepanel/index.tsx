@@ -133,6 +133,7 @@ export default function SidePanel() {
 				return acc
 			}, [])
 		}
+		// use plugin 后，这里的 prop 时需要被替换掉
 		return <List list={orderList(filteredList)} RenderItem={RenderItem}></List>
 	}, [searchValue, originalList])
 
