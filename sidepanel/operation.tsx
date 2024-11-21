@@ -9,7 +9,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { VISIBILITY_CLASS } from '~shared/constants'
 import { ItemType, type ListItemType, OperationItemPropertyTypes, OperationItemTitleMap } from '~shared/types'
-import { deleteItem, handleClickItem, isTabItem, queryInNewTab } from '~shared/utils'
+import { deleteItem, handleItemClick, isTabItem, queryInNewTab } from '~shared/utils'
 import { OriginalListAtom } from './atom'
 export const OPERATION_ICON_CLASS = 'operation-icon'
 
@@ -121,7 +121,7 @@ export const RenderOperation = ({ item }: { item: ListItemType }) => {
 		switch (name) {
 			case OperationItemPropertyTypes.switch:
 			case OperationItemPropertyTypes.open:
-				handleClickItem(item)
+				handleItemClick(item)
 				break
 			case OperationItemPropertyTypes.close:
 				isTabItem(item) &&

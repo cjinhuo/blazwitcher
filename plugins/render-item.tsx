@@ -7,14 +7,7 @@ interface RenderPluginItemProps {
 	item: CommandPlugin
 }
 export function RenderPluginItem({ item }: RenderPluginItemProps) {
-	const setSearchValue = useSetAtom(SearchValueAtom)
-
-	const handlePluginClick = (plugin: CommandPlugin) => {
-		// 更改 atom 去更新 search 组件的 value
-		setSearchValue({ value: plugin.command })
-	}
-	// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-	return <div onClick={() => handlePluginClick(item)}>{item.command}</div>
+	return <div>{item.command}</div>
 }
 
 export function usePluginClickItem() {
