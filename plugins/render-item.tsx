@@ -42,7 +42,8 @@ export function usePluginClickItem() {
 	const setSearchValue = useSetAtom(SearchValueAtom)
 
 	const handlePluginClick = (plugin: CommandPlugin) => {
-		setSearchValue({ value: plugin.command })
+		// 额外添加一个空格，方便 alt 删除单个单词
+		setSearchValue({ value: `${plugin.command} ` })
 	}
 
 	return handlePluginClick
