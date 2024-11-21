@@ -1,5 +1,17 @@
-import { extractBoundaryMapping } from 'text-search-engine'
-import { LAST_ACTIVE_WINDOW_ID_KEY, SELF_WINDOW_ID_KEY, SELF_WINDOW_STATE } from './constants'
+import {
+	extractBoundaryMapping,
+	isStrictnessSatisfied,
+	mergeSpacesWithRanges,
+	searchSentenceByBoundaryMapping,
+} from 'text-search-engine'
+import {
+	DEFAULT_BOOKMARK_DISPLAY_COUNT,
+	DEFAULT_HISTORY_DISPLAY_COUNT,
+	DEFAULT_STRICTNESS_COEFFICIENT,
+	LAST_ACTIVE_WINDOW_ID_KEY,
+	SELF_WINDOW_ID_KEY,
+	SELF_WINDOW_STATE,
+} from './constants'
 import { storageGet, storageRemove } from './promisify'
 import { ItemType, type ListItemType, type Matrix } from './types'
 
@@ -184,4 +196,81 @@ export function splitCompositeHitRanges(compositeHitRanges: Matrix, compositeSou
 		result.push(...Array(compositeSourceLengths.length - sourceIndex - 1).fill(undefined))
 	}
 	return result
+}
+
+export const orderList = (list: ListItemType[]) => {
+	const tabs: ListItemType<ItemType.Tab>[] = []
+	const bookmarks: ListItemType<ItemType.Bookmark>[] = []
+	const histories: ListItemType<ItemType.History>[] = []
+	const set = new Set()
+	for (const item of list) {
+		const { title, url } = item.data
+		const hasSameItemInTabs = () => {
+			if (set.has(title) || (url && set.has(url))) {
+				return true
+			}
+			set.add(title)
+			set.add(url)
+			return false
+		}
+
+		if (isTabItem(item)) {
+			tabs.push(item)
+			set.add(title)
+			set.add(url)
+		} else if (isBookmarkItem(item) && !hasSameItemInTabs()) {
+			bookmarks.push(item)
+		} else if (isHistoryItem(item) && !hasSameItemInTabs()) {
+			histories.push(item)
+		}
+	}
+	const compareForLastAccess = (a: ListItemType<ItemType.Tab>, b: ListItemType<ItemType.Tab>) =>
+		a.data.lastAccessed ? b.data.lastAccessed - a.data.lastAccessed : -1
+
+	const compareForLastVisitTime = (a: ListItemType<ItemType.History>, b: ListItemType<ItemType.History>) =>
+		a.data.lastVisitTime ? b.data.lastVisitTime - a.data.lastVisitTime : -1
+
+	const compareForHitRangeLength = (a: ListItemType, b: ListItemType) => {
+		if (a.data.compositeHitRanges && b.data.compositeHitRanges) {
+			return a.data.compositeHitRanges.length - b.data.compositeHitRanges.length
+		}
+		return 0
+	}
+
+	const compareForActiveStatus = (a: ListItemType<ItemType.Tab>, _b: ListItemType<ItemType.Tab>) =>
+		a.data.active ? -1 : 1
+
+	return [
+		...tabs
+			.filter((item) => !item.data.url.includes(chrome.runtime.id))
+			.toSorted(compareForLastAccess)
+			.toSorted(compareForHitRangeLength)
+			.toSorted(compareForActiveStatus),
+		...histories
+			.toSorted(compareForLastVisitTime)
+			.toSorted(compareForHitRangeLength)
+			.slice(0, DEFAULT_HISTORY_DISPLAY_COUNT),
+		...bookmarks.toSorted(compareForHitRangeLength).slice(0, DEFAULT_BOOKMARK_DISPLAY_COUNT),
+	].toSorted(compareForHitRangeLength)
+}
+
+export const searchWithList = (list: ListItemType[], searchValue: string) => {
+	return list.reduce<ListItemType[]>((acc, item) => {
+		let hitRanges: Matrix | undefined
+		hitRanges = searchSentenceByBoundaryMapping(item.data.compositeBoundaryMapping, searchValue)
+		if (hitRanges) {
+			const mergedHitRanges = mergeSpacesWithRanges(item.data.compositeSource, hitRanges)
+			if (isStrictnessSatisfied(DEFAULT_STRICTNESS_COEFFICIENT, searchValue, mergedHitRanges)) {
+				const [titleHitRanges, hostHitRanges] = splitCompositeHitRanges(mergedHitRanges, [
+					item.data.title.length,
+					item.data.host.length,
+				])
+				acc.push({
+					...item,
+					data: { ...item.data, compositeHitRanges: mergedHitRanges, titleHitRanges, hostHitRanges },
+				})
+			}
+		}
+		return acc
+	}, [])
 }
