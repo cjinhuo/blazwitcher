@@ -255,6 +255,7 @@ export const orderList = (list: ListItemType[]) => {
 }
 
 export const searchWithList = (list: ListItemType[], searchValue: string) => {
+	if (searchValue === '') return list
 	return list.reduce<ListItemType[]>((acc, item) => {
 		let hitRanges: Matrix | undefined
 		hitRanges = searchSentenceByBoundaryMapping(item.data.compositeBoundaryMapping, searchValue)

@@ -7,10 +7,13 @@ import styled from 'styled-components'
 import { MAIN_CONTENT_CLASS } from '~shared/constants'
 import { orderList, searchWithList, setDarkTheme } from '~shared/utils'
 
+import plugins from '~plugins'
+import { matchPlugin } from '~plugins/helper'
+import RenderPluginItem from '~plugins/render-item'
 import Footer from './footer'
 import useOriginalList from './hooks/useOriginalList'
 import List from './list'
-import { RenderItem } from './list-item'
+import { RenderItem as ListItemRenderItem } from './list-item'
 import Search from './search'
 
 const { Header, Content } = Layout
@@ -34,23 +37,34 @@ export default function SidePanel() {
 		setDarkTheme()
 	}, [])
 
-	const RenderList = useMemo(() => {
-		let filteredList = originalList
-		if (searchValue.trim() !== '') {
-			filteredList = searchWithList(originalList, searchValue)
+	const RenderContent = useMemo(() => {
+		if (searchValue === '') return <List list={orderList(originalList)} RenderItem={ListItemRenderItem}></List>
+		let realSearchValue = searchValue
+		let realList = originalList
+
+		// 插件匹配
+		if (searchValue.startsWith('/')) {
+			const [hitPlugin, mainSearchValue] = matchPlugin(plugins, searchValue)
+			if (!hitPlugin) return <List list={plugins} RenderItem={RenderPluginItem}></List>
+			if (hitPlugin.render) {
+				return hitPlugin.render()
+			}
+			realList = hitPlugin.dataProcessing(originalList)
+			realSearchValue = mainSearchValue
 		}
-		// use plugin 后，这里的 prop 时需要被替换掉
-		return <List list={orderList(filteredList)} RenderItem={RenderItem}></List>
+		const filteredList = searchWithList(realList, realSearchValue)
+		return <List list={orderList(filteredList)} RenderItem={ListItemRenderItem}></List>
 	}, [searchValue, originalList])
 
-	const handleSearch = (value: string) => setSearchValue(value)
+	// 会影响小部分匹配，比如 ab c，输入 ab 加上一个空格，理论上应该匹配 [ab ]，但现在会被 trim 掉，无伤大雅
+	const handleSearch = (value: string) => setSearchValue(value.trim())
 
 	return (
 		<Container>
 			<Header style={{ flex: '0 0 50px' }}>
 				<Search onSearch={handleSearch}></Search>
 			</Header>
-			<ContentWrapper className={MAIN_CONTENT_CLASS}>{RenderList}</ContentWrapper>
+			<ContentWrapper className={MAIN_CONTENT_CLASS}>{RenderContent}</ContentWrapper>
 			<Footer />
 		</Container>
 	)
