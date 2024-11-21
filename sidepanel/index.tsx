@@ -5,11 +5,11 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { MAIN_CONTENT_CLASS } from '~shared/constants'
-import { orderList, searchWithList, setDarkTheme } from '~shared/utils'
+import { handleItemClick, orderList, searchWithList, setDarkTheme } from '~shared/utils'
 
 import plugins from '~plugins'
 import { matchPlugin } from '~plugins/helper'
-import RenderPluginItem from '~plugins/render-item'
+import { RenderPluginItem, usePluginClickItem } from '~plugins/render-item'
 import Footer from './footer'
 import useOriginalList from './hooks/useOriginalList'
 import List from './list'
@@ -32,20 +32,24 @@ const ContentWrapper = styled(Content)`
 export default function SidePanel() {
 	const originalList = useOriginalList()
 	const [searchValue, setSearchValue] = useState('')
-
+	const handlePluginItemClick = usePluginClickItem()
 	useEffect(() => {
 		setDarkTheme()
 	}, [])
 
 	const RenderContent = useMemo(() => {
-		if (searchValue === '') return <List list={orderList(originalList)} RenderItem={ListItemRenderItem}></List>
+		if (searchValue === '')
+			return (
+				<List list={orderList(originalList)} RenderItem={ListItemRenderItem} handleItemClick={handleItemClick}></List>
+			)
 		let realSearchValue = searchValue
 		let realList = originalList
 
 		// 插件匹配
 		if (searchValue.startsWith('/')) {
 			const [hitPlugin, mainSearchValue] = matchPlugin(plugins, searchValue)
-			if (!hitPlugin) return <List list={plugins} RenderItem={RenderPluginItem}></List>
+			if (!hitPlugin)
+				return <List list={plugins} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem}></List>
 			if (hitPlugin.render) {
 				return hitPlugin.render()
 			}
@@ -53,8 +57,10 @@ export default function SidePanel() {
 			realSearchValue = mainSearchValue
 		}
 		const filteredList = searchWithList(realList, realSearchValue)
-		return <List list={orderList(filteredList)} RenderItem={ListItemRenderItem}></List>
-	}, [searchValue, originalList])
+		return (
+			<List list={orderList(filteredList)} handleItemClick={handleItemClick} RenderItem={ListItemRenderItem}></List>
+		)
+	}, [searchValue, originalList, handlePluginItemClick])
 
 	// 会影响小部分匹配，比如 ab c，输入 ab 加上一个空格，理论上应该匹配 [ab ]，但现在会被 trim 掉，无伤大雅
 	const handleSearch = useCallback((value: string) => {

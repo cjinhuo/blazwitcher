@@ -89,7 +89,7 @@ export const createTabWithUrl = async (url: string) => {
 	closeCurrentWindowAndClearStorage()
 }
 
-export const handleClickItem = async (item: ListItemType) => {
+export const handleItemClick = async (item: ListItemType) => {
 	isTabItem(item) ? await activeTab(item) : await createTabWithUrl(item.data.url)
 }
 

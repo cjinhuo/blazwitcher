@@ -6,7 +6,7 @@ import { SearchValueAtom } from '~sidepanel/atom'
 interface RenderPluginItemProps {
 	item: CommandPlugin
 }
-export default function RenderPluginItem({ item }: RenderPluginItemProps) {
+export function RenderPluginItem({ item }: RenderPluginItemProps) {
 	const setSearchValue = useSetAtom(SearchValueAtom)
 
 	const handlePluginClick = (plugin: CommandPlugin) => {
@@ -15,4 +15,14 @@ export default function RenderPluginItem({ item }: RenderPluginItemProps) {
 	}
 	// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
 	return <div onClick={() => handlePluginClick(item)}>{item.command}</div>
+}
+
+export function usePluginClickItem() {
+	const setSearchValue = useSetAtom(SearchValueAtom)
+
+	const handlePluginClick = (plugin: CommandPlugin) => {
+		setSearchValue({ value: plugin.command })
+	}
+
+	return handlePluginClick
 }

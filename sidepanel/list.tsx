@@ -4,8 +4,7 @@ import styled from 'styled-components'
 
 import { useAtomValue } from 'jotai'
 import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS, VISIBILITY_CLASS } from '../shared/constants'
-import type { ListItemType } from '../shared/types'
-import { closeCurrentWindowAndClearStorage, handleClickItem, scrollIntoViewIfNeeded } from '../shared/utils'
+import { closeCurrentWindowAndClearStorage, scrollIntoViewIfNeeded } from '../shared/utils'
 import { CompositionAtom } from './atom'
 import { HIGHLIGHT_TEXT_CLASS, NORMAL_TEXT_CLASS } from './highlight-text'
 import { HOST_CLASS, IMAGE_CLASS, SVG_CLASS } from './list-item'
@@ -87,9 +86,10 @@ interface ListProps<T = any> {
 	list: T[]
 	// 通过 props 传进来就可以在外面控制如何渲染和点击事件
 	RenderItem: React.FC<{ item: T }>
+	handleItemClick: (item: T) => void
 }
 
-export default function List({ list, RenderItem }: ListProps) {
+export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 	const isComposition = useAtomValue(CompositionAtom)
 	const [activeIndex, setActiveIndex] = useState(0)
 	const i = useRef(0)
@@ -141,8 +141,8 @@ export default function List({ list, RenderItem }: ListProps) {
 	)
 
 	const handleEnterEvent = useCallback(() => {
-		handleClickItem(list[activeIndex])
-	}, [activeIndex, list])
+		handleItemClick(list[activeIndex])
+	}, [activeIndex, list, handleItemClick])
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useLayoutEffect(() => {
@@ -191,6 +191,7 @@ export default function List({ list, RenderItem }: ListProps) {
 					<ListItemWrapper
 						className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ''}
 						main={<RenderItem item={item} />}
+						onClick={() => handleItemClick(item)}
 					/>
 				)}
 			/>
