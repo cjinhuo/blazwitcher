@@ -1,7 +1,7 @@
 import './sidepanel.css'
 
 import { Layout } from '@douyinfe/semi-ui'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { MAIN_CONTENT_CLASS } from '~shared/constants'
@@ -57,7 +57,9 @@ export default function SidePanel() {
 	}, [searchValue, originalList])
 
 	// 会影响小部分匹配，比如 ab c，输入 ab 加上一个空格，理论上应该匹配 [ab ]，但现在会被 trim 掉，无伤大雅
-	const handleSearch = (value: string) => setSearchValue(value.trim())
+	const handleSearch = useCallback((value: string) => {
+		setSearchValue(value.trim())
+	}, [])
 
 	return (
 		<Container>
