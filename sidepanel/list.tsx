@@ -83,7 +83,7 @@ const setScrollTopIfNeeded = () => {
 	scrollIntoViewIfNeeded(activeItem, mainContent)
 }
 
-interface ListProps<T = ListItemType> {
+interface ListProps<T = any> {
 	list: T[]
 	// 通过 props 传进来就可以在外面控制如何渲染和点击事件
 	RenderItem: React.FC<{ item: T }>
