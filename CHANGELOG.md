@@ -1,5 +1,11 @@
 # blazwitcher
 
+## 0.3.0
+
+### Minor Changes
+
+- c40830f: add plugin system to integrate commands
+
 ## 0.2.3
 
 ### Patch Changes
