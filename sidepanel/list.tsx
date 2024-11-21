@@ -3,11 +3,10 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import styled from 'styled-components'
 
 import { useAtomValue } from 'jotai'
+import { HIGHLIGHT_TEXT_CLASS, HOST_CLASS, IMAGE_CLASS, NORMAL_TEXT_CLASS, SVG_CLASS } from '~shared/common-styles'
 import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS, VISIBILITY_CLASS } from '../shared/constants'
 import { closeCurrentWindowAndClearStorage, scrollIntoViewIfNeeded } from '../shared/utils'
 import { CompositionAtom } from './atom'
-import { HIGHLIGHT_TEXT_CLASS, NORMAL_TEXT_CLASS } from './highlight-text'
-import { HOST_CLASS, IMAGE_CLASS, SVG_CLASS } from './list-item'
 
 const ListContainer = styled.div`
   padding: 6px;
@@ -27,6 +26,13 @@ const ListItemWrapper = styled(ListComponent.Item)`
   }
   .${VISIBILITY_CLASS} {
     visibility: hidden;
+  }
+	 .${NORMAL_TEXT_CLASS} {
+    color: var(--color-neutral-3);
+  }
+  .${HIGHLIGHT_TEXT_CLASS} {
+    color: var(--highlight-text);
+    background-color: var(--highlight-bg);
   }
   &:hover {
     background-color: var(--color-neutral-4);

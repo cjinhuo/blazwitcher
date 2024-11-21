@@ -1,3 +1,4 @@
+import type { FunctionComponent } from 'react'
 import type React from 'react'
 
 export type Matrix = [number, number][]
@@ -73,8 +74,9 @@ export interface CommandPlugin {
 	command: string
 	// 别名，暂时不做
 	alias?: string
+	icon: React.ReactNode
 	// 输入框背景的占位符
-	placeholder: string
+	description: string
 	// 数据处理
 	dataProcessing?: (data: ListItemType[]) => ListItemType[]
 	// 渲染
