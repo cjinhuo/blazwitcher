@@ -1,36 +1,19 @@
 import './sidepanel.css'
 
 import { Layout } from '@douyinfe/semi-ui'
-import { useAtom } from 'jotai'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import {
-	DEFAULT_BOOKMARK_DISPLAY_COUNT,
-	DEFAULT_HISTORY_DISPLAY_COUNT,
-	DEFAULT_STRICTNESS_COEFFICIENT,
-	MAIN_CONTENT_CLASS,
-	MAIN_WINDOW,
-} from '~shared/constants'
-import type { ItemType, ListItemType } from '~shared/types'
-import {
-	isBookmarkItem,
-	isDarkMode,
-	isHistoryItem,
-	isTabItem,
-	setDarkTheme,
-	splitCompositeHitRanges,
-} from '~shared/utils'
+import { MAIN_CONTENT_CLASS } from '~shared/constants'
+import { handleItemClick, orderList, searchWithList, setDarkTheme } from '~shared/utils'
 
-import {
-	type Matrix,
-	isStrictnessSatisfied,
-	mergeSpacesWithRanges,
-	searchSentenceByBoundaryMapping,
-} from 'text-search-engine'
+import plugins from '~plugins'
+import { matchPlugin } from '~plugins/helper'
+import { RenderPluginItem, usePluginClickItem } from '~plugins/render-item'
 import Footer from './footer'
 import useOriginalList from './hooks/useOriginalList'
 import List from './list'
+import { RenderItem as ListItemRenderItem } from './list-item'
 import Search from './search'
 
 const { Header, Content } = Layout
@@ -46,103 +29,50 @@ const ContentWrapper = styled(Content)`
   padding: 0;
 `
 
-const orderList = (list: ListItemType[]) => {
-	const tabs: ListItemType<ItemType.Tab>[] = []
-	const bookmarks: ListItemType<ItemType.Bookmark>[] = []
-	const histories: ListItemType<ItemType.History>[] = []
-	const set = new Set()
-	for (const item of list) {
-		const { title, url } = item.data
-		const hasSameItemInTabs = () => {
-			if (set.has(title) || (url && set.has(url))) {
-				return true
-			}
-			set.add(title)
-			set.add(url)
-			return false
-		}
-
-		if (isTabItem(item)) {
-			tabs.push(item)
-			set.add(title)
-			set.add(url)
-		} else if (isBookmarkItem(item) && !hasSameItemInTabs()) {
-			bookmarks.push(item)
-		} else if (isHistoryItem(item) && !hasSameItemInTabs()) {
-			histories.push(item)
-		}
-	}
-	const compareForLastAccess = (a: ListItemType<ItemType.Tab>, b: ListItemType<ItemType.Tab>) =>
-		a.data.lastAccessed ? b.data.lastAccessed - a.data.lastAccessed : -1
-
-	const compareForLastVisitTime = (a: ListItemType<ItemType.History>, b: ListItemType<ItemType.History>) =>
-		a.data.lastVisitTime ? b.data.lastVisitTime - a.data.lastVisitTime : -1
-
-	const compareForHitRangeLength = (a: ListItemType, b: ListItemType) => {
-		if (a.data.compositeHitRanges && b.data.compositeHitRanges) {
-			return a.data.compositeHitRanges.length - b.data.compositeHitRanges.length
-		}
-		return 0
-	}
-
-	const compareForActiveStatus = (a: ListItemType<ItemType.Tab>, _b: ListItemType<ItemType.Tab>) =>
-		a.data.active ? -1 : 1
-
-	return [
-		...tabs
-			.filter((item) => !item.data.url.includes(chrome.runtime.id))
-			.toSorted(compareForLastAccess)
-			.toSorted(compareForHitRangeLength)
-			.toSorted(compareForActiveStatus),
-		...histories
-			.toSorted(compareForLastVisitTime)
-			.toSorted(compareForHitRangeLength)
-			.slice(0, DEFAULT_HISTORY_DISPLAY_COUNT),
-		...bookmarks.toSorted(compareForHitRangeLength).slice(0, DEFAULT_BOOKMARK_DISPLAY_COUNT),
-	].toSorted(compareForHitRangeLength)
-}
-
 export default function SidePanel() {
 	const originalList = useOriginalList()
 	const [searchValue, setSearchValue] = useState('')
-
+	const handlePluginItemClick = usePluginClickItem()
 	useEffect(() => {
 		setDarkTheme()
 	}, [])
 
-	const RenderList = useMemo(() => {
-		let filteredList = originalList
-		if (searchValue.trim() !== '') {
-			filteredList = originalList.reduce<ListItemType[]>((acc, item) => {
-				let hitRanges: Matrix | undefined
-				hitRanges = searchSentenceByBoundaryMapping(item.data.compositeBoundaryMapping, searchValue)
-				if (hitRanges) {
-					const mergedHitRanges = mergeSpacesWithRanges(item.data.compositeSource, hitRanges)
-					if (isStrictnessSatisfied(DEFAULT_STRICTNESS_COEFFICIENT, searchValue, mergedHitRanges)) {
-						const [titleHitRanges, hostHitRanges] = splitCompositeHitRanges(mergedHitRanges, [
-							item.data.title.length,
-							item.data.host.length,
-						])
-						acc.push({
-							...item,
-							data: { ...item.data, compositeHitRanges: mergedHitRanges, titleHitRanges, hostHitRanges },
-						})
-					}
-				}
-				return acc
-			}, [])
-		}
-		return <List list={orderList(filteredList)}></List>
-	}, [searchValue, originalList])
+	const RenderContent = useMemo(() => {
+		if (searchValue === '')
+			return (
+				<List list={orderList(originalList)} RenderItem={ListItemRenderItem} handleItemClick={handleItemClick}></List>
+			)
+		let realSearchValue = searchValue
+		let realList = originalList
 
-	const handleSearch = (value: string) => setSearchValue(value)
+		// 插件匹配
+		if (searchValue.startsWith('/')) {
+			const [hitPlugin, mainSearchValue] = matchPlugin(plugins, searchValue)
+			if (!hitPlugin)
+				return <List list={plugins} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem}></List>
+			if (hitPlugin.render) {
+				return hitPlugin.render()
+			}
+			realList = hitPlugin.dataProcessing(originalList)
+			realSearchValue = mainSearchValue
+		}
+		const filteredList = searchWithList(realList, realSearchValue)
+		return (
+			<List list={orderList(filteredList)} handleItemClick={handleItemClick} RenderItem={ListItemRenderItem}></List>
+		)
+	}, [searchValue, originalList, handlePluginItemClick])
+
+	// 会影响小部分匹配，比如 ab c，输入 ab 加上一个空格，理论上应该匹配 [ab ]，但现在会被 trim 掉，无伤大雅
+	const handleSearch = useCallback((value: string) => {
+		setSearchValue(value.trim())
+	}, [])
 
 	return (
 		<Container>
 			<Header style={{ flex: '0 0 50px' }}>
 				<Search onSearch={handleSearch}></Search>
 			</Header>
-			<ContentWrapper className={MAIN_CONTENT_CLASS}>{RenderList}</ContentWrapper>
+			<ContentWrapper className={MAIN_CONTENT_CLASS}>{RenderContent}</ContentWrapper>
 			<Footer />
 		</Container>
 	)

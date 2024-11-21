@@ -16,7 +16,7 @@
 		"@douyinfe/semi-ui": "^2.62.0",
 		"jotai": "^2.9.3",
 		"observable-hooks": "^4.2.4",
-		"plasmo": "0.89.3",
+		"plasmo": "0.89.4",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"rxjs": "8.0.0-alpha.14",

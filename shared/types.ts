@@ -1,3 +1,4 @@
+import type { FunctionComponent } from 'react'
 import type React from 'react'
 
 export type Matrix = [number, number][]
@@ -69,8 +70,15 @@ export const OperationItemTitleMap = {
 }
 
 export interface CommandPlugin {
+	// 命令
 	command: string
-	alias: string
-	dataProcessing?: (data: ListItemType) => ListItemType
+	// 别名，暂时不做
+	alias?: string
+	icon: React.ReactNode
+	// 输入框背景的占位符
+	description: string
+	// 数据处理
+	dataProcessing?: (data: ListItemType[]) => ListItemType[]
+	// 渲染
 	render?: () => React.ReactNode
 }

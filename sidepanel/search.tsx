@@ -1,9 +1,9 @@
 import { IconSearch } from '@douyinfe/semi-icons'
 import { Input } from '@douyinfe/semi-ui'
-import { useAtom } from 'jotai'
-import { useCallback, useRef, useState } from 'react'
+import { useAtom, useAtomValue } from 'jotai'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { CompositionAtom } from './atom'
+import { CompositionAtom, SearchValueAtom } from './atom'
 
 const SearchContainer = styled.div`
   width: 100%;
@@ -22,9 +22,10 @@ const Divider = styled.div`
 interface SearchProps {
 	onSearch: (value: string) => void
 }
-export default function Search({ onSearch }: SearchProps) {
+function Search({ onSearch }: SearchProps) {
 	const [inputValue, setInputValue] = useState('')
 	const [isComposition, setIsComposition] = useAtom(CompositionAtom)
+	const searchValue = useAtomValue(SearchValueAtom)
 
 	const handleCompositionStart = () => {
 		setIsComposition(true)
@@ -48,6 +49,11 @@ export default function Search({ onSearch }: SearchProps) {
 		[isComposition, onSearch]
 	)
 
+	useEffect(() => {
+		setInputValue(searchValue.value)
+		onSearch(searchValue.value.toLowerCase())
+	}, [searchValue, onSearch])
+
 	return (
 		<SearchContainer>
 			<InputWrapper
@@ -65,3 +71,5 @@ export default function Search({ onSearch }: SearchProps) {
 		</SearchContainer>
 	)
 }
+
+export default memo(Search)

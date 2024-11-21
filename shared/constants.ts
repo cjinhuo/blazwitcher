@@ -32,7 +32,7 @@ export const DEFAULT_HISTORY_MAX_RESULTS = 200
 export const DEFAULT_BOOKMARK_DISPLAY_COUNT = 20
 export const DEFAULT_HISTORY_DISPLAY_COUNT = 20
 
-export const tabGroupColorMap = {
+export const TabGroupColorMap = {
 	light: {
 		grey: '#E8EAED',
 		blue: '#1A73E8',
