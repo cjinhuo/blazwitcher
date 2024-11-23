@@ -42,10 +42,7 @@
 		}
 	},
 	"manifest": {
-		"host_permissions": [
-			"https://*/*",
-			"http://*/*"
-		],
+		"host_permissions": ["https://*/*", "http://*/*"],
 		"commands": {
 			"_execute_action": {
 				"suggested_key": {
@@ -58,6 +55,12 @@
 		"action": {
 			"default_title": "Blazwitcher"
 		},
+		"web_accessible_resources": [
+			{
+				"resources": ["sidepanel.html"],
+				"matches": ["<all_urls>"]
+			}
+		],
 		"permissions": [
 			"tabs",
 			"tabGroups",
@@ -68,7 +71,8 @@
 			"favicon",
 			"system.display",
 			"sidePanel",
-			"contextMenus"
+			"contextMenus",
+			"scripting"
 		],
 		"offline_enabled": true
 	}
