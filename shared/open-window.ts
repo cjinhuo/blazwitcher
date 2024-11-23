@@ -1,5 +1,5 @@
 import { LAST_ACTIVE_WINDOW_ID_KEY, SELF_WINDOW_ID_KEY, SELF_WINDOW_STATE } from './constants'
-import { getCurrentWindow, getDisplayInfo, getWindowById, storageGet, storageSet } from './promisify'
+import { getCurrentWindow, getDisplayInfo, getWindowById, storageGet, storageSet, tabsQuery } from './promisify'
 
 const SEARCH_WINDOW_WIDTH = 750
 const SEARCH_WINDOW_HEIGHT = 450
@@ -19,18 +19,7 @@ async function activeWindow() {
 	await storageSet({ [LAST_ACTIVE_WINDOW_ID_KEY]: currentWindow.id })
 	// there is a bug in "window" platform. When the window state is maximized, the left and top are not correct.
 	// Normally speaking left and top should be 0. But they are -7 in this case.So reset the left and top to 0 to fix it.
-	if (currentWindow.state === 'fullscreen') {
-		chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-			if (tabs[0].id) {
-				const url = chrome.runtime.getURL('sidepanel.html')
-				chrome.scripting.executeScript({
-					target: { tabId: tabs[0].id },
-					world: 'MAIN',
-					func: injectModal,
-					args: [url, chrome.runtime.id],
-				})
-			}
-		})
+	if (currentWindow.state === 'fullscreen' && (await injectScriptToOpenModal())) {
 		return
 	}
 	if (currentWindow.state === 'maximized') {
@@ -78,6 +67,28 @@ async function activeWindow() {
 		[SELF_WINDOW_ID_KEY]: _window.id,
 		[SELF_WINDOW_STATE]: _window.state,
 	})
+}
+
+async function injectScriptToOpenModal() {
+	try {
+		const tabs = await tabsQuery({ active: true, currentWindow: true })
+		const activeTab = tabs[0]
+		if (activeTab.id) {
+			const url = chrome.runtime.getURL('sidepanel.html')
+			// https://chromewebstore.google.com/  插件商店也不能注入脚本
+			// chrome:// 开头的不能注入 脚本
+			await chrome.scripting.executeScript({
+				target: { tabId: activeTab.id },
+				world: 'ISOLATED',
+				func: injectModal,
+				args: [url, chrome.runtime.id],
+				injectImmediately: true,
+			})
+		}
+	} catch (error) {
+		return false
+	}
+	return true
 }
 
 function injectModal(url: string, id?: string) {

@@ -45,6 +45,9 @@
 			"suspicious": {
 				"noExplicitAny": "off"
 			},
+			"complexity": {
+				"noForEach": "off"
+			},
 			"style": {
 				"useSelfClosingElements": "off"
 			}
