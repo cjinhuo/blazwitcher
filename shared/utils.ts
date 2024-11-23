@@ -72,6 +72,8 @@ export const closeCurrentWindowAndClearStorage = async () => {
 			await chrome.windows.remove(selfWindowId)
 		} catch (error) {}
 	}
+	// 和父 window 通信，关闭全屏状态下的 modal
+	window.parent.postMessage({ type: 'close' }, '*')
 }
 
 export const activeTab = async (item: ListItemType<ItemType.Tab>) => {

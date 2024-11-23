@@ -19,12 +19,27 @@ async function activeWindow() {
 	await storageSet({ [LAST_ACTIVE_WINDOW_ID_KEY]: currentWindow.id })
 	// there is a bug in "window" platform. When the window state is maximized, the left and top are not correct.
 	// Normally speaking left and top should be 0. But they are -7 in this case.So reset the left and top to 0 to fix it.
+	if (currentWindow.state === 'fullscreen') {
+		chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+			if (tabs[0].id) {
+				const url = chrome.runtime.getURL('sidepanel.html')
+				chrome.scripting.executeScript({
+					target: { tabId: tabs[0].id },
+					world: 'MAIN',
+					func: injectModal,
+					args: [url, chrome.runtime.id],
+				})
+			}
+		})
+		return
+	}
 	if (currentWindow.state === 'maximized') {
 		// biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
 		currentWindow.left >= -10 && currentWindow.left < 0 && (currentWindow.left = 0)
 		// biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
 		currentWindow.top >= -10 && currentWindow.top < 0 && (currentWindow.top = 0)
 	}
+
 	const displays = await getDisplayInfo()
 	// find the display that the current window is in
 	const focusedDisplay =
@@ -63,6 +78,91 @@ async function activeWindow() {
 		[SELF_WINDOW_ID_KEY]: _window.id,
 		[SELF_WINDOW_STATE]: _window.state,
 	})
+}
+
+function injectModal(url: string, id?: string) {
+	const NAMESPACE = `blazwitcher-chrome-ext-modal-${id || chrome.runtime.id}`
+	if (process.env.NODE_ENV !== 'production') {
+		console.log('injectModal', NAMESPACE)
+	}
+	if (document.getElementById(NAMESPACE)) return
+
+	const modal = document.createElement('div')
+	modal.style.cssText = `
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 750px;
+		height: 420px;
+		background: white;
+		z-index: 10000000;
+		border-radius: 10px;
+		overflow: hidden;
+		box-shadow: 0 0 10px rgba(0,0,0,0.3);
+	`
+
+	const iframe = document.createElement('iframe')
+	iframe.src = url
+	iframe.style.cssText = `
+		width: 100%;
+		height: 100%;
+		border: none;
+	`
+
+	modal.appendChild(iframe)
+
+	// 创建遮罩层
+	const overlay = document.createElement('div')
+	overlay.style.cssText = `
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.3);
+		z-index: 9999999;
+	`
+
+	const container = document.createElement('div')
+	container.id = NAMESPACE
+	container.appendChild(overlay)
+	container.appendChild(modal)
+
+	const mount = () => {
+		document.body.appendChild(container)
+		document.addEventListener('keydown', handleEscKey)
+	}
+
+	const unmount = () => {
+		container.remove()
+		document.removeEventListener('keydown', handleEscKey)
+	}
+
+	const handleEscKey = (e: KeyboardEvent) => {
+		if (e.key === 'Escape') {
+			unmount()
+		}
+	}
+
+	// 点击遮罩层时移除 container
+	overlay.addEventListener('click', (e) => {
+		if (e.target === overlay) {
+			unmount()
+		}
+	})
+
+	window.addEventListener('message', (event) => {
+		if (event.source === iframe.contentWindow) {
+			switch (event.data.type) {
+				case 'close':
+					unmount()
+					break
+			}
+		}
+	})
+
+	mount()
 }
 
 export function weakUpWindowIfActiveByUser() {
