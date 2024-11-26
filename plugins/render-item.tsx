@@ -3,6 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import {
 	ContentContainer,
+	IMAGE_CLASS,
 	ImageContainer,
 	NORMAL_TEXT_CLASS,
 	SecondaryContainer,
@@ -29,7 +30,7 @@ const CommandText = styled.div`
 export function RenderPluginItem({ item }: RenderPluginItemProps) {
 	return (
 		<PluginContainer>
-			<ImageContainer>{item.icon}</ImageContainer>
+			<ImageContainer className={IMAGE_CLASS}>{item.icon}</ImageContainer>
 			<TitleContainer>
 				<CommandText className={NORMAL_TEXT_CLASS}>{item.command}</CommandText>
 				<SecondaryContainer className={NORMAL_TEXT_CLASS}>{item.description}</SecondaryContainer>
