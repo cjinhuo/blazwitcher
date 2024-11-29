@@ -73,7 +73,9 @@ export const closeCurrentWindowAndClearStorage = async () => {
 		} catch (error) {}
 	}
 	// 和父 window 通信，关闭全屏状态下的 modal
-	window.parent.postMessage({ type: 'close' }, '*')
+	if (typeof window !== 'undefined' && window.parent) {
+		window.parent.postMessage({ type: 'close' }, '*')
+	}
 }
 
 export const activeTab = async (item: ListItemType<ItemType.Tab>) => {
@@ -84,9 +86,11 @@ export const activeTab = async (item: ListItemType<ItemType.Tab>) => {
 
 export const createTabWithUrl = async (url: string) => {
 	const storage = await storageGet()
-	const lastActiveWindowId = storage[LAST_ACTIVE_WINDOW_ID_KEY]
 	// need to focus the last active window to fix the bug of switching abort in arc browser
-	await chrome.windows.update(lastActiveWindowId, { focused: true })
+	const lastActiveWindowId = storage[LAST_ACTIVE_WINDOW_ID_KEY]
+	if (lastActiveWindowId) {
+		await chrome.windows.update(lastActiveWindowId, { focused: true })
+	}
 	await chrome.tabs.create({ url, windowId: lastActiveWindowId })
 	closeCurrentWindowAndClearStorage()
 }
