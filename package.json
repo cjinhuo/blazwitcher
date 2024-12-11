@@ -8,7 +8,8 @@
 		"dev": "plasmo dev ",
 		"package": "plasmo build && plasmo package",
 		"commit": "git add . && git cz",
-		"debug": "plasmo dev --verbose"
+		"debug": "plasmo dev --verbose",
+		"scan-cn": "node scripts/scan-cn.js"
 	},
 	"dependencies": {
 		"@commitlint/config-conventional": "^19.2.2",
@@ -24,6 +25,8 @@
 		"text-search-engine": "1.4.2"
 	},
 	"devDependencies": {
+		"@babel/parser": "^7.26.3",
+		"@babel/traverse": "^7.26.4",
 		"@biomejs/biome": "^1.8.3",
 		"@changesets/cli": "^2.27.8",
 		"@ianvs/prettier-plugin-sort-imports": "4.1.1",
@@ -42,10 +45,7 @@
 		}
 	},
 	"manifest": {
-		"host_permissions": [
-			"https://*/*",
-			"http://*/*"
-		],
+		"host_permissions": ["https://*/*", "http://*/*"],
 		"commands": {
 			"_execute_action": {
 				"suggested_key": {
@@ -60,12 +60,8 @@
 		},
 		"web_accessible_resources": [
 			{
-				"resources": [
-					"sidepanel.html"
-				],
-				"matches": [
-					"<all_urls>"
-				]
+				"resources": ["sidepanel.html"],
+				"matches": ["<all_urls>"]
 			}
 		],
 		"permissions": [

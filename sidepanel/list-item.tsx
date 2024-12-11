@@ -8,6 +8,8 @@ import { timeAgo } from '~shared/time'
 import type { BookmarkItemType, HistoryItemType, ListItemType, TabItemType } from '~shared/types'
 import { isBookmarkItem, isTabItem } from '~shared/utils'
 
+import { useAtom } from 'jotai'
+import { i18nAtom } from '~i18n/atom'
 import {
 	ContentContainer,
 	type ContentContainerProps,
@@ -79,11 +81,9 @@ const LabelContainer = styled.div`
 const Tag = styled.div`
   padding: 0 2px;
   line-height: 14px;
-  /* 比如 domain 少一个像素 */
   font-size: 9px;
   border-radius: 2px;
   background-color: var(--color-neutral-8);
-  /* 字体颜色比 title 少一个级*/
   color: var(--color-neutral-4);
   text-wrap: nowrap;
 `
@@ -98,6 +98,7 @@ const BookmarkLabel = ({ data }: { data: BookmarkItemType }) => {
 }
 
 const TabLabel = ({ data }: { data: TabItemType }) => {
+	const [i18n] = useAtom(i18nAtom)
 	return (
 		<LabelContainer>
 			<TabSvg className={SVG_CLASS}></TabSvg>
@@ -105,19 +106,20 @@ const TabLabel = ({ data }: { data: TabItemType }) => {
 			{data.active && (
 				<>
 					<ActiveStatus></ActiveStatus>
-					<Tag>Active</Tag>
+					<Tag>{i18n('active')}</Tag>
 				</>
 			)}
-			{data.active || (data.lastAccessed && <Tag>{timeAgo(data.lastAccessed)}</Tag>)}
+			{data.active || (data.lastAccessed && <Tag>{timeAgo(data.lastAccessed, i18n)}</Tag>)}
 		</LabelContainer>
 	)
 }
 
 const HistoryLabel = ({ data }: { data: HistoryItemType }) => {
+	const [i18n] = useAtom(i18nAtom)
 	return (
 		<LabelContainer>
 			<HistorySvg className={SVG_CLASS}></HistorySvg>
-			{data.lastVisitTime && <Tag>{timeAgo(data.lastVisitTime)}</Tag>}
+			{data.lastVisitTime && <Tag>{timeAgo(data.lastVisitTime, i18n)}</Tag>}
 		</LabelContainer>
 	)
 }
