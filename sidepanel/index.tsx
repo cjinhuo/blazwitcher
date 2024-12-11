@@ -7,11 +7,11 @@ import styled from 'styled-components'
 import { MAIN_CONTENT_CLASS } from '~shared/constants'
 import { handleItemClick, orderList, searchWithList, setDarkTheme } from '~shared/utils'
 
-import { useAtom } from 'jotai'
-import { i18nAtom } from '~i18n/atom'
+import { useAtomValue } from 'jotai'
 import plugins from '~plugins'
 import { matchPlugin } from '~plugins/helper'
 import { RenderPluginItem, usePluginClickItem } from '~plugins/render-item'
+import { i18nAtom } from '~sidepanel/atom'
 import Footer from './footer'
 import useOriginalList from './hooks/useOriginalList'
 import List from './list'
@@ -32,7 +32,7 @@ const ContentWrapper = styled(Content)`
 `
 
 export default function SidePanel() {
-	const [i18n] = useAtom(i18nAtom)
+	const i18n = useAtomValue(i18nAtom)
 	const originalList = useOriginalList()
 	const [searchValue, setSearchValue] = useState('')
 	const handlePluginItemClick = usePluginClickItem()

@@ -8,8 +8,7 @@ import { timeAgo } from '~shared/time'
 import type { BookmarkItemType, HistoryItemType, ListItemType, TabItemType } from '~shared/types'
 import { isBookmarkItem, isTabItem } from '~shared/utils'
 
-import { useAtom } from 'jotai'
-import { i18nAtom } from '~i18n/atom'
+import { useAtomValue } from 'jotai'
 import {
 	ContentContainer,
 	type ContentContainerProps,
@@ -20,6 +19,7 @@ import {
 	TitleContainer,
 	colorMap,
 } from '~shared/common-styles'
+import { i18nAtom } from '~sidepanel/atom'
 import HighlightText from './highlight-text'
 import { RenderOperation } from './operation'
 
@@ -98,7 +98,7 @@ const BookmarkLabel = ({ data }: { data: BookmarkItemType }) => {
 }
 
 const TabLabel = ({ data }: { data: TabItemType }) => {
-	const [i18n] = useAtom(i18nAtom)
+	const i18n = useAtomValue(i18nAtom)
 	return (
 		<LabelContainer>
 			<TabSvg className={SVG_CLASS}></TabSvg>
@@ -115,7 +115,7 @@ const TabLabel = ({ data }: { data: TabItemType }) => {
 }
 
 const HistoryLabel = ({ data }: { data: HistoryItemType }) => {
-	const [i18n] = useAtom(i18nAtom)
+	const i18n = useAtomValue(i18nAtom)
 	return (
 		<LabelContainer>
 			<HistorySvg className={SVG_CLASS}></HistorySvg>
