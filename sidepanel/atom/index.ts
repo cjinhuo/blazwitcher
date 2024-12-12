@@ -14,7 +14,7 @@ type Language = 'cn' | 'en'
 export type i18nFunction = (key: string, args?: any, lang?: Language) => string
 
 // 默认语言 english
-export const languageAtom = atom<Language>('cn')
+export const languageAtom = atom<Language>('en')
 
 export const i18nAtom = atom((get) => (key: string, args?: any) => {
 	const defaultLang = get(languageAtom)
