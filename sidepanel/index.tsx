@@ -7,9 +7,11 @@ import styled from 'styled-components'
 import { MAIN_CONTENT_CLASS } from '~shared/constants'
 import { handleItemClick, orderList, searchWithList, setDarkTheme } from '~shared/utils'
 
+import { useAtomValue } from 'jotai'
 import plugins from '~plugins'
 import { matchPlugin } from '~plugins/helper'
 import { RenderPluginItem, usePluginClickItem } from '~plugins/render-item'
+import { i18nAtom } from '~sidepanel/atom'
 import Footer from './footer'
 import useOriginalList from './hooks/useOriginalList'
 import List from './list'
@@ -30,6 +32,7 @@ const ContentWrapper = styled(Content)`
 `
 
 export default function SidePanel() {
+	const i18n = useAtomValue(i18nAtom)
 	const originalList = useOriginalList()
 	const [searchValue, setSearchValue] = useState('')
 	const handlePluginItemClick = usePluginClickItem()
@@ -47,9 +50,9 @@ export default function SidePanel() {
 
 		// 插件匹配
 		if (searchValue.startsWith('/')) {
-			const [hitPlugin, mainSearchValue] = matchPlugin(plugins, searchValue)
+			const [hitPlugin, mainSearchValue] = matchPlugin(plugins(i18n), searchValue)
 			if (!hitPlugin)
-				return <List list={plugins} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem}></List>
+				return <List list={plugins(i18n)} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem}></List>
 			if (hitPlugin.render) {
 				return hitPlugin.render()
 			}

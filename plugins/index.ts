@@ -2,6 +2,11 @@ import { filterByBookmarkPlugin, filterByHistoryPlugin, filterByTabPlugin } from
 import { settingPlugin } from './setting'
 
 // settingPlugin
-const plugins = [filterByTabPlugin, filterByHistoryPlugin, filterByBookmarkPlugin]
+const plugins = (i18n) => [
+	filterByTabPlugin(i18n),
+	filterByHistoryPlugin(i18n),
+	filterByBookmarkPlugin(i18n),
+	// settingPlugin(i18n),
+]
 
 export default plugins

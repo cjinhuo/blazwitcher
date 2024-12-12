@@ -1,9 +1,10 @@
 import SettingSvg from 'react:~assets/setting.svg'
+import type { i18nFunction } from '~i18n/atom'
 import type { CommandPlugin } from '~shared/types'
 
-export const settingPlugin: CommandPlugin = {
+export const settingPlugin = (i18n: i18nFunction): CommandPlugin => ({
 	command: '/setting',
-	description: 'Setting Page',
+	description: i18n('settingPage'),
 	icon: <SettingSvg width={24} height={24} />,
-	render: () => <div>Setting</div>,
-}
+	render: () => <div>{i18n('setting')}</div>,
+})
