@@ -1,5 +1,12 @@
 # blazwitcher
 
+## 0.3.2
+
+### Patch Changes
+
+- ea00224: fix active tab in sidePanel
+- 1b0ac8b: add i18n with jotai
+
 ## 0.3.1
 
 ### Patch Changes
