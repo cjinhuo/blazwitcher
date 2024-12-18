@@ -1,6 +1,6 @@
 import SettingSvg from 'react:~assets/setting.svg'
-import type { i18nFunction } from '~i18n/atom'
 import type { CommandPlugin } from '~shared/types'
+import type { i18nFunction } from '~sidepanel/atom'
 
 export const settingPlugin = (i18n: i18nFunction): CommandPlugin => ({
 	command: '/setting',

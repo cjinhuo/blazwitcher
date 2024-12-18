@@ -176,7 +176,7 @@ function injectModal(url: string, id?: string) {
 	mount()
 }
 
-export function weakUpWindowIfActiveByUser() {
+export function wakeUpWindowIfActiveByUser() {
 	chrome.runtime.onInstalled.addListener((detail) => {
 		if (detail.reason === 'install') {
 			activeWindow()

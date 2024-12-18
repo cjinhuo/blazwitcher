@@ -1,6 +1,6 @@
 import { DEFAULT_HISTORY_MAX_DAYS, DEFAULT_HISTORY_MAX_RESULTS, ONE_DAY_MILLISECONDS } from './constants'
 import { getBookmarksById, getBookmarksTree, getTabGroupById, historySearch, tabsQuery } from './promisify'
-import { type BookmarkItemType, type HistoryItemType, ItemType } from './types'
+import { type BookmarkItemType, type HistoryItemType, ItemType, type ListItemType } from './types'
 import { faviconURL, getCompositeSourceAndHost } from './utils'
 
 export async function tabsProcessing() {
@@ -26,11 +26,10 @@ function tabGroupProcessing(groupId: number) {
 	return getTabGroupById(groupId)
 }
 
-export function bookmarksProcessing() {
+export async function bookmarksProcessing() {
 	let processedBookmarks: BookmarkItemType[] = []
-	getBookmarksTree().then((bookmarks) => {
-		processedBookmarks = traversalBookmarkTreeNode(bookmarks)
-	})
+	const bookmarks = await getBookmarksTree()
+	processedBookmarks = traversalBookmarkTreeNode(bookmarks)
 
 	chrome.bookmarks.onChanged.addListener((id, changeInfo) => {
 		const index = processedBookmarks.findIndex((bookmark) => bookmark.id === id)
@@ -57,11 +56,10 @@ export function bookmarksProcessing() {
 		index && processedBookmarks.splice(index, 1)
 	})
 
-	return () =>
-		processedBookmarks.map((bookmark) => ({
-			itemType: ItemType.Bookmark,
-			data: bookmark,
-		}))
+	return processedBookmarks.map((bookmark) => ({
+		itemType: ItemType.Bookmark,
+		data: bookmark,
+	}))
 }
 
 function processHistoryItem(history: chrome.history.HistoryItem) {
@@ -128,17 +126,17 @@ export const traversalBookmarkTreeNode = (
 	return result
 }
 
-export function dataProcessing() {
+export async function dataProcessing() {
 	// Just don't effect the main thread
 	// Since the bookmarks may be too large, we should use async callback to get.
-	const getBookmarks = bookmarksProcessing()
+	const bookmarks = await bookmarksProcessing()
 	return async () => {
 		// because the tabs data not really too large, so we can use sync calculation.
 		// And it would be changed very frequently so listening the update of it is not a good idea.
-		const bookmarks = getBookmarks()
+
 		const tabs = await tabsProcessing()
 		const history = await historyProcessing()
 		// prioritize tabs over history、history over bookmarks
-		return [...tabs, ...history, ...bookmarks]
+		return [...tabs, ...history, ...bookmarks] as ListItemType[]
 	}
 }

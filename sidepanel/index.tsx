@@ -36,6 +36,7 @@ export default function SidePanel() {
 	const originalList = useOriginalList()
 	const [searchValue, setSearchValue] = useState('')
 	const handlePluginItemClick = usePluginClickItem()
+
 	useEffect(() => {
 		setDarkTheme()
 	}, [])
@@ -63,7 +64,7 @@ export default function SidePanel() {
 		return (
 			<List list={orderList(filteredList)} handleItemClick={handleItemClick} RenderItem={ListItemRenderItem}></List>
 		)
-	}, [searchValue, originalList, handlePluginItemClick])
+	}, [searchValue, originalList, handlePluginItemClick, i18n])
 
 	// 会影响小部分匹配，比如 ab c，输入 ab 加上一个空格，理论上应该匹配 [ab ]，但现在会被 trim 掉，无伤大雅
 	const handleSearch = useCallback((value: string) => {

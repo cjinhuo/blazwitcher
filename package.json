@@ -1,6 +1,6 @@
 {
 	"name": "blazwitcher",
-	"displayName": "Blazwitcher: Fuzzy Pinyin Search & Tab Switch In Blazing Speed",
+	"displayName": "Blazwitcher: Fuzzy Pinyin Search",
 	"version": "0.3.2",
 	"description": "Blazwitcher is a local tool for searching tabs, bookmarks, and history, with support for fuzzy Pinyin search.",
 	"author": "cjinhuo@qq.com",
@@ -46,6 +46,10 @@
 	},
 	"manifest": {
 		"host_permissions": ["https://*/*", "http://*/*"],
+		"omnibox": {
+			"keyword": "/",
+			"description": "Search By Blazwitcher"
+		},
 		"commands": {
 			"_execute_action": {
 				"suggested_key": {
