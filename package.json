@@ -47,7 +47,7 @@
 	"manifest": {
 		"host_permissions": ["https://*/*", "http://*/*"],
 		"omnibox": {
-			"keyword": "/",
+			"keyword": "j",
 			"description": "Search By Blazwitcher"
 		},
 		"commands": {

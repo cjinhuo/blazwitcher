@@ -1,4 +1,4 @@
-import type { ListItemType } from './types'
+import { ItemType, type ListItemType } from './types'
 import { escapeXml, orderList, searchWithList } from './utils'
 
 const highlightText = (text: string, ranges: [number, number][]) => {
@@ -10,9 +10,9 @@ const highlightText = (text: string, ranges: [number, number][]) => {
 	ranges.forEach(([start, end]) => {
 		// Add non-matching text
 		result += escapeXml(text.slice(lastIndex, start))
-		// Add matching text with highlight
-		result += `<match>${escapeXml(text.slice(start, end))}</match>`
-		lastIndex = end
+		// Use 'match' class instead of XML tag for better Unicode support
+		result += `<b>${escapeXml(text.slice(start, end + 1))}</b>`
+		lastIndex = end + 1
 	})
 
 	// Add remaining text
@@ -28,9 +28,7 @@ export const setupOmnibox = async (getProcessedData: () => Promise<ListItemType[
 	})
 
 	chrome.omnibox.onInputStarted.addListener(async () => {
-		const _data = await getProcessedData()
-		console.log('omnibox data', _data)
-		data = _data
+		data = await getProcessedData()
 	})
 
 	// Handle user input
@@ -39,6 +37,13 @@ export const setupOmnibox = async (getProcessedData: () => Promise<ListItemType[
 		const suggestions = orderList(searchWithList(data, text))
 			.map(({ data, itemType }) => {
 				const { hostHitRanges, titleHitRanges, title, host, url } = data
+				if (itemType === ItemType.Tab) {
+					return {
+						content: String(data.id),
+						deletable: false,
+						description: `${highlightText(title, titleHitRanges)} - <url>${highlightText(host, hostHitRanges)}</url> <dim>- Switch to this tab</dim>`,
+					}
+				}
 				return {
 					content: url,
 					deletable: false,
@@ -53,7 +58,13 @@ export const setupOmnibox = async (getProcessedData: () => Promise<ListItemType[
 
 	// Handle when user selects a suggestion
 	chrome.omnibox.onInputEntered.addListener((text, disposition) => {
-		console.log('disposition', text, disposition)
-		// chrome.tabs.create({ url })
+		// 将 text 转成 number ，如果能转则表示是 tab，否则表示是 url
+		const id = Number(text)
+		if (!Number.isNaN(id)) {
+			chrome.windows.update(id, { focused: true })
+			chrome.tabs.update(id, { active: true })
+		} else {
+			chrome.tabs.create({ url: text })
+		}
 	})
 }
