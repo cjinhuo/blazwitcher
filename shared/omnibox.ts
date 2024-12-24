@@ -11,7 +11,7 @@ const highlightText = (text: string, ranges: [number, number][]) => {
 		// Add non-matching text
 		result += escapeXml(text.slice(lastIndex, start))
 		// Add matching text with highlight
-		result += `<match>${escapeXml(text.slice(start, end + 1))}</match>`
+		result += '<match>这是中文，将不会被高亮</match><match>this is english, will be highlighted</match>'
 		lastIndex = end + 1
 	})
 
@@ -34,37 +34,54 @@ export const setupOmnibox = async (getProcessedData: () => Promise<ListItemType[
 	// Handle user input
 	chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
 		console.log('input', text, data)
-		const suggestions = orderList(searchWithList(data, text))
-			.map(({ data, itemType }) => {
-				const { hostHitRanges, titleHitRanges, title, host, url } = data
-				if (itemType === ItemType.Tab) {
-					return {
-						content: String(data.id),
-						deletable: false,
-						description: `${highlightText(title, titleHitRanges)} - <url>${highlightText(host, hostHitRanges)}</url> <dim>- Switch to this tab</dim>`,
-					}
-				}
-				return {
-					content: url,
-					deletable: false,
-					description: `${highlightText(title, titleHitRanges)} - <url>${highlightText(host, hostHitRanges)}</url>`,
-				}
-			})
-			.slice(0, 8)
-		console.log('suggestions', suggestions)
+		const temp = [
+			{
+				content: 'test_1',
+				deletable: false,
+				description: '<match>这是中文，将不会被高亮</match>  <match>this is english, will be highlighted</match>',
+			},
+			{
+				content: 'test_2',
+				deletable: false,
+				description: '<match>这是中文，将不会被高亮</match>  <match>this is english, will be highlighted</match>',
+			},
+			{
+				content: 'test_3',
+				deletable: false,
+				description: '<match>这是中文，将不会被高亮</match>  <match>this is english, will be highlighted</match>',
+			},
+		]
+		// const suggestions = orderList(searchWithList(data, text))
+		// 	.map(({ data, itemType }) => {
+		// 		const { hostHitRanges, titleHitRanges, title, host, url } = data
+		// 		if (itemType === ItemType.Tab) {
+		// 			return {
+		// 				content: String(data.id),
+		// 				deletable: false,
+		// 				description: '<match>这是中文，将不会被高亮</match><match>this is english, will be highlighted</match>',
+		// 			}
+		// 		}
+		// 		return {
+		// 			content: url,
+		// 			deletable: false,
+		// 			description: '<match>这是中文，将不会被高亮</match><match>this is english, will be highlighted</match>',
+		// 		}
+		// 	})
+		// 	.slice(0, 8)
+		// console.log('suggestions', suggestions)
 
-		suggest(suggestions)
+		suggest(temp)
 	})
 
 	// Handle when user selects a suggestion
 	chrome.omnibox.onInputEntered.addListener((text, disposition) => {
 		// 将 text 转成 number ，如果能转则表示是 tab，否则表示是 url
-		const id = Number(text)
-		if (!Number.isNaN(id)) {
-			chrome.windows.update(id, { focused: true })
-			chrome.tabs.update(id, { active: true })
-		} else {
-			chrome.tabs.create({ url: text })
-		}
+		// const id = Number(text)
+		// if (!Number.isNaN(id)) {
+		// 	chrome.windows.update(id, { focused: true })
+		// 	chrome.tabs.update(id, { active: true })
+		// } else {
+		// 	chrome.tabs.create({ url: text })
+		// }
 	})
 }
