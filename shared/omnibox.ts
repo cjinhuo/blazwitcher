@@ -10,8 +10,8 @@ const highlightText = (text: string, ranges: [number, number][]) => {
 	ranges.forEach(([start, end]) => {
 		// Add non-matching text
 		result += escapeXml(text.slice(lastIndex, start))
-		// Use 'match' class instead of XML tag for better Unicode support
-		result += `<b>${escapeXml(text.slice(start, end + 1))}</b>`
+		// Add matching text with highlight
+		result += `<match>${escapeXml(text.slice(start, end + 1))}</match>`
 		lastIndex = end + 1
 	})
 
