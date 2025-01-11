@@ -1,0 +1,107 @@
+{
+	"appearance": {
+		"message": "Appearance"
+	},
+	"keyboard": {
+		"message": "Keyboard"
+	},
+	"search": {
+		"message": "Search"
+	},
+	"theme_settings": {
+		"message": "Theme Settings"
+	},
+	"appearance_mode": {
+		"message": "Appearance Mode"
+	},
+	"light": {
+		"message": "Light"
+	},
+	"dark": {
+		"message": "Dark"
+	},
+	"follow_system": {
+		"message": "Follow System"
+	},
+	"window_size": {
+		"message": "Window Size"
+	},
+	"small": {
+		"message": "Small"
+	},
+	"medium": {
+		"message": "Medium"
+	},
+	"large": {
+		"message": "Large"
+	},
+	"language": {
+		"message": "Language"
+	},
+	"keyboard_settings": {
+		"message": "Keyboard Settings"
+	},
+	"open_extension": {
+		"message": "Open Extension"
+	},
+	"open_extension_desc": {
+		"message": "Quickly open the extension panel"
+	},
+	"delete_tab": {
+		"message": "Delete Tab"
+	},
+	"delete_tab_desc": {
+		"message": "Close current tab"
+	},
+	"open_in_new_window": {
+		"message": "Open in New Window"
+	},
+	"open_in_new_window_desc": {
+		"message": "Open tab in new window"
+	},
+	"search_history": {
+		"message": "Search in History"
+	},
+	"search_history_desc": {
+		"message": "Search browsing history"
+	},
+	"edit": {
+		"message": "Edit"
+	},
+	"edit_shortcut": {
+		"message": "Edit Shortcut"
+	},
+	"current_action": {
+		"message": "Current Action"
+	},
+	"function_description": {
+		"message": "Function Description"
+	},
+	"shortcut": {
+		"message": "Shortcut"
+	},
+	"press_shortcut": {
+		"message": "Press shortcut combination"
+	},
+	"please_input_shortcut": {
+		"message": "Please input shortcut"
+	},
+	"shortcut_already_used": {
+		"message": "This shortcut is already in use"
+	},
+	"search_settings": {
+		"message": "Search Settings"
+	},
+	"search_history_count": {
+		"message": "Number of searchable history items"
+	},
+	"search_history_days": {
+		"message": "History search time range (days)"
+	},
+	"search_source_config": {
+		"message": "Search Source Configuration"
+	},
+	"default_search_type": {
+		"message": "Default Search Type"
+	}
+}

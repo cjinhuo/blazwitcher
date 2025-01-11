@@ -1,4 +1,4 @@
-import type { i18nFunction } from '~i18n/atom'
+import type { i18nFunction } from '~sidepanel/atom'
 
 export function timeAgo(lastAccessed: number, i18n: i18nFunction) {
 	const now = Date.now()

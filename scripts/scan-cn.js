@@ -83,7 +83,6 @@ function scanFile(filePath) {
 
 			// JSX 和 TSX
 			if (path.node.type === 'JSXText') {
-				console.log(path.node.loc.start, 111)
 				checkAndAddChinese(path.node.value, filePath, path.node.loc.start.line, path.node.loc.start.column)
 			}
 

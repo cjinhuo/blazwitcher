@@ -1,9 +1,9 @@
 import BookmarkSvg from 'react:~assets/bookmark.svg'
 import HistorySvg from 'react:~assets/history.svg'
 import TabSvg from 'react:~assets/tab.svg'
-import type { i18nFunction } from '~i18n/atom'
 import type { CommandPlugin } from '~shared/types'
 import { isBookmarkItem, isHistoryItem, isTabItem } from '~shared/utils'
+import type { i18nFunction } from '~sidepanel/atom'
 
 export const filterByBookmarkPlugin = (i18n: i18nFunction): CommandPlugin => ({
 	command: '/b',
