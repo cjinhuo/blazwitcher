@@ -1,0 +1,107 @@
+{
+	"appearance": {
+		"message": "外观"
+	},
+	"keyboard": {
+		"message": "快捷键"
+	},
+	"search": {
+		"message": "搜索"
+	},
+	"theme_settings": {
+		"message": "主题设置"
+	},
+	"appearance_mode": {
+		"message": "外观模式"
+	},
+	"light": {
+		"message": "浅色"
+	},
+	"dark": {
+		"message": "深色"
+	},
+	"follow_system": {
+		"message": "跟随系统"
+	},
+	"window_size": {
+		"message": "窗口大小"
+	},
+	"small": {
+		"message": "小"
+	},
+	"medium": {
+		"message": "中"
+	},
+	"large": {
+		"message": "大"
+	},
+	"language": {
+		"message": "语言"
+	},
+	"keyboard_settings": {
+		"message": "快捷键设置"
+	},
+	"open_extension": {
+		"message": "打开扩展"
+	},
+	"open_extension_desc": {
+		"message": "快速打开扩展面板"
+	},
+	"delete_tab": {
+		"message": "删除标签"
+	},
+	"delete_tab_desc": {
+		"message": "关闭当前标签页"
+	},
+	"open_in_new_window": {
+		"message": "在新窗口打开标签"
+	},
+	"open_in_new_window_desc": {
+		"message": "在新窗口中打开标签"
+	},
+	"search_history": {
+		"message": "在历史记录中搜索"
+	},
+	"search_history_desc": {
+		"message": "搜索浏览历史"
+	},
+	"edit": {
+		"message": "编辑"
+	},
+	"edit_shortcut": {
+		"message": "编辑快捷键"
+	},
+	"current_action": {
+		"message": "当前操作"
+	},
+	"function_description": {
+		"message": "功能说明"
+	},
+	"shortcut": {
+		"message": "快捷键"
+	},
+	"press_shortcut": {
+		"message": "请按下快捷键组合"
+	},
+	"please_input_shortcut": {
+		"message": "请输入快捷键"
+	},
+	"shortcut_already_used": {
+		"message": "该快捷键已被使用"
+	},
+	"search_settings": {
+		"message": "搜索参数设置"
+	},
+	"search_history_count": {
+		"message": "可回溯搜索的条数"
+	},
+	"search_history_days": {
+		"message": "回溯历史记录时间（天）"
+	},
+	"search_source_config": {
+		"message": "搜索源配置"
+	},
+	"default_search_type": {
+		"message": "默认检索类型"
+	}
+}

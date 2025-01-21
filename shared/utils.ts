@@ -281,3 +281,7 @@ export const searchWithList = (list: ListItemType[], searchValue: string) => {
 		return acc
 	}, [])
 }
+
+export const t = (key: string) => {
+	return chrome.i18n.getMessage(key) || key
+}
