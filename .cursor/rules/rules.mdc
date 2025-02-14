@@ -1,5 +1,5 @@
 ---
-description: for all
+description: for allgit 
 globs: *.ts,*.tsx
 ---
 代码格式按照 [biome.json](mdc:biome.json) 规则
