@@ -41,8 +41,8 @@ export default function SidePanel() {
 		setDarkTheme()
 	}, [])
 
-	const RenderContent = useMemo(() => {
-		const renderList = (list: ListItemType[]) => {
+	const RenderList = useCallback(
+		(list: ListItemType[]) => {
 			const { tabs, bookmarks, histories } = orderList(list)
 
 			const itemsWithDivide = [
@@ -56,21 +56,15 @@ export default function SidePanel() {
 				...(bookmarks.length > 0 ? [{ itemType: 'divide', data: { name: i18n('bookmarks') } }, ...bookmarks] : []),
 			]
 
-			return (
-				<List
-					list={itemsWithDivide}
-					RenderItem={({ item }) => {
-						return <ListItemRenderItem item={item} />
-					}}
-					handleItemClick={(item) => {
-						handleItemClick(item)
-					}}
-				/>
-			)
-		}
+			// RenderItem 如果使用函数，会导致每次渲染都会重新创建一个新的函数，从而导致性能问题
+			return <List list={itemsWithDivide} RenderItem={ListItemRenderItem} handleItemClick={handleItemClick} />
+		},
+		[i18n]
+	)
 
+	const RenderContent = useMemo(() => {
 		if (searchValue === '') {
-			return renderList(originalList)
+			return RenderList(originalList)
 		}
 
 		let realSearchValue = searchValue
@@ -89,8 +83,8 @@ export default function SidePanel() {
 		}
 
 		const filteredList = searchWithList(realList, realSearchValue)
-		return renderList(filteredList)
-	}, [searchValue, originalList, handlePluginItemClick, i18n])
+		return RenderList(filteredList)
+	}, [searchValue, originalList, handlePluginItemClick, i18n, RenderList])
 
 	// 会影响小部分匹配，比如 ab c，输入 ab 加上一个空格，理论上应该匹配 [ab ]，但现在会被 trim 掉，无伤大雅
 	const handleSearch = useCallback((value: string) => {
