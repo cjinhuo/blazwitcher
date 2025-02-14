@@ -1,4 +1,16 @@
 export const lang = {
+	open_tab: {
+		cn: '已打开标签页',
+		en: 'Opened Tabs',
+	},
+	recent_histories: {
+		cn: '最近历史记录',
+		en: 'Recent Histories',
+	},
+	bookmarks: {
+		cn: '书签',
+		en: 'Bookmarks',
+	},
 	tab: {
 		cn: '标签页',
 		en: 'Tab',

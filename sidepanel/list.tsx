@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { useAtomValue } from 'jotai'
 import { HIGHLIGHT_TEXT_CLASS, HOST_CLASS, IMAGE_CLASS, NORMAL_TEXT_CLASS, SVG_CLASS } from '~shared/common-styles'
-import { LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS, VISIBILITY_CLASS } from '../shared/constants'
+import { DIVIDE_CLASS, LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS, VISIBILITY_CLASS } from '../shared/constants'
 import { closeCurrentWindowAndClearStorage, scrollIntoViewIfNeeded } from '../shared/utils'
 import { CompositionAtom } from './atom'
 
@@ -13,10 +13,22 @@ const ListContainer = styled.div`
   .semi-list-item-body-main {
     width: 100%;
     overflow: hidden;
+		cursor: default;
   }
   .semi-list-item-body {
     overflow: hidden;
   }
+`
+
+const Divide = styled.div`
+  padding: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-neutral-4);
+  display: flex;
+  align-items: center;
+  /* border-bottom: 1px solid var(--color-neutral-8); */
+  letter-spacing: 0.5px;
 `
 
 const ListItemWrapper = styled(ListComponent.Item)`
@@ -76,8 +88,15 @@ const ListItemWrapper = styled(ListComponent.Item)`
       visibility: visible;
     }
   }
-  &.semi-list-item {
+	&.semi-list-item {
     height: 50px;
+  }
+`
+
+const HeaderItem = styled(ListComponent.Item)`
+  &.semi-list-item {
+    height: 26px;
+    background-color: transparent !important;
   }
 `
 
@@ -85,7 +104,11 @@ const setScrollTopIfNeeded = () => {
 	const mainContent = document.querySelector(`.${MAIN_CONTENT_CLASS}`) as HTMLElement
 	const activeItem = document.querySelector(`.${LIST_ITEM_ACTIVE_CLASS}`) as HTMLElement
 	if (!activeItem) return
-	scrollIntoViewIfNeeded(activeItem, mainContent)
+	let divideItem = activeItem.parentElement?.previousElementSibling?.firstChild as HTMLElement | undefined
+	if (!divideItem?.classList?.contains(DIVIDE_CLASS)) {
+		divideItem = undefined
+	}
+	scrollIntoViewIfNeeded(activeItem, mainContent, divideItem)
 }
 
 interface ListProps<T = any> {
@@ -97,17 +120,21 @@ interface ListProps<T = any> {
 
 export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 	const isComposition = useAtomValue(CompositionAtom)
-	const [activeIndex, setActiveIndex] = useState(0)
-	const i = useRef(0)
+	const [activeIndex, setActiveIndex] = useState(() => {
+		// Find first non-divide item index
+		return list.findIndex((item) => item.itemType !== 'divide')
+	})
+	const i = useRef(activeIndex)
 
 	const timer = useRef<NodeJS.Timeout>()
 	const accumulatedOffset = useRef(0)
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		// reset active index
-		setActiveIndex(0)
-		i.current = 0
+		// reset active index to first non-divide item
+		const firstValidIndex = list.findIndex((item) => item.itemType !== 'divide')
+		setActiveIndex(firstValidIndex)
+		i.current = firstValidIndex
 	}, [list])
 
 	const changeActiveIndex = useCallback(
@@ -118,7 +145,7 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 				index = list.length - 1
 			}
 			if (index >= list.length) {
-				index = 0
+				index = list.findIndex((item) => item.itemType !== 'divide')
 			}
 			i.current = index
 			setActiveIndex(index)
@@ -141,9 +168,17 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 	const keyActionsChangeIndex = useCallback(
 		(offset: number) => {
 			accumulatedOffset.current += offset
+
+			while (true) {
+				const nextIndex = i.current + accumulatedOffset.current
+				if (nextIndex < 0 || nextIndex >= list.length) break
+				const item = list[nextIndex]
+				if (item.itemType !== 'divide') break
+				accumulatedOffset.current += offset > 0 ? 1 : -1
+			}
 			debounceChangeActiveIndex()
 		},
-		[debounceChangeActiveIndex]
+		[debounceChangeActiveIndex, list]
 	)
 
 	const handleEnterEvent = useCallback(() => {
@@ -193,13 +228,18 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 					span: 24,
 				}}
 				dataSource={list}
-				renderItem={(item, index) => (
-					<ListItemWrapper
-						className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ''}
-						main={<RenderItem item={item} />}
-						onClick={() => handleItemClick(item)}
-					/>
-				)}
+				renderItem={(item, index) => {
+					if (item.itemType === 'divide') {
+						return <HeaderItem className={DIVIDE_CLASS} main={<Divide>{item.data.name}</Divide>} />
+					}
+					return (
+						<ListItemWrapper
+							className={index === activeIndex ? LIST_ITEM_ACTIVE_CLASS : ''}
+							main={<RenderItem item={item} />}
+							onClick={() => handleItemClick(item)}
+						/>
+					)
+				}}
 			/>
 		</ListContainer>
 	)

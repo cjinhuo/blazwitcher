@@ -20,13 +20,31 @@ export function isChineseChar(char) {
 	return chineseCharRegex.test(char)
 }
 
-export function scrollIntoViewIfNeeded(element: HTMLElement, container: HTMLElement) {
-	const containerRect = container.getBoundingClientRect()
+/**
+ * 滚动元素到视图中，如果元素在容器中，则滚动容器，如果元素在容器中，则滚动容器，如果元素在容器中，则滚动容器
+ * @param element 需要滚动的元素
+ * @param container 容器
+ * @param divideElement 分割元素
+ */
+export function scrollIntoViewIfNeeded(element: HTMLElement, container: HTMLElement, divideElement?: HTMLElement) {
 	const elementRect = element.getBoundingClientRect()
-	if (elementRect.top < containerRect.top) {
-		container.scrollTop -= containerRect.top - elementRect.top
-	} else if (elementRect.bottom > containerRect.bottom) {
-		container.scrollTop += elementRect.bottom - containerRect.bottom + 4 // '+4' is for having margins with Footer Component
+	let elementTop = elementRect.top
+	let elementBottom = elementRect.bottom
+	if (divideElement) {
+		const divideRect = divideElement.getBoundingClientRect()
+		if (divideRect.top < elementTop) {
+			elementTop = divideRect.top
+		}
+		if (divideRect.bottom > elementBottom) {
+			elementBottom = divideRect.bottom
+		}
+	}
+	const containerRect = container.getBoundingClientRect()
+
+	if (elementTop < containerRect.top) {
+		container.scrollTop -= containerRect.top - elementTop
+	} else if (elementBottom > containerRect.bottom) {
+		container.scrollTop += elementBottom - containerRect.bottom + 4 // '+4' is for having margins with Footer Component
 	}
 }
 
@@ -246,18 +264,18 @@ export const orderList = (list: ListItemType[]) => {
 	const compareForActiveStatus = (a: ListItemType<ItemType.Tab>, _b: ListItemType<ItemType.Tab>) =>
 		a.data.active ? -1 : 1
 
-	return [
-		...tabs
+	return {
+		tabs: tabs
 			.filter((item) => !item.data.url.includes(chrome.runtime.id))
 			.toSorted(compareForLastAccess)
 			.toSorted(compareForHitRangeLength)
 			.toSorted(compareForActiveStatus),
-		...histories
+		histories: histories
 			.toSorted(compareForLastVisitTime)
 			.toSorted(compareForHitRangeLength)
 			.slice(0, DEFAULT_HISTORY_DISPLAY_COUNT),
-		...bookmarks.toSorted(compareForHitRangeLength).slice(0, DEFAULT_BOOKMARK_DISPLAY_COUNT),
-	].toSorted(compareForHitRangeLength)
+		bookmarks: bookmarks.toSorted(compareForHitRangeLength).slice(0, DEFAULT_BOOKMARK_DISPLAY_COUNT),
+	}
 }
 
 export const searchWithList = (list: ListItemType[], searchValue: string) => {
@@ -284,4 +302,8 @@ export const searchWithList = (list: ListItemType[], searchValue: string) => {
 
 export const t = (key: string) => {
 	return chrome.i18n.getMessage(key) || key
+}
+
+export function isDivideItem(item) {
+	// return item.itemType === ItemType.Divide
 }

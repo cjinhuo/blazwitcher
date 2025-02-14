@@ -11,6 +11,7 @@ import { useAtomValue } from 'jotai'
 import plugins from '~plugins'
 import { matchPlugin } from '~plugins/helper'
 import { RenderPluginItem, usePluginClickItem } from '~plugins/render-item'
+import type { ListItemType } from '~shared/types'
 import { i18nAtom } from '~sidepanel/atom'
 import Footer from './footer'
 import useOriginalList from './hooks/useOriginalList'
@@ -41,10 +42,37 @@ export default function SidePanel() {
 	}, [])
 
 	const RenderContent = useMemo(() => {
-		if (searchValue === '')
+		const renderList = (list: ListItemType[]) => {
+			const { tabs, bookmarks, histories } = orderList(list)
+
+			const itemsWithDivide = [
+				// Tabs section
+				...(tabs.length > 0 ? [{ itemType: 'divide', data: { name: i18n('open_tab') } }, ...tabs] : []),
+				// History section
+				...(histories.length > 0
+					? [{ itemType: 'divide', data: { name: i18n('recent_histories') } }, ...histories]
+					: []),
+				// Bookmarks section
+				...(bookmarks.length > 0 ? [{ itemType: 'divide', data: { name: i18n('bookmarks') } }, ...bookmarks] : []),
+			]
+
 			return (
-				<List list={orderList(originalList)} RenderItem={ListItemRenderItem} handleItemClick={handleItemClick}></List>
+				<List
+					list={itemsWithDivide}
+					RenderItem={({ item }) => {
+						return <ListItemRenderItem item={item} />
+					}}
+					handleItemClick={(item) => {
+						handleItemClick(item)
+					}}
+				/>
 			)
+		}
+
+		if (searchValue === '') {
+			return renderList(originalList)
+		}
+
 		let realSearchValue = searchValue
 		let realList = originalList
 
@@ -52,18 +80,17 @@ export default function SidePanel() {
 		if (searchValue.startsWith('/')) {
 			const [hitPlugin, mainSearchValue] = matchPlugin(plugins(i18n), searchValue)
 			if (!hitPlugin)
-				return <List list={plugins(i18n)} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem}></List>
+				return <List list={plugins(i18n)} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem} />
 			if (hitPlugin.render) {
 				return hitPlugin.render()
 			}
 			realList = hitPlugin.dataProcessing(originalList)
 			realSearchValue = mainSearchValue
 		}
+
 		const filteredList = searchWithList(realList, realSearchValue)
-		return (
-			<List list={orderList(filteredList)} handleItemClick={handleItemClick} RenderItem={ListItemRenderItem}></List>
-		)
-	}, [searchValue, originalList, handlePluginItemClick])
+		return renderList(filteredList)
+	}, [searchValue, originalList, handlePluginItemClick, i18n])
 
 	// 会影响小部分匹配，比如 ab c，输入 ab 加上一个空格，理论上应该匹配 [ab ]，但现在会被 trim 掉，无伤大雅
 	const handleSearch = useCallback((value: string) => {

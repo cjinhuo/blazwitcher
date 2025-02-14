@@ -41,52 +41,52 @@ export const RenderIcon = ({ iconUrl }: { iconUrl: string }) => {
 }
 
 const TabGroup = styled.div<ContentContainerProps>`
-  background-color: ${(props) => colorMap[props.$tabGroup.color]};
-  color: var(--color-neutral-10);
+	background-color: ${(props) => colorMap[props.$tabGroup.color]};
+	color: var(--color-neutral-10);
 	height: 16px;
 	line-height: 16px;
-  padding: 0 4px;
-  border-radius: 4px;
-  font-size: 9px;
-  font-weight: 500;
-  max-width: 100px;
-  white-space: nowrap;
-  overflow: hidden;
-  position: relative;
+	padding: 0 4px;
+	border-radius: 4px;
+	font-size: 9px;
+	font-weight: 500;
+	max-width: 100px;
+	white-space: nowrap;
+	overflow: hidden;
+	position: relative;
 
-  &::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 15%;
-    height: 100%;
-    background: linear-gradient(to right, transparent, ${(props) => colorMap[props.$tabGroup.color]});
-  }
+	&::after {
+		content: '';
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 15%;
+		height: 100%;
+		background: linear-gradient(to right, transparent, ${(props) => colorMap[props.$tabGroup.color]});
+	}
 `
 
 const ActiveStatus = styled.div`
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: #0bc40b;
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background-color: #0bc40b;
 `
 
 const LabelContainer = styled.div`
-  margin-left: 6px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+	margin-left: 6px;
+	display: flex;
+	align-items: center;
+	gap: 6px;
 `
 
 const Tag = styled.div`
-  padding: 0 2px;
-  line-height: 14px;
-  font-size: 9px;
-  border-radius: 2px;
-  background-color: var(--color-neutral-8);
-  color: var(--color-neutral-4);
-  text-wrap: nowrap;
+	padding: 0 2px;
+	line-height: 14px;
+	font-size: 9px;
+	border-radius: 2px;
+	background-color: var(--color-neutral-8);
+	color: var(--color-neutral-4);
+	text-wrap: nowrap;
 `
 
 const BookmarkLabel = ({ data }: { data: BookmarkItemType }) => {
