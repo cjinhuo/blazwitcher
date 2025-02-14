@@ -54,3 +54,8 @@ export const TitleContainer = styled.div`
 
 export const HIGHLIGHT_TEXT_CLASS = HighlightClasses.highlight
 export const NORMAL_TEXT_CLASS = HighlightClasses.normal
+
+export const InlineSvgWrapper = styled.div`
+  width: 16px;
+  height: 16px;
+`

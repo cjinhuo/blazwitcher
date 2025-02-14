@@ -14,6 +14,7 @@ import {
 	type ContentContainerProps,
 	IMAGE_CLASS,
 	ImageContainer,
+	InlineSvgWrapper,
 	SVG_CLASS,
 	SecondaryContainer,
 	TitleContainer,
@@ -89,9 +90,12 @@ const Tag = styled.div`
 `
 
 const BookmarkLabel = ({ data }: { data: BookmarkItemType }) => {
+	const i18n = useAtomValue(i18nAtom)
 	return (
 		<LabelContainer>
-			<BookmarkSvg className={SVG_CLASS}></BookmarkSvg>
+			<InlineSvgWrapper title={i18n('bookmark')}>
+				<BookmarkSvg className={SVG_CLASS}></BookmarkSvg>
+			</InlineSvgWrapper>
 			{data.folderName.trim().length !== 0 && <Tag>{data.folderName}</Tag>}
 		</LabelContainer>
 	)
@@ -101,7 +105,9 @@ const TabLabel = ({ data }: { data: TabItemType }) => {
 	const i18n = useAtomValue(i18nAtom)
 	return (
 		<LabelContainer>
-			<TabSvg className={SVG_CLASS}></TabSvg>
+			<InlineSvgWrapper title={i18n('tab')}>
+				<TabSvg className={SVG_CLASS}></TabSvg>
+			</InlineSvgWrapper>
 			{data.tabGroup && <TabGroup $tabGroup={data.tabGroup}>{data.tabGroup.title}</TabGroup>}
 			{data.active && (
 				<>
@@ -118,7 +124,9 @@ const HistoryLabel = ({ data }: { data: HistoryItemType }) => {
 	const i18n = useAtomValue(i18nAtom)
 	return (
 		<LabelContainer>
-			<HistorySvg className={SVG_CLASS}></HistorySvg>
+			<InlineSvgWrapper title={i18n('history')}>
+				<HistorySvg className={SVG_CLASS}></HistorySvg>
+			</InlineSvgWrapper>
 			{data.lastVisitTime && <Tag>{timeAgo(data.lastVisitTime, i18n)}</Tag>}
 		</LabelContainer>
 	)
