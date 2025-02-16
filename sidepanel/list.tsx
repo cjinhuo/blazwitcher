@@ -8,7 +8,7 @@ import { useAtomValue } from 'jotai'
 import { HIGHLIGHT_TEXT_CLASS, HOST_CLASS, IMAGE_CLASS, NORMAL_TEXT_CLASS, SVG_CLASS } from '~shared/common-styles'
 import { DIVIDE_CLASS, LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS, VISIBILITY_CLASS } from '../shared/constants'
 import { closeCurrentWindowAndClearStorage, scrollIntoViewIfNeeded } from '../shared/utils'
-import { CompositionAtom } from './atom'
+import { CompositionAtom, i18nAtom } from './atom'
 
 const ListContainer = styled.div`
   padding: 6px;
@@ -125,6 +125,7 @@ interface ListProps<T = any> {
 }
 
 export default function List({ list, RenderItem, handleItemClick }: ListProps) {
+	const i18n = useAtomValue(i18nAtom)
 	const isComposition = useAtomValue(CompositionAtom)
 	const [activeIndex, setActiveIndex] = useState(() => {
 		// Find first non-divide item index
@@ -238,7 +239,7 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 					<Empty
 						image={<IllustrationNoResult style={{ width: 150, height: 150 }} />}
 						darkModeImage={<IllustrationNoResultDark style={{ width: 150, height: 150 }} />}
-						description={'搜索无结果'}
+						description={i18n('emptySearch')}
 						style={emptyStyle}
 					/>
 				}

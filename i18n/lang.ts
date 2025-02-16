@@ -1,13 +1,17 @@
 export const lang = {
-	top_suggestions: {
+	emptySearch: {
+		cn: '搜索无结果',
+		en: 'No Results Found',
+	},
+	topSuggestions: {
 		cn: '最优建议',
 		en: 'Top Suggestions',
 	},
-	open_tab: {
+	openedTabs: {
 		cn: '已打开标签页',
 		en: 'Opened Tabs',
 	},
-	recent_histories: {
+	recentHistories: {
 		cn: '最近历史记录',
 		en: 'Recent Histories',
 	},

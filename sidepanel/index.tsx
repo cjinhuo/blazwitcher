@@ -1,6 +1,6 @@
 import './sidepanel.css'
 
-import { Layout } from '@douyinfe/semi-ui'
+import { Empty, Layout } from '@douyinfe/semi-ui'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -61,7 +61,7 @@ export default function SidePanel() {
 						{
 							itemType: 'divide',
 							data: {
-								name: i18n('top_suggestions'),
+								name: i18n('topSuggestions'),
 							},
 						},
 						...topSuggestions,
@@ -73,10 +73,10 @@ export default function SidePanel() {
 			itemsWithDivide.push(
 				...[
 					// Tabs section
-					...(tabs.length > 0 ? [{ itemType: 'divide', data: { name: i18n('open_tab') } }, ...tabs] : []),
+					...(tabs.length > 0 ? [{ itemType: 'divide', data: { name: i18n('openedTabs') } }, ...tabs] : []),
 					// History section
 					...(histories.length > 0
-						? [{ itemType: 'divide', data: { name: i18n('recent_histories') } }, ...histories]
+						? [{ itemType: 'divide', data: { name: i18n('recentHistories') } }, ...histories]
 						: []),
 					// Bookmarks section
 					...(bookmarks.length > 0 ? [{ itemType: 'divide', data: { name: i18n('bookmarks') } }, ...bookmarks] : []),
@@ -89,6 +89,9 @@ export default function SidePanel() {
 	)
 
 	const RenderContent = useMemo(() => {
+		if (originalList.length === 0) {
+			return <Empty description={''} />
+		}
 		if (searchValue === '') {
 			return RenderList(originalList, false)
 		}
