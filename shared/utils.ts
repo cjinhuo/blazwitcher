@@ -222,6 +222,13 @@ export function splitCompositeHitRanges(compositeHitRanges: Matrix, compositeSou
 	return result
 }
 
+export const compareForHitRangeLength = (a: ListItemType, b: ListItemType) => {
+	if (a.data.compositeHitRanges && b.data.compositeHitRanges) {
+		return a.data.compositeHitRanges.length - b.data.compositeHitRanges.length
+	}
+	return 0
+}
+
 export const orderList = (list: ListItemType[]) => {
 	const tabs: ListItemType<ItemType.Tab>[] = []
 	const bookmarks: ListItemType<ItemType.Bookmark>[] = []
@@ -254,28 +261,21 @@ export const orderList = (list: ListItemType[]) => {
 	const compareForLastVisitTime = (a: ListItemType<ItemType.History>, b: ListItemType<ItemType.History>) =>
 		a.data.lastVisitTime ? b.data.lastVisitTime - a.data.lastVisitTime : -1
 
-	const compareForHitRangeLength = (a: ListItemType, b: ListItemType) => {
-		if (a.data.compositeHitRanges && b.data.compositeHitRanges) {
-			return a.data.compositeHitRanges.length - b.data.compositeHitRanges.length
-		}
-		return 0
-	}
-
 	const compareForActiveStatus = (a: ListItemType<ItemType.Tab>, _b: ListItemType<ItemType.Tab>) =>
 		a.data.active ? -1 : 1
 
-	return {
-		tabs: tabs
+	return [
+		...tabs
 			.filter((item) => !item.data.url.includes(chrome.runtime.id))
 			.toSorted(compareForLastAccess)
 			.toSorted(compareForHitRangeLength)
 			.toSorted(compareForActiveStatus),
-		histories: histories
+		...histories
 			.toSorted(compareForLastVisitTime)
 			.toSorted(compareForHitRangeLength)
 			.slice(0, DEFAULT_HISTORY_DISPLAY_COUNT),
-		bookmarks: bookmarks.toSorted(compareForHitRangeLength).slice(0, DEFAULT_BOOKMARK_DISPLAY_COUNT),
-	}
+		...bookmarks.toSorted(compareForHitRangeLength).slice(0, DEFAULT_BOOKMARK_DISPLAY_COUNT),
+	].toSorted(compareForHitRangeLength)
 }
 
 export const searchWithList = (list: ListItemType[], searchValue: string) => {
@@ -302,6 +302,26 @@ export const searchWithList = (list: ListItemType[], searchValue: string) => {
 
 export const t = (key: string) => {
 	return chrome.i18n.getMessage(key) || key
+}
+
+export const splitToGroup = (list: ListItemType[]) => {
+	const tabs: ListItemType<ItemType.Tab>[] = []
+	const bookmarks: ListItemType<ItemType.Bookmark>[] = []
+	const histories: ListItemType<ItemType.History>[] = []
+	for (const item of list) {
+		if (isTabItem(item)) {
+			tabs.push(item)
+		} else if (isBookmarkItem(item)) {
+			bookmarks.push(item)
+		} else if (isHistoryItem(item)) {
+			histories.push(item)
+		}
+	}
+	return {
+		tabs,
+		bookmarks,
+		histories,
+	}
 }
 
 export function isDivideItem(item) {

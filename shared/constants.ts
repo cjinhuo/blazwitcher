@@ -29,9 +29,10 @@ export const ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000
 
 // config
 export const DEFAULT_HISTORY_MAX_DAYS = 14
-export const DEFAULT_HISTORY_MAX_RESULTS = 200
-export const DEFAULT_BOOKMARK_DISPLAY_COUNT = 20
-export const DEFAULT_HISTORY_DISPLAY_COUNT = 30
+export const DEFAULT_HISTORY_MAX_RESULTS = 300
+export const DEFAULT_BOOKMARK_DISPLAY_COUNT = 10
+export const DEFAULT_HISTORY_DISPLAY_COUNT = 10
+export const DEFAULT_TOP_SUGGESTIONS_COUNT = 2
 
 export const TabGroupColorMap = {
 	light: {

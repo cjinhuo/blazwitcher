@@ -1,8 +1,8 @@
 import { LAST_ACTIVE_WINDOW_ID_KEY, SELF_WINDOW_ID_KEY, SELF_WINDOW_STATE } from './constants'
 import { getCurrentWindow, getDisplayInfo, getWindowById, storageGet, storageSet, tabsQuery } from './promisify'
 
-const SEARCH_WINDOW_WIDTH = 750
-const SEARCH_WINDOW_HEIGHT = 450
+const SEARCH_WINDOW_WIDTH = 850
+const SEARCH_WINDOW_HEIGHT = 550
 
 // const SEARCH_WINDOW_WIDTH = 640
 // const SEARCH_WINDOW_HEIGHT = 400

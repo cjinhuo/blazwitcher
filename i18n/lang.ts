@@ -1,4 +1,8 @@
 export const lang = {
+	top_suggestions: {
+		cn: '最优建议',
+		en: 'Top Suggestions',
+	},
 	open_tab: {
 		cn: '已打开标签页',
 		en: 'Opened Tabs',
