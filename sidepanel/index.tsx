@@ -53,9 +53,11 @@ export default function SidePanel() {
 			const orderedList = orderList(list)
 			let restList = orderedList
 			const itemsWithDivide = []
-			// todo 当有输入时，获取前两个作为 top suggestions
 			if (hasInput && orderedList.length > 0) {
-				const topSuggestions = orderedList.slice(0, DEFAULT_TOP_SUGGESTIONS_COUNT)
+				const topSuggestions = orderedList.slice(0, DEFAULT_TOP_SUGGESTIONS_COUNT).map((item) => {
+					item.data.isShowType = true
+					return item
+				})
 				itemsWithDivide.push(
 					...[
 						{

@@ -22,6 +22,8 @@ interface BaseItemType {
 	titleHitRanges?: Matrix
 	hostHitRanges?: Matrix
 	groupNameHitRanges?: Matrix
+	// 是否显示类型，在 top suggestions 下为 true
+	isShowType?: boolean
 }
 export interface TabItemType extends chrome.tabs.Tab, BaseItemType {
 	titleBoundaryMapping: SourceMappingData

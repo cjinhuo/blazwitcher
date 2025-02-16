@@ -19,13 +19,13 @@ export const lang = {
 		cn: '书签',
 		en: 'Bookmarks',
 	},
-	tab: {
-		cn: '标签页',
-		en: 'Tab',
-	},
 	bookmark: {
 		cn: '书签',
 		en: 'Bookmark',
+	},
+	tab: {
+		cn: '标签页',
+		en: 'Tab',
 	},
 	history: {
 		cn: '历史记录',
