@@ -14,6 +14,7 @@
 	"dependencies": {
 		"@commitlint/config-conventional": "^19.2.2",
 		"@douyinfe/semi-icons": "^2.62.0",
+		"@douyinfe/semi-illustrations": "^2.74.0",
 		"@douyinfe/semi-ui": "^2.62.0",
 		"jotai": "^2.9.3",
 		"observable-hooks": "^4.2.4",
@@ -49,7 +50,10 @@
 	},
 	"manifest": {
 		"default_locale": "en",
-		"host_permissions": ["https://*/*", "http://*/*"],
+		"host_permissions": [
+			"https://*/*",
+			"http://*/*"
+		],
 		"commands": {
 			"_execute_action": {
 				"suggested_key": {
@@ -64,8 +68,12 @@
 		},
 		"web_accessible_resources": [
 			{
-				"resources": ["sidepanel.html"],
-				"matches": ["<all_urls>"]
+				"resources": [
+					"sidepanel.html"
+				],
+				"matches": [
+					"<all_urls>"
+				]
 			}
 		],
 		"permissions": [

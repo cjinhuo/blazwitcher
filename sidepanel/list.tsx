@@ -1,6 +1,8 @@
-import { List as ListComponent } from '@douyinfe/semi-ui'
+import { Empty, List as ListComponent } from '@douyinfe/semi-ui'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+
+import { IllustrationNoResult, IllustrationNoResultDark } from '@douyinfe/semi-illustrations'
 
 import { useAtomValue } from 'jotai'
 import { HIGHLIGHT_TEXT_CLASS, HOST_CLASS, IMAGE_CLASS, NORMAL_TEXT_CLASS, SVG_CLASS } from '~shared/common-styles'
@@ -109,6 +111,10 @@ const setScrollTopIfNeeded = () => {
 		divideItem = undefined
 	}
 	scrollIntoViewIfNeeded(activeItem, mainContent, divideItem)
+}
+
+const emptyStyle = {
+	padding: 30,
 }
 
 interface ListProps<T = any> {
@@ -228,6 +234,14 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 					span: 24,
 				}}
 				dataSource={list}
+				emptyContent={
+					<Empty
+						image={<IllustrationNoResult style={{ width: 150, height: 150 }} />}
+						darkModeImage={<IllustrationNoResultDark style={{ width: 150, height: 150 }} />}
+						description={'搜索无结果'}
+						style={emptyStyle}
+					/>
+				}
 				renderItem={(item, index) => {
 					if (item.itemType === 'divide') {
 						return <HeaderItem className={DIVIDE_CLASS} main={<Divide>{item.data.name}</Divide>} />
