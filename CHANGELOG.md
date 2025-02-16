@@ -1,5 +1,16 @@
 # blazwitcher
 
+## 0.4.0
+
+### Minor Changes
+
+- d026c0c: new feature for top suggestions and display empty status when no data found
+
+### Patch Changes
+
+- 3dbe00d: optimize type hints for i18n
+- 6fa3efc: init setting page and use chrome i18n
+
 ## 0.3.2
 
 ### Patch Changes
