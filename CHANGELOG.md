@@ -1,5 +1,12 @@
 # blazwitcher
 
+## 0.4.1
+
+### Patch Changes
+
+- 98fdfbb: update languageAtom from navigator.language when launch and optimize contants for i18n atom
+- 2b8d646: refine ts type and optimize css for divide item
+
 ## 0.4.0
 
 ### Minor Changes
