@@ -1,5 +1,11 @@
 # blazwitcher
 
+## 0.4.2
+
+### Patch Changes
+
+- 98f7b3b: readjust the window size opened
+
 ## 0.4.1
 
 ### Patch Changes
