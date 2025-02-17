@@ -116,7 +116,7 @@ export default function SidePanel() {
 		}
 
 		const filteredList = searchWithList(realList, realSearchValue)
-		return RenderList(filteredList, true)
+		return RenderList(filteredList, realSearchValue !== '')
 	}, [searchValue, originalList, handlePluginItemClick, i18n, RenderList])
 
 	// 会影响小部分匹配，比如 ab c，输入 ab 加上一个空格，理论上应该匹配 [ab ]，但现在会被 trim 掉，无伤大雅
