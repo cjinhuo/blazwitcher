@@ -4,15 +4,15 @@ import { Empty, Layout } from '@douyinfe/semi-ui'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { DEFAULT_TOP_SUGGESTIONS_COUNT, MAIN_CONTENT_CLASS } from '~shared/constants'
+import { DEFAULT_TOP_SUGGESTIONS_COUNT, LanguageType, MAIN_CONTENT_CLASS } from '~shared/constants'
 import { handleItemClick, orderList, searchWithList, setDarkTheme, splitToGroup } from '~shared/utils'
 
-import { useAtomValue } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import plugins from '~plugins'
 import { matchPlugin } from '~plugins/helper'
 import { RenderPluginItem, usePluginClickItem } from '~plugins/render-item'
 import { ItemType, type ListItemType } from '~shared/types'
-import { i18nAtom } from '~sidepanel/atom'
+import { i18nAtom, languageAtom } from '~sidepanel/atom'
 import Footer from './footer'
 import useOriginalList from './hooks/useOriginalList'
 import List from './list'
@@ -34,12 +34,15 @@ const ContentWrapper = styled(Content)`
 
 export default function SidePanel() {
 	const i18n = useAtomValue(i18nAtom)
+	const setLanguage = useSetAtom(languageAtom)
 	const originalList = useOriginalList()
 	const [searchValue, setSearchValue] = useState('')
 	const handlePluginItemClick = usePluginClickItem()
+
 	useEffect(() => {
 		setDarkTheme()
-	}, [])
+		navigator.language.toLowerCase().startsWith('zh') ? setLanguage(LanguageType.zh) : setLanguage(LanguageType.en)
+	}, [setLanguage])
 
 	const RenderList = useCallback(
 		(list: ListItemType[], hasInput: boolean) => {

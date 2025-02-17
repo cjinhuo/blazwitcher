@@ -23,6 +23,11 @@ export const CONTEXT_MENU_HOMEPAGE = {
 	title: 'Open Homepage',
 }
 
+export enum LanguageType {
+	zh = 'zh',
+	en = 'en',
+}
+
 export const GITHUB_URL = 'https://github.com/cjinhuo/blazwitcher'
 
 export const ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000
