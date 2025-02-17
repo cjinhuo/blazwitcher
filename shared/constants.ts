@@ -33,6 +33,8 @@ export const GITHUB_URL = 'https://github.com/cjinhuo/blazwitcher'
 export const ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000
 
 // config
+export const SEARCH_WINDOW_WIDTH = 760
+export const SEARCH_WINDOW_HEIGHT = 505
 export const DEFAULT_HISTORY_MAX_DAYS = 14
 export const DEFAULT_HISTORY_MAX_RESULTS = 1000
 export const DEFAULT_BOOKMARK_DISPLAY_COUNT = 10

@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { DEFAULT_TOP_SUGGESTIONS_COUNT, LanguageType, MAIN_CONTENT_CLASS } from '~shared/constants'
 import { handleItemClick, orderList, searchWithList, setDarkTheme, splitToGroup } from '~shared/utils'
 
-import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import plugins from '~plugins'
 import { matchPlugin } from '~plugins/helper'
 import { RenderPluginItem, usePluginClickItem } from '~plugins/render-item'

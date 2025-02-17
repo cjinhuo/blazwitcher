@@ -1,11 +1,12 @@
-import { LAST_ACTIVE_WINDOW_ID_KEY, SELF_WINDOW_ID_KEY, SELF_WINDOW_STATE } from './constants'
+import {
+	LAST_ACTIVE_WINDOW_ID_KEY,
+	SEARCH_WINDOW_HEIGHT,
+	SEARCH_WINDOW_WIDTH,
+	SELF_WINDOW_ID_KEY,
+	SELF_WINDOW_STATE,
+} from './constants'
 import { getCurrentWindow, getDisplayInfo, getWindowById, storageGet, storageSet, tabsQuery } from './promisify'
 
-const SEARCH_WINDOW_WIDTH = 850
-const SEARCH_WINDOW_HEIGHT = 550
-
-// const SEARCH_WINDOW_WIDTH = 640
-// const SEARCH_WINDOW_HEIGHT = 400
 async function activeWindow() {
 	const storage = await storageGet(SELF_WINDOW_ID_KEY)
 	if (storage[SELF_WINDOW_ID_KEY]) {
@@ -99,13 +100,15 @@ function injectModal(url: string, id?: string) {
 	if (document.getElementById(NAMESPACE)) return
 
 	const modal = document.createElement('div')
+	// 这里只能写死，不能用常量，因为常量是运行时计算的
+	// height = SEARCH_WINDOW_HEIGHT - 27(27 是浏览器标题栏高度)
 	modal.style.cssText = `
 		position: fixed;
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
-		width: 750px;
-		height: 420px;
+		width: 760px;
+		height: 478px;
 		background: white;
 		z-index: 10000000;
 		border-radius: 10px;
