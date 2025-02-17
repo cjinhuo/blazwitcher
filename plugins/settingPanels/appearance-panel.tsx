@@ -1,7 +1,10 @@
 import { IconDesktop, IconLanguage, IconMoon, IconSun } from '@douyinfe/semi-icons'
 import { Card, Radio, RadioGroup } from '@douyinfe/semi-ui'
+import { useSetAtom } from 'jotai'
 import styled from 'styled-components'
+import { LanguageType } from '~shared/constants'
 import { t } from '~shared/utils'
+import { languageAtom } from '~sidepanel/atom'
 
 const Container = styled.div`
   display: flex;
@@ -26,6 +29,11 @@ const StyledCard = styled(Card)`
 `
 
 export const AppearancePanel: React.FC = () => {
+	const setLanguage = useSetAtom(languageAtom)
+	const handleLanguageChange = (value: string) => {
+		// todo 需要存在 Localstorage，然后在 index 加载时先从 localstorage 读取
+		setLanguage(value as LanguageType)
+	}
 	return (
 		<StyledCard title={t('theme_settings')}>
 			<Container>
@@ -64,14 +72,14 @@ export const AppearancePanel: React.FC = () => {
 
 				<div>
 					<Section>{t('language')}</Section>
-					<RadioGroup type='button' defaultValue='en'>
-						<Radio value='en'>
+					<RadioGroup onChange={(e) => handleLanguageChange(e.target.value)} type='button' defaultValue='en'>
+						<Radio value={LanguageType.en}>
 							<IconWrapper>
 								<IconLanguage />
 								<span>English</span>
 							</IconWrapper>
 						</Radio>
-						<Radio value='zh'>
+						<Radio value={LanguageType.zh}>
 							<IconWrapper>
 								<IconLanguage />
 								<span>中文</span>
