@@ -60,6 +60,10 @@ export function isHistoryItem(item: ListItemType): item is ListItemType<ItemType
 	return item.itemType === ItemType.History
 }
 
+export function isDivideItem(item: ListItemType): item is ListItemType<ItemType.Divide> {
+	return item.itemType === ItemType.Divide
+}
+
 // todo 需要做一个每次首次都不需要等待的节流函数
 export function throttle(delay: number) {
 	let timer = undefined
@@ -322,8 +326,4 @@ export const splitToGroup = (list: ListItemType[]) => {
 		bookmarks,
 		histories,
 	}
-}
-
-export function isDivideItem(item) {
-	// return item.itemType === ItemType.Divide
 }

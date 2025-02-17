@@ -48,11 +48,12 @@ export enum ItemType {
 	Tab = 'tab',
 	Bookmark = 'bookmark',
 	History = 'history',
+	Divide = 'divide',
 }
 
 export interface ListItemType<T extends ItemType = ItemType> {
 	itemType: T
-	data: ItemTypeSet[T]
+	data: T extends keyof ItemTypeSet ? ItemTypeSet[T] : any
 }
 
 export enum OperationItemPropertyTypes {

@@ -6,8 +6,9 @@ import { IllustrationNoResult, IllustrationNoResultDark } from '@douyinfe/semi-i
 
 import { useAtomValue } from 'jotai'
 import { HIGHLIGHT_TEXT_CLASS, HOST_CLASS, IMAGE_CLASS, NORMAL_TEXT_CLASS, SVG_CLASS } from '~shared/common-styles'
+import type { ListItemType } from '~shared/types'
 import { DIVIDE_CLASS, LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS, VISIBILITY_CLASS } from '../shared/constants'
-import { closeCurrentWindowAndClearStorage, scrollIntoViewIfNeeded } from '../shared/utils'
+import { closeCurrentWindowAndClearStorage, isDivideItem, scrollIntoViewIfNeeded } from '../shared/utils'
 import { CompositionAtom, i18nAtom } from './atom'
 
 const ListContainer = styled.div`
@@ -23,14 +24,14 @@ const ListContainer = styled.div`
 `
 
 const Divide = styled.div`
-  padding: 6px;
+  padding: 0 4px;
   font-size: 14px;
   font-weight: 600;
   color: var(--color-neutral-4);
   display: flex;
   align-items: center;
   /* border-bottom: 1px solid var(--color-neutral-8); */
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
 `
 
 const ListItemWrapper = styled(ListComponent.Item)`
@@ -97,8 +98,7 @@ const ListItemWrapper = styled(ListComponent.Item)`
 
 const HeaderItem = styled(ListComponent.Item)`
   &.semi-list-item {
-    height: 26px;
-    background-color: transparent !important;
+    /* background-color: transparent !important; */
   }
 `
 
@@ -117,7 +117,7 @@ const emptyStyle = {
 	padding: 30,
 }
 
-interface ListProps<T = any> {
+interface ListProps<T extends ListItemType = ListItemType> {
 	list: T[]
 	// 通过 props 传进来就可以在外面控制如何渲染和点击事件
 	RenderItem: React.FC<{ item: T }>
@@ -129,17 +129,16 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 	const isComposition = useAtomValue(CompositionAtom)
 	const [activeIndex, setActiveIndex] = useState(() => {
 		// Find first non-divide item index
-		return list.findIndex((item) => item.itemType !== 'divide')
+		return list.findIndex((item) => !isDivideItem(item))
 	})
 	const i = useRef(activeIndex)
 
 	const timer = useRef<NodeJS.Timeout>()
 	const accumulatedOffset = useRef(0)
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		// reset active index to first non-divide item
-		const firstValidIndex = list.findIndex((item) => item.itemType !== 'divide')
+		const firstValidIndex = list.findIndex((item) => !isDivideItem(item))
 		setActiveIndex(firstValidIndex)
 		i.current = firstValidIndex
 	}, [list])
@@ -152,7 +151,7 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 				index = list.length - 1
 			}
 			if (index >= list.length) {
-				index = list.findIndex((item) => item.itemType !== 'divide')
+				index = list.findIndex((item) => !isDivideItem(item))
 			}
 			i.current = index
 			setActiveIndex(index)
@@ -180,7 +179,7 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 				const nextIndex = i.current + accumulatedOffset.current
 				if (nextIndex < 0 || nextIndex >= list.length) break
 				const item = list[nextIndex]
-				if (item.itemType !== 'divide') break
+				if (!isDivideItem(item)) break
 				accumulatedOffset.current += offset > 0 ? 1 : -1
 			}
 			debounceChangeActiveIndex()
@@ -244,7 +243,7 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 					/>
 				}
 				renderItem={(item, index) => {
-					if (item.itemType === 'divide') {
+					if (isDivideItem(item)) {
 						return <HeaderItem className={DIVIDE_CLASS} main={<Divide>{item.data.name}</Divide>} />
 					}
 					return (
