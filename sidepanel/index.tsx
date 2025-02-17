@@ -5,20 +5,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { DEFAULT_TOP_SUGGESTIONS_COUNT, MAIN_CONTENT_CLASS } from '~shared/constants'
-import {
-	compareForHitRangeLength,
-	handleItemClick,
-	orderList,
-	searchWithList,
-	setDarkTheme,
-	splitToGroup,
-} from '~shared/utils'
+import { handleItemClick, orderList, searchWithList, setDarkTheme, splitToGroup } from '~shared/utils'
 
 import { useAtomValue } from 'jotai'
 import plugins from '~plugins'
 import { matchPlugin } from '~plugins/helper'
 import { RenderPluginItem, usePluginClickItem } from '~plugins/render-item'
-import type { ListItemType } from '~shared/types'
+import { ItemType, type ListItemType } from '~shared/types'
 import { i18nAtom } from '~sidepanel/atom'
 import Footer from './footer'
 import useOriginalList from './hooks/useOriginalList'
@@ -52,7 +45,7 @@ export default function SidePanel() {
 		(list: ListItemType[], hasInput: boolean) => {
 			const orderedList = orderList(list)
 			let restList = orderedList
-			const itemsWithDivide = []
+			const itemsWithDivide: ListItemType[] = []
 			if (hasInput && orderedList.length > 0) {
 				const topSuggestions = orderedList.slice(0, DEFAULT_TOP_SUGGESTIONS_COUNT).map((item) => {
 					item.data.isShowType = true
@@ -61,7 +54,7 @@ export default function SidePanel() {
 				itemsWithDivide.push(
 					...[
 						{
-							itemType: 'divide',
+							itemType: ItemType.Divide,
 							data: {
 								name: i18n('topSuggestions'),
 							},
@@ -73,16 +66,16 @@ export default function SidePanel() {
 			}
 			const { tabs, bookmarks, histories } = splitToGroup(restList)
 			itemsWithDivide.push(
-				...[
-					// Tabs section
-					...(tabs.length > 0 ? [{ itemType: 'divide', data: { name: i18n('openedTabs') } }, ...tabs] : []),
-					// History section
-					...(histories.length > 0
-						? [{ itemType: 'divide', data: { name: i18n('recentHistories') } }, ...histories]
-						: []),
-					// Bookmarks section
-					...(bookmarks.length > 0 ? [{ itemType: 'divide', data: { name: i18n('bookmarks') } }, ...bookmarks] : []),
-				]
+				// Tabs section
+				...(tabs.length > 0 ? [{ itemType: ItemType.Divide, data: { name: i18n('openedTabs') } }, ...tabs] : []),
+				// History section
+				...(histories.length > 0
+					? [{ itemType: ItemType.Divide, data: { name: i18n('recentHistories') } }, ...histories]
+					: []),
+				// Bookmarks section
+				...(bookmarks.length > 0
+					? [{ itemType: ItemType.Divide, data: { name: i18n('bookmarks') } }, ...bookmarks]
+					: [])
 			)
 			// RenderItem 如果使用函数，会导致每次渲染都会重新创建一个新的函数，从而导致性能问题
 			return <List list={itemsWithDivide} RenderItem={ListItemRenderItem} handleItemClick={handleItemClick} />
@@ -105,7 +98,13 @@ export default function SidePanel() {
 		if (searchValue.startsWith('/')) {
 			const [hitPlugin, mainSearchValue] = matchPlugin(plugins(i18n), searchValue)
 			if (!hitPlugin)
-				return <List list={plugins(i18n)} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem} />
+				return (
+					<List
+						list={plugins(i18n) as any}
+						handleItemClick={handlePluginItemClick as any}
+						RenderItem={RenderPluginItem as any}
+					/>
+				)
 			if (hitPlugin.render) {
 				return hitPlugin.render()
 			}
