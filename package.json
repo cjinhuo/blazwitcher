@@ -23,7 +23,7 @@
 		"react-dom": "18.2.0",
 		"rxjs": "8.0.0-alpha.14",
 		"styled-components": "^6.1.11",
-		"text-search-engine": "1.4.2"
+		"text-search-engine": "1.4.3"
 	},
 	"devDependencies": {
 		"@babel/parser": "^7.26.3",
