@@ -304,10 +304,6 @@ export const searchWithList = (list: ListItemType[], searchValue: string) => {
 	}, [])
 }
 
-export const t = (key: string) => {
-	return chrome.i18n.getMessage(key) || key
-}
-
 export const splitToGroup = (list: ListItemType[]) => {
 	const tabs: ListItemType<ItemType.Tab>[] = []
 	const bookmarks: ListItemType<ItemType.Bookmark>[] = []

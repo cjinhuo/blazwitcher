@@ -68,3 +68,5 @@ export const TabGroupColorMap = {
 
 // search
 export const DEFAULT_STRICTNESS_COEFFICIENT = 0.6
+
+export const DEFAULT_LANGUAGE_KEY = 'blazwitcher_default_language'

@@ -1,8 +1,9 @@
 import { IconEdit } from '@douyinfe/semi-icons'
 import { Button, Card, List, Modal, Toast } from '@douyinfe/semi-ui'
+import { useAtomValue } from 'jotai'
 import { useState } from 'react'
 import styled from 'styled-components'
-import { t } from '~shared/utils'
+import { i18nAtom } from '~sidepanel/atom'
 
 const styles = {
 	card: styled(Card)`
@@ -93,26 +94,27 @@ interface Shortcut {
 }
 
 export const KeyboardPanel: React.FC = () => {
+	const i18n = useAtomValue(i18nAtom)
 	const [shortcuts, setShortcuts] = useState<Shortcut[]>([
 		{
-			action: t('open_extension'),
+			action: i18n('openExtension'),
 			shortcut: 'Ctrl + Shift + E',
-			description: t('open_extension_desc'),
+			description: i18n('openExtensionDesc'),
 		},
 		{
-			action: t('delete_tab'),
+			action: i18n('deleteTab'),
 			shortcut: 'Ctrl + W',
-			description: t('delete_tab_desc'),
+			description: i18n('deleteTabDesc'),
 		},
 		{
-			action: t('open_in_new_window'),
+			action: i18n('openInNewWindow'),
 			shortcut: 'Ctrl + N',
-			description: t('open_in_new_window_desc'),
+			description: i18n('openInNewWindowDesc'),
 		},
 		{
-			action: t('search_history'),
+			action: i18n('searchHistory'),
 			shortcut: 'Ctrl + H',
-			description: t('search_history_desc'),
+			description: i18n('searchHistoryDesc'),
 		},
 	])
 
@@ -146,7 +148,7 @@ export const KeyboardPanel: React.FC = () => {
 
 	const handleOk = () => {
 		if (!tempKeys) {
-			Toast.error(t('please_input_shortcut'))
+			Toast.error(i18n('pleaseInputShortcut'))
 			return
 		}
 
@@ -155,7 +157,7 @@ export const KeyboardPanel: React.FC = () => {
 		)
 
 		if (isDuplicate) {
-			Toast.error(t('shortcut_already_used'))
+			Toast.error(i18n('shortcutAlreadyUsed'))
 			return
 		}
 
@@ -175,7 +177,7 @@ export const KeyboardPanel: React.FC = () => {
 	}
 
 	return (
-		<styles.card title='快捷键设置'>
+		<styles.card title={i18n('keyboardSettings')}>
 			<List
 				dataSource={shortcuts}
 				renderItem={(item, index) => (
@@ -185,37 +187,44 @@ export const KeyboardPanel: React.FC = () => {
 							<styles.actionTitle>{item.action}</styles.actionTitle>
 							<styles.description>{item.description}</styles.description>
 						</styles.mainContent>
+						{/* @ts-ignore */}
 						<styles.editButton
 							icon={<IconEdit />}
 							theme='borderless'
 							type='tertiary'
 							onClick={() => handleEdit(item, index)}
 						>
-							{t('edit')}
+							{i18n('edit')}
 						</styles.editButton>
 					</styles.listItem>
 				)}
 			/>
 
-			<Modal title={t('edit_shortcut')} visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} destroyOnClose>
+			<Modal
+				title={i18n('editShortcut')}
+				visible={isModalVisible}
+				onOk={handleOk}
+				onCancel={handleCancel}
+				destroyOnClose
+			>
 				{currentShortcut && (
 					<div>
 						<styles.modalSection>
-							<div className='label'>{t('current_action')}</div>
+							<div className='label'>{i18n('currentAction')}</div>
 							<div className='content'>{currentShortcut.action}</div>
 						</styles.modalSection>
 						<styles.modalSection>
-							<div className='label'>{t('function_description')}</div>
+							<div className='label'>{i18n('functionDescription')}</div>
 							<div className='content'>{currentShortcut.description}</div>
 						</styles.modalSection>
 						<styles.modalSection>
-							<div className='label'>{t('shortcut')}</div>
+							<div className='label'>{i18n('shortcut')}</div>
 							<styles.shortcutInput
 								tabIndex={0}
 								onKeyDown={handleKeyDown}
 								value={tempKeys}
 								onChange={(e) => setTempKeys(e.target.value)}
-								placeholder={t('press_shortcut')}
+								placeholder={i18n('pressShortcut')}
 							/>
 						</styles.modalSection>
 					</div>
