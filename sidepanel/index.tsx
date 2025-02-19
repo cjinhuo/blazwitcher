@@ -4,7 +4,12 @@ import { Empty, Layout } from '@douyinfe/semi-ui'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { DEFAULT_TOP_SUGGESTIONS_COUNT, LanguageType, MAIN_CONTENT_CLASS } from '~shared/constants'
+import {
+	DEFAULT_LANGUAGE_KEY,
+	DEFAULT_TOP_SUGGESTIONS_COUNT,
+	LanguageType,
+	MAIN_CONTENT_CLASS,
+} from '~shared/constants'
 import { handleItemClick, orderList, searchWithList, setDarkTheme, splitToGroup } from '~shared/utils'
 
 import { useAtomValue, useSetAtom } from 'jotai'
@@ -14,6 +19,7 @@ import { RenderPluginItem, usePluginClickItem } from '~plugins/render-item'
 import { ItemType, type ListItemType } from '~shared/types'
 import { i18nAtom, languageAtom } from '~sidepanel/atom'
 import Footer from './footer'
+import { initializeLanguage } from './hooks/useInitialLanguage'
 import useOriginalList from './hooks/useOriginalList'
 import List from './list'
 import { RenderItem as ListItemRenderItem } from './list-item'
@@ -39,10 +45,17 @@ export default function SidePanel() {
 	const [searchValue, setSearchValue] = useState('')
 	const handlePluginItemClick = usePluginClickItem()
 
+	const initializeLanguage = useCallback(() => {
+		const storedLanguage = localStorage.getItem(DEFAULT_LANGUAGE_KEY) as LanguageType | null
+		const defaultLanguage = navigator.language.toLowerCase().startsWith('zh') ? LanguageType.zh : LanguageType.en
+
+		setLanguage(storedLanguage ?? defaultLanguage)
+	}, [setLanguage])
+
 	useEffect(() => {
 		setDarkTheme()
-		navigator.language.toLowerCase().startsWith('zh') ? setLanguage(LanguageType.zh) : setLanguage(LanguageType.en)
-	}, [setLanguage])
+		initializeLanguage()
+	}, [initializeLanguage])
 
 	const RenderList = useCallback(
 		(list: ListItemType[], hasInput: boolean) => {

@@ -1,10 +1,9 @@
 import { IconDesktop, IconLanguage, IconMoon, IconSun } from '@douyinfe/semi-icons'
 import { Card, Radio, RadioGroup } from '@douyinfe/semi-ui'
-import { useSetAtom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import styled from 'styled-components'
-import { LanguageType } from '~shared/constants'
-import { t } from '~shared/utils'
-import { languageAtom } from '~sidepanel/atom'
+import { DEFAULT_LANGUAGE_KEY, LanguageType } from '~shared/constants'
+import { i18nAtom, languageAtom } from '~sidepanel/atom'
 
 const Container = styled.div`
   display: flex;
@@ -29,50 +28,52 @@ const StyledCard = styled(Card)`
 `
 
 export const AppearancePanel: React.FC = () => {
-	const setLanguage = useSetAtom(languageAtom)
+	const i18n = useAtomValue(i18nAtom)
+	const [language, setLanguage] = useAtom(languageAtom)
 	const handleLanguageChange = (value: string) => {
-		// todo 需要存在 Localstorage，然后在 index 加载时先从 localstorage 读取
+		localStorage.setItem(DEFAULT_LANGUAGE_KEY, value)
 		setLanguage(value as LanguageType)
 	}
+
 	return (
-		<StyledCard title={t('theme_settings')}>
+		<StyledCard title={i18n('themeSettings')}>
 			<Container>
 				<div>
-					<Section>{t('appearance_mode')}</Section>
+					<Section>{i18n('appearanceMode')}</Section>
 					<RadioGroup type='button' defaultValue='system'>
 						<Radio value='light'>
 							<IconWrapper>
 								<IconSun />
-								<span>{t('light')}</span>
+								<span>{i18n('light')}</span>
 							</IconWrapper>
 						</Radio>
 						<Radio value='dark'>
 							<IconWrapper>
 								<IconMoon />
-								<span>{t('dark')}</span>
+								<span>{i18n('dark')}</span>
 							</IconWrapper>
 						</Radio>
 						<Radio value='system'>
 							<IconWrapper>
 								<IconDesktop />
-								<span>{t('follow_system')}</span>
+								<span>{i18n('followSystem')}</span>
 							</IconWrapper>
 						</Radio>
 					</RadioGroup>
 				</div>
 
 				<div>
-					<Section>{t('window_size')}</Section>
+					<Section>{i18n('windowSize')}</Section>
 					<RadioGroup type='button' defaultValue='medium'>
-						<Radio value='small'>{t('small')}</Radio>
-						<Radio value='medium'>{t('medium')}</Radio>
-						<Radio value='large'>{t('large')}</Radio>
+						<Radio value='small'>{i18n('small')}</Radio>
+						<Radio value='medium'>{i18n('medium')}</Radio>
+						<Radio value='large'>{i18n('large')}</Radio>
 					</RadioGroup>
 				</div>
 
 				<div>
-					<Section>{t('language')}</Section>
-					<RadioGroup onChange={(e) => handleLanguageChange(e.target.value)} type='button' defaultValue='en'>
+					<Section>{i18n('language')}</Section>
+					<RadioGroup onChange={(e) => handleLanguageChange(e.target.value)} type='button' defaultValue={language}>
 						<Radio value={LanguageType.en}>
 							<IconWrapper>
 								<IconLanguage />

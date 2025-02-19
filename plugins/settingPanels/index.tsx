@@ -1,8 +1,9 @@
 import { IconDesktop, IconKey, IconSearch } from '@douyinfe/semi-icons'
 import { Layout, Nav } from '@douyinfe/semi-ui'
+import { useAtomValue } from 'jotai'
 import { useState } from 'react'
 import styled from 'styled-components'
-import { t } from '~shared/utils'
+import { i18nAtom } from '~sidepanel/atom'
 import { AppearancePanel } from './appearance-panel'
 import { KeyboardPanel } from './keyboard-panel'
 import { SearchPanel } from './search-panel'
@@ -37,23 +38,24 @@ const styles = {
 }
 
 export const SettingPanels: React.FC = () => {
+	const i18n = useAtomValue(i18nAtom)
 	const [activeKey, setActiveKey] = useState<string>('appearance')
 
 	const menuItems: MenuItem[] = [
 		{
 			itemKey: 'appearance',
 			icon: <IconDesktop />,
-			text: t('appearance'),
+			text: i18n('appearance'),
 		},
 		{
 			itemKey: 'keyboard',
 			icon: <IconKey />,
-			text: t('keyboard'),
+			text: i18n('keyboard'),
 		},
 		{
 			itemKey: 'search',
 			icon: <IconSearch />,
-			text: t('search'),
+			text: i18n('search'),
 		},
 	]
 
