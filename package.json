@@ -8,6 +8,7 @@
 		"dev": "plasmo dev ",
 		"package": "plasmo build && plasmo package",
 		"commit": "git add . && git cz",
+		"prepare": "husky",
 		"debug": "plasmo dev --verbose",
 		"scan-cn": "node scripts/scan-cn.js"
 	},
@@ -36,6 +37,8 @@
 		"@types/react": "18.2.48",
 		"@types/react-dom": "18.2.18",
 		"cz-git": "^1.9.4",
+		"husky": "^9.1.7",
+		"lint-staged": "^15.4.3",
 		"path-browserify": "^1.0.0",
 		"typescript": "5.3.3",
 		"url": "^0.11.0"
@@ -50,10 +53,7 @@
 	},
 	"manifest": {
 		"default_locale": "en",
-		"host_permissions": [
-			"https://*/*",
-			"http://*/*"
-		],
+		"host_permissions": ["https://*/*", "http://*/*"],
 		"commands": {
 			"_execute_action": {
 				"suggested_key": {
@@ -68,12 +68,8 @@
 		},
 		"web_accessible_resources": [
 			{
-				"resources": [
-					"sidepanel.html"
-				],
-				"matches": [
-					"<all_urls>"
-				]
+				"resources": ["sidepanel.html"],
+				"matches": ["<all_urls>"]
 			}
 		],
 		"permissions": [
@@ -90,5 +86,15 @@
 			"scripting"
 		],
 		"offline_enabled": true
+	},
+	"lint-staged": {
+		"*.{js,ts,jsx,tsx,json}": [
+			"biome check --files-ignore-unknown=true",
+			"biome check --write --no-errors-on-unmatched",
+			"biome check --write --organize-imports-enabled=false --no-errors-on-unmatched",
+			"biome check --write --unsafe --no-errors-on-unmatched",
+			"biome format --write --no-errors-on-unmatched",
+			"biome lint --write --no-errors-on-unmatched"
+		]
 	}
 }
