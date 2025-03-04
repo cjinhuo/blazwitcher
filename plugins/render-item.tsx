@@ -10,7 +10,7 @@ import {
 	TitleContainer,
 } from '~shared/common-styles'
 import type { CommandPlugin } from '~shared/types'
-import { SearchValueAtom } from '~sidepanel/atom'
+import { searchValueAtom } from '~sidepanel/atom'
 
 interface RenderPluginItemProps {
 	item: CommandPlugin
@@ -40,7 +40,7 @@ export function RenderPluginItem({ item }: RenderPluginItemProps) {
 }
 
 export function usePluginClickItem() {
-	const setSearchValue = useSetAtom(SearchValueAtom)
+	const setSearchValue = useSetAtom(searchValueAtom)
 
 	const handlePluginClick = (plugin: CommandPlugin) => {
 		// 额外添加一个空格，方便 alt 删除单个单词

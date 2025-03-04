@@ -103,6 +103,8 @@ const IconWithName = ({
 			style={{
 				fontSize: '10px',
 				padding: '6px',
+				backgroundColor: 'rgba(var(--semi-white), 1)',
+				borderColor: 'rgba(var(--semi-white), .08)',
 			}}
 		>
 			<IconContainer className={`${OPERATION_ICON_CLASS} ${VISIBILITY_CLASS}`} data-name={name}>

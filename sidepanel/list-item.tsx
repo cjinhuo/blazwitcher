@@ -9,6 +9,7 @@ import type { BookmarkItemType, HistoryItemType, ListItemType, TabItemType } fro
 import { isBookmarkItem, isTabItem } from '~shared/utils'
 
 import { useAtomValue } from 'jotai'
+import { useMemo } from 'react'
 import {
 	ContentContainer,
 	type ContentContainerProps,
@@ -18,9 +19,10 @@ import {
 	SVG_CLASS,
 	SecondaryContainer,
 	TitleContainer,
-	colorMap,
 } from '~shared/common-styles'
-import { i18nAtom } from '~sidepanel/atom'
+import { TabGroupColorMap } from '~shared/constants'
+import { i18nAtom, themeAtom } from '~sidepanel/atom'
+import { isDarkMode } from '~sidepanel/hooks/useTheme'
 import HighlightText from './highlight-text'
 import { RenderOperation } from './operation'
 
@@ -41,7 +43,7 @@ export const RenderIcon = ({ iconUrl }: { iconUrl: string }) => {
 }
 
 const TabGroup = styled.div<ContentContainerProps>`
-	background-color: ${(props) => colorMap[props.$tabGroup.color]};
+	background-color: ${(props) => props.colorMap[props.$tabGroup.color]};
 	color: var(--color-neutral-10);
 	height: 16px;
 	line-height: 16px;
@@ -61,7 +63,7 @@ const TabGroup = styled.div<ContentContainerProps>`
 		top: 0;
 		width: 15%;
 		height: 100%;
-		background: linear-gradient(to right, transparent, ${(props) => colorMap[props.$tabGroup.color]});
+		background: linear-gradient(to right, transparent, ${(props) => props.colorMap[props.$tabGroup.color]});
 	}
 `
 
@@ -91,13 +93,23 @@ const Tag = styled.div`
 
 const TabLabel = ({ data }: { data: TabItemType }) => {
 	const i18n = useAtomValue(i18nAtom)
+	const themeColor = useAtomValue(themeAtom)
+	const colorMap = useMemo(
+		() => (isDarkMode(themeColor) ? TabGroupColorMap.dark : TabGroupColorMap.light),
+		[themeColor]
+	)
+
 	return (
 		<LabelContainer>
 			<InlineSvgWrapper title={i18n('tab')}>
 				<TabSvg className={SVG_CLASS}></TabSvg>
 			</InlineSvgWrapper>
 
-			{data.tabGroup && <TabGroup $tabGroup={data.tabGroup}>{data.tabGroup.title}</TabGroup>}
+			{data.tabGroup && (
+				<TabGroup colorMap={colorMap} $tabGroup={data.tabGroup}>
+					{data.tabGroup.title}
+				</TabGroup>
+			)}
 			{data.isShowType && <Tag>{i18n('tab')}</Tag>}
 			{data.active && (
 				<>

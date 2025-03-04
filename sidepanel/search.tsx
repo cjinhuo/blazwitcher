@@ -4,7 +4,7 @@ import { useAtom, useAtomValue } from 'jotai'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { i18nAtom } from '~sidepanel/atom'
-import { CompositionAtom, SearchValueAtom } from './atom'
+import { compositionAtom, searchValueAtom } from './atom'
 
 const SearchContainer = styled.div`
   width: 100%;
@@ -25,8 +25,8 @@ interface SearchProps {
 }
 function Search({ onSearch }: SearchProps) {
 	const [inputValue, setInputValue] = useState('')
-	const [isComposition, setIsComposition] = useAtom(CompositionAtom)
-	const searchValue = useAtomValue(SearchValueAtom)
+	const [isComposition, setIsComposition] = useAtom(compositionAtom)
+	const searchValue = useAtomValue(searchValueAtom)
 	const i18n = useAtomValue(i18nAtom)
 
 	const handleCompositionStart = () => {

@@ -1,3 +1,5 @@
+import type { TabGroupColorMapType } from './types'
+
 // class name
 export const MAIN_CONTENT_CLASS = 'main-content'
 export const LIST_ITEM_ACTIVE_CLASS = 'list-item__active'
@@ -41,7 +43,7 @@ export const DEFAULT_BOOKMARK_DISPLAY_COUNT = 10
 export const DEFAULT_HISTORY_DISPLAY_COUNT = 10
 export const DEFAULT_TOP_SUGGESTIONS_COUNT = 2
 
-export const TabGroupColorMap = {
+export const TabGroupColorMap: TabGroupColorMapType = {
 	light: {
 		grey: '#E8EAED',
 		blue: '#1A73E8',
@@ -71,3 +73,4 @@ export const DEFAULT_STRICTNESS_COEFFICIENT = 0.6
 
 export const DEFAULT_LANGUAGE_KEY = 'blazwitcher_default_language'
 export const DEFAULT_SHORTCUT_MAPPINGS = 'blazwitcher_shortcut_mappings'
+export const DEFAULT_THEME_COLOR = 'blazwitcher_theme_color'

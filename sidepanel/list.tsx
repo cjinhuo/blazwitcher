@@ -8,7 +8,7 @@ import type { ListItemType } from '~shared/types'
 import { useKeyboardListen } from '~sidepanel/hooks/useKeyboardListen'
 import { DIVIDE_CLASS, LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS, VISIBILITY_CLASS } from '../shared/constants'
 import { closeCurrentWindowAndClearStorage, isDivideItem, scrollIntoViewIfNeeded } from '../shared/utils'
-import { CompositionAtom, i18nAtom } from './atom'
+import { compositionAtom, i18nAtom } from './atom'
 
 const ListContainer = styled.div`
   padding: 6px;
@@ -125,7 +125,7 @@ interface ListProps<T extends ListItemType = ListItemType> {
 
 export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 	const i18n = useAtomValue(i18nAtom)
-	const isComposition = useAtomValue(CompositionAtom)
+	const isComposition = useAtomValue(compositionAtom)
 	const [activeIndex, setActiveIndex] = useState<number>(-1)
 	const i = useRef(activeIndex)
 	const timer = useRef<NodeJS.Timeout>()

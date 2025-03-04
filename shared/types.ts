@@ -85,3 +85,14 @@ export interface CommandPlugin {
 	// 渲染
 	render?: () => React.ReactNode
 }
+
+type ColorKey = 'grey' | 'blue' | 'red' | 'yellow' | 'green' | 'pink' | 'purple' | 'cyan' | 'orange'
+
+export type ColorTheme = {
+	[key in ColorKey]: string
+}
+
+export type TabGroupColorMapType = {
+	light: ColorTheme
+	dark: ColorTheme
+}

@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { DEFAULT_TOP_SUGGESTIONS_COUNT, MAIN_CONTENT_CLASS } from '~shared/constants'
-import { handleItemClick, orderList, searchWithList, setDarkTheme, splitToGroup } from '~shared/utils'
+import { handleItemClick, orderList, searchWithList, splitToGroup } from '~shared/utils'
 
 import plugins from '~plugins'
 import { matchPlugin } from '~plugins/helper'
@@ -14,6 +14,7 @@ import { RenderPluginItem, usePluginClickItem } from '~plugins/render-item'
 import { ItemType, type ListItemType } from '~shared/types'
 import { i18nAtom } from '~sidepanel/atom'
 import useOriginalList from '~sidepanel/hooks/useOriginalList'
+import { useTheme } from '~sidepanel/hooks/useTheme'
 import Footer from './footer'
 import List from './list'
 import { RenderItem as ListItemRenderItem } from './list-item'
@@ -38,9 +39,7 @@ export default function SidePanel() {
 	const [searchValue, setSearchValue] = useState('')
 	const handlePluginItemClick = usePluginClickItem()
 
-	useEffect(() => {
-		setDarkTheme()
-	}, [])
+	useTheme()
 
 	const RenderList = useCallback(
 		(list: ListItemType[], hasInput: boolean) => {

@@ -92,7 +92,7 @@ export const closeCurrentWindowAndClearStorage = async () => {
 		try {
 			// the target window may not exist, then throw an error
 			await chrome.windows.remove(selfWindowId)
-		} catch (error) {}
+		} catch {}
 	}
 	// 和父 window 通信，关闭全屏状态下的 modal
 	if (typeof window !== 'undefined' && window.parent) {
@@ -151,17 +151,6 @@ export function faviconURL(u: string) {
 
 export function sleep(ms: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms))
-}
-
-export function isDarkMode() {
-	return window.matchMedia?.('(prefers-color-scheme: dark)').matches
-}
-
-export function setDarkTheme() {
-	if (isDarkMode()) {
-		document.body.classList.add('dark')
-		document.body.setAttribute('theme-mode', 'dark')
-	}
 }
 
 export function getCompositeSourceAndHost(title?: string, url?: string) {

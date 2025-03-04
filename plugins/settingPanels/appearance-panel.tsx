@@ -3,7 +3,7 @@ import { Card, Radio, RadioGroup } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue } from 'jotai'
 import styled from 'styled-components'
 import { LanguageType } from '~shared/constants'
-import { i18nAtom, languageAtom } from '~sidepanel/atom'
+import { i18nAtom, languageAtom, themeAtom } from '~sidepanel/atom'
 
 const Container = styled.div`
   display: flex;
@@ -30,8 +30,12 @@ const StyledCard = styled(Card)`
 export const AppearancePanel: React.FC = () => {
 	const i18n = useAtomValue(i18nAtom)
 	const [language, setLanguage] = useAtom(languageAtom)
+	const [themeColor, setThemeColor] = useAtom(themeAtom)
 	const handleLanguageChange = (value: string) => {
 		setLanguage(value as LanguageType)
+	}
+	const handleThemeChange = (value: 'dark' | 'light' | 'system') => {
+		setThemeColor(value)
 	}
 
 	return (
@@ -39,7 +43,7 @@ export const AppearancePanel: React.FC = () => {
 			<Container>
 				<div>
 					<Section>{i18n('appearanceMode')}</Section>
-					<RadioGroup type='button' defaultValue='system'>
+					<RadioGroup type='button' onChange={(e) => handleThemeChange(e.target.value)} defaultValue={themeColor}>
 						<Radio value='light'>
 							<IconWrapper>
 								<IconSun />
@@ -61,14 +65,15 @@ export const AppearancePanel: React.FC = () => {
 					</RadioGroup>
 				</div>
 
-				<div>
+				{/* TODO: 窗口大小设置 是否默认全屏设置 */}
+				{/* <div>
 					<Section>{i18n('windowSize')}</Section>
 					<RadioGroup type='button' defaultValue='medium'>
 						<Radio value='small'>{i18n('small')}</Radio>
 						<Radio value='medium'>{i18n('medium')}</Radio>
 						<Radio value='large'>{i18n('large')}</Radio>
 					</RadioGroup>
-				</div>
+				</div> */}
 
 				<div>
 					<Section>{i18n('language')}</Section>

@@ -2,11 +2,11 @@ import { useAtom, useAtomValue } from 'jotai'
 import { useCallback } from 'react'
 import { type ListItemType, OperationItemPropertyTypes } from '~shared/types'
 import { deleteItem, handleItemClick, isTabItem, queryInNewTab } from '~shared/utils'
-import { OriginalListAtom, i18nAtom } from '~sidepanel/atom'
+import { i18nAtom, originalListAtom } from '~sidepanel/atom'
 
 export const useListOperations = () => {
 	const i18n = useAtomValue(i18nAtom)
-	const [originalList, setOriginalList] = useAtom(OriginalListAtom)
+	const [originalList, setOriginalList] = useAtom(originalListAtom)
 
 	const removeItemFromOriginList = useCallback(
 		(item: ListItemType) => {

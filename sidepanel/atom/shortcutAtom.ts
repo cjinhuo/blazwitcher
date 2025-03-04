@@ -14,7 +14,7 @@ const defaultShortcutConfigs: Shortcut[] = [
 	{
 		id: OperationItemPropertyTypes.open,
 		action: 'openCurrentTab',
-		shortcut: 'Ctrl + Shift + N',
+		shortcut: 'Enter',
 	},
 	{
 		id: OperationItemPropertyTypes.query,
@@ -51,7 +51,7 @@ export const shortcutsAtom = atom((get) => {
 	return defaultShortcutConfigs.map((config) => ({
 		id: config.id,
 		action: config.action,
-		shortcut: mappings[config.id] || config.defaultShortcut,
+		shortcut: mappings[config.id] || config.shortcut,
 	}))
 })
 

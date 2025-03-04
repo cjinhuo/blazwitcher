@@ -1,5 +1,5 @@
 import { IconEdit } from '@douyinfe/semi-icons'
-import { Button, Card, List, Modal, Toast } from '@douyinfe/semi-ui'
+import { Button, Card, List, Modal, Toast, Typography } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useState } from 'react'
 import styled from 'styled-components'
@@ -61,7 +61,7 @@ const styles = {
     margin-bottom: 16px;
     
     .label {
-      font-weight: 500;
+      font-weight: 600;
       margin-bottom: 8px;
     }
     
@@ -92,6 +92,7 @@ export const KeyboardPanel: React.FC = () => {
 	const i18n = useAtomValue(i18nAtom)
 	const [shortcuts] = useAtom(shortcutsAtom)
 	const updateShortcut = useSetAtom(updateShortcutAtom)
+	const { Text } = Typography
 
 	// 正在编辑的快捷键
 	const [currentShortcut, setCurrentShortcut] = useState<Shortcut | null>(null)
@@ -167,7 +168,9 @@ export const KeyboardPanel: React.FC = () => {
 					<styles.listItem>
 						<styles.shortcutDisplay>{item.shortcut}</styles.shortcutDisplay>
 						<styles.mainContent>
-							<styles.actionTitle>{i18n(item.action)}</styles.actionTitle>
+							<styles.actionTitle>
+								<Text ellipsis={{ showTooltip: true }}>{i18n(item.action)}</Text>
+							</styles.actionTitle>
 						</styles.mainContent>
 						{/* @ts-ignore */}
 						<styles.editButton icon={<IconEdit />} theme='borderless' type='tertiary' onClick={() => handleEdit(item)}>

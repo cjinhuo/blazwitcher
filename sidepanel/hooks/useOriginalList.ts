@@ -1,10 +1,10 @@
 import { useAtom } from 'jotai'
 import { useEffect } from 'react'
 import { MAIN_WINDOW } from '~shared/constants'
-import { OriginalListAtom } from '~sidepanel/atom'
+import { originalListAtom } from '~sidepanel/atom'
 
 export default function useOriginalList() {
-	const [originalList, setOriginalList] = useAtom(OriginalListAtom)
+	const [originalList, setOriginalList] = useAtom(originalListAtom)
 	useEffect(() => {
 		let portConnectStatus = false
 		const port = chrome.runtime.connect({ name: MAIN_WINDOW })
