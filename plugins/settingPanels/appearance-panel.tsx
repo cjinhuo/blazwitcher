@@ -2,7 +2,7 @@ import { IconDesktop, IconLanguage, IconMoon, IconSun } from '@douyinfe/semi-ico
 import { Card, Radio, RadioGroup } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue } from 'jotai'
 import styled from 'styled-components'
-import { DEFAULT_LANGUAGE_KEY, LanguageType } from '~shared/constants'
+import { LanguageType } from '~shared/constants'
 import { i18nAtom, languageAtom } from '~sidepanel/atom'
 
 const Container = styled.div`
@@ -31,7 +31,6 @@ export const AppearancePanel: React.FC = () => {
 	const i18n = useAtomValue(i18nAtom)
 	const [language, setLanguage] = useAtom(languageAtom)
 	const handleLanguageChange = (value: string) => {
-		localStorage.setItem(DEFAULT_LANGUAGE_KEY, value)
 		setLanguage(value as LanguageType)
 	}
 

@@ -70,3 +70,4 @@ export const TabGroupColorMap = {
 export const DEFAULT_STRICTNESS_COEFFICIENT = 0.6
 
 export const DEFAULT_LANGUAGE_KEY = 'blazwitcher_default_language'
+export const DEFAULT_SHORTCUT_MAPPINGS = 'blazwitcher_shortcut_mappings'

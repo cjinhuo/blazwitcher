@@ -1,5 +1,5 @@
-import type { FunctionComponent } from 'react'
 import type React from 'react'
+import type { TranslationKeys } from '~sidepanel/atom'
 
 export type Matrix = [number, number][]
 
@@ -64,12 +64,12 @@ export enum OperationItemPropertyTypes {
 	close = 'close',
 }
 
-export const OperationItemTitleMap = {
-	[OperationItemPropertyTypes.open]: 'open new window',
-	[OperationItemPropertyTypes.switch]: 'switch to tab',
+export const OperationItemTitleMap: Record<string, TranslationKeys> = {
+	[OperationItemPropertyTypes.open]: 'openCurrentTab',
+	[OperationItemPropertyTypes.switch]: 'openCurrentTab',
 	[OperationItemPropertyTypes.query]: 'query',
-	[OperationItemPropertyTypes.delete]: 'delete from history',
-	[OperationItemPropertyTypes.close]: 'close tab',
+	[OperationItemPropertyTypes.delete]: 'deleteFromHistory',
+	[OperationItemPropertyTypes.close]: 'closeTab',
 }
 
 export interface CommandPlugin {
