@@ -4,7 +4,7 @@ import type { ColorTheme } from './types'
 
 export interface ContentContainerProps {
 	$tabGroup?: chrome.tabGroups.TabGroup | null
-	colorMap: ColorTheme
+	$colorMap?: ColorTheme
 }
 
 export const ContentContainer = styled.div<ContentContainerProps>`
@@ -13,7 +13,7 @@ export const ContentContainer = styled.div<ContentContainerProps>`
   width: 100%;
 	height: 50px;
 	border-radius: 6px;
-  border-left: ${(props) => (props.$tabGroup ? `4px solid ${colorMap[props.$tabGroup.color]}` : 'none')};
+  border-left: ${(props) => (props.$tabGroup ? `4px solid ${props.$colorMap[props.$tabGroup.color]}` : 'none')};
 `
 export const IMAGE_CLASS = 'image-container'
 export const ImageContainer = styled.div`

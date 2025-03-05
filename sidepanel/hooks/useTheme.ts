@@ -1,5 +1,6 @@
 import { useAtomValue } from 'jotai'
-import { useCallback, useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
+import { TabGroupColorMap } from '~shared/constants'
 import { themeAtom } from '~sidepanel/atom'
 
 const isSystemDarkMode = () => {
@@ -24,4 +25,13 @@ export const useTheme = () => {
 	useEffect(() => {
 		setThemeClass(isDarkMode(themeColor))
 	}, [themeColor])
+}
+
+export const useColorMap = () => {
+	const themeColor = useAtomValue(themeAtom)
+	const colorMap = useMemo(
+		() => (isDarkMode(themeColor) ? TabGroupColorMap.dark : TabGroupColorMap.light),
+		[themeColor]
+	)
+	return colorMap
 }
