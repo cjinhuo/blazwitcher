@@ -43,7 +43,8 @@
 		"rules": {
 			"recommended": true,
 			"correctness": {
-				"noUnusedVariables": "error"
+				"noUnusedVariables": "warn",
+				"noUnusedImports": "warn"
 			},
 			"suspicious": {
 				"noEmptyInterface": "error",
