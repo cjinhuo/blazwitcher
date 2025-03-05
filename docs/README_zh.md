@@ -2,7 +2,10 @@
     <a href="#" target="_blank">
     <img src="./1400_560.png" alt="logo" height="100">
     </a>
-    <p>一个用于搜索标签，书签和历史的浏览器插件</p>
+
+![https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg](https://img.shields.io/badge/chrome-extension?style=flat&label=extension&color=deepskyblue)
+
+<p>一个用于搜索标签，书签和历史的浏览器插件</p>
 </div>
 
 # 概述
@@ -34,6 +37,13 @@ Blazwitcher 是一个[浏览器插件](https://chrome.google.com/webstore/detail
 
 ## 快捷方式
 激活 Blazwitcher 扩展的默认快捷键是Mac上的`Command+.(Command+Period)`，Windows上的`Ctrl+.(Ctrl+Period)`。当然，你可以访问 [chrome://extensions/shortcuts](chrome://extensions/shortcuts) 来修改它以适应你的习惯。
+
+
+# 贡献
+请参考 [贡献指南](./CONTRIBUTING.md) 了解更多信息，感谢所有贡献者 [contributors](https://github.com/cjinhuo/blazwitcher/graphs/contributors) ❤️
+
+[![Contributors](https://contrib.rocks/image?repo=cjinhuo/blazwitcher)](https://github.com/cjinhuo/blazwitcher/graphs/contributors)
+
 
 # 📞 联系
 欢迎提 issue，你可以加我微信或者邮件联系我，如果你有好的建议(备注: blazwitcher)

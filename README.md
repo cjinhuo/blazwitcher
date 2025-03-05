@@ -2,7 +2,12 @@
     <a href="#" target="_blank">
       <img src="./docs/1400_560.png" alt="logo" height="100">
     </a>
-    <p>A local Chrome Extension for searching tabs, bookmarks, and history</p>
+
+
+![https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg](https://img.shields.io/badge/chrome-extension?style=flat&label=extension&color=deepskyblue)
+
+<p>A local Chrome Extension for searching tabs, bookmarks, and history</p>
+
 </div>
 
 
@@ -38,7 +43,18 @@ Those people who are looking for quick action and speed, like:
 ## shortcut
 The default **shortcut key** to active Blazwitcher Extension is `Command+.(Command+Period)` on Mac, and `Ctrl+.(Ctrl+Period)` on Windows. Of course, you could visit [chrome://extensions/shortcuts](chrome://extensions/shortcuts) to modify it to suit your habits.
 
+# Contributing
+Please see the [contributing guidelines](./CONTRIBUTING.md) to learn more.
+
+A big thanks to all of our amazing [contributors](https://github.com/cjinhuo/blazwitcher/graphs/contributors) ❤️
+
+Feel free to join the fun and send a PR!
+
+[![Contributors](https://contrib.rocks/image?repo=cjinhuo/blazwitcher)](https://github.com/cjinhuo/blazwitcher/graphs/contributors)
+
+
+
 # 📞 contact
-welcome to raise issue, you can contact me on wx or email if you have some good suggestion(notes: text-search-engine)
+welcome to raise issue, you can contact me on wx or email if you have some good suggestion(notes: Blazwitcher)
 * wx: cjinhuo
 * email: cjinhuo@qq.com
