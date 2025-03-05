@@ -53,13 +53,12 @@
 		}
 	},
 	"manifest": {
-		"default_locale": "en",
 		"host_permissions": ["https://*/*", "http://*/*"],
 		"commands": {
 			"_execute_action": {
 				"suggested_key": {
-					"default": "Ctrl+P",
-					"mac": "Command+P"
+					"default": "Ctrl+Period",
+					"mac": "Command+Period"
 				},
 				"description": "Blazwitcher"
 			}

@@ -20,11 +20,6 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
-			// 不处理输入框中的键盘事件
-			if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
-				return
-			}
-
 			const keys = collectPressedKeys(e)
 
 			if (!isValidShortcut(keys)) {
@@ -39,6 +34,7 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 			if (matchedShortcut) {
 				debouncedShowToast(matchedShortcut.id)
 				e.preventDefault()
+				e.stopPropagation()
 			}
 		}
 

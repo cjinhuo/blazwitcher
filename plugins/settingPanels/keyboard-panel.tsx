@@ -3,6 +3,7 @@ import { Button, Card, List, Modal, Toast, Typography } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useState } from 'react'
 import styled from 'styled-components'
+import { OperationItemPropertyTypes } from '~shared/types'
 import { type Shortcut, i18nAtom, shortcutsAtom, updateShortcutAtom } from '~sidepanel/atom'
 import { collectPressedKeys, isValidShortcut, standardizeKeyOrder } from '~sidepanel/utils/keyboardUtils'
 
@@ -102,6 +103,10 @@ export const KeyboardPanel: React.FC = () => {
 	const [keysArray, setKeysArray] = useState<string[]>([])
 	const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
 
+	const isEditable = (shortcut: Shortcut) => {
+		return shortcut.id !== OperationItemPropertyTypes.open
+	}
+
 	// 打开编辑快捷键弹窗
 	const handleEdit = (item: Shortcut) => {
 		setCurrentShortcut(item)
@@ -173,7 +178,17 @@ export const KeyboardPanel: React.FC = () => {
 							</styles.actionTitle>
 						</styles.mainContent>
 						{/* @ts-ignore */}
-						<styles.editButton icon={<IconEdit />} theme='borderless' type='tertiary' onClick={() => handleEdit(item)}>
+						<styles.editButton
+							icon={<IconEdit />}
+							theme='borderless'
+							type='tertiary'
+							onClick={() => handleEdit(item)}
+							disabled={!isEditable(item)}
+							style={{
+								cursor: isEditable(item) ? 'pointer' : 'not-allowed',
+								opacity: isEditable(item) ? 1 : 0.5,
+							}}
+						>
 							{i18n('edit')}
 						</styles.editButton>
 					</styles.listItem>
