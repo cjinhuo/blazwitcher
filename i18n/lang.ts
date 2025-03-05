@@ -1,4 +1,5 @@
 import { LanguageType } from '~shared/constants'
+
 export const lang = {
 	emptySearch: {
 		[LanguageType.zh]: '搜索无结果',
@@ -81,6 +82,7 @@ export const lang = {
 		[LanguageType.en]: 'Setting Page',
 	},
 	// 配置页的多语言
+	// 外观设置页
 	appearance: {
 		[LanguageType.zh]: '外观',
 		[LanguageType.en]: 'Appearance',
@@ -133,41 +135,30 @@ export const lang = {
 		[LanguageType.zh]: '语言',
 		[LanguageType.en]: 'Language',
 	},
+	// 快捷键设置页
 	keyboardSettings: {
 		[LanguageType.zh]: '快捷键设置',
 		[LanguageType.en]: 'Keyboard Settings',
 	},
-	openExtension: {
-		[LanguageType.zh]: '打开扩展',
-		[LanguageType.en]: 'Open Extension',
+	deleteFromHistory: {
+		[LanguageType.zh]: '从历史记录中删除',
+		[LanguageType.en]: 'Delete from History',
 	},
-	openExtensionDesc: {
-		[LanguageType.zh]: '快速打开扩展面板',
-		[LanguageType.en]: 'Quickly open the extension panel',
-	},
-	deleteTab: {
-		[LanguageType.zh]: '删除标签',
-		[LanguageType.en]: 'Delete Tab',
-	},
-	deleteTabDesc: {
+	closeTab: {
 		[LanguageType.zh]: '关闭当前标签页',
 		[LanguageType.en]: 'Close current tab',
 	},
-	openInNewWindow: {
-		[LanguageType.zh]: '在新窗口打开标签',
-		[LanguageType.en]: 'Open in New Window',
+	openCurrentTab: {
+		[LanguageType.zh]: '打开当前标签',
+		[LanguageType.en]: 'Open current tab',
 	},
-	openInNewWindowDesc: {
-		[LanguageType.zh]: '在新窗口中打开标签',
-		[LanguageType.en]: 'Open tab in new window',
+	query: {
+		[LanguageType.zh]: '查询',
+		[LanguageType.en]: 'Query',
 	},
 	searchHistory: {
 		[LanguageType.zh]: '在历史记录中搜索',
 		[LanguageType.en]: 'Search in History',
-	},
-	searchHistoryDesc: {
-		[LanguageType.zh]: '搜索浏览历史',
-		[LanguageType.en]: 'Search browsing history',
 	},
 	edit: {
 		[LanguageType.zh]: '编辑',
@@ -180,10 +171,6 @@ export const lang = {
 	currentAction: {
 		[LanguageType.zh]: '当前操作',
 		[LanguageType.en]: 'Current Action',
-	},
-	functionDescription: {
-		[LanguageType.zh]: '功能说明',
-		[LanguageType.en]: 'Function Description',
 	},
 	shortcut: {
 		[LanguageType.zh]: '快捷键',
@@ -201,6 +188,7 @@ export const lang = {
 		[LanguageType.zh]: '该快捷键已被使用',
 		[LanguageType.en]: 'This shortcut is already in use',
 	},
+	// 搜索参数配置页
 	searchSettings: {
 		[LanguageType.zh]: '搜索参数设置',
 		[LanguageType.en]: 'Search Settings',
@@ -220,5 +208,21 @@ export const lang = {
 	defaultSearchType: {
 		[LanguageType.zh]: '默认检索类型',
 		[LanguageType.en]: 'Default Search Type',
+	},
+	shortcutRequired: {
+		[LanguageType.zh]: '请输入快捷键',
+		[LanguageType.en]: 'Please input shortcut',
+	},
+	invalidShortcut: {
+		[LanguageType.zh]: '无效的快捷键组合，请至少包含一个修饰键和一个普通键',
+		[LanguageType.en]: 'Invalid shortcut combination, must contain at least one modifier key and one regular key',
+	},
+	duplicateShortcut: {
+		[LanguageType.zh]: '该快捷键已被使用',
+		[LanguageType.en]: 'This shortcut is already in use',
+	},
+	unknownOperation: {
+		[LanguageType.zh]: '未知按键',
+		[LanguageType.en]: 'unknown operation',
 	},
 }

@@ -1,26 +1,21 @@
 import './sidepanel.css'
 
 import { Empty, Layout } from '@douyinfe/semi-ui'
+import { useAtomValue } from 'jotai'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import {
-	DEFAULT_LANGUAGE_KEY,
-	DEFAULT_TOP_SUGGESTIONS_COUNT,
-	LanguageType,
-	MAIN_CONTENT_CLASS,
-} from '~shared/constants'
-import { handleItemClick, orderList, searchWithList, setDarkTheme, splitToGroup } from '~shared/utils'
+import { DEFAULT_TOP_SUGGESTIONS_COUNT, MAIN_CONTENT_CLASS } from '~shared/constants'
+import { handleItemClick, orderList, searchWithList, splitToGroup } from '~shared/utils'
 
-import { useAtomValue, useSetAtom } from 'jotai'
 import plugins from '~plugins'
 import { matchPlugin } from '~plugins/helper'
 import { RenderPluginItem, usePluginClickItem } from '~plugins/render-item'
 import { ItemType, type ListItemType } from '~shared/types'
-import { i18nAtom, languageAtom } from '~sidepanel/atom'
+import { i18nAtom } from '~sidepanel/atom'
+import useOriginalList from '~sidepanel/hooks/useOriginalList'
+import { useTheme } from '~sidepanel/hooks/useTheme'
 import Footer from './footer'
-import { initializeLanguage } from './hooks/useInitialLanguage'
-import useOriginalList from './hooks/useOriginalList'
 import List from './list'
 import { RenderItem as ListItemRenderItem } from './list-item'
 import Search from './search'
@@ -40,22 +35,11 @@ const ContentWrapper = styled(Content)`
 
 export default function SidePanel() {
 	const i18n = useAtomValue(i18nAtom)
-	const setLanguage = useSetAtom(languageAtom)
 	const originalList = useOriginalList()
 	const [searchValue, setSearchValue] = useState('')
 	const handlePluginItemClick = usePluginClickItem()
 
-	const initializeLanguage = useCallback(() => {
-		const storedLanguage = localStorage.getItem(DEFAULT_LANGUAGE_KEY) as LanguageType | null
-		const defaultLanguage = navigator.language.toLowerCase().startsWith('zh') ? LanguageType.zh : LanguageType.en
-
-		setLanguage(storedLanguage ?? defaultLanguage)
-	}, [setLanguage])
-
-	useEffect(() => {
-		setDarkTheme()
-		initializeLanguage()
-	}, [initializeLanguage])
+	useTheme()
 
 	const RenderList = useCallback(
 		(list: ListItemType[], hasInput: boolean) => {

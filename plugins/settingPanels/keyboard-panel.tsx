@@ -1,9 +1,11 @@
 import { IconEdit } from '@douyinfe/semi-icons'
-import { Button, Card, List, Modal, Toast } from '@douyinfe/semi-ui'
-import { useAtomValue } from 'jotai'
+import { Button, Card, List, Modal, Toast, Typography } from '@douyinfe/semi-ui'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useState } from 'react'
 import styled from 'styled-components'
-import { i18nAtom } from '~sidepanel/atom'
+import { OperationItemPropertyTypes } from '~shared/types'
+import { type Shortcut, i18nAtom, shortcutsAtom, updateShortcutAtom } from '~sidepanel/atom'
+import { collectPressedKeys, isValidShortcut, standardizeKeyOrder } from '~sidepanel/utils/keyboardUtils'
 
 const styles = {
 	card: styled(Card)`
@@ -60,7 +62,7 @@ const styles = {
     margin-bottom: 16px;
     
     .label {
-      font-weight: 500;
+      font-weight: 600;
       margin-bottom: 8px;
     }
     
@@ -87,112 +89,105 @@ const styles = {
   `,
 }
 
-interface Shortcut {
-	action: string
-	shortcut: string
-	description: string
-}
-
 export const KeyboardPanel: React.FC = () => {
 	const i18n = useAtomValue(i18nAtom)
-	const [shortcuts, setShortcuts] = useState<Shortcut[]>([
-		{
-			action: i18n('openExtension'),
-			shortcut: 'Ctrl + Shift + E',
-			description: i18n('openExtensionDesc'),
-		},
-		{
-			action: i18n('deleteTab'),
-			shortcut: 'Ctrl + W',
-			description: i18n('deleteTabDesc'),
-		},
-		{
-			action: i18n('openInNewWindow'),
-			shortcut: 'Ctrl + N',
-			description: i18n('openInNewWindowDesc'),
-		},
-		{
-			action: i18n('searchHistory'),
-			shortcut: 'Ctrl + H',
-			description: i18n('searchHistoryDesc'),
-		},
-	])
+	const [shortcuts] = useAtom(shortcutsAtom)
+	const updateShortcut = useSetAtom(updateShortcutAtom)
+	const { Text } = Typography
 
-	const [isModalVisible, setIsModalVisible] = useState(false)
+	// 正在编辑的快捷键
 	const [currentShortcut, setCurrentShortcut] = useState<Shortcut | null>(null)
-	const [tempKeys, setTempKeys] = useState('')
-	const [editingIndex, setEditingIndex] = useState(-1)
+	// 快捷键字符串 用 + 连接
+	const [tempKeys, setTempKeys] = useState<string>('')
+	// 快捷键数组
+	const [keysArray, setKeysArray] = useState<string[]>([])
+	const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
 
-	const handleEdit = (shortcut: Shortcut, index: number) => {
-		setCurrentShortcut(shortcut)
-		setTempKeys(shortcut.shortcut)
-		setEditingIndex(index)
+	const isEditable = (shortcut: Shortcut) => {
+		return shortcut.id !== OperationItemPropertyTypes.open
+	}
+
+	// 打开编辑快捷键弹窗
+	const handleEdit = (item: Shortcut) => {
+		setCurrentShortcut(item)
+		setKeysArray(item.shortcut.split(' + '))
+		setTempKeys(item.shortcut)
 		setIsModalVisible(true)
 	}
 
 	const handleKeyDown = (e: React.KeyboardEvent) => {
 		e.preventDefault()
 
-		const keys: string[] = []
-		if (e.ctrlKey) keys.push('Ctrl')
-		if (e.shiftKey) keys.push('Shift')
-		if (e.altKey) keys.push('Alt')
-		if (e.metaKey) keys.push('⌘')
+		// 使用共享函数收集按键
+		const keys = collectPressedKeys(e)
 
-		if (!['Control', 'Shift', 'Alt', 'Meta', 'CapsLock', 'Tab', 'Escape'].includes(e.key)) {
-			keys.push(e.key.toUpperCase())
-		}
-
-		setTempKeys(keys.join(' + '))
+		// 标准化按键顺序
+		const orderedKeys = standardizeKeyOrder(keys)
+		setTempKeys(orderedKeys.join(' + '))
 	}
 
 	const handleOk = () => {
-		if (!tempKeys) {
-			Toast.error(i18n('pleaseInputShortcut'))
+		if (!tempKeys || !currentShortcut) {
+			Toast.error(i18n('shortcutRequired'))
+			return
+		}
+
+		// 验证快捷键是否有效
+		if (!isValidShortcut(keysArray)) {
+			Toast.error(i18n('invalidShortcut'))
 			return
 		}
 
 		const isDuplicate = shortcuts.some(
-			(s, index) => index !== editingIndex && s.shortcut.toLowerCase() === tempKeys.toLowerCase()
+			(s) => s.id !== currentShortcut.id && s.shortcut.toLowerCase() === tempKeys.toLowerCase()
 		)
 
 		if (isDuplicate) {
-			Toast.error(i18n('shortcutAlreadyUsed'))
+			Toast.error(i18n('duplicateShortcut'))
 			return
 		}
 
-		setShortcuts(shortcuts.map((s, index) => (index === editingIndex ? { ...s, shortcut: tempKeys } : s)))
-
+		updateShortcut({ id: currentShortcut.id, shortcut: tempKeys })
 		setIsModalVisible(false)
+
+		// 直接重置状态
 		setCurrentShortcut(null)
 		setTempKeys('')
-		setEditingIndex(-1)
+		setKeysArray([])
 	}
 
 	const handleCancel = () => {
 		setIsModalVisible(false)
+
+		// 直接重置状态
 		setCurrentShortcut(null)
 		setTempKeys('')
-		setEditingIndex(-1)
+		setKeysArray([])
 	}
 
 	return (
 		<styles.card title={i18n('keyboardSettings')}>
 			<List
 				dataSource={shortcuts}
-				renderItem={(item, index) => (
+				renderItem={(item) => (
 					<styles.listItem>
 						<styles.shortcutDisplay>{item.shortcut}</styles.shortcutDisplay>
 						<styles.mainContent>
-							<styles.actionTitle>{item.action}</styles.actionTitle>
-							<styles.description>{item.description}</styles.description>
+							<styles.actionTitle>
+								<Text ellipsis={{ showTooltip: true }}>{i18n(item.action)}</Text>
+							</styles.actionTitle>
 						</styles.mainContent>
 						{/* @ts-ignore */}
 						<styles.editButton
 							icon={<IconEdit />}
 							theme='borderless'
 							type='tertiary'
-							onClick={() => handleEdit(item, index)}
+							onClick={() => handleEdit(item)}
+							disabled={!isEditable(item)}
+							style={{
+								cursor: isEditable(item) ? 'pointer' : 'not-allowed',
+								opacity: isEditable(item) ? 1 : 0.5,
+							}}
 						>
 							{i18n('edit')}
 						</styles.editButton>
@@ -200,22 +195,12 @@ export const KeyboardPanel: React.FC = () => {
 				)}
 			/>
 
-			<Modal
-				title={i18n('editShortcut')}
-				visible={isModalVisible}
-				onOk={handleOk}
-				onCancel={handleCancel}
-				destroyOnClose
-			>
+			<Modal title={i18n('editShortcut')} visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
 				{currentShortcut && (
 					<div>
 						<styles.modalSection>
 							<div className='label'>{i18n('currentAction')}</div>
-							<div className='content'>{currentShortcut.action}</div>
-						</styles.modalSection>
-						<styles.modalSection>
-							<div className='label'>{i18n('functionDescription')}</div>
-							<div className='content'>{currentShortcut.description}</div>
+							<div className='content'>{i18n(currentShortcut.action)}</div>
 						</styles.modalSection>
 						<styles.modalSection>
 							<div className='label'>{i18n('shortcut')}</div>

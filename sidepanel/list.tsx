@@ -1,15 +1,14 @@
+import { IllustrationNoResult, IllustrationNoResultDark } from '@douyinfe/semi-illustrations'
 import { Empty, List as ListComponent } from '@douyinfe/semi-ui'
+import { useAtom, useAtomValue } from 'jotai'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-
-import { IllustrationNoResult, IllustrationNoResultDark } from '@douyinfe/semi-illustrations'
-
-import { useAtomValue } from 'jotai'
 import { HIGHLIGHT_TEXT_CLASS, HOST_CLASS, IMAGE_CLASS, NORMAL_TEXT_CLASS, SVG_CLASS } from '~shared/common-styles'
 import type { ListItemType } from '~shared/types'
+import { useKeyboardListen } from '~sidepanel/hooks/useKeyboardListen'
 import { DIVIDE_CLASS, LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS, VISIBILITY_CLASS } from '../shared/constants'
 import { closeCurrentWindowAndClearStorage, isDivideItem, scrollIntoViewIfNeeded } from '../shared/utils'
-import { CompositionAtom, i18nAtom } from './atom'
+import { compositionAtom, i18nAtom } from './atom'
 
 const ListContainer = styled.div`
   padding: 6px;
@@ -126,15 +125,14 @@ interface ListProps<T extends ListItemType = ListItemType> {
 
 export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 	const i18n = useAtomValue(i18nAtom)
-	const isComposition = useAtomValue(CompositionAtom)
-	const [activeIndex, setActiveIndex] = useState(() => {
-		// Find first non-divide item index
-		return list.findIndex((item) => !isDivideItem(item))
-	})
+	const isComposition = useAtomValue(compositionAtom)
+	const [activeIndex, setActiveIndex] = useState<number>(-1)
 	const i = useRef(activeIndex)
-
 	const timer = useRef<NodeJS.Timeout>()
 	const accumulatedOffset = useRef(0)
+
+	// listen shortcut
+	useKeyboardListen(list, activeIndex)
 
 	useEffect(() => {
 		// reset active index to first non-divide item

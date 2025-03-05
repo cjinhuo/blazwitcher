@@ -18,9 +18,9 @@ import {
 	SVG_CLASS,
 	SecondaryContainer,
 	TitleContainer,
-	colorMap,
 } from '~shared/common-styles'
 import { i18nAtom } from '~sidepanel/atom'
+import { useColorMap } from '~sidepanel/hooks/useTheme'
 import HighlightText from './highlight-text'
 import { RenderOperation } from './operation'
 
@@ -41,7 +41,7 @@ export const RenderIcon = ({ iconUrl }: { iconUrl: string }) => {
 }
 
 const TabGroup = styled.div<ContentContainerProps>`
-	background-color: ${(props) => colorMap[props.$tabGroup.color]};
+	background-color: ${(props) => props.$colorMap[props.$tabGroup.color]};
 	color: var(--color-neutral-10);
 	height: 16px;
 	line-height: 16px;
@@ -61,7 +61,7 @@ const TabGroup = styled.div<ContentContainerProps>`
 		top: 0;
 		width: 15%;
 		height: 100%;
-		background: linear-gradient(to right, transparent, ${(props) => colorMap[props.$tabGroup.color]});
+		background: linear-gradient(to right, transparent, ${(props) => props.$colorMap[props.$tabGroup.color]});
 	}
 `
 
@@ -91,13 +91,19 @@ const Tag = styled.div`
 
 const TabLabel = ({ data }: { data: TabItemType }) => {
 	const i18n = useAtomValue(i18nAtom)
+	const colorMap = useColorMap()
+
 	return (
 		<LabelContainer>
 			<InlineSvgWrapper title={i18n('tab')}>
 				<TabSvg className={SVG_CLASS}></TabSvg>
 			</InlineSvgWrapper>
 
-			{data.tabGroup && <TabGroup $tabGroup={data.tabGroup}>{data.tabGroup.title}</TabGroup>}
+			{data.tabGroup && (
+				<TabGroup $colorMap={colorMap} $tabGroup={data.tabGroup}>
+					{data.tabGroup.title}
+				</TabGroup>
+			)}
 			{data.isShowType && <Tag>{i18n('tab')}</Tag>}
 			{data.active && (
 				<>
@@ -160,8 +166,9 @@ export const RenderContent = ({ item }: { item: ListItemType }) => {
 }
 
 export const RenderItem = ({ item }: { item: ListItemType }) => {
+	const colorMap = useColorMap()
 	return (
-		<ContentContainer $tabGroup={isTabItem(item) && item.data?.tabGroup}>
+		<ContentContainer $tabGroup={isTabItem(item) && item.data?.tabGroup} $colorMap={colorMap}>
 			<RenderIcon iconUrl={item.data.favIconUrl} />
 			<RenderContent item={item}></RenderContent>
 			<RenderOperation item={item}></RenderOperation>
