@@ -1,3 +1,4 @@
+import { useAtomValue } from 'jotai'
 import {
 	extractBoundaryMapping,
 	isStrictnessSatisfied,
@@ -5,12 +6,12 @@ import {
 	searchSentenceByBoundaryMapping,
 } from 'text-search-engine'
 import {
-	DEFAULT_BOOKMARK_DISPLAY_COUNT,
-	DEFAULT_HISTORY_DISPLAY_COUNT,
+	DEFAULT_SEARCH_CONFIG,
 	DEFAULT_STRICTNESS_COEFFICIENT,
 	LAST_ACTIVE_WINDOW_ID_KEY,
 	SELF_WINDOW_ID_KEY,
 	SELF_WINDOW_STATE,
+	defaultSearchConfig,
 } from './constants'
 import { storageGet, storageRemove } from './promisify'
 import { ItemType, type ListItemType, type Matrix } from './types'
@@ -223,6 +224,7 @@ export const compareForHitRangeLength = (a: ListItemType, b: ListItemType) => {
 }
 
 export const orderList = (list: ListItemType[]) => {
+	const searchConfig = JSON.parse(localStorage.getItem(DEFAULT_SEARCH_CONFIG)) || defaultSearchConfig
 	const tabs: ListItemType<ItemType.Tab>[] = []
 	const bookmarks: ListItemType<ItemType.Bookmark>[] = []
 	const histories: ListItemType<ItemType.History>[] = []
@@ -266,8 +268,8 @@ export const orderList = (list: ListItemType[]) => {
 		...histories
 			.toSorted(compareForLastVisitTime)
 			.toSorted(compareForHitRangeLength)
-			.slice(0, DEFAULT_HISTORY_DISPLAY_COUNT),
-		...bookmarks.toSorted(compareForHitRangeLength).slice(0, DEFAULT_BOOKMARK_DISPLAY_COUNT),
+			.slice(0, searchConfig.historyDisplayCount),
+		...bookmarks.toSorted(compareForHitRangeLength).slice(0, searchConfig.bookmarkDisplayCount),
 	].toSorted(compareForHitRangeLength)
 }
 

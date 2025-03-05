@@ -188,27 +188,6 @@ export const lang = {
 		[LanguageType.zh]: '该快捷键已被使用',
 		[LanguageType.en]: 'This shortcut is already in use',
 	},
-	// 搜索参数配置页
-	searchSettings: {
-		[LanguageType.zh]: '搜索参数设置',
-		[LanguageType.en]: 'Search Settings',
-	},
-	searchHistoryCount: {
-		[LanguageType.zh]: '可回溯搜索的条数',
-		[LanguageType.en]: 'Number of searchable history items',
-	},
-	searchHistoryDays: {
-		[LanguageType.zh]: '回溯历史记录时间（天）',
-		[LanguageType.en]: 'History search time range (days)',
-	},
-	searchSourceConfig: {
-		[LanguageType.zh]: '搜索源配置',
-		[LanguageType.en]: 'Search Source Configuration',
-	},
-	defaultSearchType: {
-		[LanguageType.zh]: '默认检索类型',
-		[LanguageType.en]: 'Default Search Type',
-	},
 	shortcutRequired: {
 		[LanguageType.zh]: '请输入快捷键',
 		[LanguageType.en]: 'Please input shortcut',
@@ -224,5 +203,34 @@ export const lang = {
 	unknownOperation: {
 		[LanguageType.zh]: '未知按键',
 		[LanguageType.en]: 'unknown operation',
+	},
+	// 搜索参数配置页
+	searchSettings: {
+		[LanguageType.zh]: '搜索参数设置',
+		[LanguageType.en]: 'Search Settings',
+	},
+	restoreDefaults: {
+		[LanguageType.zh]: '恢复默认',
+		[LanguageType.en]: 'Restore Defaults',
+	},
+	historyMaxDays: {
+		[LanguageType.zh]: '可回溯搜索的条数',
+		[LanguageType.en]: 'Number of searchable history items',
+	},
+	historyMaxResults: {
+		[LanguageType.zh]: '回溯历史记录时间（天）',
+		[LanguageType.en]: 'History search time range (days)',
+	},
+	bookmarkDisplayCount: {
+		[LanguageType.zh]: '书签显示数量',
+		[LanguageType.en]: 'Bookmark Display Count',
+	},
+	historyDisplayCount: {
+		[LanguageType.zh]: '历史记录显示数量',
+		[LanguageType.en]: 'History Display Count',
+	},
+	topSuggestionsCount: {
+		[LanguageType.zh]: '顶部建议数量',
+		[LanguageType.en]: 'Top Suggestions Count',
 	},
 }

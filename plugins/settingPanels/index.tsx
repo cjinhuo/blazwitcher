@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import { i18nAtom } from '~sidepanel/atom'
 import { AppearancePanel } from './appearance-panel'
 import { KeyboardPanel } from './keyboard-panel'
-// import { SearchPanel } from './search-panel'
+import { SearchPanel } from './search-panel'
 
 interface MenuItem {
 	itemKey: string
@@ -52,11 +52,11 @@ export const SettingPanels: React.FC = () => {
 			icon: <IconKey />,
 			text: i18n('keyboard'),
 		},
-		// {
-		// 	itemKey: 'search',
-		// 	icon: <IconSearch />,
-		// 	text: i18n('search'),
-		// },
+		{
+			itemKey: 'search',
+			icon: <IconSearch />,
+			text: i18n('search'),
+		},
 	]
 
 	const renderPanel = () => {
@@ -65,8 +65,8 @@ export const SettingPanels: React.FC = () => {
 				return <AppearancePanel />
 			case 'keyboard':
 				return <KeyboardPanel />
-			// case 'search':
-			// 	return <SearchPanel />
+			case 'search':
+				return <SearchPanel />
 			default:
 				return null
 		}

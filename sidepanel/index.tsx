@@ -2,17 +2,17 @@ import './sidepanel.css'
 
 import { Empty, Layout } from '@douyinfe/semi-ui'
 import { useAtomValue } from 'jotai'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { DEFAULT_TOP_SUGGESTIONS_COUNT, MAIN_CONTENT_CLASS } from '~shared/constants'
+import { MAIN_CONTENT_CLASS } from '~shared/constants'
 import { handleItemClick, orderList, searchWithList, splitToGroup } from '~shared/utils'
 
 import plugins from '~plugins'
 import { matchPlugin } from '~plugins/helper'
 import { RenderPluginItem, usePluginClickItem } from '~plugins/render-item'
 import { ItemType, type ListItemType } from '~shared/types'
-import { i18nAtom } from '~sidepanel/atom'
+import { i18nAtom, searchConfigAtom } from '~sidepanel/atom'
 import useOriginalList from '~sidepanel/hooks/useOriginalList'
 import { useTheme } from '~sidepanel/hooks/useTheme'
 import Footer from './footer'
@@ -35,6 +35,7 @@ const ContentWrapper = styled(Content)`
 
 export default function SidePanel() {
 	const i18n = useAtomValue(i18nAtom)
+	const searchConfig = useAtomValue(searchConfigAtom)
 	const originalList = useOriginalList()
 	const [searchValue, setSearchValue] = useState('')
 	const handlePluginItemClick = usePluginClickItem()
@@ -47,7 +48,7 @@ export default function SidePanel() {
 			let restList = orderedList
 			const itemsWithDivide: ListItemType[] = []
 			if (hasInput && orderedList.length > 0) {
-				const topSuggestions = orderedList.slice(0, DEFAULT_TOP_SUGGESTIONS_COUNT).map((item) => {
+				const topSuggestions = orderedList.slice(0, searchConfig.topSuggestionsCount).map((item) => {
 					item.data.isShowType = true
 					return item
 				})
@@ -62,7 +63,7 @@ export default function SidePanel() {
 						...topSuggestions,
 					]
 				)
-				restList = orderedList.slice(DEFAULT_TOP_SUGGESTIONS_COUNT)
+				restList = orderedList.slice(searchConfig.topSuggestionsCount)
 			}
 			const { tabs, bookmarks, histories } = splitToGroup(restList)
 			itemsWithDivide.push(
@@ -80,7 +81,7 @@ export default function SidePanel() {
 			// RenderItem 如果使用函数，会导致每次渲染都会重新创建一个新的函数，从而导致性能问题
 			return <List list={itemsWithDivide} RenderItem={ListItemRenderItem} handleItemClick={handleItemClick} />
 		},
-		[i18n]
+		[i18n, searchConfig.topSuggestionsCount]
 	)
 
 	const RenderContent = useMemo(() => {
