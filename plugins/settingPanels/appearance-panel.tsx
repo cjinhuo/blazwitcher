@@ -1,9 +1,18 @@
-import { IconDesktop, IconLanguage, IconMoon, IconSun } from '@douyinfe/semi-icons'
-import { Card, Radio, RadioGroup } from '@douyinfe/semi-ui'
+import {
+	IconComponent,
+	IconDesktop,
+	IconExpand,
+	IconInfoCircle,
+	IconLanguage,
+	IconMoon,
+	IconSun,
+} from '@douyinfe/semi-icons'
+import { Card, InputNumber, Radio, RadioGroup, Tooltip } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue } from 'jotai'
 import styled from 'styled-components'
-import { LanguageType } from '~shared/constants'
+import { LanguageType, SEARCH_WINDOW_HEIGHT, SEARCH_WINDOW_WIDTH } from '~shared/constants'
 import { i18nAtom, languageAtom, themeAtom } from '~sidepanel/atom'
+import { displayModeAtom, heightAtom, widthAtom } from '~sidepanel/atom/windowAtom'
 
 const Container = styled.div`
   display: flex;
@@ -27,13 +36,48 @@ const StyledCard = styled(Card)`
   max-width: 32rem;
 `
 
+const SizeInputContainer = styled.div`
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+`
+
+const SizeInputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`
+
+const SizeLabel = styled.span`
+  font-size: 12px;
+  color: var(--semi-color-text-2);
+`
+
+const InfoIcon = styled(IconInfoCircle)`
+  color: var(--semi-color-text-2);
+  cursor: help;
+`
+
 export const AppearancePanel: React.FC = () => {
 	const i18n = useAtomValue(i18nAtom)
 	const [language, setLanguage] = useAtom(languageAtom)
 	const [themeColor, setThemeColor] = useAtom(themeAtom)
+	const [displayMode, setDisplayMode] = useAtom(displayModeAtom)
+	const [iframeWidth, setIframeWidth] = useAtom(widthAtom)
+	const [iframeHeight, setIframeHeight] = useAtom(heightAtom)
+
+	const handleChangeWidth = (value: number) => {
+		setIframeWidth(value)
+	}
+
+	const handleChangeHeight = (value: number) => {
+		setIframeHeight(value)
+	}
+
 	const handleLanguageChange = (value: string) => {
 		setLanguage(value as LanguageType)
 	}
+
 	const handleThemeChange = (value: 'dark' | 'light' | 'system') => {
 		setThemeColor(value)
 	}
@@ -65,15 +109,56 @@ export const AppearancePanel: React.FC = () => {
 					</RadioGroup>
 				</div>
 
-				{/* TODO: 窗口大小设置 是否默认全屏设置 */}
-				{/* <div>
-					<Section>{i18n('windowSize')}</Section>
-					<RadioGroup type='button' defaultValue='medium'>
-						<Radio value='small'>{i18n('small')}</Radio>
-						<Radio value='medium'>{i18n('medium')}</Radio>
-						<Radio value='large'>{i18n('large')}</Radio>
+				<div>
+					<Section>
+						{i18n('windowMode')}{' '}
+						<Tooltip content={i18n('restartRequired')} position='right'>
+							<InfoIcon size='small' />
+						</Tooltip>
+					</Section>
+
+					<RadioGroup
+						type='button'
+						value={displayMode || 'iframe'}
+						defaultValue={'iframe'}
+						onChange={(e) => setDisplayMode(e.target.value)}
+					>
+						<Radio value='iframe'>
+							<IconWrapper>
+								<IconComponent />
+								<span>{i18n('iframeMode')}</span>
+							</IconWrapper>
+						</Radio>
+						<Radio value='fullscreen'>
+							<IconWrapper>
+								<IconExpand />
+								<span>{i18n('fullscreen')}</span>
+							</IconWrapper>
+						</Radio>
 					</RadioGroup>
-				</div> */}
+					{displayMode === 'iframe' && (
+						<SizeInputContainer>
+							<SizeInputWrapper>
+								<SizeLabel>{i18n('iframeWidth')}</SizeLabel>
+								<InputNumber
+									value={iframeWidth || SEARCH_WINDOW_WIDTH}
+									onChange={handleChangeWidth}
+									style={{ width: 120 }}
+									min={400}
+								/>
+							</SizeInputWrapper>
+							<SizeInputWrapper>
+								<SizeLabel>{i18n('iframeHeight')}</SizeLabel>
+								<InputNumber
+									value={iframeHeight || SEARCH_WINDOW_HEIGHT}
+									onChange={handleChangeHeight}
+									style={{ width: 120 }}
+									min={300}
+								/>
+							</SizeInputWrapper>
+						</SizeInputContainer>
+					)}
+				</div>
 
 				<div>
 					<Section>{i18n('language')}</Section>

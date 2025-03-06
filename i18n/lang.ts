@@ -115,21 +115,33 @@ export const lang = {
 		[LanguageType.zh]: '跟随系统',
 		[LanguageType.en]: 'Follow System',
 	},
+	windowMode: {
+		[LanguageType.zh]: '窗口模式',
+		[LanguageType.en]: 'Window Mode',
+	},
+	fullscreen: {
+		[LanguageType.zh]: '全屏',
+		[LanguageType.en]: 'Fullscreen',
+	},
+	iframeMode: {
+		[LanguageType.zh]: '内嵌iframe',
+		[LanguageType.en]: 'IFrame',
+	},
 	windowSize: {
 		[LanguageType.zh]: '窗口大小',
 		[LanguageType.en]: 'Window Size',
 	},
-	small: {
-		[LanguageType.zh]: '小',
-		[LanguageType.en]: 'Small',
+	iframeWidth: {
+		[LanguageType.zh]: '宽度',
+		[LanguageType.en]: 'Width',
 	},
-	medium: {
-		[LanguageType.zh]: '中',
-		[LanguageType.en]: 'Medium',
+	iframeHeight: {
+		[LanguageType.zh]: '高度',
+		[LanguageType.en]: 'Height',
 	},
-	large: {
-		[LanguageType.zh]: '大',
-		[LanguageType.en]: 'Large',
+	restartRequired: {
+		[LanguageType.zh]: '重启扩展后生效',
+		[LanguageType.en]: 'Restart extension for changes to take effect',
 	},
 	language: {
 		[LanguageType.zh]: '语言',

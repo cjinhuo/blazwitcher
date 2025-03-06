@@ -5,6 +5,7 @@ import type { CommandPlugin, ListItemType } from '~shared/types'
 export * from './shortcutAtom'
 export * from './i18nAtom'
 export * from './searchConfigAtom'
+export * from './windowAtom'
 export const themeAtom = atomWithStorage<'dark' | 'light' | 'system'>(DEFAULT_THEME_COLOR, 'system')
 export const activeItemAtom = atomWithReset<ListItemType>(null)
 export const originalListAtom = atomWithReset<ListItemType[]>([])
