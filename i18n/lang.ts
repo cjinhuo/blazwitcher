@@ -234,23 +234,23 @@ export const lang = {
 		[LanguageType.en]: 'Restore Defaults',
 	},
 	historyMaxResults: {
-		[LanguageType.zh]: '可回溯搜索的条数',
-		[LanguageType.en]: 'Number of searchable history items',
+		[LanguageType.zh]: '最多历史记录条数',
+		[LanguageType.en]: 'Maximum number of history records',
 	},
 	historyMaxDays: {
-		[LanguageType.zh]: '可回溯历史记录时间（天）',
-		[LanguageType.en]: 'Traceable historical record period (days)',
+		[LanguageType.zh]: '最长历史记录回溯时间（天）',
+		[LanguageType.en]: 'Maximum historical record period(days)',
 	},
 	bookmarkDisplayCount: {
-		[LanguageType.zh]: '书签显示数量',
+		[LanguageType.zh]: '书签展示数量',
 		[LanguageType.en]: 'Bookmark Display Count',
 	},
 	historyDisplayCount: {
-		[LanguageType.zh]: '最优历史记录显示数量',
-		[LanguageType.en]: 'Top Suggestions History Display Count',
+		[LanguageType.zh]: '历史记录展示数量',
+		[LanguageType.en]: 'History Display Count',
 	},
 	topSuggestionsCount: {
-		[LanguageType.zh]: '顶部建议数量',
+		[LanguageType.zh]: '最优建议数量',
 		[LanguageType.en]: 'Top Suggestions Count',
 	},
 }

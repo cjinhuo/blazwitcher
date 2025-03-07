@@ -18,7 +18,7 @@ import { displayModeAtom, heightAtom, widthAtom } from '~sidepanel/atom/windowAt
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 `
 
 const Section = styled.div`
@@ -34,7 +34,6 @@ const IconWrapper = styled.div`
 
 const StyledCard = styled(Card)`
   width: 100%;
-  max-width: 32rem;
 `
 
 const SizeInputContainer = styled.div`

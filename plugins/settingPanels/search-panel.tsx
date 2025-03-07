@@ -6,13 +6,7 @@ import { i18nAtom, resetSearchConfigAtom, searchConfigAtom } from '~sidepanel/at
 
 const StyledCard = styled(Card)`
   width: 100%;
-  max-width: 32rem;
-`
-
-const _TitleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  height: 100%;
+	align-items: center;
 `
 
 const Section = styled.div`
@@ -45,11 +39,8 @@ export const SearchPanel: React.FC = () => {
 					{i18n('restoreDefaults')}
 				</Button>
 			}
-			style={{
-				alignItems: 'center',
-			}}
 		>
-			<Row gutter={[24, 0]}>
+			<Row gutter={[12, 6]}>
 				<Col span={12}>
 					<ConfigItem>
 						<Section>{i18n('historyMaxDays')}</Section>

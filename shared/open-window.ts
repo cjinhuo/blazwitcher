@@ -30,8 +30,6 @@ async function activeWindow() {
 	await storageSet({ [LAST_ACTIVE_WINDOW_ID_KEY]: currentWindow.id })
 	const extensionLocalStorage = await storageGetLocal()
 	const windowMode = extensionLocalStorage?.[`${DEFAULT_WINDOW_CONFIG}_displayMode`] || 'iframe'
-	// const windowCOnfig = await storageGetLocal(DEFAULT_WINDOW_CONFIG)
-	// const window
 	// there is a bug in "window" platform. When the window state is maximized, the left and top are not correct.
 	// Normally speaking left and top should be 0. But they are -7 in this case.So reset the left and top to 0 to fix it.
 	if (currentWindow.state === 'fullscreen' && windowMode !== 'fullscreen' && (await injectScriptToOpenModal())) {

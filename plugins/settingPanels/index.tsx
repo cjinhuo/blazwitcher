@@ -24,13 +24,13 @@ const styles = {
   `,
 	content: styled(Content)`
     flex: 1;
-    padding: 24px;
+    padding: 12px;
     display: flex;
     justify-content: center;
     overflow: auto;
   `,
 	wrapper: styled.div`
-    width: 90%;
+    width: 100%;
     min-width: 320px;
     margin: 0 auto;
   `,

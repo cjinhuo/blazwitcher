@@ -77,6 +77,7 @@ const styles = {
     border: 1px solid var(--semi-color-border);
     border-radius: 4px;
     padding: 0 12px;
+		color: var(--semi-color-text-0);
     background-color: var(--semi-color-fill-0);
     cursor: text;
     font-family: monospace;
