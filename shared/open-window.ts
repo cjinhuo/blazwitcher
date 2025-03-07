@@ -1,11 +1,21 @@
 import {
+	DEFAULT_WINDOW_CONFIG,
 	LAST_ACTIVE_WINDOW_ID_KEY,
 	SEARCH_WINDOW_HEIGHT,
 	SEARCH_WINDOW_WIDTH,
 	SELF_WINDOW_ID_KEY,
 	SELF_WINDOW_STATE,
 } from './constants'
-import { getCurrentWindow, getDisplayInfo, getWindowById, storageGet, storageSet, tabsQuery } from './promisify'
+import {
+	getCurrentWindow,
+	getDisplayInfo,
+	getWindowById,
+	storageGet,
+	storageGetLocal,
+	storageSet,
+	tabsQuery,
+} from './promisify'
+import type { ExtensionStorageType } from './types'
 
 async function activeWindow() {
 	const storage = await storageGet(SELF_WINDOW_ID_KEY)
@@ -14,13 +24,17 @@ async function activeWindow() {
 			const _window = await getWindowById(Number(storage[SELF_WINDOW_ID_KEY]))
 			chrome.windows.update(_window.id, { focused: true })
 			return
-		} catch (error) {}
+		} catch (_error) {}
 	}
 	const currentWindow = await getCurrentWindow()
 	await storageSet({ [LAST_ACTIVE_WINDOW_ID_KEY]: currentWindow.id })
+	const extensionLocalStorage = await storageGetLocal()
+	const windowMode = extensionLocalStorage?.[`${DEFAULT_WINDOW_CONFIG}_displayMode`] || 'iframe'
+	// const windowCOnfig = await storageGetLocal(DEFAULT_WINDOW_CONFIG)
+	// const window
 	// there is a bug in "window" platform. When the window state is maximized, the left and top are not correct.
 	// Normally speaking left and top should be 0. But they are -7 in this case.So reset the left and top to 0 to fix it.
-	if (currentWindow.state === 'fullscreen' && (await injectScriptToOpenModal())) {
+	if (currentWindow.state === 'fullscreen' && windowMode !== 'fullscreen' && (await injectScriptToOpenModal())) {
 		return
 	}
 	if (currentWindow.state === 'maximized') {
@@ -73,6 +87,7 @@ async function activeWindow() {
 async function injectScriptToOpenModal() {
 	try {
 		const tabs = await tabsQuery({ active: true, currentWindow: true })
+		const extensionLocalStorage = await storageGetLocal()
 		const activeTab = tabs[0]
 		if (activeTab.id) {
 			const url = chrome.runtime.getURL('sidepanel.html')
@@ -82,23 +97,24 @@ async function injectScriptToOpenModal() {
 				target: { tabId: activeTab.id },
 				world: 'ISOLATED',
 				func: injectModal,
-				args: [url, chrome.runtime.id],
+				args: [url, chrome.runtime.id, extensionLocalStorage],
 				injectImmediately: true,
 			})
 		}
-	} catch (error) {
+	} catch (_error) {
 		return false
 	}
 	return true
 }
 
-function injectModal(url: string, id?: string) {
+async function injectModal(url: string, id?: string, extensionLocalStorage?: ExtensionStorageType) {
+	const iframeWidth = extensionLocalStorage?.blazwitcher_window_config_width || 760
+	const iframeHeight = extensionLocalStorage?.blazwitcher_window_config_height || 478
 	const NAMESPACE = `blazwitcher-chrome-ext-modal-${id || chrome.runtime.id}`
 	if (process.env.NODE_ENV !== 'production') {
-		console.log('injectModal', NAMESPACE)
+		console.log('injectModal', NAMESPACE, 'extensionLocalStorage', extensionLocalStorage)
 	}
 	if (document.getElementById(NAMESPACE)) return
-
 	const modal = document.createElement('div')
 	// 这里只能写死，不能用常量，因为常量是运行时计算的
 	// height = SEARCH_WINDOW_HEIGHT - 27(27 是浏览器标题栏高度)
@@ -107,8 +123,8 @@ function injectModal(url: string, id?: string) {
 		top: 50%;
 		left: 50%;
 		transform: translate(-50%, -50%);
-		width: 760px;
-		height: 478px;
+		width: ${iframeWidth}px;
+		height: ${iframeHeight}px;
 		background: white;
 		z-index: 10000000;
 		border-radius: 10px;

@@ -27,6 +27,11 @@ export const getWindowById = promisifyChromeMethod<chrome.windows.Window>(chrome
 export const storageGet = promisifyChromeMethod<{ [key: string]: any }>(
 	chrome.storage.session.get.bind(chrome.storage.session)
 )
+
+export const storageGetLocal = promisifyChromeMethod<{ [key: string]: any }>(
+	chrome.storage.local.get.bind(chrome.storage.local)
+)
+
 export const storageSet = promisifyChromeMethod(chrome.storage.session.set.bind(chrome.storage.session))
 
 export const storageRemove = promisifyChromeMethod(chrome.storage.session.remove.bind(chrome.storage.session))

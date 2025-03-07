@@ -41,7 +41,7 @@ export function bookmarksProcessing() {
 		}
 	})
 
-	chrome.bookmarks.onCreated.addListener(async (id, bookmark) => {
+	chrome.bookmarks.onCreated.addListener(async (_, bookmark) => {
 		if (bookmark.url) {
 			let folderName = ''
 			if (bookmark.parentId) {
@@ -52,7 +52,7 @@ export function bookmarksProcessing() {
 		}
 	})
 
-	chrome.bookmarks.onRemoved.addListener((id, removeInfo) => {
+	chrome.bookmarks.onRemoved.addListener((id) => {
 		const index = processedBookmarks.findIndex((bookmark) => bookmark.id === id)
 		index && processedBookmarks.splice(index, 1)
 	})

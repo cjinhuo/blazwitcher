@@ -1,9 +1,19 @@
-import { IconDesktop, IconLanguage, IconMoon, IconSun } from '@douyinfe/semi-icons'
-import { Card, Radio, RadioGroup } from '@douyinfe/semi-ui'
-import { useAtom, useAtomValue } from 'jotai'
+import {
+	IconComponent,
+	IconDesktop,
+	IconExpand,
+	IconInfoCircle,
+	IconLanguage,
+	IconMoon,
+	IconRefresh,
+	IconSun,
+} from '@douyinfe/semi-icons'
+import { Button, Card, InputNumber, Radio, RadioGroup, Tooltip } from '@douyinfe/semi-ui'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import styled from 'styled-components'
-import { LanguageType } from '~shared/constants'
-import { i18nAtom, languageAtom, themeAtom } from '~sidepanel/atom'
+import { LanguageType, SEARCH_WINDOW_HEIGHT, SEARCH_WINDOW_WIDTH } from '~shared/constants'
+import { i18nAtom, languageAtom, restoreAppearanceSettingsAtom, themeAtom } from '~sidepanel/atom'
+import { displayModeAtom, heightAtom, widthAtom } from '~sidepanel/atom/windowAtom'
 
 const Container = styled.div`
   display: flex;
@@ -27,23 +37,69 @@ const StyledCard = styled(Card)`
   max-width: 32rem;
 `
 
+const SizeInputContainer = styled.div`
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+`
+
+const SizeInputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`
+
+const SizeLabel = styled.span`
+  font-size: 12px;
+  color: var(--semi-color-text-2);
+`
+
+const InfoIcon = styled(IconInfoCircle)`
+  color: var(--semi-color-text-2);
+  cursor: help;
+`
+
 export const AppearancePanel: React.FC = () => {
 	const i18n = useAtomValue(i18nAtom)
 	const [language, setLanguage] = useAtom(languageAtom)
 	const [themeColor, setThemeColor] = useAtom(themeAtom)
+	const [displayMode, setDisplayMode] = useAtom(displayModeAtom)
+	const [iframeWidth, setIframeWidth] = useAtom(widthAtom)
+	const [iframeHeight, setIframeHeight] = useAtom(heightAtom)
+	const resetConfig = useSetAtom(restoreAppearanceSettingsAtom)
+
+	const handleChangeWidth = (value: number) => {
+		setIframeWidth(value)
+	}
+
+	const handleChangeHeight = (value: number) => {
+		setIframeHeight(value)
+	}
+
 	const handleLanguageChange = (value: string) => {
 		setLanguage(value as LanguageType)
 	}
+
 	const handleThemeChange = (value: 'dark' | 'light' | 'system') => {
 		setThemeColor(value)
 	}
 
 	return (
-		<StyledCard title={i18n('themeSettings')}>
+		<StyledCard
+			title={i18n('themeSettings')}
+			headerExtraContent={
+				<Button type='tertiary' icon={<IconRefresh />} onClick={resetConfig}>
+					{i18n('restoreDefaults')}
+				</Button>
+			}
+			style={{
+				alignItems: 'center',
+			}}
+		>
 			<Container>
 				<div>
 					<Section>{i18n('appearanceMode')}</Section>
-					<RadioGroup type='button' onChange={(e) => handleThemeChange(e.target.value)} defaultValue={themeColor}>
+					<RadioGroup type='button' onChange={(e) => handleThemeChange(e.target.value)} value={themeColor}>
 						<Radio value='light'>
 							<IconWrapper>
 								<IconSun />
@@ -65,19 +121,60 @@ export const AppearancePanel: React.FC = () => {
 					</RadioGroup>
 				</div>
 
-				{/* TODO: 窗口大小设置 是否默认全屏设置 */}
-				{/* <div>
-					<Section>{i18n('windowSize')}</Section>
-					<RadioGroup type='button' defaultValue='medium'>
-						<Radio value='small'>{i18n('small')}</Radio>
-						<Radio value='medium'>{i18n('medium')}</Radio>
-						<Radio value='large'>{i18n('large')}</Radio>
+				<div>
+					<Section>
+						{i18n('windowMode')}{' '}
+						<Tooltip content={i18n('restartRequired')} position='right'>
+							<InfoIcon size='small' />
+						</Tooltip>
+					</Section>
+
+					<RadioGroup
+						type='button'
+						value={displayMode || 'iframe'}
+						defaultValue={'iframe'}
+						onChange={(e) => setDisplayMode(e.target.value)}
+					>
+						<Radio value='iframe'>
+							<IconWrapper>
+								<IconComponent />
+								<Tooltip content={i18n('iframeTooltipDesc')}>{i18n('iframeMode')}</Tooltip>
+							</IconWrapper>
+						</Radio>
+						<Radio value='fullscreen'>
+							<IconWrapper>
+								<IconExpand />
+								<Tooltip content={i18n('fullscreenTooltipDesc')}>{i18n('fullscreen')}</Tooltip>
+							</IconWrapper>
+						</Radio>
 					</RadioGroup>
-				</div> */}
+					{
+						<SizeInputContainer>
+							<SizeInputWrapper>
+								<SizeLabel>{i18n('iframeWidth')}</SizeLabel>
+								<InputNumber
+									value={iframeWidth || SEARCH_WINDOW_WIDTH}
+									onChange={handleChangeWidth}
+									style={{ width: 120 }}
+									min={400}
+								/>
+							</SizeInputWrapper>
+							<SizeInputWrapper>
+								<SizeLabel>{i18n('iframeHeight')}</SizeLabel>
+								<InputNumber
+									value={iframeHeight || SEARCH_WINDOW_HEIGHT}
+									onChange={handleChangeHeight}
+									style={{ width: 120 }}
+									min={300}
+								/>
+							</SizeInputWrapper>
+						</SizeInputContainer>
+					}
+				</div>
 
 				<div>
 					<Section>{i18n('language')}</Section>
-					<RadioGroup onChange={(e) => handleLanguageChange(e.target.value)} type='button' defaultValue={language}>
+					<RadioGroup onChange={(e) => handleLanguageChange(e.target.value)} type='button' value={language}>
 						<Radio value={LanguageType.en}>
 							<IconWrapper>
 								<IconLanguage />

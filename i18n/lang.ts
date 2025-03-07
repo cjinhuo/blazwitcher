@@ -115,21 +115,41 @@ export const lang = {
 		[LanguageType.zh]: '跟随系统',
 		[LanguageType.en]: 'Follow System',
 	},
+	windowMode: {
+		[LanguageType.zh]: '窗口模式',
+		[LanguageType.en]: 'Window Mode',
+	},
+	fullscreen: {
+		[LanguageType.zh]: '独立窗口',
+		[LanguageType.en]: 'Isolate window',
+	},
+	iframeTooltipDesc: {
+		[LanguageType.zh]: '注入脚本失败时会以独立窗口形式打开',
+		[LanguageType.en]: 'When script injection fails, it will open in a separate window.',
+	},
+	fullscreenTooltipDesc: {
+		[LanguageType.zh]: '全屏状态下会新开一个独立全屏窗口',
+		[LanguageType.en]: 'In fullscreen mode, it will open a new independent fullscreen window.',
+	},
+	iframeMode: {
+		[LanguageType.zh]: '内嵌iframe',
+		[LanguageType.en]: 'IFrame',
+	},
 	windowSize: {
 		[LanguageType.zh]: '窗口大小',
 		[LanguageType.en]: 'Window Size',
 	},
-	small: {
-		[LanguageType.zh]: '小',
-		[LanguageType.en]: 'Small',
+	iframeWidth: {
+		[LanguageType.zh]: '宽度',
+		[LanguageType.en]: 'Width',
 	},
-	medium: {
-		[LanguageType.zh]: '中',
-		[LanguageType.en]: 'Medium',
+	iframeHeight: {
+		[LanguageType.zh]: '高度',
+		[LanguageType.en]: 'Height',
 	},
-	large: {
-		[LanguageType.zh]: '大',
-		[LanguageType.en]: 'Large',
+	restartRequired: {
+		[LanguageType.zh]: '重启扩展后生效',
+		[LanguageType.en]: 'Restart extension for changes to take effect',
 	},
 	language: {
 		[LanguageType.zh]: '语言',
@@ -188,27 +208,6 @@ export const lang = {
 		[LanguageType.zh]: '该快捷键已被使用',
 		[LanguageType.en]: 'This shortcut is already in use',
 	},
-	// 搜索参数配置页
-	searchSettings: {
-		[LanguageType.zh]: '搜索参数设置',
-		[LanguageType.en]: 'Search Settings',
-	},
-	searchHistoryCount: {
-		[LanguageType.zh]: '可回溯搜索的条数',
-		[LanguageType.en]: 'Number of searchable history items',
-	},
-	searchHistoryDays: {
-		[LanguageType.zh]: '回溯历史记录时间（天）',
-		[LanguageType.en]: 'History search time range (days)',
-	},
-	searchSourceConfig: {
-		[LanguageType.zh]: '搜索源配置',
-		[LanguageType.en]: 'Search Source Configuration',
-	},
-	defaultSearchType: {
-		[LanguageType.zh]: '默认检索类型',
-		[LanguageType.en]: 'Default Search Type',
-	},
 	shortcutRequired: {
 		[LanguageType.zh]: '请输入快捷键',
 		[LanguageType.en]: 'Please input shortcut',
@@ -224,5 +223,34 @@ export const lang = {
 	unknownOperation: {
 		[LanguageType.zh]: '未知按键',
 		[LanguageType.en]: 'unknown operation',
+	},
+	// 搜索参数配置页
+	searchSettings: {
+		[LanguageType.zh]: '搜索参数设置',
+		[LanguageType.en]: 'Search Settings',
+	},
+	restoreDefaults: {
+		[LanguageType.zh]: '恢复默认',
+		[LanguageType.en]: 'Restore Defaults',
+	},
+	historyMaxResults: {
+		[LanguageType.zh]: '可回溯搜索的条数',
+		[LanguageType.en]: 'Number of searchable history items',
+	},
+	historyMaxDays: {
+		[LanguageType.zh]: '可回溯历史记录时间（天）',
+		[LanguageType.en]: 'Traceable historical record period (days)',
+	},
+	bookmarkDisplayCount: {
+		[LanguageType.zh]: '书签显示数量',
+		[LanguageType.en]: 'Bookmark Display Count',
+	},
+	historyDisplayCount: {
+		[LanguageType.zh]: '最优历史记录显示数量',
+		[LanguageType.en]: 'Top Suggestions History Display Count',
+	},
+	topSuggestionsCount: {
+		[LanguageType.zh]: '顶部建议数量',
+		[LanguageType.en]: 'Top Suggestions Count',
 	},
 }

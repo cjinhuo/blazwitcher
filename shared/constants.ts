@@ -43,6 +43,14 @@ export const DEFAULT_BOOKMARK_DISPLAY_COUNT = 10
 export const DEFAULT_HISTORY_DISPLAY_COUNT = 10
 export const DEFAULT_TOP_SUGGESTIONS_COUNT = 2
 
+export const defaultSearchConfig = {
+	historyMaxDays: DEFAULT_HISTORY_MAX_DAYS,
+	historyMaxResults: DEFAULT_HISTORY_MAX_RESULTS,
+	bookmarkDisplayCount: DEFAULT_BOOKMARK_DISPLAY_COUNT,
+	historyDisplayCount: DEFAULT_HISTORY_DISPLAY_COUNT,
+	topSuggestionsCount: DEFAULT_TOP_SUGGESTIONS_COUNT,
+}
+
 export const TabGroupColorMap: TabGroupColorMapType = {
 	light: {
 		grey: '#E8EAED',
@@ -74,3 +82,5 @@ export const DEFAULT_STRICTNESS_COEFFICIENT = 0.6
 export const DEFAULT_LANGUAGE_KEY = 'blazwitcher_default_language'
 export const DEFAULT_SHORTCUT_MAPPINGS = 'blazwitcher_shortcut_mappings'
 export const DEFAULT_THEME_COLOR = 'blazwitcher_theme_color'
+export const DEFAULT_SEARCH_CONFIG = 'blazwitcher_search_config'
+export const DEFAULT_WINDOW_CONFIG = 'blazwitcher_window_config'

@@ -16,11 +16,10 @@ export type Translations = {
 export type TranslationKeys = keyof typeof translations
 export type i18nFunction = (key: TranslationKeys, args?: any) => string
 
+export const defaultLanguage = navigator.language.toLowerCase().startsWith('zh') ? LanguageType.zh : LanguageType.en
+
 // 默认语言 en
-export const languageAtom = atomWithStorage<LanguageType>(
-	DEFAULT_LANGUAGE_KEY,
-	navigator.language.toLowerCase().startsWith('zh') ? LanguageType.zh : LanguageType.en
-)
+export const languageAtom = atomWithStorage<LanguageType>(DEFAULT_LANGUAGE_KEY, defaultLanguage)
 
 export const i18nAtom = atom((get) => <K extends TranslationKeys>(key: K, args?: any) => {
 	const defaultLang = get(languageAtom)
