@@ -138,17 +138,17 @@ export const AppearancePanel: React.FC = () => {
 						<Radio value='iframe'>
 							<IconWrapper>
 								<IconComponent />
-								<span>{i18n('iframeMode')}</span>
+								<Tooltip content={i18n('iframeTooltipDesc')}>{i18n('iframeMode')}</Tooltip>
 							</IconWrapper>
 						</Radio>
 						<Radio value='fullscreen'>
 							<IconWrapper>
 								<IconExpand />
-								<span>{i18n('fullscreen')}</span>
+								<Tooltip content={i18n('fullscreenTooltipDesc')}>{i18n('fullscreen')}</Tooltip>
 							</IconWrapper>
 						</Radio>
 					</RadioGroup>
-					{displayMode === 'iframe' && (
+					{
 						<SizeInputContainer>
 							<SizeInputWrapper>
 								<SizeLabel>{i18n('iframeWidth')}</SizeLabel>
@@ -169,7 +169,7 @@ export const AppearancePanel: React.FC = () => {
 								/>
 							</SizeInputWrapper>
 						</SizeInputContainer>
-					)}
+					}
 				</div>
 
 				<div>

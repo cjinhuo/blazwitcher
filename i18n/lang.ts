@@ -120,8 +120,16 @@ export const lang = {
 		[LanguageType.en]: 'Window Mode',
 	},
 	fullscreen: {
-		[LanguageType.zh]: '全屏',
-		[LanguageType.en]: 'Fullscreen',
+		[LanguageType.zh]: '独立窗口',
+		[LanguageType.en]: 'Isolate window',
+	},
+	iframeTooltipDesc: {
+		[LanguageType.zh]: '注入脚本失败时会以独立窗口形式打开',
+		[LanguageType.en]: 'When script injection fails, it will open in a separate window.',
+	},
+	fullscreenTooltipDesc: {
+		[LanguageType.zh]: '全屏状态下会新开一个独立全屏窗口',
+		[LanguageType.en]: 'In fullscreen mode, it will open a new independent fullscreen window.',
 	},
 	iframeMode: {
 		[LanguageType.zh]: '内嵌iframe',

@@ -30,8 +30,7 @@ const styles = {
     overflow: auto;
   `,
 	wrapper: styled.div`
-    width: 100%;
-    max-width: 480px;
+    width: 90%;
     min-width: 320px;
     margin: 0 auto;
   `,
