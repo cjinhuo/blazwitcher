@@ -48,7 +48,7 @@ export const windowConfigAtom = atom(
 	}
 )
 
-export const resetWindowConfigAtom = atom(null, (_, set) => {
+export const restoreWindowConfigAtom = atom(null, (_, set) => {
 	set(displayModeAtom, defaultWindowConfig.displayMode)
 	set(widthAtom, defaultWindowConfig.width)
 	set(heightAtom, defaultWindowConfig.height)

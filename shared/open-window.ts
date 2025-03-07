@@ -15,6 +15,7 @@ import {
 	storageSet,
 	tabsQuery,
 } from './promisify'
+import type { ExtensionStorageType } from './types'
 
 async function activeWindow() {
 	const storage = await storageGet(SELF_WINDOW_ID_KEY)
@@ -27,8 +28,8 @@ async function activeWindow() {
 	}
 	const currentWindow = await getCurrentWindow()
 	await storageSet({ [LAST_ACTIVE_WINDOW_ID_KEY]: currentWindow.id })
-	const _localStorage = await storageGetLocal()
-	const windowMode = _localStorage?.[`${DEFAULT_WINDOW_CONFIG}_displayMode`] || 'iframe'
+	const extensionLocalStorage = await storageGetLocal()
+	const windowMode = extensionLocalStorage?.[`${DEFAULT_WINDOW_CONFIG}_displayMode`] || 'iframe'
 	// const windowCOnfig = await storageGetLocal(DEFAULT_WINDOW_CONFIG)
 	// const window
 	// there is a bug in "window" platform. When the window state is maximized, the left and top are not correct.
@@ -86,7 +87,7 @@ async function activeWindow() {
 async function injectScriptToOpenModal() {
 	try {
 		const tabs = await tabsQuery({ active: true, currentWindow: true })
-		const _localStorage = await storageGetLocal()
+		const extensionLocalStorage = await storageGetLocal()
 		const activeTab = tabs[0]
 		if (activeTab.id) {
 			const url = chrome.runtime.getURL('sidepanel.html')
@@ -96,7 +97,7 @@ async function injectScriptToOpenModal() {
 				target: { tabId: activeTab.id },
 				world: 'ISOLATED',
 				func: injectModal,
-				args: [url, chrome.runtime.id, _localStorage],
+				args: [url, chrome.runtime.id, extensionLocalStorage],
 				injectImmediately: true,
 			})
 		}
@@ -106,13 +107,12 @@ async function injectScriptToOpenModal() {
 	return true
 }
 
-async function injectModal(url: string, id?: string, _localStorage?: any) {
-	const iframeWidth = _localStorage?.blazwitcher_window_config_width || 760
-	const iframeHeight = _localStorage?.blazwitcher_window_config_height || 478
-	console.log('injectModal', iframeWidth, iframeHeight, _localStorage)
+async function injectModal(url: string, id?: string, extensionLocalStorage?: ExtensionStorageType) {
+	const iframeWidth = extensionLocalStorage?.blazwitcher_window_config_width || 760
+	const iframeHeight = extensionLocalStorage?.blazwitcher_window_config_height || 478
 	const NAMESPACE = `blazwitcher-chrome-ext-modal-${id || chrome.runtime.id}`
 	if (process.env.NODE_ENV !== 'production') {
-		console.log('injectModal', NAMESPACE)
+		console.log('injectModal', NAMESPACE, 'extensionLocalStorage', extensionLocalStorage)
 	}
 	if (document.getElementById(NAMESPACE)) return
 	const modal = document.createElement('div')

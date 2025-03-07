@@ -5,13 +5,14 @@ import {
 	IconInfoCircle,
 	IconLanguage,
 	IconMoon,
+	IconRefresh,
 	IconSun,
 } from '@douyinfe/semi-icons'
-import { Card, InputNumber, Radio, RadioGroup, Tooltip } from '@douyinfe/semi-ui'
-import { useAtom, useAtomValue } from 'jotai'
+import { Button, Card, InputNumber, Radio, RadioGroup, Tooltip } from '@douyinfe/semi-ui'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import styled from 'styled-components'
 import { LanguageType, SEARCH_WINDOW_HEIGHT, SEARCH_WINDOW_WIDTH } from '~shared/constants'
-import { i18nAtom, languageAtom, themeAtom } from '~sidepanel/atom'
+import { i18nAtom, languageAtom, restoreAppearanceSettingsAtom, themeAtom } from '~sidepanel/atom'
 import { displayModeAtom, heightAtom, widthAtom } from '~sidepanel/atom/windowAtom'
 
 const Container = styled.div`
@@ -65,6 +66,7 @@ export const AppearancePanel: React.FC = () => {
 	const [displayMode, setDisplayMode] = useAtom(displayModeAtom)
 	const [iframeWidth, setIframeWidth] = useAtom(widthAtom)
 	const [iframeHeight, setIframeHeight] = useAtom(heightAtom)
+	const resetConfig = useSetAtom(restoreAppearanceSettingsAtom)
 
 	const handleChangeWidth = (value: number) => {
 		setIframeWidth(value)
@@ -83,11 +85,21 @@ export const AppearancePanel: React.FC = () => {
 	}
 
 	return (
-		<StyledCard title={i18n('themeSettings')}>
+		<StyledCard
+			title={i18n('themeSettings')}
+			headerExtraContent={
+				<Button type='tertiary' icon={<IconRefresh />} onClick={resetConfig}>
+					{i18n('restoreDefaults')}
+				</Button>
+			}
+			style={{
+				alignItems: 'center',
+			}}
+		>
 			<Container>
 				<div>
 					<Section>{i18n('appearanceMode')}</Section>
-					<RadioGroup type='button' onChange={(e) => handleThemeChange(e.target.value)} defaultValue={themeColor}>
+					<RadioGroup type='button' onChange={(e) => handleThemeChange(e.target.value)} value={themeColor}>
 						<Radio value='light'>
 							<IconWrapper>
 								<IconSun />
@@ -162,7 +174,7 @@ export const AppearancePanel: React.FC = () => {
 
 				<div>
 					<Section>{i18n('language')}</Section>
-					<RadioGroup onChange={(e) => handleLanguageChange(e.target.value)} type='button' defaultValue={language}>
+					<RadioGroup onChange={(e) => handleLanguageChange(e.target.value)} type='button' value={language}>
 						<Radio value={LanguageType.en}>
 							<IconWrapper>
 								<IconLanguage />

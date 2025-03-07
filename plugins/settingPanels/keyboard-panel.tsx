@@ -1,10 +1,11 @@
-import { IconEdit } from '@douyinfe/semi-icons'
+import { IconEdit, IconRefresh } from '@douyinfe/semi-icons'
 import { Button, Card, List, Modal, Toast, Typography } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { OperationItemPropertyTypes } from '~shared/types'
 import { type Shortcut, i18nAtom, shortcutsAtom, updateShortcutAtom } from '~sidepanel/atom'
+import { restoreDefaultShortcutsAtom } from '~sidepanel/atom'
 import { collectPressedKeys, isValidShortcut, standardizeKeyOrder } from '~sidepanel/utils/keyboardUtils'
 
 const styles = {
@@ -93,6 +94,7 @@ export const KeyboardPanel: React.FC = () => {
 	const i18n = useAtomValue(i18nAtom)
 	const [shortcuts] = useAtom(shortcutsAtom)
 	const updateShortcut = useSetAtom(updateShortcutAtom)
+	const resetConfig = useSetAtom(restoreDefaultShortcutsAtom)
 	const { Text } = Typography
 
 	// 正在编辑的快捷键
@@ -166,7 +168,17 @@ export const KeyboardPanel: React.FC = () => {
 	}
 
 	return (
-		<styles.card title={i18n('keyboardSettings')}>
+		<styles.card
+			title={i18n('keyboardSettings')}
+			headerExtraContent={
+				<Button type='tertiary' icon={<IconRefresh />} onClick={() => resetConfig()}>
+					{i18n('restoreDefaults')}
+				</Button>
+			}
+			style={{
+				alignItems: 'center',
+			}}
+		>
 			<List
 				dataSource={shortcuts}
 				renderItem={(item) => (

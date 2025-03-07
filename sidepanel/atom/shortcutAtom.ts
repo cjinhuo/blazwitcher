@@ -33,16 +33,22 @@ const defaultShortcutConfigs: Shortcut[] = [
 	},
 ]
 
+const defaultShortcutMappings = defaultShortcutConfigs.reduce(
+	(acc, config) => {
+		acc[config.id] = config.shortcut
+		return acc
+	},
+	{} as Record<string, string>
+)
+
 export const shortcutMappingsAtom = atomWithStorage<Record<string, string>>(
 	DEFAULT_SHORTCUT_MAPPINGS,
-	defaultShortcutConfigs.reduce(
-		(acc, config) => {
-			acc[config.id] = config.shortcut
-			return acc
-		},
-		{} as Record<string, string>
-	)
+	defaultShortcutMappings
 )
+
+export const restoreDefaultShortcutsAtom = atom(null, (_, set) => {
+	set(shortcutMappingsAtom, defaultShortcutMappings)
+})
 
 // 先读取localstorage，如果没有就使用默认值
 export const shortcutsAtom = atom((get) => {
