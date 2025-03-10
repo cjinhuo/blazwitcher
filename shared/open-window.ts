@@ -1,44 +1,36 @@
+import { getWindowConfig } from '~sidepanel/atom'
 import {
-	DEFAULT_WINDOW_CONFIG,
+	DisplayMode,
 	LAST_ACTIVE_WINDOW_ID_KEY,
-	SEARCH_WINDOW_HEIGHT,
-	SEARCH_WINDOW_WIDTH,
 	SELF_WINDOW_ID_KEY,
 	SELF_WINDOW_STATE,
+	type WindowConfig,
 } from './constants'
-import {
-	getCurrentWindow,
-	getDisplayInfo,
-	getWindowById,
-	storageGet,
-	storageGetLocal,
-	storageSet,
-	tabsQuery,
-} from './promisify'
-import type { ExtensionStorageType } from './types'
+import { getCurrentWindow, getDisplayInfo, getWindowById, storageGet, storageSet, tabsQuery } from './promisify'
 
 async function activeWindow() {
-	const storage = await storageGet(SELF_WINDOW_ID_KEY)
-	if (storage[SELF_WINDOW_ID_KEY]) {
+	const sessionStorage = await storageGet(SELF_WINDOW_ID_KEY)
+	if (sessionStorage[SELF_WINDOW_ID_KEY]) {
 		try {
-			const _window = await getWindowById(Number(storage[SELF_WINDOW_ID_KEY]))
+			const _window = await getWindowById(Number(sessionStorage[SELF_WINDOW_ID_KEY]))
 			chrome.windows.update(_window.id, { focused: true })
 			return
 		} catch (_error) {}
 	}
 	const currentWindow = await getCurrentWindow()
 	await storageSet({ [LAST_ACTIVE_WINDOW_ID_KEY]: currentWindow.id })
-	const extensionLocalStorage = await storageGetLocal()
-	const windowMode = extensionLocalStorage?.[`${DEFAULT_WINDOW_CONFIG}_displayMode`] || 'iframe'
+	const windowConfig = await getWindowConfig()
 	// there is a bug in "window" platform. When the window state is maximized, the left and top are not correct.
 	// Normally speaking left and top should be 0. But they are -7 in this case.So reset the left and top to 0 to fix it.
-	if (currentWindow.state === 'fullscreen' && windowMode !== 'fullscreen' && (await injectScriptToOpenModal())) {
+	if (
+		(windowConfig.displayMode === DisplayMode.IFRAME || currentWindow.state === 'fullscreen') &&
+		// 如果 injectScriptToOpenModal 执行失败，返回 false，则继续走 isolateWindow 模式
+		(await injectScriptToOpenModal(windowConfig))
+	) {
 		return
 	}
 	if (currentWindow.state === 'maximized') {
-		// biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
 		currentWindow.left >= -10 && currentWindow.left < 0 && (currentWindow.left = 0)
-		// biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
 		currentWindow.top >= -10 && currentWindow.top < 0 && (currentWindow.top = 0)
 	}
 
@@ -68,10 +60,10 @@ async function activeWindow() {
 	// if focusedDisplay is not found, just lower the standard about bounds
 	const { width, height, left, top } = focusedDisplay.bounds
 	const _window = await chrome.windows.create({
-		width: SEARCH_WINDOW_WIDTH,
-		height: SEARCH_WINDOW_HEIGHT,
-		left: Math.floor((width - SEARCH_WINDOW_WIDTH) / 2 + left),
-		top: Math.floor((height - SEARCH_WINDOW_HEIGHT) / 2 + top),
+		width: windowConfig.width,
+		height: windowConfig.height,
+		left: Math.floor((width - windowConfig.width) / 2 + left),
+		top: Math.floor((height - windowConfig.height) / 2 + top),
 		focused: true,
 		type: 'popup',
 		url: './sidepanel.html',
@@ -82,10 +74,9 @@ async function activeWindow() {
 	})
 }
 
-async function injectScriptToOpenModal() {
+async function injectScriptToOpenModal(windowConfig: WindowConfig) {
 	try {
 		const tabs = await tabsQuery({ active: true, currentWindow: true })
-		const extensionLocalStorage = await storageGetLocal()
 		const activeTab = tabs[0]
 		if (activeTab.id) {
 			const url = chrome.runtime.getURL('sidepanel.html')
@@ -95,7 +86,7 @@ async function injectScriptToOpenModal() {
 				target: { tabId: activeTab.id },
 				world: 'ISOLATED',
 				func: injectModal,
-				args: [url, chrome.runtime.id, extensionLocalStorage],
+				args: [url, windowConfig, chrome.runtime.id],
 				injectImmediately: true,
 			})
 		}
@@ -105,17 +96,16 @@ async function injectScriptToOpenModal() {
 	return true
 }
 
-async function injectModal(url: string, id?: string, extensionLocalStorage?: ExtensionStorageType) {
-	const iframeWidth = extensionLocalStorage?.blazwitcher_window_config_width || 760
-	const iframeHeight = extensionLocalStorage?.blazwitcher_window_config_height || 478
+async function injectModal(url: string, windowConfig: WindowConfig, id?: string) {
+	const iframeWidth = windowConfig.width
+	// 27 是浏览器标题栏高度
+	const iframeHeight = windowConfig.height - 27
 	const NAMESPACE = `blazwitcher-chrome-ext-modal-${id || chrome.runtime.id}`
 	if (process.env.NODE_ENV !== 'production') {
-		console.log('injectModal', NAMESPACE, 'extensionLocalStorage', extensionLocalStorage)
+		console.log('injectModal', NAMESPACE, 'windowConfig', windowConfig)
 	}
 	if (document.getElementById(NAMESPACE)) return
 	const modal = document.createElement('div')
-	// 这里只能写死，不能用常量，因为常量是运行时计算的
-	// height = SEARCH_WINDOW_HEIGHT - 27(27 是浏览器标题栏高度)
 	modal.style.cssText = `
 		position: fixed;
 		top: 50%;

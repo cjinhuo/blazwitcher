@@ -96,11 +96,3 @@ export type TabGroupColorMapType = {
 	light: ColorTheme
 	dark: ColorTheme
 }
-
-export interface ExtensionStorageType {
-	// 窗口模式
-	blazwitcher_window_config_displayMode?: 'iframe' | 'fullscreen'
-	// 窗口大小
-	blazwitcher_window_config_height?: number
-	blazwitcher_window_config_width?: number
-}
