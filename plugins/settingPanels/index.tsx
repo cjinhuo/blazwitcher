@@ -18,7 +18,7 @@ const { Sider, Content } = Layout
 
 const styles = {
 	layout: styled(Layout)`
-    height: 100vh;
+		height: 100%;
     display: flex;
     flex-direction: row;
   `,

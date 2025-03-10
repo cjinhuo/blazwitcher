@@ -11,7 +11,7 @@ import {
 import { Button, Card, InputNumber, Radio, RadioGroup, Tooltip } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import styled from 'styled-components'
-import { LanguageType, SEARCH_WINDOW_HEIGHT, SEARCH_WINDOW_WIDTH } from '~shared/constants'
+import { DisplayMode, LanguageType, SEARCH_WINDOW_HEIGHT, SEARCH_WINDOW_WIDTH } from '~shared/constants'
 import { i18nAtom, languageAtom, restoreAppearanceSettingsAtom, themeAtom } from '~sidepanel/atom'
 import { displayModeAtom, heightAtom, widthAtom } from '~sidepanel/atom/windowAtom'
 
@@ -37,6 +37,7 @@ const IconWrapper = styled.div`
 
 const StyledCard = styled(Card)`
   width: 100%;
+	align-items: center;
 `
 
 const SizeInputContainer = styled.div`
@@ -94,9 +95,6 @@ export const AppearancePanel: React.FC = () => {
 					{i18n('restoreDefaults')}
 				</Button>
 			}
-			style={{
-				alignItems: 'center',
-			}}
 		>
 			<Container>
 				<div>
@@ -137,16 +135,16 @@ export const AppearancePanel: React.FC = () => {
 						defaultValue={'iframe'}
 						onChange={(e) => setDisplayMode(e.target.value)}
 					>
-						<Radio value='iframe'>
+						<Radio value={DisplayMode.IFRAME}>
 							<IconWrapper>
 								<IconComponent />
 								<Tooltip content={i18n('iframeTooltipDesc')}>{i18n('iframeMode')}</Tooltip>
 							</IconWrapper>
 						</Radio>
-						<Radio value='fullscreen'>
+						<Radio value={DisplayMode.ISOLATE_WINDOW}>
 							<IconWrapper>
 								<IconExpand />
-								<Tooltip content={i18n('fullscreenTooltipDesc')}>{i18n('fullscreen')}</Tooltip>
+								<Tooltip content={i18n('isolatedWindowTooltipDesc')}>{i18n('isolatedWindow')}</Tooltip>
 							</IconWrapper>
 						</Radio>
 					</RadioGroup>

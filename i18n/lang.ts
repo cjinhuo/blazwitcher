@@ -119,17 +119,17 @@ export const lang = {
 		[LanguageType.zh]: '窗口模式',
 		[LanguageType.en]: 'Window Mode',
 	},
-	fullscreen: {
+	isolatedWindow: {
 		[LanguageType.zh]: '独立窗口',
-		[LanguageType.en]: 'Isolate window',
+		[LanguageType.en]: 'Isolated Window',
 	},
 	iframeTooltipDesc: {
-		[LanguageType.zh]: '注入脚本失败时会以独立窗口形式打开',
-		[LanguageType.en]: 'When script injection fails, it will open in a separate window.',
+		[LanguageType.zh]: '以内嵌iframe的形式打开，失败时会以独立窗口形式打开',
+		[LanguageType.en]: 'Open in iframe mode, if failed, it will open in a isolated window',
 	},
-	fullscreenTooltipDesc: {
+	isolatedWindowTooltipDesc: {
 		[LanguageType.zh]: '全屏状态下会新开一个独立全屏窗口',
-		[LanguageType.en]: 'In fullscreen mode, it will open a new independent fullscreen window.',
+		[LanguageType.en]: 'In fullscreen mode, it will open a new isolated fullscreen window',
 	},
 	iframeMode: {
 		[LanguageType.zh]: '内嵌iframe',
@@ -149,7 +149,7 @@ export const lang = {
 	},
 	restartRequired: {
 		[LanguageType.zh]: '重启扩展后生效',
-		[LanguageType.en]: 'Restart extension for changes to take effect',
+		[LanguageType.en]: 'Takes effect after restarting the extension',
 	},
 	language: {
 		[LanguageType.zh]: '语言',
