@@ -1,4 +1,3 @@
-import { useAtomValue } from 'jotai'
 import {
 	extractBoundaryMapping,
 	isStrictnessSatisfied,

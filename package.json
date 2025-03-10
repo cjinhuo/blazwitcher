@@ -1,101 +1,24 @@
 {
-	"name": "blazwitcher",
-	"displayName": "Blazwitcher: Fuzzy Pinyin Search & Tab Switch In Blazing Speed",
-	"version": "0.4.2",
-	"description": "Blazwitcher is a local tool for searching tabs, bookmarks, and history, with support for fuzzy Pinyin search.",
-	"author": "cjinhuo@qq.com",
-	"scripts": {
-		"dev": "plasmo dev ",
-		"package": "plasmo build && plasmo package",
-		"commit": "git add . && git cz",
-		"prepare": "husky",
-		"debug": "plasmo dev --verbose",
-		"scan-cn": "node scripts/scan-cn.js"
-	},
-	"dependencies": {
-		"@commitlint/config-conventional": "^19.2.2",
-		"@douyinfe/semi-icons": "^2.62.0",
-		"@douyinfe/semi-illustrations": "^2.74.0",
-		"@douyinfe/semi-ui": "^2.62.0",
-		"jotai": "^2.9.3",
-		"lodash-es": "^4.17.21",
-		"observable-hooks": "^4.2.4",
-		"plasmo": "0.90.3",
-		"react": "18.2.0",
-		"react-dom": "18.2.0",
-		"rxjs": "8.0.0-alpha.14",
-		"styled-components": "^6.1.11",
-		"text-search-engine": "1.4.3"
-	},
-	"devDependencies": {
-		"@babel/parser": "^7.26.3",
-		"@babel/traverse": "^7.26.4",
-		"@biomejs/biome": "^1.8.3",
-		"@changesets/cli": "^2.27.8",
-		"@ianvs/prettier-plugin-sort-imports": "4.1.1",
-		"@types/chrome": "0.0.268",
-		"@types/lodash-es": "^4.17.12",
-		"@types/node": "20.11.5",
-		"@types/react": "18.2.48",
-		"@types/react-dom": "18.2.18",
-		"cz-git": "^1.9.4",
-		"husky": "^9.1.7",
-		"lint-staged": "^15.4.3",
-		"path-browserify": "^1.0.0",
-		"typescript": "5.3.3",
-		"url": "^0.11.0"
-	},
-	"@parcel/resolver-default": {
-		"packageExports": true
-	},
-	"config": {
-		"commitizen": {
-			"path": "node_modules/cz-git"
-		}
-	},
-	"manifest": {
-		"host_permissions": ["https://*/*", "http://*/*"],
-		"commands": {
-			"_execute_action": {
-				"suggested_key": {
-					"default": "Ctrl+Period",
-					"mac": "Command+Period"
-				},
-				"description": "Blazwitcher"
-			}
-		},
-		"action": {
-			"default_title": "Blazwitcher"
-		},
-		"web_accessible_resources": [
-			{
-				"resources": ["sidepanel.html"],
-				"matches": ["<all_urls>"]
-			}
-		],
-		"permissions": [
-			"tabs",
-			"tabGroups",
-			"bookmarks",
-			"history",
-			"storage",
-			"windows",
-			"favicon",
-			"system.display",
-			"sidePanel",
-			"contextMenus",
-			"scripting"
-		],
-		"offline_enabled": true
-	},
-	"lint-staged": {
-		"*.{js,ts,jsx,tsx,json}": [
-			"biome check --files-ignore-unknown=true",
-			"biome check --write --no-errors-on-unmatched",
-			"biome check --write --organize-imports-enabled=false --no-errors-on-unmatched",
-			"biome check --write --unsafe --no-errors-on-unmatched",
-			"biome format --write --no-errors-on-unmatched",
-			"biome lint --write --no-errors-on-unmatched"
-		]
-	}
+  "scripts": {
+    "prepare": "husky install",
+    "dev": "cd packages/Extension && pnpm run dev",
+    "package": "cd packages/Extension && pnpm run package",
+    "commit": "cd packages/Extension && pnpm run commit",
+    "debug": "cd packages/Extension && pnpm run debug"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.8",
+    "@commitlint/config-conventional": "^19.2.2",
+    "cz-git": "^1.9.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
+    "@biomejs/biome": "^1.8.3",
+    "typescript": "5.3.3"
+  },
+  "keywords": [],
+  "license": "ISC"
 }

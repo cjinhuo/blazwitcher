@@ -1,7 +1,7 @@
 import { IconSearch } from '@douyinfe/semi-icons'
 import { Input } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue } from 'jotai'
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { i18nAtom } from '~sidepanel/atom'
 import { compositionAtom, searchValueAtom } from './atom'

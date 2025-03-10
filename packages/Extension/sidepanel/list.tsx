@@ -1,6 +1,6 @@
 import { IllustrationNoResult, IllustrationNoResultDark } from '@douyinfe/semi-illustrations'
 import { Empty, List as ListComponent } from '@douyinfe/semi-ui'
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtomValue } from 'jotai'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { HIGHLIGHT_TEXT_CLASS, HOST_CLASS, IMAGE_CLASS, NORMAL_TEXT_CLASS, SVG_CLASS } from '~shared/common-styles'
