@@ -1,3 +1,4 @@
+import { getExtensionStorageSearchConfig } from '~sidepanel/atom/searchConfigAtom'
 import { DEFAULT_HISTORY_MAX_DAYS, DEFAULT_HISTORY_MAX_RESULTS, ONE_DAY_MILLISECONDS } from './constants'
 import { getBookmarksById, getBookmarksTree, getTabGroupById, historySearch, tabsQuery } from './promisify'
 import { type BookmarkItemType, type HistoryItemType, ItemType } from './types'
@@ -103,7 +104,9 @@ async function retrieveRecentHistories(count = DEFAULT_HISTORY_MAX_RESULTS, maxD
 }
 
 export async function historyProcessing() {
-	const processedHistory = await retrieveRecentHistories()
+	// 通过 extension storage 来获取 historyMaxResults 和 historyMaxDays
+	const { historyMaxResults, historyMaxDays } = await getExtensionStorageSearchConfig()
+	const processedHistory = await retrieveRecentHistories(historyMaxResults, historyMaxDays)
 	return processedHistory.map((item) => ({
 		itemType: ItemType.History,
 		data: item,

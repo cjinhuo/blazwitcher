@@ -2,7 +2,13 @@ import { IconRefresh } from '@douyinfe/semi-icons'
 import { Button, Card, Col, InputNumber, Row } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import styled from 'styled-components'
-import { i18nAtom, resetSearchConfigAtom, searchConfigAtom } from '~sidepanel/atom'
+import {
+	historyMaxDaysAtom,
+	historyMaxResultsAtom,
+	i18nAtom,
+	resetSearchConfigAtom,
+	searchConfigAtom,
+} from '~sidepanel/atom'
 
 const StyledCard = styled(Card)`
   width: 100%;
@@ -24,6 +30,8 @@ const StyledInputNumber = styled(InputNumber)`
 
 export const SearchPanel: React.FC = () => {
 	const [config, setConfig] = useAtom(searchConfigAtom)
+	const [historyMaxDays, setHistoryMaxDays] = useAtom(historyMaxDaysAtom)
+	const [historyMaxResults, setHistoryMaxResults] = useAtom(historyMaxResultsAtom)
 	const resetConfig = useSetAtom(resetSearchConfigAtom)
 	const i18n = useAtomValue(i18nAtom)
 
@@ -47,8 +55,8 @@ export const SearchPanel: React.FC = () => {
 						<StyledInputNumber
 							min={7}
 							max={100}
-							value={config.historyMaxDays}
-							onChange={(value: number) => handleConfigChange('historyMaxDays', value)}
+							value={historyMaxDays}
+							onChange={(value: number) => setHistoryMaxDays(value)}
 						/>
 					</ConfigItem>
 				</Col>
@@ -59,8 +67,8 @@ export const SearchPanel: React.FC = () => {
 						<StyledInputNumber
 							min={100}
 							max={2000}
-							value={config.historyMaxResults}
-							onChange={(value: number) => handleConfigChange('historyMaxResults', value)}
+							value={historyMaxResults}
+							onChange={(value: number) => setHistoryMaxResults(value)}
 						/>
 					</ConfigItem>
 				</Col>

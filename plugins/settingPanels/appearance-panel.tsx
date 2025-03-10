@@ -131,8 +131,8 @@ export const AppearancePanel: React.FC = () => {
 
 					<RadioGroup
 						type='button'
-						value={displayMode || 'iframe'}
-						defaultValue={'iframe'}
+						value={displayMode || DisplayMode.IFRAME}
+						defaultValue={DisplayMode.IFRAME}
 						onChange={(e) => setDisplayMode(e.target.value)}
 					>
 						<Radio value={DisplayMode.IFRAME}>
