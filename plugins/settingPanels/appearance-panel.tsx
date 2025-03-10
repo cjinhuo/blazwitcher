@@ -24,6 +24,9 @@ const Container = styled.div`
 const Section = styled.div`
   margin-bottom: 8px;
   font-weight: 500;
+	display: flex;
+	align-items: center;
+	gap: 8px;
 `
 
 const IconWrapper = styled.div`

@@ -51,6 +51,23 @@ export const defaultSearchConfig = {
 	topSuggestionsCount: DEFAULT_TOP_SUGGESTIONS_COUNT,
 }
 
+export enum DisplayMode {
+	IFRAME = 'iframe',
+	ISOLATE_WINDOW = 'isolateWindow',
+}
+
+export interface WindowConfig {
+	displayMode: DisplayMode
+	width: number
+	height: number
+}
+
+export const DefaultWindowConfig: WindowConfig = {
+	displayMode: DisplayMode.ISOLATE_WINDOW,
+	width: SEARCH_WINDOW_WIDTH,
+	height: SEARCH_WINDOW_HEIGHT,
+}
+
 export const TabGroupColorMap: TabGroupColorMapType = {
 	light: {
 		grey: '#E8EAED',

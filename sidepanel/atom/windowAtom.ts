@@ -1,18 +1,7 @@
 import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { DEFAULT_WINDOW_CONFIG, SEARCH_WINDOW_HEIGHT, SEARCH_WINDOW_WIDTH } from '~shared/constants'
-
-export interface WindowConfig {
-	displayMode: 'iframe' | 'fullscreen'
-	width: number
-	height: number
-}
-
-const defaultWindowConfig = {
-	displayMode: 'iframe',
-	width: SEARCH_WINDOW_WIDTH,
-	height: SEARCH_WINDOW_HEIGHT,
-}
+import { DEFAULT_WINDOW_CONFIG, DefaultWindowConfig, DisplayMode, type WindowConfig } from '~shared/constants'
+import { storageGetLocal } from '~shared/promisify'
 
 const createStorageAtom = <T>(key: string, defaultValue: T) =>
 	atomWithStorage<T>(key, defaultValue, {
@@ -30,10 +19,18 @@ const createStorageAtom = <T>(key: string, defaultValue: T) =>
 
 export const displayModeAtom = createStorageAtom(
 	`${DEFAULT_WINDOW_CONFIG}_displayMode`,
-	defaultWindowConfig.displayMode
+	DefaultWindowConfig.displayMode
 )
-export const widthAtom = createStorageAtom(`${DEFAULT_WINDOW_CONFIG}_width`, defaultWindowConfig.width)
-export const heightAtom = createStorageAtom(`${DEFAULT_WINDOW_CONFIG}_height`, defaultWindowConfig.height)
+export const widthAtom = createStorageAtom(`${DEFAULT_WINDOW_CONFIG}_width`, DefaultWindowConfig.width)
+export const heightAtom = createStorageAtom(`${DEFAULT_WINDOW_CONFIG}_height`, DefaultWindowConfig.height)
+
+export async function getWindowConfig() {
+	const extensionLocalStorage = await storageGetLocal()
+	const displayMode = extensionLocalStorage?.[`${DEFAULT_WINDOW_CONFIG}_displayMode`] || DisplayMode.IFRAME
+	const width = extensionLocalStorage?.[`${DEFAULT_WINDOW_CONFIG}_width`] || DefaultWindowConfig.width
+	const height = extensionLocalStorage?.[`${DEFAULT_WINDOW_CONFIG}_height`] || DefaultWindowConfig.height
+	return { displayMode, width, height } as WindowConfig
+}
 
 export const windowConfigAtom = atom(
 	(get) => ({
@@ -49,7 +46,7 @@ export const windowConfigAtom = atom(
 )
 
 export const restoreWindowConfigAtom = atom(null, (_, set) => {
-	set(displayModeAtom, defaultWindowConfig.displayMode)
-	set(widthAtom, defaultWindowConfig.width)
-	set(heightAtom, defaultWindowConfig.height)
+	set(displayModeAtom, DefaultWindowConfig.displayMode)
+	set(widthAtom, DefaultWindowConfig.width)
+	set(heightAtom, DefaultWindowConfig.height)
 })
