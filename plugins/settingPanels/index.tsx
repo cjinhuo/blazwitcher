@@ -1,7 +1,7 @@
 import { IconDesktop, IconKey, IconSearch } from '@douyinfe/semi-icons'
 import { Layout, Nav } from '@douyinfe/semi-ui'
 import { useAtomValue } from 'jotai'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { i18nAtom } from '~sidepanel/atom'
 import { AppearancePanel } from './appearance-panel'
@@ -39,6 +39,29 @@ const styles = {
 export const SettingPanels: React.FC = () => {
 	const i18n = useAtomValue(i18nAtom)
 	const [activeKey, setActiveKey] = useState<string>('appearance')
+	const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth)
+
+	// Track window resize for responsive design
+	useEffect(() => {
+		const handleResize = () => {
+			setWindowWidth(window.innerWidth)
+		}
+
+		window.addEventListener('resize', handleResize)
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
+
+	// Memoize responsive values
+	const { navWidth, isCollapsed } = useMemo(() => {
+		const isSmallScreen = windowWidth < 600
+		return {
+			isSmallScreen,
+			navWidth: isSmallScreen ? 60 : 160,
+			isCollapsed: isSmallScreen,
+		}
+	}, [windowWidth])
 
 	const menuItems: MenuItem[] = [
 		{
@@ -75,10 +98,11 @@ export const SettingPanels: React.FC = () => {
 		<styles.layout>
 			<Sider>
 				<Nav
-					style={{ width: 160, height: '100%' }}
+					style={{ width: navWidth, height: '100%' }}
 					items={menuItems}
 					selectedKeys={[activeKey]}
 					onSelect={(data) => setActiveKey(data.itemKey as string)}
+					defaultIsCollapsed={isCollapsed}
 				/>
 			</Sider>
 			<styles.content>
