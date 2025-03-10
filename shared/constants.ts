@@ -34,18 +34,18 @@ export const GITHUB_URL = 'https://github.com/cjinhuo/blazwitcher'
 
 export const ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000
 
-// config
+// store in extension storage
 export const SEARCH_WINDOW_WIDTH = 760
 export const SEARCH_WINDOW_HEIGHT = 505
 export const DEFAULT_HISTORY_MAX_DAYS = 14
 export const DEFAULT_HISTORY_MAX_RESULTS = 1000
+
+// store in web storage
 export const DEFAULT_BOOKMARK_DISPLAY_COUNT = 10
 export const DEFAULT_HISTORY_DISPLAY_COUNT = 10
 export const DEFAULT_TOP_SUGGESTIONS_COUNT = 2
 
-export const defaultSearchConfig = {
-	historyMaxDays: DEFAULT_HISTORY_MAX_DAYS,
-	historyMaxResults: DEFAULT_HISTORY_MAX_RESULTS,
+export const DefaultSearchConfig = {
 	bookmarkDisplayCount: DEFAULT_BOOKMARK_DISPLAY_COUNT,
 	historyDisplayCount: DEFAULT_HISTORY_DISPLAY_COUNT,
 	topSuggestionsCount: DEFAULT_TOP_SUGGESTIONS_COUNT,
@@ -101,3 +101,7 @@ export const DEFAULT_SHORTCUT_MAPPINGS = 'blazwitcher_shortcut_mappings'
 export const DEFAULT_THEME_COLOR = 'blazwitcher_theme_color'
 export const DEFAULT_SEARCH_CONFIG = 'blazwitcher_search_config'
 export const DEFAULT_WINDOW_CONFIG = 'blazwitcher_window_config'
+
+// extension storage keys
+export const ES_HISTORY_MAX_DAYS = 'blazwitcher_historyMaxDays'
+export const ES_HISTORY_MAX_RESULTS = 'blazwitcher_historyMaxResults'

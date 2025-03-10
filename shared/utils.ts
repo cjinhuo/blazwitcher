@@ -1,17 +1,15 @@
-import { useAtomValue } from 'jotai'
 import {
 	extractBoundaryMapping,
 	isStrictnessSatisfied,
 	mergeSpacesWithRanges,
 	searchSentenceByBoundaryMapping,
 } from 'text-search-engine'
+import type { SearchConfigAtomType } from '~sidepanel/atom'
 import {
-	DEFAULT_SEARCH_CONFIG,
 	DEFAULT_STRICTNESS_COEFFICIENT,
 	LAST_ACTIVE_WINDOW_ID_KEY,
 	SELF_WINDOW_ID_KEY,
 	SELF_WINDOW_STATE,
-	defaultSearchConfig,
 } from './constants'
 import { storageGet, storageRemove } from './promisify'
 import { ItemType, type ListItemType, type Matrix } from './types'
@@ -223,8 +221,7 @@ export const compareForHitRangeLength = (a: ListItemType, b: ListItemType) => {
 	return 0
 }
 
-export const orderList = (list: ListItemType[]) => {
-	const searchConfig = JSON.parse(localStorage.getItem(DEFAULT_SEARCH_CONFIG)) || defaultSearchConfig
+export const orderList = (list: ListItemType[], searchConfig: SearchConfigAtomType) => {
 	const tabs: ListItemType<ItemType.Tab>[] = []
 	const bookmarks: ListItemType<ItemType.Bookmark>[] = []
 	const histories: ListItemType<ItemType.History>[] = []

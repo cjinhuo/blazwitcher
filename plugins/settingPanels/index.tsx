@@ -70,14 +70,14 @@ export const SettingPanels: React.FC = () => {
 			text: i18n('appearance'),
 		},
 		{
-			itemKey: 'keyboard',
-			icon: <IconKey />,
-			text: i18n('keyboard'),
-		},
-		{
 			itemKey: 'search',
 			icon: <IconSearch />,
 			text: i18n('search'),
+		},
+		{
+			itemKey: 'keyboard',
+			icon: <IconKey />,
+			text: i18n('keyboard'),
 		},
 	]
 

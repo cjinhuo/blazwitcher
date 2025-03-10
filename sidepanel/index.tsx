@@ -44,7 +44,7 @@ export default function SidePanel() {
 
 	const RenderList = useCallback(
 		(list: ListItemType[], hasInput: boolean) => {
-			const orderedList = orderList(list)
+			const orderedList = orderList(list, searchConfig)
 			let restList = orderedList
 			const itemsWithDivide: ListItemType[] = []
 			if (hasInput && orderedList.length > 0) {
@@ -81,7 +81,7 @@ export default function SidePanel() {
 			// RenderItem 如果使用函数，会导致每次渲染都会重新创建一个新的函数，从而导致性能问题
 			return <List list={itemsWithDivide} RenderItem={ListItemRenderItem} handleItemClick={handleItemClick} />
 		},
-		[i18n, searchConfig.topSuggestionsCount]
+		[i18n, searchConfig]
 	)
 
 	const RenderContent = useMemo(() => {
