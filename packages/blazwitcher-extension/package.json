@@ -1,0 +1,79 @@
+{
+	"name": "blazwitcher",
+	"displayName": "Blazwitcher: Fuzzy Pinyin Search & Tab Switch In Blazing Speed",
+	"version": "0.4.2",
+	"description": "Blazwitcher is a local tool for searching tabs, bookmarks, and history, with support for fuzzy Pinyin search.",
+	"author": "cjinhuo@qq.com",
+	"scripts": {
+		"dev": "plasmo dev ",
+		"package": "plasmo build && plasmo package",
+		"debug": "plasmo dev --verbose",
+		"scan-cn": "node scripts/scan-cn.js"
+	},
+	"dependencies": {
+		"@commitlint/config-conventional": "^19.2.2",
+		"@douyinfe/semi-icons": "^2.62.0",
+		"@douyinfe/semi-illustrations": "^2.74.0",
+		"@douyinfe/semi-ui": "^2.62.0",
+		"jotai": "^2.9.3",
+		"lodash-es": "^4.17.21",
+		"observable-hooks": "^4.2.4",
+		"plasmo": "0.90.3",
+		"react": "18.2.0",
+		"react-dom": "18.2.0",
+		"rxjs": "8.0.0-alpha.14",
+		"styled-components": "^6.1.11",
+		"text-search-engine": "1.4.3"
+	},
+	"devDependencies": {
+    "typescript": "^5.7.3",
+		"@babel/parser": "^7.26.3",
+		"@babel/traverse": "^7.26.4",
+		"@ianvs/prettier-plugin-sort-imports": "4.1.1",
+		"@types/chrome": "0.0.268",
+		"@types/lodash-es": "^4.17.12",
+		"@types/node": "20.11.5",
+		"@types/react": "18.2.48",
+		"@types/react-dom": "18.2.18",
+		"path-browserify": "^1.0.0",
+		"url": "^0.11.0"
+	},
+	"@parcel/resolver-default": {
+		"packageExports": true
+	},
+	"manifest": {
+		"host_permissions": ["https://*/*", "http://*/*"],
+		"commands": {
+			"_execute_action": {
+				"suggested_key": {
+					"default": "Ctrl+Period",
+					"mac": "Command+Period"
+				},
+				"description": "Blazwitcher"
+			}
+		},
+		"action": {
+			"default_title": "Blazwitcher"
+		},
+		"web_accessible_resources": [
+			{
+				"resources": ["sidepanel.html"],
+				"matches": ["<all_urls>"]
+			}
+		],
+		"permissions": [
+			"tabs",
+			"tabGroups",
+			"bookmarks",
+			"history",
+			"storage",
+			"windows",
+			"favicon",
+			"system.display",
+			"sidePanel",
+			"contextMenus",
+			"scripting"
+		],
+		"offline_enabled": true
+	}
+}
