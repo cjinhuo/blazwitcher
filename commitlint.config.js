@@ -1,4 +1,4 @@
-const scopes = ['blazwitcher']
+const scopes = ['blazwitcher-monorepo']
 module.exports = {
 	extends: ['@commitlint/config-conventional'],
 	rules: {

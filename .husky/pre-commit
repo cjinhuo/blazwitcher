@@ -1,2 +1,4 @@
 # Git commit → .git/hooks/pre-commit → .husky/_/pre-commit → Husky 主脚本 → .husky/pre-commit → lint-staged
-lint-staged
+echo "Running pre-commit hook"
+pnpm lint-staged
+
