@@ -16,6 +16,7 @@
     "@changesets/cli": "^2.27.8",
     "@commitlint/config-conventional": "^19.2.2",
     "cz-git": "^1.11.1",
+    "fast-glob": "^3.3.3",
     "husky": "^8.0.0",
     "lint-staged": "^15.4.3",
     "typescript": "^5.7.3"

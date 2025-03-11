@@ -1,6 +1,6 @@
 import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { DEFAULT_SHORTCUT_MAPPINGS } from '~shared/constants'
+import { PAGE_STORAGE_SHORTCUT_MAPPINGS } from '~shared/constants'
 import { OperationItemPropertyTypes } from '~shared/types'
 import type { TranslationKeys } from '~sidepanel/atom'
 
@@ -42,7 +42,7 @@ const defaultShortcutMappings = defaultShortcutConfigs.reduce(
 )
 
 export const shortcutMappingsAtom = atomWithStorage<Record<string, string>>(
-	DEFAULT_SHORTCUT_MAPPINGS,
+	PAGE_STORAGE_SHORTCUT_MAPPINGS,
 	defaultShortcutMappings
 )
 

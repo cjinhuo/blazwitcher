@@ -96,12 +96,14 @@ export const TabGroupColorMap: TabGroupColorMapType = {
 // search
 export const DEFAULT_STRICTNESS_COEFFICIENT = 0.6
 
-export const DEFAULT_LANGUAGE_KEY = 'blazwitcher_default_language'
-export const DEFAULT_SHORTCUT_MAPPINGS = 'blazwitcher_shortcut_mappings'
-export const DEFAULT_THEME_COLOR = 'blazwitcher_theme_color'
-export const DEFAULT_SEARCH_CONFIG = 'blazwitcher_search_config'
-export const DEFAULT_WINDOW_CONFIG = 'blazwitcher_window_config'
+export const PAGE_STORAGE_LANGUAGE_KEY = 'language'
+export const PAGE_STORAGE_SHORTCUT_MAPPINGS = 'shortcut_mappings'
+export const PAGE_STORAGE_THEME_COLOR = 'theme_color'
+export const PAGE_STORAGE_SEARCH_CONFIG = 'search_config'
 
 // extension storage keys
-export const ES_HISTORY_MAX_DAYS = 'blazwitcher_historyMaxDays'
-export const ES_HISTORY_MAX_RESULTS = 'blazwitcher_historyMaxResults'
+export const EXTENSION_STORAGE_HISTORY_MAX_DAYS = 'historyMaxDays'
+export const EXTENSION_STORAGE_HISTORY_MAX_RESULTS = 'historyMaxResults'
+export const EXTENSION_STORAGE_WINDOW_WIDTH = 'windowWidth'
+export const EXTENSION_STORAGE_WINDOW_HEIGHT = 'windowHeight'
+export const EXTENSION_STORAGE_DISPLAY_MODE = 'displayMode'
