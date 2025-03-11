@@ -1,5 +1,17 @@
-import { getExtensionStorageSearchConfig } from '~sidepanel/atom/searchConfigAtom'
-import { DEFAULT_HISTORY_MAX_DAYS, DEFAULT_HISTORY_MAX_RESULTS, ONE_DAY_MILLISECONDS } from './constants'
+import {
+	DEFAULT_HISTORY_MAX_DAYS,
+	DEFAULT_HISTORY_MAX_RESULTS,
+	DefaultWindowConfig,
+	DisplayMode,
+	EXTENSION_STORAGE_DISPLAY_MODE,
+	EXTENSION_STORAGE_HISTORY_MAX_DAYS,
+	EXTENSION_STORAGE_HISTORY_MAX_RESULTS,
+	EXTENSION_STORAGE_WINDOW_HEIGHT,
+	EXTENSION_STORAGE_WINDOW_WIDTH,
+	ONE_DAY_MILLISECONDS,
+	type WindowConfig,
+} from './constants'
+import { storageGetLocal } from './promisify'
 import { getBookmarksById, getBookmarksTree, getTabGroupById, historySearch, tabsQuery } from './promisify'
 import { type BookmarkItemType, type HistoryItemType, ItemType } from './types'
 import { faviconURL, getCompositeSourceAndHost } from './utils'
@@ -129,6 +141,24 @@ export const traversalBookmarkTreeNode = (
 		}
 	}
 	return result
+}
+
+export async function getExtensionStorageSearchConfig() {
+	const extensionLocalStorage = await storageGetLocal()
+	return {
+		historyMaxDays: Number(extensionLocalStorage?.[EXTENSION_STORAGE_HISTORY_MAX_DAYS] || DEFAULT_HISTORY_MAX_DAYS),
+		historyMaxResults: Number(
+			extensionLocalStorage?.[EXTENSION_STORAGE_HISTORY_MAX_RESULTS] || DEFAULT_HISTORY_MAX_RESULTS
+		),
+	}
+}
+
+export async function getWindowConfig() {
+	const extensionLocalStorage = await storageGetLocal()
+	const displayMode = extensionLocalStorage?.[EXTENSION_STORAGE_DISPLAY_MODE] || DisplayMode.ISOLATE_WINDOW
+	const width = extensionLocalStorage?.[EXTENSION_STORAGE_WINDOW_WIDTH] || DefaultWindowConfig.width
+	const height = extensionLocalStorage?.[EXTENSION_STORAGE_WINDOW_HEIGHT] || DefaultWindowConfig.height
+	return { displayMode, width, height } as WindowConfig
 }
 
 export function dataProcessing() {

@@ -8,7 +8,6 @@ import {
 	EXTENSION_STORAGE_HISTORY_MAX_RESULTS,
 	PAGE_STORAGE_SEARCH_CONFIG,
 } from '~shared/constants'
-import { storageGetLocal } from '~shared/promisify'
 import { createStorageAtom } from './common'
 
 export const historyMaxDaysAtom = createStorageAtom(EXTENSION_STORAGE_HISTORY_MAX_DAYS, DEFAULT_HISTORY_MAX_DAYS)
@@ -26,13 +25,3 @@ export const resetSearchConfigAtom = atom(null, (_, set) => {
 	set(historyMaxResultsAtom, DEFAULT_HISTORY_MAX_RESULTS)
 	set(searchConfigAtom, DefaultSearchConfig)
 })
-
-export const getExtensionStorageSearchConfig = async () => {
-	const extensionLocalStorage = await storageGetLocal()
-	return {
-		historyMaxDays: Number(extensionLocalStorage?.[EXTENSION_STORAGE_HISTORY_MAX_DAYS] || DEFAULT_HISTORY_MAX_DAYS),
-		historyMaxResults: Number(
-			extensionLocalStorage?.[EXTENSION_STORAGE_HISTORY_MAX_RESULTS] || DEFAULT_HISTORY_MAX_RESULTS
-		),
-	}
-}

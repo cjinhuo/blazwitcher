@@ -1,4 +1,3 @@
-import { getWindowConfig } from '~sidepanel/atom'
 import {
 	DisplayMode,
 	LAST_ACTIVE_WINDOW_ID_KEY,
@@ -6,6 +5,7 @@ import {
 	SELF_WINDOW_STATE,
 	type WindowConfig,
 } from './constants'
+import { getWindowConfig } from './data-processing'
 import { getCurrentWindow, getDisplayInfo, getWindowById, storageGet, storageSet, tabsQuery } from './promisify'
 
 async function activeWindow() {
