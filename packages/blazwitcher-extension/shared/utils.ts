@@ -311,3 +311,23 @@ export const splitToGroup = (list: ListItemType[]) => {
 		histories,
 	}
 }
+
+// 获取当前插件的快捷键设置
+export const getExecuteActionShortcuts = async () => {
+	try {
+		const commands = await new Promise<chrome.commands.Command[]>((resolve) => {
+			chrome.commands.getAll((commands) => {
+				resolve(commands)
+			})
+		})
+		// 查找 _execute_action 命令的快捷键
+		const actionCommand = commands.find((command) => command.name === '_execute_action')
+		if (actionCommand?.shortcut) {
+			return actionCommand.shortcut
+		}
+		return null
+	} catch (error) {
+		console.error('Error getting extension shortcuts:', error)
+		return null
+	}
+}

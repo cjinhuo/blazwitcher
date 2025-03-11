@@ -1,13 +1,13 @@
 import { IconEdit, IconRefresh } from '@douyinfe/semi-icons'
 import { Button, Card, List, Modal, Toast, Typography } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { OperationItemPropertyTypes } from '~shared/types'
+import { getExecuteActionShortcuts } from '~shared/utils'
 import { type Shortcut, i18nAtom, shortcutsAtom, updateShortcutAtom } from '~sidepanel/atom'
 import { restoreDefaultShortcutsAtom } from '~sidepanel/atom'
 import { collectPressedKeys, isValidShortcut, standardizeKeyOrder } from '~sidepanel/utils/keyboardUtils'
-
 const styles = {
 	card: styled(Card)`
     width: 100%;
@@ -96,6 +96,16 @@ export const KeyboardPanel: React.FC = () => {
 	const [shortcuts] = useAtom(shortcutsAtom)
 	const updateShortcut = useSetAtom(updateShortcutAtom)
 	const resetConfig = useSetAtom(restoreDefaultShortcutsAtom)
+	const [defaultShortcut, setDefaultShortcut] = useState<string | null>(null)
+
+	useEffect(() => {
+		const fetchDefaultShortcut = async () => {
+			const defaultShortcut = await getExecuteActionShortcuts()
+			setDefaultShortcut(defaultShortcut)
+		}
+		fetchDefaultShortcut()
+	}, [])
+
 	const { Text } = Typography
 
 	// 正在编辑的快捷键
@@ -180,6 +190,7 @@ export const KeyboardPanel: React.FC = () => {
 				alignItems: 'center',
 			}}
 		>
+			{defaultShortcut}
 			<List
 				dataSource={shortcuts}
 				renderItem={(item) => (
@@ -190,7 +201,6 @@ export const KeyboardPanel: React.FC = () => {
 								<Text ellipsis={{ showTooltip: true }}>{i18n(item.action)}</Text>
 							</styles.actionTitle>
 						</styles.mainContent>
-						{/* @ts-ignore */}
 						<styles.editButton
 							icon={<IconEdit />}
 							theme='borderless'
