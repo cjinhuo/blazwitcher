@@ -6,11 +6,15 @@ import type { TranslationKeys } from '~sidepanel/atom'
 
 export interface Shortcut {
 	action: TranslationKeys
-	shortcut: string
+	shortcut?: string
 	id: OperationItemPropertyTypes
 }
 
 const defaultShortcutConfigs: Shortcut[] = [
+	{
+		id: OperationItemPropertyTypes.start,
+		action: 'startExtension',
+	},
 	{
 		id: OperationItemPropertyTypes.open,
 		action: 'openCurrentTab',

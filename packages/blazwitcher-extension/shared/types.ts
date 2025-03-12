@@ -57,6 +57,7 @@ export interface ListItemType<T extends ItemType = ItemType> {
 }
 
 export enum OperationItemPropertyTypes {
+	start = 'start',
 	open = 'open',
 	switch = 'switch',
 	query = 'query',

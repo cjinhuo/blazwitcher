@@ -1,9 +1,11 @@
 import { IconEdit, IconRefresh } from '@douyinfe/semi-icons'
 import { Button, Card, List, Modal, Toast, Typography } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { CHROME_EXTENSIONS_SHORTCUTS_URL } from '~shared/constants'
 import { OperationItemPropertyTypes } from '~shared/types'
+import { createTabWithUrl, getExecuteActionShortcuts } from '~shared/utils'
 import { type Shortcut, i18nAtom, shortcutsAtom, updateShortcutAtom } from '~sidepanel/atom'
 import { restoreDefaultShortcutsAtom } from '~sidepanel/atom'
 import { collectPressedKeys, isValidShortcut, standardizeKeyOrder } from '~sidepanel/utils/keyboardUtils'
@@ -23,6 +25,10 @@ const styles = {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   `,
 	mainContent: styled.div`
     margin: 0 16px;
@@ -96,6 +102,16 @@ export const KeyboardPanel: React.FC = () => {
 	const [shortcuts] = useAtom(shortcutsAtom)
 	const updateShortcut = useSetAtom(updateShortcutAtom)
 	const resetConfig = useSetAtom(restoreDefaultShortcutsAtom)
+
+	const [startExtensionShortcut, setStartExtensionShortcut] = useState<string | null>(null)
+	useEffect(() => {
+		const fetchStartExtensionShortcut = async () => {
+			const shortcut = await getExecuteActionShortcuts()
+			setStartExtensionShortcut(shortcut)
+		}
+		fetchStartExtensionShortcut()
+	}, [])
+
 	const { Text } = Typography
 
 	// 正在编辑的快捷键
@@ -112,6 +128,10 @@ export const KeyboardPanel: React.FC = () => {
 
 	// 打开编辑快捷键弹窗
 	const handleEdit = (item: Shortcut) => {
+		if (item.id === OperationItemPropertyTypes.start) {
+			createTabWithUrl(CHROME_EXTENSIONS_SHORTCUTS_URL)
+			return
+		}
 		setCurrentShortcut(item)
 		setKeysArray(item.shortcut.split(' + '))
 		setTempKeys(item.shortcut)
@@ -184,13 +204,12 @@ export const KeyboardPanel: React.FC = () => {
 				dataSource={shortcuts}
 				renderItem={(item) => (
 					<styles.listItem>
-						<styles.shortcutDisplay>{item.shortcut}</styles.shortcutDisplay>
+						<styles.shortcutDisplay>{item.shortcut || startExtensionShortcut}</styles.shortcutDisplay>
 						<styles.mainContent>
 							<styles.actionTitle>
 								<Text ellipsis={{ showTooltip: true }}>{i18n(item.action)}</Text>
 							</styles.actionTitle>
 						</styles.mainContent>
-						{/* @ts-ignore */}
 						<styles.editButton
 							icon={<IconEdit />}
 							theme='borderless'

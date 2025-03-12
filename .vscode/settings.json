@@ -26,5 +26,6 @@
 		"source.organizeImports.biome": "explicit",
 		"source.organizeImports": "never",
 		"source.sortImports": "never"
-	}
+	},
+	"typescript.tsdk": "node_modules/typescript/lib"
 }

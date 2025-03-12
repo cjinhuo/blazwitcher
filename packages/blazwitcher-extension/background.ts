@@ -4,30 +4,36 @@ import { weakUpWindowIfActiveByUser } from '~shared/open-window'
 import { closeCurrentWindowAndClearStorage } from '~shared/utils'
 
 const appendContextMenus = () => {
-	chrome.contextMenus.create({
-		...CONTEXT_MENU_SHORTCUT,
-		contexts: ['action'],
-	})
-	chrome.contextMenus.create(
-		{
-			...CONTEXT_MENU_HOMEPAGE,
+	// 先移除所有现有的上下文菜单，避免ID冲突
+	chrome.contextMenus.removeAll(() => {
+		// 创建快捷键设置菜单
+		chrome.contextMenus.create({
+			...CONTEXT_MENU_SHORTCUT,
 			contexts: ['action'],
-		},
-		() => {
-			chrome.contextMenus.onClicked.addListener((info) => {
-				if (info.menuItemId === CONTEXT_MENU_SHORTCUT.id) {
-					chrome.tabs.create({ url: 'chrome://extensions/shortcuts' })
-				} else if (info.menuItemId === CONTEXT_MENU_HOMEPAGE.id) {
-					chrome.tabs.create({ url: GITHUB_URL })
-				}
-			})
-		}
-	)
+		})
+		// 创建主页菜单
+		chrome.contextMenus.create(
+			{
+				...CONTEXT_MENU_HOMEPAGE,
+				contexts: ['action'],
+			},
+			() => {
+				chrome.contextMenus.onClicked.addListener((info) => {
+					if (info.menuItemId === CONTEXT_MENU_SHORTCUT.id) {
+						chrome.tabs.create({ url: 'chrome://extensions/shortcuts' })
+					} else if (info.menuItemId === CONTEXT_MENU_HOMEPAGE.id) {
+						chrome.tabs.create({ url: GITHUB_URL })
+					}
+				})
+			}
+		)
+	})
 }
 
 async function main() {
 	weakUpWindowIfActiveByUser()
 	appendContextMenus()
+
 	// It can not be an sync calculation, since maybe the bookmarks data of user is way too large.
 	const getProcessedData = dataProcessing()
 	chrome.runtime.onConnect.addListener(async (port) => {

@@ -31,6 +31,7 @@ export enum LanguageType {
 }
 
 export const GITHUB_URL = 'https://github.com/cjinhuo/blazwitcher'
+export const CHROME_EXTENSIONS_SHORTCUTS_URL = 'chrome://extensions/shortcuts'
 
 export const ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000
 
