@@ -172,6 +172,10 @@ export const lang = {
 		[LanguageType.zh]: '打开当前标签',
 		[LanguageType.en]: 'Open current tab',
 	},
+	startExtension: {
+		[LanguageType.zh]: '启动扩展',
+		[LanguageType.en]: 'Start Extension',
+	},
 	query: {
 		[LanguageType.zh]: '查询',
 		[LanguageType.en]: 'Query',
