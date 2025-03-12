@@ -107,7 +107,7 @@ export const KeyboardPanel: React.FC = () => {
 	useEffect(() => {
 		const fetchStartExtensionShortcut = async () => {
 			const shortcut = await getExecuteActionShortcuts()
-			setStartExtensionShortcut(shortcut)
+			setStartExtensionShortcut(shortcut.split('').join(' + '))
 		}
 		fetchStartExtensionShortcut()
 	}, [])
@@ -118,8 +118,6 @@ export const KeyboardPanel: React.FC = () => {
 	const [currentShortcut, setCurrentShortcut] = useState<Shortcut | null>(null)
 	// 快捷键字符串 用 + 连接
 	const [tempKeys, setTempKeys] = useState<string>('')
-	// 快捷键数组
-	const [keysArray, setKeysArray] = useState<string[]>([])
 	const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
 
 	const isEditable = (shortcut: Shortcut) => {
@@ -133,7 +131,6 @@ export const KeyboardPanel: React.FC = () => {
 			return
 		}
 		setCurrentShortcut(item)
-		setKeysArray(item.shortcut.split(' + '))
 		setTempKeys(item.shortcut)
 		setIsModalVisible(true)
 	}
@@ -154,16 +151,15 @@ export const KeyboardPanel: React.FC = () => {
 			Toast.error(i18n('shortcutRequired'))
 			return
 		}
-
 		// 验证快捷键是否有效
-		if (!isValidShortcut(keysArray)) {
+		if (!isValidShortcut(tempKeys.split(' + '))) {
 			Toast.error(i18n('invalidShortcut'))
 			return
 		}
 
-		const isDuplicate = shortcuts.some(
-			(s) => s.id !== currentShortcut.id && s.shortcut.toLowerCase() === tempKeys.toLowerCase()
-		)
+		const isDuplicate = shortcuts
+			.filter((v) => v.shortcut)
+			.some((s) => s.id !== currentShortcut.id && s.shortcut.toLowerCase() === tempKeys.toLowerCase())
 
 		if (isDuplicate) {
 			Toast.error(i18n('duplicateShortcut'))
@@ -176,7 +172,6 @@ export const KeyboardPanel: React.FC = () => {
 		// 直接重置状态
 		setCurrentShortcut(null)
 		setTempKeys('')
-		setKeysArray([])
 	}
 
 	const handleCancel = () => {
@@ -185,7 +180,6 @@ export const KeyboardPanel: React.FC = () => {
 		// 直接重置状态
 		setCurrentShortcut(null)
 		setTempKeys('')
-		setKeysArray([])
 	}
 
 	return (
@@ -204,7 +198,7 @@ export const KeyboardPanel: React.FC = () => {
 				dataSource={shortcuts}
 				renderItem={(item) => (
 					<styles.listItem>
-						<styles.shortcutDisplay>{item.shortcut || startExtensionShortcut}</styles.shortcutDisplay>
+						<styles.shortcutDisplay>{item?.shortcut || startExtensionShortcut}</styles.shortcutDisplay>
 						<styles.mainContent>
 							<styles.actionTitle>
 								<Text ellipsis={{ showTooltip: true }}>{i18n(item.action)}</Text>

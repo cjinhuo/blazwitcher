@@ -39,7 +39,7 @@ const defaultShortcutConfigs: Shortcut[] = [
 
 const defaultShortcutMappings = defaultShortcutConfigs.reduce(
 	(acc, config) => {
-		acc[config.id] = config.shortcut
+		acc[config.id] = config?.shortcut
 		return acc
 	},
 	{} as Record<string, string>
@@ -61,7 +61,7 @@ export const shortcutsAtom = atom((get) => {
 	return defaultShortcutConfigs.map((config) => ({
 		id: config.id,
 		action: config.action,
-		shortcut: mappings[config.id] || config.shortcut,
+		shortcut: mappings[config.id] || config?.shortcut,
 	}))
 })
 
