@@ -13,8 +13,9 @@ import {
 } from './constants'
 import { storageGetLocal } from './promisify'
 import { getBookmarksById, getBookmarksTree, getTabGroupById, historySearch, tabsQuery } from './promisify'
+import { getCompositeSourceAndHost } from './text-search-pinyin'
 import { type BookmarkItemType, type HistoryItemType, ItemType } from './types'
-import { faviconURL, getCompositeSourceAndHost } from './utils'
+import { faviconURL } from './utils'
 
 export async function tabsProcessing() {
 	const processedTabs = await tabsQuery({})

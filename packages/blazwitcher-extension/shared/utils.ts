@@ -1,9 +1,4 @@
-import {
-	extractBoundaryMapping,
-	isStrictnessSatisfied,
-	mergeSpacesWithRanges,
-	searchSentenceByBoundaryMapping,
-} from 'text-search-engine'
+import { isStrictnessSatisfied, mergeSpacesWithRanges, searchSentenceByBoundaryMapping } from 'text-search-engine'
 import type { SearchConfigAtomType } from '~sidepanel/atom'
 import {
 	DEFAULT_STRICTNESS_COEFFICIENT,
@@ -150,16 +145,6 @@ export function faviconURL(u: string) {
 
 export function sleep(ms: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms))
-}
-
-export function getCompositeSourceAndHost(title?: string, url?: string) {
-	const host = new URL(url).host
-	const compositeSource = `${title.toLocaleLowerCase().trim()}${host}`
-	return {
-		compositeSource,
-		host,
-		compositeBoundaryMapping: extractBoundaryMapping(compositeSource),
-	}
 }
 
 /**
