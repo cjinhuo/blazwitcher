@@ -11,7 +11,7 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 	const activeItem = list?.[activeIndex]
 	const { handleOperations } = useListOperations()
 
-	const debouncedShowToast = debounce((id: OperationItemPropertyTypes) => {
+	const debouncedOperationHandler = debounce((id: OperationItemPropertyTypes) => {
 		if (activeItem) {
 			handleOperations(id, activeItem)
 		}
@@ -29,9 +29,11 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 			const pressedShortcut = orderedKeys.join(' + ')
 
 			// 查找匹配的快捷键
-			const matchedShortcut = shortcuts.find((s) => s.shortcut.toLowerCase() === pressedShortcut.toLowerCase())
+			const matchedShortcut = shortcuts
+				.filter((v) => v.shortcut)
+				.find((s) => s.shortcut.toLowerCase() === pressedShortcut.toLowerCase())
 			if (matchedShortcut) {
-				debouncedShowToast(matchedShortcut.id)
+				debouncedOperationHandler(matchedShortcut.id)
 				e.preventDefault()
 				e.stopPropagation()
 			}
@@ -42,5 +44,5 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 		return () => {
 			window.removeEventListener('keydown', handleKeyDown)
 		}
-	}, [shortcuts, debouncedShowToast])
+	}, [shortcuts, debouncedOperationHandler])
 }
