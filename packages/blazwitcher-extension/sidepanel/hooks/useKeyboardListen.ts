@@ -15,7 +15,7 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 		if (activeItem) {
 			handleOperations(id, activeItem)
 		}
-	}, 500)
+	}, 100)
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -29,9 +29,7 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 			const pressedShortcut = orderedKeys.join(' + ')
 
 			// 查找匹配的快捷键
-			const matchedShortcut = shortcuts
-				.filter((v) => v.shortcut)
-				.find((s) => s.shortcut.toLowerCase() === pressedShortcut.toLowerCase())
+			const matchedShortcut = shortcuts.find((s) => s.shortcut.toLowerCase() === pressedShortcut.toLowerCase())
 			if (matchedShortcut) {
 				debouncedOperationHandler(matchedShortcut.id)
 				e.preventDefault()

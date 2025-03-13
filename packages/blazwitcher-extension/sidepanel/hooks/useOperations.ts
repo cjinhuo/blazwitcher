@@ -1,7 +1,7 @@
 import { useAtom, useAtomValue } from 'jotai'
 import { useCallback } from 'react'
 import { type ListItemType, OperationItemPropertyTypes } from '~shared/types'
-import { deleteItem, handleItemClick, isTabItem, queryInNewTab } from '~shared/utils'
+import { deleteItem, handleItemClick, isBookmarkItem, isHistoryItem, isTabItem, queryInNewTab } from '~shared/utils'
 import { i18nAtom, originalListAtom } from '~sidepanel/atom'
 
 export const useListOperations = () => {
@@ -39,7 +39,9 @@ export const useListOperations = () => {
 				})
 				break
 			case OperationItemPropertyTypes.query:
-				queryInNewTab(item)
+				if (isHistoryItem(item) || isBookmarkItem(item)) {
+					queryInNewTab(item)
+				}
 				break
 			default:
 				console.error(i18n('unknownOperation'), name)

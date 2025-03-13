@@ -157,9 +157,9 @@ export const KeyboardPanel: React.FC = () => {
 			return
 		}
 
-		const isDuplicate = shortcuts
-			.filter((v) => v.shortcut)
-			.some((s) => s.id !== currentShortcut.id && s.shortcut.toLowerCase() === tempKeys.toLowerCase())
+		const isDuplicate = shortcuts.some(
+			(s) => s.id !== currentShortcut.id && s.shortcut.toLowerCase() === tempKeys.toLowerCase()
+		)
 
 		if (isDuplicate) {
 			Toast.error(i18n('duplicateShortcut'))

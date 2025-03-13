@@ -6,7 +6,7 @@ import type { TranslationKeys } from '~sidepanel/atom'
 
 export interface Shortcut {
 	action: TranslationKeys
-	shortcut?: string
+	shortcut: string
 	id: OperationItemPropertyTypes
 }
 
@@ -14,6 +14,7 @@ const defaultShortcutConfigs: Shortcut[] = [
 	{
 		id: OperationItemPropertyTypes.start,
 		action: 'startExtension',
+		shortcut: '',
 	},
 	{
 		id: OperationItemPropertyTypes.open,
@@ -21,14 +22,14 @@ const defaultShortcutConfigs: Shortcut[] = [
 		shortcut: 'Enter',
 	},
 	{
-		id: OperationItemPropertyTypes.query,
-		action: 'searchHistory',
-		shortcut: 'Ctrl + Shift + H',
-	},
-	{
 		id: OperationItemPropertyTypes.close,
 		action: 'closeTab',
 		shortcut: 'Ctrl + Shift + W',
+	},
+	{
+		id: OperationItemPropertyTypes.query,
+		action: 'searchHistory',
+		shortcut: 'Ctrl + Shift + H',
 	},
 	{
 		id: OperationItemPropertyTypes.delete,
@@ -39,7 +40,7 @@ const defaultShortcutConfigs: Shortcut[] = [
 
 const defaultShortcutMappings = defaultShortcutConfigs.reduce(
 	(acc, config) => {
-		acc[config.id] = config?.shortcut
+		acc[config.id] = config.shortcut
 		return acc
 	},
 	{} as Record<string, string>
@@ -61,7 +62,7 @@ export const shortcutsAtom = atom((get) => {
 	return defaultShortcutConfigs.map((config) => ({
 		id: config.id,
 		action: config.action,
-		shortcut: mappings[config.id] || config?.shortcut,
+		shortcut: mappings[config.id] || config.shortcut,
 	}))
 })
 
