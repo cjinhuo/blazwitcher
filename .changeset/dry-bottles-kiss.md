@@ -1,5 +1,0 @@
----
-"blazwitcher": patch
----
-
-setting page

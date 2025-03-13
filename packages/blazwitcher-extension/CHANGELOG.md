@@ -1,5 +1,21 @@
 # blazwitcher
 
+## 0.5.0
+
+### Minor Changes
+
+- release setting page and upgrade text-search-engine to 1.4.4
+
+### Patch Changes
+
+- 1f37b82: setting page
+- 4ee54c9: add search panel & window config
+- a7e02a5: get windowConfig from extension storage and apply it when restart it
+- 002fd17: add language setting plugin
+- 149f406: add monorepo
+- b952ee2: move history param from web storage to extension storage
+- 930af33: fix js error
+
 ## 0.4.2
 
 ### Patch Changes
