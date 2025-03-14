@@ -1,3 +1,5 @@
+import { Popover } from '@douyinfe/semi-ui'
+import type { PopoverProps } from '@douyinfe/semi-ui/lib/es/popover'
 import styled from 'styled-components'
 import { HighlightClasses } from 'text-search-engine/react'
 import type { ColorTheme } from './types'
@@ -57,3 +59,41 @@ export const InlineSvgWrapper = styled.div`
   width: 16px;
   height: 16px;
 `
+
+const OperationTooltip = styled.div`
+  display: inline-flex;
+  flex-direction: column;
+	color: #1c1c1c;
+	text-align: center;
+
+	span:first-child {
+		font-weight: 700;
+	}
+
+	span:last-child {
+		font-size: 8px;
+	}
+`
+
+interface PopoverWrapperProps extends PopoverProps {
+	children: React.ReactNode
+}
+
+export const PopoverWrapper = ({ children, content, ...props }: PopoverWrapperProps) => {
+	return (
+		<Popover
+			trigger='hover'
+			showArrow
+			content={<OperationTooltip>{content as React.ReactNode}</OperationTooltip>}
+			style={{
+				fontSize: '10px',
+				padding: '6px',
+				backgroundColor: 'rgba(var(--semi-white), 1)',
+				borderColor: 'rgba(var(--semi-white), .08)',
+			}}
+			{...props}
+		>
+			{children}
+		</Popover>
+	)
+}

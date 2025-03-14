@@ -3,11 +3,11 @@ import DeleteIcon from 'react:~assets/delete.svg'
 import NewWindow from 'react:~assets/new-window.svg'
 import QueryIcon from 'react:~assets/query.svg'
 import RightArrow from 'react:~assets/right-arrow.svg'
-import { Popover } from '@douyinfe/semi-ui'
 import { useAtomValue } from 'jotai'
 import { useCallback } from 'react'
 import React from 'react'
 import styled from 'styled-components'
+import { PopoverWrapper } from '~shared/common-styles'
 import { VISIBILITY_CLASS } from '~shared/constants'
 import { ItemType, type ListItemType, OperationItemPropertyTypes, OperationItemTitleMap } from '~shared/types'
 import { i18nAtom, shortcutsAtom } from '~sidepanel/atom'
@@ -59,21 +59,6 @@ const OperationContainer = styled.div`
 	position: relative; 
 `
 
-const OperationTooltip = styled.div`
-  display: inline-flex;
-  flex-direction: column;
-	color: black;
-	text-align: center;
-
-	span:first-child {
-		font-weight: 700;
-	}
-
-	span:last-child {
-		font-size: 8px;
-	}
-`
-
 const IconWithName = ({
 	children,
 	name,
@@ -91,26 +76,18 @@ const IconWithName = ({
 	)
 
 	return (
-		<Popover
-			trigger='hover'
-			showArrow
+		<PopoverWrapper
 			content={
-				<OperationTooltip>
+				<>
 					<span>{i18n(OperationItemTitleMap[name])}</span>
 					<span>{getShortcut(name)}</span>
-				</OperationTooltip>
+				</>
 			}
-			style={{
-				fontSize: '10px',
-				padding: '6px',
-				backgroundColor: 'rgba(var(--semi-white), 1)',
-				borderColor: 'rgba(var(--semi-white), .08)',
-			}}
 		>
 			<IconContainer className={`${OPERATION_ICON_CLASS} ${VISIBILITY_CLASS}`} data-name={name}>
 				{children}
 			</IconContainer>
-		</Popover>
+		</PopoverWrapper>
 	)
 }
 

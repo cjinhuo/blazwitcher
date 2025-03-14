@@ -128,8 +128,9 @@ export const lang = {
 		[LanguageType.en]: 'Open in iframe mode, if failed, it will open in a isolated window',
 	},
 	isolatedWindowTooltipDesc: {
-		[LanguageType.zh]: '全屏状态下会新开一个独立全屏窗口',
-		[LanguageType.en]: 'In fullscreen mode, it will open a new isolated fullscreen window',
+		[LanguageType.zh]: '非全屏状态下会新开一个独立全屏窗口，全屏状态下优先以 iframe 形式打开',
+		[LanguageType.en]:
+			'In non-fullscreen mode, it will open a new isolated fullscreen window, and in fullscreen mode, it will open in iframe mode',
 	},
 	iframeMode: {
 		[LanguageType.zh]: '内嵌iframe',
@@ -256,5 +257,39 @@ export const lang = {
 	topSuggestionsCount: {
 		[LanguageType.zh]: '最优建议数量',
 		[LanguageType.en]: 'Top Suggestions Count',
+	},
+	// footer icon
+	settingTooltip: {
+		[LanguageType.zh]: '进入设置页面，可自定义外观、搜索参数和快捷键等',
+		[LanguageType.en]: 'Enter settings page to customize appearance, search settings, and shortcuts,etc.',
+	},
+	githubTooltip: {
+		[LanguageType.zh]: '访问 GitHub 获取更多信息',
+		[LanguageType.en]: 'Visit GitHub page for more information',
+	},
+	// General settings panel
+	general: {
+		[LanguageType.zh]: '通用',
+		[LanguageType.en]: 'General',
+	},
+	generalSettings: {
+		[LanguageType.zh]: '通用设置',
+		[LanguageType.en]: 'General Settings',
+	},
+	tooltipSettings: {
+		[LanguageType.zh]: '提示设置',
+		[LanguageType.en]: 'Tooltip Settings',
+	},
+	resetTooltips: {
+		[LanguageType.zh]: '重置所有提示',
+		[LanguageType.en]: 'Reset All Tooltips',
+	},
+	resetTooltipsDescription: {
+		[LanguageType.zh]: '重新显示所有首次使用提示',
+		[LanguageType.en]: 'Show all first-time tooltips again',
+	},
+	tooltipsReset: {
+		[LanguageType.zh]: '所有提示已重置',
+		[LanguageType.en]: 'All tooltips have been reset',
 	},
 }
