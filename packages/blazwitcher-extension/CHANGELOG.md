@@ -1,5 +1,11 @@
 # blazwitcher
 
+## 0.5.1
+
+### Patch Changes
+
+- 9e2a53f: new icon for setting entrance and separate css for options page
+
 ## 0.5.0
 
 ### Minor Changes
