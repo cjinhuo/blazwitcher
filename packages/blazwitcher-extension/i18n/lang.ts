@@ -260,9 +260,8 @@ export const lang = {
 	},
 	// footer icon
 	settingTooltip: {
-		[LanguageType.zh]: '点击这里进入设置页面，可自定义外观、搜索参数、快捷键等',
-		[LanguageType.en]:
-			'Click here to access settings page where you can customize appearance, search settings, and shortcuts,etc.',
+		[LanguageType.zh]: '进入设置页面，可自定义外观、搜索参数和快捷键等',
+		[LanguageType.en]: 'Enter settings page to customize appearance, search settings, and shortcuts,etc.',
 	},
 	githubTooltip: {
 		[LanguageType.zh]: '访问 GitHub 获取更多信息',

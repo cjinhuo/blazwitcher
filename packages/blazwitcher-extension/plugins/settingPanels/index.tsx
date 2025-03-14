@@ -4,6 +4,7 @@ import { useAtomValue } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { i18nAtom } from '~sidepanel/atom'
+import { useTheme } from '~sidepanel/hooks/useTheme'
 import { AppearancePanel } from './appearance-panel'
 import { KeyboardPanel } from './keyboard-panel'
 import { SearchPanel } from './search-panel'
@@ -39,6 +40,7 @@ const styles = {
 export const SettingPanels: React.FC = () => {
 	const i18n = useAtomValue(i18nAtom)
 	const [activeKey, setActiveKey] = useState<string>('appearance')
+	useTheme()
 	const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth)
 
 	// Track window resize for responsive design
