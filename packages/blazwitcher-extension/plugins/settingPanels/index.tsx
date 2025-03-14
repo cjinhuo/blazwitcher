@@ -9,8 +9,14 @@ import { AppearancePanel } from './appearance-panel'
 import { KeyboardPanel } from './keyboard-panel'
 import { SearchPanel } from './search-panel'
 
+enum SettingPanelKey {
+	APPEARANCE = 'appearance',
+	KEYBOARD = 'keyboard',
+	SEARCH = 'search',
+}
+
 interface MenuItem {
-	itemKey: string
+	itemKey: SettingPanelKey
 	icon: React.ReactNode
 	text: string
 }
@@ -39,7 +45,7 @@ const styles = {
 
 export const SettingPanels: React.FC = () => {
 	const i18n = useAtomValue(i18nAtom)
-	const [activeKey, setActiveKey] = useState<string>('appearance')
+	const [activeKey, setActiveKey] = useState<SettingPanelKey>(SettingPanelKey.APPEARANCE)
 	useTheme()
 	const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth)
 
@@ -67,29 +73,29 @@ export const SettingPanels: React.FC = () => {
 
 	const menuItems: MenuItem[] = [
 		{
-			itemKey: 'appearance',
+			itemKey: SettingPanelKey.APPEARANCE,
 			icon: <IconDesktop />,
-			text: i18n('appearance'),
+			text: i18n(SettingPanelKey.APPEARANCE),
 		},
 		{
-			itemKey: 'search',
+			itemKey: SettingPanelKey.SEARCH,
 			icon: <IconSearch />,
-			text: i18n('search'),
+			text: i18n(SettingPanelKey.SEARCH),
 		},
 		{
-			itemKey: 'keyboard',
+			itemKey: SettingPanelKey.KEYBOARD,
 			icon: <IconKey />,
-			text: i18n('keyboard'),
+			text: i18n(SettingPanelKey.KEYBOARD),
 		},
 	]
 
 	const renderPanel = () => {
 		switch (activeKey) {
-			case 'appearance':
+			case SettingPanelKey.APPEARANCE:
 				return <AppearancePanel />
-			case 'keyboard':
+			case SettingPanelKey.KEYBOARD:
 				return <KeyboardPanel />
-			case 'search':
+			case SettingPanelKey.SEARCH:
 				return <SearchPanel />
 			default:
 				return null
@@ -103,7 +109,7 @@ export const SettingPanels: React.FC = () => {
 					style={{ width: navWidth, height: '100%' }}
 					items={menuItems}
 					selectedKeys={[activeKey]}
-					onSelect={(data) => setActiveKey(data.itemKey as string)}
+					onSelect={(data) => setActiveKey(data.itemKey as SettingPanelKey)}
 					defaultIsCollapsed={isCollapsed}
 				/>
 			</Sider>

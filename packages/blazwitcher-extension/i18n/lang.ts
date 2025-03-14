@@ -267,29 +267,4 @@ export const lang = {
 		[LanguageType.zh]: '访问 GitHub 获取更多信息',
 		[LanguageType.en]: 'Visit GitHub page for more information',
 	},
-	// General settings panel
-	general: {
-		[LanguageType.zh]: '通用',
-		[LanguageType.en]: 'General',
-	},
-	generalSettings: {
-		[LanguageType.zh]: '通用设置',
-		[LanguageType.en]: 'General Settings',
-	},
-	tooltipSettings: {
-		[LanguageType.zh]: '提示设置',
-		[LanguageType.en]: 'Tooltip Settings',
-	},
-	resetTooltips: {
-		[LanguageType.zh]: '重置所有提示',
-		[LanguageType.en]: 'Reset All Tooltips',
-	},
-	resetTooltipsDescription: {
-		[LanguageType.zh]: '重新显示所有首次使用提示',
-		[LanguageType.en]: 'Show all first-time tooltips again',
-	},
-	tooltipsReset: {
-		[LanguageType.zh]: '所有提示已重置',
-		[LanguageType.en]: 'All tooltips have been reset',
-	},
 }
