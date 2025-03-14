@@ -128,8 +128,9 @@ export const lang = {
 		[LanguageType.en]: 'Open in iframe mode, if failed, it will open in a isolated window',
 	},
 	isolatedWindowTooltipDesc: {
-		[LanguageType.zh]: '全屏状态下会新开一个独立全屏窗口',
-		[LanguageType.en]: 'In fullscreen mode, it will open a new isolated fullscreen window',
+		[LanguageType.zh]: '非全屏状态下会新开一个独立全屏窗口，全屏状态下优先以 iframe 形式打开',
+		[LanguageType.en]:
+			'In non-fullscreen mode, it will open a new isolated fullscreen window, and in fullscreen mode, it will open in iframe mode',
 	},
 	iframeMode: {
 		[LanguageType.zh]: '内嵌iframe',
