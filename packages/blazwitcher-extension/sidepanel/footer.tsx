@@ -1,9 +1,11 @@
 import GithubSvg from 'react:~assets/github.svg'
 import SettingSvg from 'react:~assets/setting.svg'
+import { useAtomValue } from 'jotai'
 import styled from 'styled-components'
-
+import { PopoverWrapper } from '~shared/common-styles'
 import { GITHUB_URL } from '~shared/constants'
 import { createTabWithUrl } from '~shared/utils'
+import { i18nAtom } from './atom'
 
 const FooterContainer = styled.div`
   flex: 0 0 20px;
@@ -42,19 +44,24 @@ const SvgWithFileStyle = styled.div`
   }
 `
 export default function Footer() {
+	const i18n = useAtomValue(i18nAtom)
 	return (
 		<FooterContainer>
-			<SvgWithFileStyle
-				onClick={() => {
-					const optionsPageUrl = chrome.runtime.getURL('options.html')
-					createTabWithUrl(optionsPageUrl)
-				}}
-			>
-				<SettingSvg style={{ width: '16px', height: '16px' }} />
-			</SvgWithFileStyle>
-			<SvgWithStrokeStyle onClick={() => createTabWithUrl(GITHUB_URL)}>
-				<GithubSvg style={{ width: '16px', height: '16px' }} />
-			</SvgWithStrokeStyle>
+			<PopoverWrapper content={i18n('settingTooltip')} position='top'>
+				<SvgWithFileStyle
+					onClick={() => {
+						const optionsPageUrl = chrome.runtime.getURL('options.html')
+						createTabWithUrl(optionsPageUrl)
+					}}
+				>
+					<SettingSvg style={{ width: '16px', height: '16px' }} />
+				</SvgWithFileStyle>
+			</PopoverWrapper>
+			<PopoverWrapper content={i18n('githubTooltip')} position='top'>
+				<SvgWithStrokeStyle onClick={() => createTabWithUrl(GITHUB_URL)}>
+					<GithubSvg style={{ width: '16px', height: '16px' }} />
+				</SvgWithStrokeStyle>
+			</PopoverWrapper>
 		</FooterContainer>
 	)
 }
