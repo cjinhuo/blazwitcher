@@ -1,0 +1,28 @@
+{
+	// shadcn/ui 组件库配置文件
+	"$schema": "https://ui.shadcn.com/schema.json",
+	// 样式主题配置（纽约风格视觉设计）
+	"style": "new-york",
+	// 启用 React Server Components 支持
+	"rsc": true,
+	// 使用 TypeScript 语法
+	"tsx": true,
+	// Tailwind CSS 集成配置
+	"tailwind": {
+		"config": "tailwind.config.ts", // Tailwind 配置文件路径
+		"css": "src/app/globals.css", // 全局样式文件路径
+		"baseColor": "neutral", // 基础色板配置
+		"cssVariables": true, // 启用 CSS 变量模式
+		"prefix": "" // 无类名前缀
+	},
+	// 路径别名配置（与 tsconfig 对应）
+	"aliases": {
+		"components": "@/components", // 组件目录
+		"utils": "@/lib/utils", // 工具函数目录
+		"ui": "@/components/ui", // UI 组件目录
+		"lib": "@/lib", // 公共库目录
+		"hooks": "@/hooks" // 自定义 hooks 目录
+	},
+	// 图标库配置（使用 lucide-react）
+	"iconLibrary": "lucide"
+}
