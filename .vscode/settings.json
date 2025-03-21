@@ -2,6 +2,9 @@
 	"eslint.enable": false,
 	"prettier.enable": false,
 	"biome.enabled": true,
+	"files.associations": {
+		"*.json": "jsonc" // 通配符匹配所有 JSON 文件
+	},
 	"[javascript]": {
 		"editor.defaultFormatter": "biomejs.biome",
 		"editor.formatOnSave": true
