@@ -1,0 +1,36 @@
+{
+	"LandingPage": {
+		"slogan": {
+			"line1": "Ultimate Smooth",
+			"line2": "Pinyin Search"
+		},
+		"description": "A Browser Extension for searching tabs, bookmarks, and history, with support for fuzzy Pinyin search.",
+		"actions": {
+			"install_store": "Install via Extension Store",
+			"get_algorithm": "Get the same Pinyin algorithm",
+			"engine_name": "Text Search Engine"
+		},
+		"features": {
+			"title": "Pinyin Search, One-Click Access",
+			"subtitle": "Smart Recognition for Smoother Browsing",
+			"list": {
+				"1": {
+					"title": "Smart Pinyin Search",
+					"description": "Supports Chinese/English hybrid search with 20,000+ pinyin library"
+				},
+				"2": {
+					"title": "Multi-source Integration",
+					"description": "Simultaneous search across tabs, history and bookmarks"
+				},
+				"3": {
+					"title": "Keyboard Navigation",
+					"description": "Full keyboard support with arrow keys selection and Enter to navigate"
+				},
+				"4": {
+					"title": "Custom Settings",
+					"description": "Type /s to access personalized configuration"
+				}
+			}
+		}
+	}
+}
