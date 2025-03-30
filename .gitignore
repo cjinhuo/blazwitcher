@@ -1,4 +1,3 @@
-
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -24,6 +23,8 @@ yarn-error.log*
 
 out/
 build/
+# 不过滤 zip 文件
+!build/*.zip
 dist/
 
 # plasmo
@@ -33,3 +34,6 @@ dist/
 .tsbuildinfo
 
 .next
+
+# Include zip files
+!*.zip

@@ -5,7 +5,7 @@
   ],
   "scripts": {
     "dev": "pnpm --parallel --filter \"./packages/blazwitcher-extension\" run dev",
-    "build": "pnpm --filter \"./packages/blazwitcher-extension\" run build",
+    "package": "pnpm --filter \"./packages/blazwitcher-extension\" run package",
     "dev:doc": "pnpm --filter \"./packages/blazwitcher-doc\" run dev",
     "prepare": "husky install",
     "lint": "biome check --files-ignore-unknown=true ./packages/**/*.{ts,tsx}",
