@@ -31,6 +31,11 @@
 					"description": "输入 /s 进入设置页面进行个性化配置"
 				}
 			}
+		},
+		"footer": {
+			"product": "产品",
+			"resources": "资源",
+			"description": "使用 Blazwitcher 优化你的浏览体验。"
 		}
 	}
 }
