@@ -3,6 +3,7 @@ import { Geist } from 'next/font/google'
 import './globals.css'
 import { ModeToggle } from '@/components/mode-toggle'
 import { ThemeProvider } from '@/components/theme-provider'
+import { Analytics } from '@vercel/analytics/react'
 import { NextIntlClientProvider } from 'next-intl'
 
 // 配置 Geist 字体
@@ -55,6 +56,7 @@ export default async function RootLayout({
 					</ThemeProvider>
 				</NextIntlClientProvider>
 			</body>
+			<Analytics />
 		</html>
 	)
 }
