@@ -56,6 +56,7 @@ export default function SectionContent() {
 					size='sm'
 					variant='outline'
 					className='h-8 rounded-full border-muted px-4'
+					isExternal
 				>
 					{t('actions.get_algorithm')}
 					<span className='ml-2 text-muted-foreground'>{t('actions.engine_name')} →</span>
