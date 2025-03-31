@@ -24,6 +24,7 @@ async function activeWindow() {
 	// Normally speaking left and top should be 0. But they are -7 in this case.So reset the left and top to 0 to fix it.
 	if (
 		(windowConfig.displayMode === DisplayMode.IFRAME || currentWindow.state === 'fullscreen') &&
+		currentWindow.width > windowConfig.width &&
 		// 如果 injectScriptToOpenModal 执行失败，返回 false，则继续走 isolateWindow 模式
 		(await injectScriptToOpenModal(windowConfig))
 	) {
