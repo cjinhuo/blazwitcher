@@ -22,9 +22,12 @@ async function activeWindow() {
 	const windowConfig = await getWindowConfig()
 	// there is a bug in "window" platform. When the window state is maximized, the left and top are not correct.
 	// Normally speaking left and top should be 0. But they are -7 in this case.So reset the left and top to 0 to fix it.
+	const isSmallerThanCurrentWindow =
+		windowConfig.width <= currentWindow.width && windowConfig.height <= currentWindow.height
 	if (
 		(windowConfig.displayMode === DisplayMode.IFRAME || currentWindow.state === 'fullscreen') &&
-		currentWindow.width > windowConfig.width &&
+		// only when the windowConfig is smaller than the current window, it will be opened in iframe mode, otherwise the content will be blocked
+		isSmallerThanCurrentWindow &&
 		// 如果 injectScriptToOpenModal 执行失败，返回 false，则继续走 isolateWindow 模式
 		(await injectScriptToOpenModal(windowConfig))
 	) {
