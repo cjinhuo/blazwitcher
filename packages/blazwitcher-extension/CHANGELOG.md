@@ -1,5 +1,11 @@
 # blazwitcher
 
+## 0.5.2
+
+### Patch Changes
+
+- b23cfdf: improve display mode in iframe window
+
 ## 0.5.1
 
 ### Patch Changes

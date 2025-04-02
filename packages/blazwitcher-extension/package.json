@@ -1,11 +1,13 @@
 {
 	"name": "blazwitcher",
 	"displayName": "Blazwitcher: Fuzzy Pinyin Search & Tab Switch In Blazing Speed",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"description": "Blazwitcher is a local tool for searching tabs, bookmarks, and history, with support for fuzzy Pinyin search.",
 	"author": "cjinhuo@qq.com",
 	"scripts": {
-		"dev": "plasmo dev",
+		"prebuild": "node scripts/pre-build.js",
+		"dev": "pnpm run prebuild && plasmo dev",
+		"build": "pnpm run prebuild && plasmo build",
 		"package": "plasmo build && plasmo package",
 		"help": "plasmo --help",
 		"debug": "plasmo dev --verbose",
