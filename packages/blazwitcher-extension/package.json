@@ -46,6 +46,7 @@
 	},
 	"manifest": {
 		"host_permissions": [
+			"<all_urls>",
 			"https://*/*",
 			"http://*/*"
 		],
@@ -72,6 +73,7 @@
 			}
 		],
 		"permissions": [
+			"activeTab",
 			"tabs",
 			"tabGroups",
 			"bookmarks",

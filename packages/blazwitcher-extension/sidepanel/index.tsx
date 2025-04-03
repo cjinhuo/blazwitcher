@@ -66,6 +66,10 @@ export default function SidePanel() {
 				restList = orderedList.slice(searchConfig.topSuggestionsCount)
 			}
 			const { tabs, bookmarks, histories } = splitToGroup(restList)
+			console.log('tabs', tabs)
+			chrome.tabs.captureVisibleTab(879172847, { format: 'jpeg', quality: 1 }, (data) => {
+				console.log('data', data)
+			})
 			itemsWithDivide.push(
 				// Tabs section
 				...(tabs.length > 0 ? [{ itemType: ItemType.Divide, data: { name: i18n('openedTabs') } }, ...tabs] : []),
