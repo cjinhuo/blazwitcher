@@ -1,5 +1,6 @@
 {
 	"extends": "plasmo/templates/tsconfig.base",
+	"files": ["types.d.ts"],
 	"exclude": ["node_modules"],
 	"include": [".plasmo/index.d.ts", "./**/*.ts", "./**/*.tsx"],
 	"compilerOptions": {
