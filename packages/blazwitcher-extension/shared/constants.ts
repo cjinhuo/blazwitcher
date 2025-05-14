@@ -30,7 +30,12 @@ export enum LanguageType {
 	en = 'en',
 }
 
-export const GITHUB_URL = 'https://github.com/cjinhuo/blazwitcher'
+export const PERSONAL_GITHUB_URL = 'https://github.com/cjinhuo'
+export const GITHUB_URL = `${PERSONAL_GITHUB_URL}/blazwitcher`
+export const GITHUB_ISSUE_URL = `${GITHUB_URL}/issues/new?template=feature_bug.md`
+export const BLOG_URL = 'https://cjinhuo.github.io'
+export const EMAIL_URL = 'cjinhuo@qq.com'
+
 export const CHROME_EXTENSIONS_SHORTCUTS_URL = 'chrome://extensions/shortcuts'
 
 export const ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000

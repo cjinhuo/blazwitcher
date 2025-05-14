@@ -18,6 +18,11 @@ const ResourceLinkData = [
 		cnLabel: '个人博客',
 		href: 'https://cjinhuo.github.io/',
 	},
+	{
+		label: 'Email',
+		cnLabel: '邮箱',
+		href: 'mailto:cjinhuo@qq.com',
+	},
 ]
 export function SiteFooter() {
 	const t = useTranslations('LandingPage')

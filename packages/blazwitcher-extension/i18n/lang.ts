@@ -95,6 +95,10 @@ export const lang = {
 		[LanguageType.zh]: '搜索',
 		[LanguageType.en]: 'Search',
 	},
+	contact: {
+		[LanguageType.zh]: '联系',
+		[LanguageType.en]: 'Contact',
+	},
 	themeSettings: {
 		[LanguageType.zh]: '主题设置',
 		[LanguageType.en]: 'Theme Settings',
@@ -262,6 +266,10 @@ export const lang = {
 	settingTooltip: {
 		[LanguageType.zh]: '进入设置页面，可自定义外观、搜索参数和快捷键等',
 		[LanguageType.en]: 'Enter settings page to customize appearance, search settings, and shortcuts,etc.',
+	},
+	issueTooltip: {
+		[LanguageType.zh]: '提交问题反馈',
+		[LanguageType.en]: 'Submit issue feedback',
 	},
 	githubTooltip: {
 		[LanguageType.zh]: '访问 GitHub 获取更多信息',

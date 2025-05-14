@@ -1,4 +1,4 @@
-import { IconDesktop, IconKey, IconSearch } from '@douyinfe/semi-icons'
+import { IconCustomerSupport, IconDesktop, IconKey, IconSearch } from '@douyinfe/semi-icons'
 import { Layout, Nav } from '@douyinfe/semi-ui'
 import { useAtomValue } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { i18nAtom } from '~sidepanel/atom'
 import { useTheme } from '~sidepanel/hooks/useTheme'
 import { AppearancePanel } from './appearance-panel'
+import { ContactPanel } from './contact-panel'
 import { KeyboardPanel } from './keyboard-panel'
 import { SearchPanel } from './search-panel'
 
@@ -13,6 +14,7 @@ enum SettingPanelKey {
 	APPEARANCE = 'appearance',
 	KEYBOARD = 'keyboard',
 	SEARCH = 'search',
+	CONTACT = 'contact',
 }
 
 interface MenuItem {
@@ -87,6 +89,11 @@ export const SettingPanels: React.FC = () => {
 			icon: <IconKey />,
 			text: i18n(SettingPanelKey.KEYBOARD),
 		},
+		{
+			itemKey: SettingPanelKey.CONTACT,
+			icon: <IconCustomerSupport />,
+			text: i18n(SettingPanelKey.CONTACT),
+		},
 	]
 
 	const renderPanel = () => {
@@ -97,6 +104,8 @@ export const SettingPanels: React.FC = () => {
 				return <KeyboardPanel />
 			case SettingPanelKey.SEARCH:
 				return <SearchPanel />
+			case SettingPanelKey.CONTACT:
+				return <ContactPanel />
 			default:
 				return null
 		}
