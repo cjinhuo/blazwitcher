@@ -1,31 +1,11 @@
 import qrcode from 'raw:~assets/wx_code.png'
 import { Typography } from '@douyinfe/semi-ui'
+import { useAtomValue } from 'jotai'
 import styled from 'styled-components'
 import { BLOG_URL, EMAIL_URL, PERSONAL_GITHUB_URL } from '~shared/constants'
 import { createTabWithUrl } from '~shared/utils'
+import { i18nAtom } from '~sidepanel/atom'
 
-const data = [
-	{
-		type: 'url',
-		label: 'Blog',
-		url: BLOG_URL,
-	},
-	{
-		type: 'url',
-		label: 'GitHub',
-		url: PERSONAL_GITHUB_URL,
-	},
-	{
-		type: 'url',
-		label: 'Email',
-		url: `mailto:${EMAIL_URL}`,
-	},
-	{
-		type: 'img',
-		label: 'WeChat',
-		imgUrl: qrcode,
-	},
-]
 const { Text } = Typography
 
 const handleLinkClick = (url: string) => {
@@ -54,15 +34,43 @@ const UrlItem = ({ label, url }: { label: string; url: string }) => {
 	)
 }
 
-const ImgItem = ({ label, imgUrl }: { label: string; imgUrl: string }) => {
+const ImgItem = ({ label, imgUrl, value }: { label: string; imgUrl: string; value: string }) => {
 	return (
-		<UrlItemContainer>
-			<Text>{label}:</Text>
+		<ItemContainer>
+			<UrlItemContainer>
+				<Text>{label}:</Text>
+				<Text>{value}</Text>
+			</UrlItemContainer>
 			<img src={imgUrl} alt={label} width={200} height={200} />
-		</UrlItemContainer>
+		</ItemContainer>
 	)
 }
 export function ContactPanel() {
+	const i18n = useAtomValue(i18nAtom)
+
+	const data = [
+		{
+			type: 'url',
+			label: 'Blog',
+			url: BLOG_URL,
+		},
+		{
+			type: 'url',
+			label: 'GitHub',
+			url: PERSONAL_GITHUB_URL,
+		},
+		{
+			type: 'url',
+			label: 'Email',
+			url: `mailto:${EMAIL_URL}`,
+		},
+		{
+			type: 'img',
+			label: i18n('WeChatWithRemark'),
+			value: 'cjinhuo',
+			imgUrl: qrcode,
+		},
+	]
 	return (
 		<ItemContainer>
 			{data.map((item) => {
@@ -70,7 +78,7 @@ export function ContactPanel() {
 					return <UrlItem key={item.label} label={item.label} url={item.url} />
 				}
 				if (item.type === 'img') {
-					return <ImgItem key={item.label} label={item.label} imgUrl={item.imgUrl} />
+					return <ImgItem key={item.label} label={item.label} value={item.value} imgUrl={item.imgUrl} />
 				}
 				return null
 			})}

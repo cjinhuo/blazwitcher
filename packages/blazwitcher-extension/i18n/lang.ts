@@ -81,6 +81,10 @@ export const lang = {
 		[LanguageType.zh]: '设置页',
 		[LanguageType.en]: 'Setting Page',
 	},
+	WeChatWithRemark: {
+		[LanguageType.zh]: 'WeChat(备注: Blazwitcher)',
+		[LanguageType.en]: 'WeChat(Remark: Blazwitcher)',
+	},
 	// 配置页的多语言
 	// 外观设置页
 	appearance: {

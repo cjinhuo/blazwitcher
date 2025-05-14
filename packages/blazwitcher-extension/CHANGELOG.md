@@ -1,5 +1,11 @@
 # blazwitcher
 
+## 0.5.3
+
+### Patch Changes
+
+- 8d20cc0: new panel for showing contact and new icon for creating issue
+
 ## 0.5.2
 
 ### Patch Changes
