@@ -1,9 +1,11 @@
 import GithubSvg from 'react:~assets/github.svg'
+import IssueSvg from 'react:~assets/issue.svg'
 import SettingSvg from 'react:~assets/setting.svg'
+
 import { useAtomValue } from 'jotai'
 import styled from 'styled-components'
 import { PopoverWrapper } from '~shared/common-styles'
-import { GITHUB_URL } from '~shared/constants'
+import { GITHUB_ISSUE_URL, GITHUB_URL } from '~shared/constants'
 import { createTabWithUrl } from '~shared/utils'
 import { i18nAtom } from './atom'
 
@@ -47,6 +49,15 @@ export default function Footer() {
 	const i18n = useAtomValue(i18nAtom)
 	return (
 		<FooterContainer>
+			<PopoverWrapper content={i18n('issueTooltip')} position='top'>
+				<SvgWithFileStyle
+					onClick={() => {
+						createTabWithUrl(GITHUB_ISSUE_URL)
+					}}
+				>
+					<IssueSvg style={{ width: '16px', height: '16px' }} />
+				</SvgWithFileStyle>
+			</PopoverWrapper>
 			<PopoverWrapper content={i18n('settingTooltip')} position='top'>
 				<SvgWithFileStyle
 					onClick={() => {
