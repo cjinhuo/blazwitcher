@@ -110,7 +110,13 @@ async function retrieveRecentHistories(count = DEFAULT_HISTORY_MAX_RESULTS, maxD
 			maxResults: count - data.length,
 			text: '',
 		})
-		data.push(...rawData.map((item) => processHistoryItem(item)))
+
+		const historyProcessed = rawData
+			// filter the history that is not a valid url or is a chrome-extension url
+			.filter((item) => item.url && !item.url.startsWith('chrome-extension:'))
+			.map((item) => processHistoryItem(item))
+
+		data.push(...historyProcessed)
 		if (data.length >= count) return data
 	}
 	return data
