@@ -1,5 +1,11 @@
 # blazwitcher
 
+## 0.5.4
+
+### Patch Changes
+
+- b20f451: filter the history that is not a valid url or is a chrome-extension url
+
 ## 0.5.3
 
 ### Patch Changes
