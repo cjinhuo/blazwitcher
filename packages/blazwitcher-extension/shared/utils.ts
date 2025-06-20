@@ -1,4 +1,9 @@
-import { isStrictnessSatisfied, mergeSpacesWithRanges, searchSentenceByBoundaryMapping } from 'text-search-engine'
+import {
+	isConsecutiveForChar,
+	isStrictnessSatisfied,
+	mergeSpacesWithRanges,
+	searchSentenceByBoundaryMapping,
+} from 'text-search-engine'
 import type { SearchConfigAtomType } from '~sidepanel/atom'
 import {
 	DEFAULT_STRICTNESS_COEFFICIENT,
@@ -8,11 +13,6 @@ import {
 } from './constants'
 import { storageGet, storageRemove } from './promisify'
 import { ItemType, type ListItemType, type Matrix } from './types'
-
-export function isChineseChar(char) {
-	const chineseCharRegex = /[\u4E00-\u9FFF]/
-	return chineseCharRegex.test(char)
-}
 
 /**
  * 滚动元素到视图中，如果元素在容器中，则滚动容器，如果元素在容器中，则滚动容器，如果元素在容器中，则滚动容器
@@ -258,9 +258,11 @@ export const orderList = (list: ListItemType[], searchConfig: SearchConfigAtomTy
 export const searchWithList = (list: ListItemType[], searchValue: string) => {
 	if (searchValue === '') return list
 	return list.reduce<ListItemType[]>((acc, item) => {
-		let hitRanges: Matrix | undefined
-		hitRanges = searchSentenceByBoundaryMapping(item.data.compositeBoundaryMapping, searchValue)
-		if (hitRanges) {
+		const { hitRanges, wordHitRangesMapping } = searchSentenceByBoundaryMapping(
+			item.data.compositeBoundaryMapping,
+			searchValue
+		)
+		if (hitRanges && isConsecutiveForChar(item.data.compositeSource, searchValue, wordHitRangesMapping, hitRanges)) {
 			const mergedHitRanges = mergeSpacesWithRanges(item.data.compositeSource, hitRanges)
 			if (isStrictnessSatisfied(DEFAULT_STRICTNESS_COEFFICIENT, searchValue, mergedHitRanges)) {
 				const [titleHitRanges, hostHitRanges] = splitCompositeHitRanges(mergedHitRanges, [
