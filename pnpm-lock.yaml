@@ -154,8 +154,8 @@ importers:
         specifier: ^6.1.11
         version: 6.1.15(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       text-search-engine:
-        specifier: 1.5.0-beta.0
-        version: 1.5.0-beta.0(react@18.2.0)
+        specifier: 1.5.0
+        version: 1.5.0(react@18.2.0)
     devDependencies:
       '@babel/parser':
         specifier: ^7.26.3
@@ -5611,8 +5611,8 @@ packages:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
     engines: {node: '>=8'}
 
-  text-search-engine@1.5.0-beta.0:
-    resolution: {integrity: sha512-j+hQ9FL7t1Z3OE846YS3Rf+2JOFlMj7iNeaWLfIKnr4j/bQE1Aau29OiMLxczdOitu0xXYQ+u+gGNOkptIdsbw==}
+  text-search-engine@1.5.0:
+    resolution: {integrity: sha512-/yq6VOv9Dd7vBVUk0DO/9z4UN6RlFV050qfy91f2EAn8d7um67+4NA1pbQ4D3lVrV0zV5jOT97UAZimxxWXa5w==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
@@ -12347,7 +12347,7 @@ snapshots:
 
   term-size@2.2.1: {}
 
-  text-search-engine@1.5.0-beta.0(react@18.2.0):
+  text-search-engine@1.5.0(react@18.2.0):
     dependencies:
       react: 18.2.0
 
