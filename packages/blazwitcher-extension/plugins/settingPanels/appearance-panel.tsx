@@ -148,28 +148,26 @@ export const AppearancePanel: React.FC = () => {
 							</IconWrapper>
 						</Radio>
 					</RadioGroup>
-					{
-						<SizeInputContainer>
-							<SizeInputWrapper>
-								<SizeLabel>{i18n('iframeWidth')}</SizeLabel>
-								<InputNumber
-									value={iframeWidth || SEARCH_WINDOW_WIDTH}
-									onChange={handleChangeWidth}
-									style={{ width: 120 }}
-									min={400}
-								/>
-							</SizeInputWrapper>
-							<SizeInputWrapper>
-								<SizeLabel>{i18n('iframeHeight')}</SizeLabel>
-								<InputNumber
-									value={iframeHeight || SEARCH_WINDOW_HEIGHT}
-									onChange={handleChangeHeight}
-									style={{ width: 120 }}
-									min={300}
-								/>
-							</SizeInputWrapper>
-						</SizeInputContainer>
-					}
+					<SizeInputContainer>
+						<SizeInputWrapper>
+							<SizeLabel>{i18n('iframeWidth')}</SizeLabel>
+							<InputNumber
+								value={iframeWidth || SEARCH_WINDOW_WIDTH}
+								onChange={handleChangeWidth}
+								style={{ width: 120 }}
+								min={400}
+							/>
+						</SizeInputWrapper>
+						<SizeInputWrapper>
+							<SizeLabel>{i18n('iframeHeight')}</SizeLabel>
+							<InputNumber
+								value={iframeHeight || SEARCH_WINDOW_HEIGHT}
+								onChange={handleChangeHeight}
+								style={{ width: 120 }}
+								min={300}
+							/>
+						</SizeInputWrapper>
+					</SizeInputContainer>
 				</div>
 
 				<div>

@@ -255,14 +255,18 @@ export const orderList = (list: ListItemType[], searchConfig: SearchConfigAtomTy
 	].toSorted(compareForHitRangeLength)
 }
 
-export const searchWithList = (list: ListItemType[], searchValue: string) => {
+export const searchWithList = (list: ListItemType[], searchValue: string, searchConfig: SearchConfigAtomType) => {
 	if (searchValue === '') return list
 	return list.reduce<ListItemType[]>((acc, item) => {
 		const { hitRanges, wordHitRangesMapping } = searchSentenceByBoundaryMapping(
 			item.data.compositeBoundaryMapping,
 			searchValue
 		)
-		if (hitRanges && isConsecutiveForChar(item.data.compositeSource, searchValue, wordHitRangesMapping, hitRanges)) {
+		if (
+			hitRanges &&
+			(!searchConfig.enableConsecutiveSearch ||
+				isConsecutiveForChar(item.data.compositeSource, searchValue, wordHitRangesMapping, hitRanges))
+		) {
 			const mergedHitRanges = mergeSpacesWithRanges(item.data.compositeSource, hitRanges)
 			if (isStrictnessSatisfied(DEFAULT_STRICTNESS_COEFFICIENT, searchValue, mergedHitRanges)) {
 				const [titleHitRanges, hostHitRanges] = splitCompositeHitRanges(mergedHitRanges, [

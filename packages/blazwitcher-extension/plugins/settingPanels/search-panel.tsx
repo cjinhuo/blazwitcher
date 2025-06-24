@@ -1,5 +1,5 @@
-import { IconRefresh } from '@douyinfe/semi-icons'
-import { Button, Card, Col, InputNumber, Row } from '@douyinfe/semi-ui'
+import { IconInfoCircle, IconRefresh } from '@douyinfe/semi-icons'
+import { Button, Card, Col, InputNumber, Row, Switch, Tooltip } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import styled from 'styled-components'
 import {
@@ -28,6 +28,11 @@ const StyledInputNumber = styled(InputNumber)`
   width: 120px; 
 `
 
+const InfoIcon = styled(IconInfoCircle)`
+  color: var(--semi-color-text-2);
+  cursor: help;
+`
+
 export const SearchPanel: React.FC = () => {
 	const [config, setConfig] = useAtom(searchConfigAtom)
 	const [historyMaxDays, setHistoryMaxDays] = useAtom(historyMaxDaysAtom)
@@ -35,7 +40,7 @@ export const SearchPanel: React.FC = () => {
 	const resetConfig = useSetAtom(resetSearchConfigAtom)
 	const i18n = useAtomValue(i18nAtom)
 
-	const handleConfigChange = (key: string, value: number) => {
+	const handleConfigChange = (key: string, value: number | boolean) => {
 		setConfig((prev) => ({ ...prev, [key]: value }))
 	}
 
@@ -105,6 +110,21 @@ export const SearchPanel: React.FC = () => {
 							max={10}
 							value={config.topSuggestionsCount}
 							onChange={(value: number) => handleConfigChange('topSuggestionsCount', value)}
+						/>
+					</ConfigItem>
+				</Col>
+
+				<Col span={12}>
+					<ConfigItem>
+						<Section>
+							{i18n('enableConsecutiveSearch')}{' '}
+							<Tooltip content={i18n('enableConsecutiveSearchDesc')}>
+								<InfoIcon size='small' />
+							</Tooltip>
+						</Section>
+						<Switch
+							checked={config.enableConsecutiveSearch}
+							onChange={(checked: boolean) => handleConfigChange('enableConsecutiveSearch', checked)}
 						/>
 					</ConfigItem>
 				</Col>
