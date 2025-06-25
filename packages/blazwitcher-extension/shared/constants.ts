@@ -50,11 +50,13 @@ export const DEFAULT_HISTORY_MAX_RESULTS = 500
 export const DEFAULT_BOOKMARK_DISPLAY_COUNT = 10
 export const DEFAULT_HISTORY_DISPLAY_COUNT = 10
 export const DEFAULT_TOP_SUGGESTIONS_COUNT = 2
+export const DEFAULT_ENABLE_CONSECUTIVE_SEARCH = false
 
 export const DefaultSearchConfig = {
 	bookmarkDisplayCount: DEFAULT_BOOKMARK_DISPLAY_COUNT,
 	historyDisplayCount: DEFAULT_HISTORY_DISPLAY_COUNT,
 	topSuggestionsCount: DEFAULT_TOP_SUGGESTIONS_COUNT,
+	enableConsecutiveSearch: DEFAULT_ENABLE_CONSECUTIVE_SEARCH,
 }
 
 export enum DisplayMode {

@@ -266,6 +266,15 @@ export const lang = {
 		[LanguageType.zh]: '最优建议数量',
 		[LanguageType.en]: 'Top Suggestions Count',
 	},
+	enableConsecutiveSearch: {
+		[LanguageType.zh]: '严格搜索(英文单词要求连续)',
+		[LanguageType.en]: 'Strict Search(English words require consecutive)',
+	},
+	enableConsecutiveSearchDesc: {
+		[LanguageType.zh]: '搜索时要求单词连续匹配，如搜索 "hello"，则 "heo" 不会被匹配',
+		[LanguageType.en]:
+			'Require consecutive word matching when searching, e.g. searching "hello", "heo" will not be matched',
+	},
 	// footer icon
 	settingTooltip: {
 		[LanguageType.zh]: '进入设置页面，可自定义外观、搜索参数和快捷键等',
