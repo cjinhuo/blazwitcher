@@ -6,8 +6,9 @@
 	"author": "cjinhuo@qq.com",
 	"scripts": {
 		"prebuild": "npx tsx scripts/pre-build.ts",
-		"dev": "pnpm run prebuild && plasmo dev",
-		"build": "pnpm run prebuild && plasmo build",
+		"generateChangelog": "node scripts/generate-changelog.js",
+		"dev": "pnpm run prebuild && pnpm run generateChangelog && plasmo dev",
+		"build": "pnpm run prebuild && pnpm run generateChangelog && plasmo build",
 		"package": "plasmo build && plasmo package",
 		"help": "plasmo --help",
 		"debug": "plasmo dev --verbose",
@@ -15,7 +16,7 @@
 		"fetch-releases": "npx tsx scripts/fetch-github-releases.ts",
 		"push-release": "npx tsx scripts/push-new-release.ts"
 	},
-	"dependencies": {
+	"dependencies": { 
 		"@commitlint/config-conventional": "^19.2.2",
 		"@douyinfe/semi-icons": "^2.62.0",
 		"@douyinfe/semi-illustrations": "^2.74.0",
@@ -62,7 +63,8 @@
 			}
 		},
 		"action": {
-			"default_title": "Blazwitcher"
+			"default_title": "Blazwitcher",
+			"default_popup": "popup.html"
 		},
 		"web_accessible_resources": [
 			{

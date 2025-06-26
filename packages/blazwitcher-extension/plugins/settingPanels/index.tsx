@@ -1,4 +1,4 @@
-import { IconCustomerSupport, IconDesktop, IconKey, IconSearch } from '@douyinfe/semi-icons'
+import { IconCustomerSupport, IconDesktop, IconHistory, IconKey, IconSearch } from '@douyinfe/semi-icons'
 import { Layout, Nav } from '@douyinfe/semi-ui'
 import { useAtomValue } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { i18nAtom } from '~sidepanel/atom'
 import { useTheme } from '~sidepanel/hooks/useTheme'
 import { AppearancePanel } from './appearance-panel'
+import { ChangelogPanel } from './changelog-panel'
 import { ContactPanel } from './contact-panel'
 import { KeyboardPanel } from './keyboard-panel'
 import { SearchPanel } from './search-panel'
@@ -14,6 +15,7 @@ enum SettingPanelKey {
 	APPEARANCE = 'appearance',
 	KEYBOARD = 'keyboard',
 	SEARCH = 'search',
+	CHANGELOG = 'changelog',
 	CONTACT = 'contact',
 }
 
@@ -90,6 +92,11 @@ export const SettingPanels: React.FC = () => {
 			text: i18n(SettingPanelKey.KEYBOARD),
 		},
 		{
+			itemKey: SettingPanelKey.CHANGELOG,
+			icon: <IconHistory />,
+			text: i18n(SettingPanelKey.CHANGELOG),
+		},
+		{
 			itemKey: SettingPanelKey.CONTACT,
 			icon: <IconCustomerSupport />,
 			text: i18n(SettingPanelKey.CONTACT),
@@ -104,6 +111,8 @@ export const SettingPanels: React.FC = () => {
 				return <KeyboardPanel />
 			case SettingPanelKey.SEARCH:
 				return <SearchPanel />
+			case SettingPanelKey.CHANGELOG:
+				return <ChangelogPanel />
 			case SettingPanelKey.CONTACT:
 				return <ContactPanel />
 			default:

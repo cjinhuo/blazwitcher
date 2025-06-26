@@ -1,0 +1,220 @@
+[
+	{
+		"version": "0.5.4",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "filter the history that is not a valid url or is a chrome-extension url",
+				"zh": "filter the history that is not a valid url or is a chrome-extension url"
+			}
+		]
+	},
+	{
+		"version": "0.5.3",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "new panel for showing contact and new icon for creating issue",
+				"zh": "new panel for showing contact and new icon for creating issue"
+			}
+		]
+	},
+	{
+		"version": "0.5.2",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "improve display mode in iframe window",
+				"zh": "improve display mode in iframe window"
+			}
+		]
+	},
+	{
+		"version": "0.5.1",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "new icon for setting entrance and separate css for options page",
+				"zh": "new icon for setting entrance and separate css for options page"
+			}
+		]
+	},
+	{
+		"version": "0.5.0",
+		"type": "minor",
+		"changes": [
+			{
+				"en": "release setting page and upgrade text-search-engine to 1.4.4",
+				"zh": "release setting page and upgrade text-search-engine to 1.4.4"
+			},
+			{
+				"en": "setting page",
+				"zh": "add search panel & window config"
+			},
+			{
+				"en": "get windowConfig from extension storage and apply it when restart it",
+				"zh": "add language setting plugin"
+			},
+			{
+				"en": "add monorepo",
+				"zh": "move history param from web storage to extension storage"
+			},
+			{
+				"en": "fix js error",
+				"zh": "fix js error"
+			}
+		]
+	},
+	{
+		"version": "0.4.2",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "readjust the window size opened",
+				"zh": "readjust the window size opened"
+			}
+		]
+	},
+	{
+		"version": "0.4.1",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "update languageAtom from navigator.language when launch and optimize contants for i18n atom",
+				"zh": "refine ts type and optimize css for divide item"
+			}
+		]
+	},
+	{
+		"version": "0.4.0",
+		"type": "minor",
+		"changes": [
+			{
+				"en": "new feature for top suggestions and display empty status when no data found",
+				"zh": "new feature for top suggestions and display empty status when no data found"
+			},
+			{
+				"en": "optimize type hints for i18n",
+				"zh": "init setting page and use chrome i18n"
+			}
+		]
+	},
+	{
+		"version": "0.3.2",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "fix active tab in sidePanel",
+				"zh": "add i18n with jotai"
+			}
+		]
+	},
+	{
+		"version": "0.3.1",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "support open a modal when current tab is in fullscreen state",
+				"zh": "支持在全屏状态下打开一个模态框"
+			}
+		]
+	},
+	{
+		"version": "0.3.0",
+		"type": "minor",
+		"changes": [
+			{
+				"en": "add plugin system to integrate commands",
+				"zh": "添加插件系统以集成命令"
+			}
+		]
+	},
+	{
+		"version": "0.2.3",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "upgrade text-search-engine to 1.4.2",
+				"zh": "升级 text-search-engine 到 1.4.2 版本"
+			}
+		]
+	},
+	{
+		"version": "0.2.2",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: add debounce when change active tab",
+				"zh": "功能：切换活动标签页时添加防抖"
+			},
+			{
+				"en": "Determine if chrome.tabGroups exists to adapt for 360 Browser",
+				"zh": "检测 chrome.tabGroups 是否存在以适配 360 浏览器"
+			}
+		]
+	},
+	{
+		"version": "0.2.1",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: add tabGroup title and color",
+				"zh": "功能：添加标签组标题和颜色"
+			}
+		]
+	},
+	{
+		"version": "0.2.0",
+		"type": "minor",
+		"changes": [
+			{
+				"en": "support hybrid searching which include host and title",
+				"zh": "支持包含域名和标题的混合搜索"
+			}
+		]
+	},
+	{
+		"version": "0.1.10",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "optimize operation button styles",
+				"zh": "优化操作按钮样式"
+			},
+			{
+				"en": "only listen to keydown event when not in composition(typing chinese in pinyin)",
+				"zh": "仅在非输入法组合状态下监听键盘按下事件（使用拼音输入中文时）"
+			}
+		]
+	},
+	{
+		"version": "0.1.9",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "add strictness coefficient to filter out results that are not highly relevant to the search value",
+				"zh": "添加严格系数以过滤掉与搜索值相关度不高的结果"
+			}
+		]
+	},
+	{
+		"version": "0.1.7",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "Optimize pinyin search under Chinese input method state",
+				"zh": "优化中文输入法状态下通过拼音搜索"
+			}
+		]
+	},
+	{
+		"version": "0.1.6",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "add operations for each item which includes query, delete, close and so on",
+				"zh": "为每个项目添加操作，包括查询、删除、关闭等"
+			}
+		]
+	}
+]
