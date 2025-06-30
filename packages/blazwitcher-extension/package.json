@@ -13,7 +13,7 @@
 		"debug": "plasmo dev --verbose",
 		"scan-cn": "node scripts/scan-cn.js"
 	},
-	"dependencies": {
+	"dependencies": { 
 		"@commitlint/config-conventional": "^19.2.2",
 		"@douyinfe/semi-icons": "^2.62.0",
 		"@douyinfe/semi-illustrations": "^2.74.0",
@@ -59,7 +59,8 @@
 			}
 		},
 		"action": {
-			"default_title": "Blazwitcher"
+			"default_title": "Blazwitcher",
+			"default_popup": "popup.html"
 		},
 		"web_accessible_resources": [
 			{
