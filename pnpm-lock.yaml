@@ -18,8 +18,8 @@ importers:
         specifier: ^19.2.2
         version: 19.8.0
       changesets-toolkit:
-        specifier: 0.0.3-beta.0
-        version: 0.0.3-beta.0
+        specifier: 0.0.3
+        version: 0.0.3
       cz-git:
         specifier: ^1.11.1
         version: 1.11.1
@@ -2893,8 +2893,8 @@ packages:
   change-case@5.1.2:
     resolution: {integrity: sha512-CAtbGEDulyjzs05RXy3uKcwqeztz/dMEuAc1Xu9NQBsbrhuGMneL0u9Dj5SoutLKBFYun8txxYIwhjtLNfUmCA==}
 
-  changesets-toolkit@0.0.3-beta.0:
-    resolution: {integrity: sha512-YLuUDHQHSQaQiOnp9ke/XNm0SYvd/kMCVe601eOhmWJr38+eH+wTSY8RQepPvBeBhaX4kMNuafq6jyzHxK3tQg==}
+  changesets-toolkit@0.0.3:
+    resolution: {integrity: sha512-+q4ZKquCUa8TFXq4udFBmKgI3g6Ye0Or45DBpfKkvSwOYsDljfreu4I5esbd7l5drr/nT2xt37MVLfM5jdyIgA==}
     hasBin: true
 
   character-entities-html4@2.1.0:
@@ -9073,7 +9073,7 @@ snapshots:
 
   change-case@5.1.2: {}
 
-  changesets-toolkit@0.0.3-beta.0:
+  changesets-toolkit@0.0.3:
     dependencies:
       axios: 1.10.0
       consola: 3.4.2
