@@ -31,12 +31,16 @@ export enum LanguageType {
 }
 
 export const PERSONAL_GITHUB_URL = 'https://github.com/cjinhuo'
+export const GITHUB_RELEASES_URL = `${PERSONAL_GITHUB_URL}/blazwitcher/releases`
+export const GITHUB_ISSUES_URL = `${PERSONAL_GITHUB_URL}/blazwitcher/issues`
 export const GITHUB_URL = `${PERSONAL_GITHUB_URL}/blazwitcher`
 export const GITHUB_ISSUE_URL = `${GITHUB_URL}/issues/new?template=feature_bug.md`
 export const BLOG_URL = 'https://cjinhuo.github.io'
 export const EMAIL_URL = 'cjinhuo@qq.com'
 
 export const CHROME_EXTENSIONS_SHORTCUTS_URL = 'chrome://extensions/shortcuts'
+export const CHROME_EXTENSIONS_URL =
+	'https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg'
 
 export const ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000
 
@@ -115,3 +119,5 @@ export const EXTENSION_STORAGE_HISTORY_MAX_RESULTS = 'historyMaxResults'
 export const EXTENSION_STORAGE_WINDOW_WIDTH = 'windowWidth'
 export const EXTENSION_STORAGE_WINDOW_HEIGHT = 'windowHeight'
 export const EXTENSION_STORAGE_DISPLAY_MODE = 'displayMode'
+
+export const EXTENSION_ID = 'fgmogngnfagcgcpfdclfeebmjoadekhd'

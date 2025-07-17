@@ -1,0 +1,244 @@
+[
+	{
+		"version": "0.5.4",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: filter the history that is not a valid url or is a chrome-extension url @cjinhuo · 2025-03-12 · `[#b20f451](https://github.com/cjinhuo/blazwitcher/commit/b20f451)`",
+				"zh": "feat: 过滤无效 URL 和 chrome-extension URL 的历史记录 @cjinhuo · 2025-03-12 · `[#b20f451](https://github.com/cjinhuo/blazwitcher/commit/b20f451)`"
+			}
+		]
+	},
+	{
+		"version": "0.5.3",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: new panel for showing contact and new icon for creating issue @MSK · 2025-03-12 · `[#8d20cc0](https://github.com/cjinhuo/blazwitcher/commit/8d20cc0)`",
+				"zh": "feat: 新增联系面板和创建问题的新图标 @MSK · 2025-03-12 · `[#8d20cc0](https://github.com/cjinhuo/blazwitcher/commit/8d20cc0)`"
+			}
+		]
+	},
+	{
+		"version": "0.5.2",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: improve display mode in iframe window @MSK · 2025-03-12 · `[#b23cfdf](https://github.com/cjinhuo/blazwitcher/commit/b23cfdf)`",
+				"zh": "feat: 改进 iframe 窗口中的显示模式 @MSK · 2025-03-12 · `[#b23cfdf](https://github.com/cjinhuo/blazwitcher/commit/b23cfdf)`"
+			}
+		]
+	},
+	{
+		"version": "0.5.1",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: new icon for setting entrance and separate css for options page @MSK · 2025-03-12 · `[#9e2a53f](https://github.com/cjinhuo/blazwitcher/commit/9e2a53f)`",
+				"zh": "feat: 设置入口新图标和选项页面独立 CSS @MSK · 2025-03-12 · `[#9e2a53f](https://github.com/cjinhuo/blazwitcher/commit/9e2a53f)`"
+			}
+		]
+	},
+	{
+		"version": "0.5.0",
+		"type": "minor",
+		"changes": [
+			{
+				"en": "feat: setting page @MSK · 2025-03-12 · `[#1f37b82](https://github.com/cjinhuo/blazwitcher/commit/1f37b82)`",
+				"zh": "feat: 设置页面 @MSK · 2025-03-12 · `[#1f37b82](https://github.com/cjinhuo/blazwitcher/commit/1f37b82)`"
+			},
+			{
+				"en": "feat: add search panel & window config @MSK · 2025-03-12 · `[#4ee54c9](https://github.com/cjinhuo/blazwitcher/commit/4ee54c9)`",
+				"zh": "feat: 添加搜索面板和窗口配置 @MSK · 2025-03-12 · `[#4ee54c9](https://github.com/cjinhuo/blazwitcher/commit/4ee54c9)`"
+			},
+			{
+				"en": "feat: get windowConfig from extension storage and apply it when restart it @MSK · 2025-03-12 · `[#a7e02a5](https://github.com/cjinhuo/blazwitcher/commit/a7e02a5)`",
+				"zh": "feat: 从扩展存储获取窗口配置并在重启时应用 @MSK · 2025-03-12 · `[#a7e02a5](https://github.com/cjinhuo/blazwitcher/commit/a7e02a5)`"
+			},
+			{
+				"en": "feat: add language setting plugin @MSK · 2025-02-18 · `[#002fd17f4e3e46af659d87fc0e968ebe520ddeb9](https://github.com/cjinhuo/blazwitcher/commit/002fd17f4e3e46af659d87fc0e968ebe520ddeb9)`",
+				"zh": "feat: 添加语言设置插件 @MSK · 2025-02-18 · `[#002fd17f4e3e46af659d87fc0e968ebe520ddeb9](https://github.com/cjinhuo/blazwitcher/commit/002fd17f4e3e46af659d87fc0e968ebe520ddeb9)`"
+			},
+			{
+				"en": "feat: add monorepo @MSK · 2025-03-10 · `[#149f406a26c775e1ee52a6c4961525d4e7118a29](https://github.com/cjinhuo/blazwitcher/commit/149f406a26c775e1ee52a6c4961525d4e7118a29)`",
+				"zh": "feat: 添加 monorepo @MSK · 2025-03-10 · `[#149f406a26c775e1ee52a6c4961525d4e7118a29](https://github.com/cjinhuo/blazwitcher/commit/149f406a26c775e1ee52a6c4961525d4e7118a29)`"
+			},
+			{
+				"en": "feat: move history param from web storage to extension storage @Shanks · 2025-03-10 · `[#b952ee26c2f78022b9d73b7c2d3890f17a4c8990](https://github.com/cjinhuo/blazwitcher/commit/b952ee26c2f78022b9d73b7c2d3890f17a4c8990)`",
+				"zh": "feat: 将历史参数从 web 存储移动到扩展存储 @Shanks · 2025-03-10 · `[#b952ee26c2f78022b9d73b7c2d3890f17a4c8990](https://github.com/cjinhuo/blazwitcher/commit/b952ee26c2f78022b9d73b7c2d3890f17a4c8990)`"
+			},
+			{
+				"en": "feat: fix js error @MSK · 2025-03-12 · `[#930af334ca0e9ae91df61495d718a655534c8d47](https://github.com/cjinhuo/blazwitcher/commit/930af334ca0e9ae91df61495d718a655534c8d47)`",
+				"zh": "feat: 修复 JS 错误 @MSK · 2025-03-12 · `[#930af334ca0e9ae91df61495d718a655534c8d47](https://github.com/cjinhuo/blazwitcher/commit/930af334ca0e9ae91df61495d718a655534c8d47)`"
+			}
+		]
+	},
+	{
+		"version": "0.4.2",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: add search panel & window config @MSK · 2025-01-15 · `[#7c29b56](https://github.com/cjinhuo/blazwitcher/commit/7c29b56)`",
+				"zh": "feat: 添加搜索面板和窗口配置 @MSK · 2025-01-15 · `[#7c29b56](https://github.com/cjinhuo/blazwitcher/commit/7c29b56)`"
+			},
+			{
+				"en": "feat: readjust the window size opened @Shanks · 2025-02-17 · `[#98f7b3bca7b5802b2e4de380dfdda49e72d093b0](https://github.com/cjinhuo/blazwitcher/commit/98f7b3bca7b5802b2e4de380dfdda49e72d093b0)`",
+				"zh": "feat: 重新调整打开的窗口大小 @Shanks · 2025-02-17 · `[#98f7b3bca7b5802b2e4de380dfdda49e72d093b0](https://github.com/cjinhuo/blazwitcher/commit/98f7b3bca7b5802b2e4de380dfdda49e72d093b0)`"
+			}
+		]
+	},
+	{
+		"version": "0.4.1",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: update languageAtom from navigator.language when launch and optimize contants for i18n atom @cjinhuo · 2025-01-15 · `[#98fdfbb](https://github.com/cjinhuo/blazwitcher/commit/98fdfbb)`",
+				"zh": "feat: 启动时从 navigator.language 更新 languageAtom 并优化 i18n atom 常量 @cjinhuo · 2025-01-15 · `[#98fdfbb](https://github.com/cjinhuo/blazwitcher/commit/98fdfbb)`"
+			},
+			{
+				"en": "feat: refine ts type and optimize css for divide item @cjinhuo · 2025-01-15 · `[#2b8d646](https://github.com/cjinhuo/blazwitcher/commit/2b8d646)`",
+				"zh": "feat: 完善 TS 类型并优化分割项的 CSS @cjinhuo · 2025-01-15 · `[#2b8d646](https://github.com/cjinhuo/blazwitcher/commit/2b8d646)`"
+			}
+		]
+	},
+	{
+		"version": "0.4.0",
+		"type": "minor",
+		"changes": [
+			{
+				"en": "feat: new feature for top suggestions and display empty status when no data found @cjinhuo · 2025-01-10 · `[#d026c0c](https://github.com/cjinhuo/blazwitcher/commit/d026c0c)`",
+				"zh": "feat: 顶部建议新功能，无数据时显示空状态 @cjinhuo · 2025-01-10 · `[#d026c0c](https://github.com/cjinhuo/blazwitcher/commit/d026c0c)`"
+			},
+			{
+				"en": "feat: optimize type hints for i18n @cjinhuo · 2025-01-10 · `[#3dbe00d](https://github.com/cjinhuo/blazwitcher/commit/3dbe00d)`",
+				"zh": "feat: 优化 i18n 类型提示 @cjinhuo · 2025-01-10 · `[#3dbe00d](https://github.com/cjinhuo/blazwitcher/commit/3dbe00d)`"
+			},
+			{
+				"en": "feat: init setting page and use chrome i18n @cjinhuo · 2025-01-10 · `[#6fa3efc](https://github.com/cjinhuo/blazwitcher/commit/6fa3efc)`",
+				"zh": "feat: 初始化设置页面并使用 chrome i18n @cjinhuo · 2025-01-10 · `[#6fa3efc](https://github.com/cjinhuo/blazwitcher/commit/6fa3efc)`"
+			}
+		]
+	},
+	{
+		"version": "0.3.2",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: fix active tab in sidePanel @cjinhuo · 2025-01-05 · `[#ea00224](https://github.com/cjinhuo/blazwitcher/commit/ea00224)`",
+				"zh": "feat: 修复侧边面板中的活动标签 @cjinhuo · 2025-01-05 · `[#ea00224](https://github.com/cjinhuo/blazwitcher/commit/ea00224)`"
+			},
+			{
+				"en": "feat: add i18n with jotai @cjinhuo · 2025-01-05 · `[#1b0ac8b](https://github.com/cjinhuo/blazwitcher/commit/1b0ac8b)`",
+				"zh": "feat: 使用 jotai 添加 i18n @cjinhuo · 2025-01-05 · `[#1b0ac8b](https://github.com/cjinhuo/blazwitcher/commit/1b0ac8b)`"
+			}
+		]
+	},
+	{
+		"version": "0.3.1",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: support open a modal when current tab is in fullscreen state @cjinhuo · 2024-12-30 · `[#26ba805](https://github.com/cjinhuo/blazwitcher/commit/26ba805)`",
+				"zh": "feat: 支持在全屏状态下打开一个模态框 @cjinhuo · 2024-12-30 · `[#26ba805](https://github.com/cjinhuo/blazwitcher/commit/26ba805)`"
+			}
+		]
+	},
+	{
+		"version": "0.3.0",
+		"type": "minor",
+		"changes": [
+			{
+				"en": "feat: add plugin system to integrate commands @cjinhuo · 2024-12-25 · `[#c40830f](https://github.com/cjinhuo/blazwitcher/commit/c40830f)`",
+				"zh": "feat: 添加插件系统以集成命令 @cjinhuo · 2024-12-25 · `[#c40830f](https://github.com/cjinhuo/blazwitcher/commit/c40830f)`"
+			}
+		]
+	},
+	{
+		"version": "0.2.3",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: upgrade text-search-engine to 1.4.2 @cjinhuo · 2024-12-20 · `[#upgrade-text-search-engine](https://github.com/cjinhuo/blazwitcher/commit/upgrade-text-search-engine)`",
+				"zh": "feat: 升级 text-search-engine 到 1.4.2 版本 @cjinhuo · 2024-12-20 · `[#upgrade-text-search-engine](https://github.com/cjinhuo/blazwitcher/commit/upgrade-text-search-engine)`"
+			}
+		]
+	},
+	{
+		"version": "0.2.2",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: add debounce when change active tab @cjinhuo · 2024-12-15 · `[#6ab84e8](https://github.com/cjinhuo/blazwitcher/commit/6ab84e8)`",
+				"zh": "feat: 切换活动标签页时添加防抖 @cjinhuo · 2024-12-15 · `[#6ab84e8](https://github.com/cjinhuo/blazwitcher/commit/6ab84e8)`"
+			},
+			{
+				"en": "feat: Determine if chrome.tabGroups exists to adapt for 360 Browser @cjinhuo · 2024-12-15 · `[#487b209](https://github.com/cjinhuo/blazwitcher/commit/487b209)`",
+				"zh": "feat: 检测 chrome.tabGroups 是否存在以适配 360 浏览器 @cjinhuo · 2024-12-15 · `[#487b209](https://github.com/cjinhuo/blazwitcher/commit/487b209)`"
+			}
+		]
+	},
+	{
+		"version": "0.2.1",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: add tabGroup title and color @cjinhuo · 2024-12-10 · `[#50bb1b6](https://github.com/cjinhuo/blazwitcher/commit/50bb1b6)`",
+				"zh": "feat: 添加标签组标题和颜色 @cjinhuo · 2024-12-10 · `[#50bb1b6](https://github.com/cjinhuo/blazwitcher/commit/50bb1b6)`"
+			}
+		]
+	},
+	{
+		"version": "0.2.0",
+		"type": "minor",
+		"changes": [
+			{
+				"en": "feat: support hybrid searching which include host and title @cjinhuo · 2024-12-05 · `[#27d2199](https://github.com/cjinhuo/blazwitcher/commit/27d2199)`",
+				"zh": "feat: 支持包含域名和标题的混合搜索 @cjinhuo · 2024-12-05 · `[#27d2199](https://github.com/cjinhuo/blazwitcher/commit/27d2199)`"
+			}
+		]
+	},
+	{
+		"version": "0.1.10",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: optimize operation button styles @cjinhuo · 2024-11-30 · `[#4598a09](https://github.com/cjinhuo/blazwitcher/commit/4598a09)`",
+				"zh": "feat: 优化操作按钮样式 @cjinhuo · 2024-11-30 · `[#4598a09](https://github.com/cjinhuo/blazwitcher/commit/4598a09)`"
+			},
+			{
+				"en": "feat: only listen to keydown event when not in composition(typing chinese in pinyin) @cjinhuo · 2024-11-30 · `[#8c56975](https://github.com/cjinhuo/blazwitcher/commit/8c56975)`",
+				"zh": "feat: 仅在非输入法组合状态下监听键盘按下事件（使用拼音输入中文时） @cjinhuo · 2024-11-30 · `[#8c56975](https://github.com/cjinhuo/blazwitcher/commit/8c56975)`"
+			}
+		]
+	},
+	{
+		"version": "0.1.9",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: add strictness coefficient to filter out results that are not highly relevant to the search value @cjinhuo · 2024-11-25 · `[#977844c](https://github.com/cjinhuo/blazwitcher/commit/977844c)`",
+				"zh": "feat: 添加严格系数以过滤掉与搜索值相关度不高的结果 @cjinhuo · 2024-11-25 · `[#977844c](https://github.com/cjinhuo/blazwitcher/commit/977844c)`"
+			}
+		]
+	},
+	{
+		"version": "0.1.7",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: Optimize pinyin search under Chinese input method state @cjinhuo · 2024-11-20 · `[#efa9a0f](https://github.com/cjinhuo/blazwitcher/commit/efa9a0f)`",
+				"zh": "feat: 优化中文输入法状态下通过拼音搜索 @cjinhuo · 2024-11-20 · `[#efa9a0f](https://github.com/cjinhuo/blazwitcher/commit/efa9a0f)`"
+			}
+		]
+	},
+	{
+		"version": "0.1.6",
+		"type": "patch",
+		"changes": [
+			{
+				"en": "feat: add operations for each item which includes query, delete, close and so on @cjinhuo · 2024-11-15 · `[#9df10bb](https://github.com/cjinhuo/blazwitcher/commit/9df10bb)`",
+				"zh": "feat: 为每个项目添加操作，包括查询、删除、关闭等 @cjinhuo · 2024-11-15 · `[#9df10bb](https://github.com/cjinhuo/blazwitcher/commit/9df10bb)`"
+			}
+		]
+	}
+]
