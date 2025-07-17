@@ -7,7 +7,7 @@ const packageJson = require('./package.json')
 const scopes = fg
 	.sync(packageJson.workspaces, { onlyDirectories: true })
 	.map((filePath) => path.basename(filePath))
-	.concat('architecture')
+	.concat('architecture', 'changeset')
 module.exports = {
 	extends: ['@commitlint/config-conventional'],
 	rules: {

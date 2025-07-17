@@ -37,3 +37,4 @@ dist/
 
 # Include zip files
 !*.zip
+.env
