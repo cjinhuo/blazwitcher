@@ -10,7 +10,7 @@ import { createTabWithUrl } from '~shared/utils'
 import { i18nAtom } from './atom'
 
 const FooterContainer = styled.div`
-  flex: 0 0 20px;
+  flex: 0 0 32px;
   background-color: var(--color-neutral-8);
   border-top: 1px solid var(--color-neutral-7);
   padding: 0 10px;
@@ -47,8 +47,14 @@ const SvgWithFileStyle = styled.div`
 `
 export default function Footer() {
 	const i18n = useAtomValue(i18nAtom)
+
+	const handleMouseDown = (e: React.MouseEvent) => {
+		// 阻止点击footer空白处时搜索框失去焦点
+		e.preventDefault()
+	}
+
 	return (
-		<FooterContainer>
+		<FooterContainer onMouseDown={handleMouseDown}>
 			<PopoverWrapper content={i18n('issueTooltip')} position='top'>
 				<SvgWithFileStyle
 					onClick={() => {
