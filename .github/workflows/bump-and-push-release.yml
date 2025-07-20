@@ -1,4 +1,4 @@
-name: Release Beta NPM Package
+name: Bump Version and Push New Release
 
 env:
   CHANGESET_READ_REPO_TOKEN: ${{ secrets.CHANGESET_READ_REPO_TOKEN }}
