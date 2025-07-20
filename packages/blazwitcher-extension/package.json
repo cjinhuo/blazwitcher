@@ -5,13 +5,14 @@
 	"description": "Blazwitcher is a local tool for searching tabs, bookmarks, and history, with support for fuzzy Pinyin search.",
 	"author": "cjinhuo@qq.com",
 	"scripts": {
-		"prebuild": "node scripts/pre-build.mjs",
+		"prebuild": "npx tsx scripts/pre-build.ts",
 		"dev": "pnpm run prebuild && plasmo dev",
 		"build": "pnpm run prebuild && plasmo build",
 		"package": "plasmo build && plasmo package",
 		"help": "plasmo --help",
 		"debug": "plasmo dev --verbose",
-		"scan-cn": "node scripts/scan-cn.js"
+		"scan-cn": "node scripts/scan-cn.js",
+		"fetch-releases": "npx tsx scripts/fetch-github-releases.ts"
 	},
 	"dependencies": {
 		"@commitlint/config-conventional": "^19.2.2",
