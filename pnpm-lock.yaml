@@ -135,6 +135,9 @@ importers:
       '@douyinfe/semi-ui':
         specifier: ^2.62.0
         version: 2.76.0(acorn@8.14.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      dotenv:
+        specifier: ^17.2.0
+        version: 17.2.0
       jotai:
         specifier: ^2.9.3
         version: 2.12.2(@types/react@18.2.48)(react@18.2.0)
@@ -3252,6 +3255,10 @@ packages:
 
   dotenv@16.4.7:
     resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
+    engines: {node: '>=12'}
+
+  dotenv@17.2.0:
+    resolution: {integrity: sha512-Q4sgBT60gzd0BB0lSyYD3xM4YxrXA9y4uBDof1JNYGzOXrQdQ6yX+7XIAqoFOGQFOTK1D3Hts5OllpxMDZFONQ==}
     engines: {node: '>=12'}
 
   dotenv@7.0.0:
@@ -9411,6 +9418,8 @@ snapshots:
   dotenv@16.3.1: {}
 
   dotenv@16.4.7: {}
+
+  dotenv@17.2.0: {}
 
   dotenv@7.0.0: {}
 

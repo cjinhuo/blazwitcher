@@ -12,13 +12,15 @@
 		"help": "plasmo --help",
 		"debug": "plasmo dev --verbose",
 		"scan-cn": "node scripts/scan-cn.js",
-		"fetch-releases": "npx tsx scripts/fetch-github-releases.ts"
+		"fetch-releases": "npx tsx scripts/fetch-github-releases.ts",
+		"push-release": "npx tsx scripts/push-new-release.ts"
 	},
 	"dependencies": {
 		"@commitlint/config-conventional": "^19.2.2",
 		"@douyinfe/semi-icons": "^2.62.0",
 		"@douyinfe/semi-illustrations": "^2.74.0",
 		"@douyinfe/semi-ui": "^2.62.0",
+		"dotenv": "^17.2.0",
 		"jotai": "^2.9.3",
 		"lodash-es": "^4.17.21",
 		"observable-hooks": "^4.2.4",
