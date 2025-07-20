@@ -96,9 +96,6 @@ export function ensureDirectoryExists(dirPath: string): void {
 	}
 }
 
-/**
- * 读取 JSON 文件
- */
 export function readJsonFile<T = any>(filePath: string): T | null {
 	try {
 		if (!fs.existsSync(filePath)) {
@@ -113,15 +110,12 @@ export function readJsonFile<T = any>(filePath: string): T | null {
 	}
 }
 
-/**
- * 写入 JSON 文件
- */
 export function writeJsonFile(filePath: string, data: any): boolean {
 	try {
 		const dirPath = path.dirname(filePath)
 		ensureDirectoryExists(dirPath)
-
-		fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8')
+		// 使用 tab 缩进
+		fs.writeFileSync(filePath, JSON.stringify(data, null, '\t'))
 		return true
 	} catch (error) {
 		console.error(`❌ 写入 JSON 文件失败: ${filePath}`, error)
