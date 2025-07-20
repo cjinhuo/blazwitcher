@@ -1,11 +1,16 @@
-const fs = require('node:fs')
-const path = require('node:path')
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+// 获取当前文件的目录路径
+const currentFilePath = fileURLToPath(import.meta.url)
+const scriptDir = path.dirname(currentFilePath)
 
 // 主函数
 async function main() {
 	try {
 		// 读取 package.json 获取版本号
-		const packageJsonPath = path.resolve(__dirname, '../package.json')
+		const packageJsonPath = path.resolve(scriptDir, '../package.json')
 		const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
 		const version = packageJson.version
 		const name = 'Blazwitcher'
@@ -13,7 +18,7 @@ async function main() {
 		console.log(`Injecting version ${version} into sidepanel/index.html...`)
 
 		// 读取 index.html 文件
-		const indexHtmlPath = path.resolve(__dirname, '../sidepanel/index.html')
+		const indexHtmlPath = path.resolve(scriptDir, '../sidepanel/index.html')
 		let indexHtmlContent = fs.readFileSync(indexHtmlPath, 'utf8')
 
 		// 直接替换 title 标签内容
