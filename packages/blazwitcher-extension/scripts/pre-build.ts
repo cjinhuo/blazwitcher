@@ -1,24 +1,32 @@
-import fs from 'node:fs'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-// 获取当前文件的目录路径
-const currentFilePath = fileURLToPath(import.meta.url)
-const scriptDir = path.dirname(currentFilePath)
+import * as fs from 'node:fs'
+import * as path from 'node:path'
+import { getExtensionRootDir, readJsonFile } from './common'
 
 // 主函数
 async function main() {
 	try {
+		const extensionDir = getExtensionRootDir()
+
 		// 读取 package.json 获取版本号
-		const packageJsonPath = path.resolve(scriptDir, '../package.json')
-		const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
+		const packageJsonPath = path.resolve(extensionDir, 'package.json')
+		const packageJson = readJsonFile(packageJsonPath)
+
+		if (!packageJson) {
+			throw new Error('无法读取 package.json 文件')
+		}
+
 		const version = packageJson.version
 		const name = 'Blazwitcher'
 
 		console.log(`Injecting version ${version} into sidepanel/index.html...`)
 
 		// 读取 index.html 文件
-		const indexHtmlPath = path.resolve(scriptDir, '../sidepanel/index.html')
+		const indexHtmlPath = path.resolve(extensionDir, 'sidepanel/index.html')
+
+		if (!fs.existsSync(indexHtmlPath)) {
+			throw new Error(`index.html 文件不存在: ${indexHtmlPath}`)
+		}
+
 		let indexHtmlContent = fs.readFileSync(indexHtmlPath, 'utf8')
 
 		// 直接替换 title 标签内容
