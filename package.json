@@ -11,6 +11,9 @@
     "dev:doc": "pnpm --filter \"./packages/blazwitcher-doc\" run dev",
     "prepare": "husky install",
     "bump_version": "dotenv -e .env -- pnpm changeset_version",
+    "push_release": "dotenv -e .env -- pnpm --filter blazwitcher push-release",
+    "bump_and_push": "pnpm bump_version && pnpm push_release",
+    "fetch_releases": "dotenv -e .env -- pnpm --filter blazwitcher fetch-releases",
     "lint": "biome check --files-ignore-unknown=true ./packages/**/*.{ts,tsx}",
     "format": "biome format --write ./packages/**/*.{ts,tsx}",
     "commit": "git add . && git-cz"
