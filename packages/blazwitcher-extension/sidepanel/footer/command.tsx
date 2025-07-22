@@ -1,6 +1,7 @@
 import { useSetAtom } from 'jotai'
 import styled from 'styled-components'
 import { searchValueAtom } from '~sidepanel/atom'
+import useI18n from '~sidepanel/hooks/useI18n'
 
 const CommandContainer = styled.div`
 	display: flex;
@@ -24,7 +25,7 @@ const CommandLabel = styled.span`
 	white-space: nowrap;
 `
 
-const ShortcutContainer = styled.div`
+const _ShortcutContainer = styled.div`
 	display: flex;
 	align-items: center;
 	gap: 2px;
@@ -49,6 +50,8 @@ const KeyContainer = styled.div`
 
 export function Command() {
 	const setSearchValue = useSetAtom(searchValueAtom)
+	const i18n = useI18n()
+
 	const handleClick = () => {
 		setSearchValue({
 			value: '/s',
@@ -57,10 +60,8 @@ export function Command() {
 	}
 	return (
 		<CommandContainer onClick={handleClick}>
-			<CommandLabel>Setting</CommandLabel>
-			<ShortcutContainer>
-				<KeyContainer>/s</KeyContainer>
-			</ShortcutContainer>
+			<CommandLabel>{i18n('setting')}</CommandLabel>
+			<KeyContainer>/S</KeyContainer>
 		</CommandContainer>
 	)
 }

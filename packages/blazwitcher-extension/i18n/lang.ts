@@ -67,11 +67,11 @@ export const lang = {
 	},
 	searchBookmark: {
 		[LanguageType.zh]: '在书签中搜索',
-		[LanguageType.en]: 'Search from bookmarks',
+		[LanguageType.en]: 'Search from Bookmarks',
 	},
 	searchOpenTab: {
 		[LanguageType.zh]: '在打开的标签页中搜索',
-		[LanguageType.en]: 'Search from opened tabs',
+		[LanguageType.en]: 'Search from Opened Tabs',
 	},
 	setting: {
 		[LanguageType.zh]: '设置',
@@ -191,7 +191,7 @@ export const lang = {
 	},
 	searchHistory: {
 		[LanguageType.zh]: '在历史记录中搜索',
-		[LanguageType.en]: 'Search in History',
+		[LanguageType.en]: 'Search from History',
 	},
 	edit: {
 		[LanguageType.zh]: '编辑',
