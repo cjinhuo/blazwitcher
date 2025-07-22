@@ -16,24 +16,19 @@
     "fetch_releases": "dotenv -e .env -- pnpm --filter blazwitcher fetch-releases",
     "lint": "biome check --files-ignore-unknown=true ./packages/**/*.{ts,tsx}",
     "format": "biome format --write ./packages/**/*.{ts,tsx}",
-    "commit": "git add . && git-cz"
+    "commit": "git add . && czg"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.3",
     "@changesets/cli": "^2.27.8",
     "@commitlint/config-conventional": "^19.2.2",
     "changesets-toolkit": "0.0.3",
-    "cz-git": "^1.11.1",
+    "czg": "^1.12.0",
     "dotenv-cli": "^8.0.0",
     "fast-glob": "^3.3.3",
     "husky": "^8.0.0",
     "lint-staged": "^15.4.3",
     "typescript": "^5.7.3"
-  },
-  "config": {
-    "commitizen": {
-      "path": "node_modules/cz-git"
-    }
   },
   "lint-staged": {
     "**.{js,ts,jsx,tsx,json}": [

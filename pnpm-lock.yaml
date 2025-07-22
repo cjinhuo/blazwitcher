@@ -20,9 +20,9 @@ importers:
       changesets-toolkit:
         specifier: 0.0.3
         version: 0.0.3
-      cz-git:
-        specifier: ^1.11.1
-        version: 1.11.1
+      czg:
+        specifier: ^1.12.0
+        version: 1.12.0
       dotenv-cli:
         specifier: ^8.0.0
         version: 8.0.0
@@ -3095,9 +3095,10 @@ packages:
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
 
-  cz-git@1.11.1:
-    resolution: {integrity: sha512-QIhpsX8blMydkGcSSlSb4VKvu4qHNtxAWeN0N3TWDfQw7VbVHMLlAwmLm/YxVk60KKPy42O5ihe7E0gosTG2kg==}
+  czg@1.12.0:
+    resolution: {integrity: sha512-LGltcoZ5m7vhe3WNw16QXqd5WurnHegx9V15MwZJtFAU2AVCYLCqDbwxPUgZOnAcdzzooq33ONcU148HOQsjdA==}
     engines: {node: '>=v12.20.0'}
+    hasBin: true
 
   damerau-levenshtein@1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
@@ -9280,7 +9281,7 @@ snapshots:
 
   csstype@3.1.3: {}
 
-  cz-git@1.11.1: {}
+  czg@1.12.0: {}
 
   damerau-levenshtein@1.0.8: {}
 
