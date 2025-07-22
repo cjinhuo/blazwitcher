@@ -1,4 +1,4 @@
-import { LanguageType } from '~shared/constants'
+import { FOOTER_DESCRIPTION_I18N_MAP, LanguageType } from '~shared/constants'
 
 export const lang = {
 	emptySearch: {
@@ -65,13 +65,17 @@ export const lang = {
 		[LanguageType.zh]: '输入搜索内容',
 		[LanguageType.en]: 'Type to search',
 	},
-	searchBookmark: {
-		[LanguageType.zh]: '在书签中搜索',
-		[LanguageType.en]: 'Search from bookmarks',
-	},
 	searchOpenTab: {
 		[LanguageType.zh]: '在打开的标签页中搜索',
-		[LanguageType.en]: 'Search from opened tabs',
+		[LanguageType.en]: 'Search from Opened Tabs',
+	},
+	searchBookmark: {
+		[LanguageType.zh]: '在书签中搜索',
+		[LanguageType.en]: 'Search from Bookmarks',
+	},
+	searchHistory: {
+		[LanguageType.zh]: '在历史记录中搜索',
+		[LanguageType.en]: 'Search from History',
 	},
 	setting: {
 		[LanguageType.zh]: '设置',
@@ -189,10 +193,6 @@ export const lang = {
 		[LanguageType.zh]: '查询',
 		[LanguageType.en]: 'Query',
 	},
-	searchHistory: {
-		[LanguageType.zh]: '在历史记录中搜索',
-		[LanguageType.en]: 'Search in History',
-	},
 	edit: {
 		[LanguageType.zh]: '编辑',
 		[LanguageType.en]: 'Edit',
@@ -287,5 +287,22 @@ export const lang = {
 	githubTooltip: {
 		[LanguageType.zh]: '访问 GitHub 获取更多信息',
 		[LanguageType.en]: 'Visit GitHub page for more information',
+	},
+	// footer
+	[FOOTER_DESCRIPTION_I18N_MAP.tab]: {
+		[LanguageType.zh]: '切换标签页',
+		[LanguageType.en]: 'Switch To Tab',
+	},
+	[FOOTER_DESCRIPTION_I18N_MAP.bookmark]: {
+		[LanguageType.zh]: '打开书签',
+		[LanguageType.en]: 'Open Bookmark',
+	},
+	[FOOTER_DESCRIPTION_I18N_MAP.history]: {
+		[LanguageType.zh]: '打开历史记录',
+		[LanguageType.en]: 'Open History',
+	},
+	[FOOTER_DESCRIPTION_I18N_MAP.plugin]: {
+		[LanguageType.zh]: '启动命令',
+		[LanguageType.en]: 'Open Command',
 	},
 }

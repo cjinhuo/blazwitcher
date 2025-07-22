@@ -8,11 +8,11 @@ import {
 	SecondaryContainer,
 	TitleContainer,
 } from '~shared/common-styles'
-import type { CommandPlugin } from '~shared/types'
+import type { ItemType, ListItemType } from '~shared/types'
 import { searchValueAtom } from '~sidepanel/atom'
 
 interface RenderPluginItemProps {
-	item: CommandPlugin
+	item: ListItemType<ItemType.Plugin>
 }
 
 const PluginContainer = styled(ContentContainer)`
@@ -26,13 +26,13 @@ const CommandText = styled.div`
 	font-weight: 500;
 `
 
-export function RenderPluginItem({ item }: RenderPluginItemProps) {
+export function RenderPluginItem({ item: { data } }: RenderPluginItemProps) {
 	return (
 		<PluginContainer>
-			<ImageContainer className={IMAGE_CLASS}>{item.icon}</ImageContainer>
+			<ImageContainer className={IMAGE_CLASS}>{data.icon}</ImageContainer>
 			<TitleContainer>
-				<CommandText className={NORMAL_TEXT_CLASS}>{item.command}</CommandText>
-				<SecondaryContainer className={NORMAL_TEXT_CLASS}>{item.description}</SecondaryContainer>
+				<CommandText className={NORMAL_TEXT_CLASS}>{data.command}</CommandText>
+				<SecondaryContainer className={NORMAL_TEXT_CLASS}>{data.description}</SecondaryContainer>
 			</TitleContainer>
 		</PluginContainer>
 	)
@@ -41,9 +41,9 @@ export function RenderPluginItem({ item }: RenderPluginItemProps) {
 export function usePluginClickItem() {
 	const setSearchValue = useSetAtom(searchValueAtom)
 
-	const handlePluginClick = (plugin: CommandPlugin) => {
-		// 额外添加一个空格，方便 alt 删除单个单词
-		setSearchValue({ value: `${plugin.command} ` })
+	const handlePluginClick = (plugin: ListItemType<ItemType.Plugin>) => {
+		// 额外添加一个空格，方便按住 alt 快捷删除单个单词
+		setSearchValue({ value: `${plugin.data.command} ` })
 	}
 
 	return handlePluginClick

@@ -58,6 +58,29 @@ export function isDivideItem(item: ListItemType): item is ListItemType<ItemType.
 	return item.itemType === ItemType.Divide
 }
 
+export function isPluginItem(item: ListItemType): item is ListItemType<ItemType.Plugin> {
+	return item.itemType === ItemType.Plugin
+}
+
+export function getItemType(item: ListItemType) {
+	if (isTabItem(item)) {
+		return ItemType.Tab
+	}
+	if (isBookmarkItem(item)) {
+		return ItemType.Bookmark
+	}
+	if (isHistoryItem(item)) {
+		return ItemType.History
+	}
+	if (isPluginItem(item)) {
+		return ItemType.Plugin
+	}
+	if (isDivideItem(item)) {
+		return ItemType.Divide
+	}
+	return undefined
+}
+
 // todo 需要做一个每次首次都不需要等待的节流函数
 export function throttle(delay: number) {
 	let timer = undefined

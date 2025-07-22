@@ -4,6 +4,7 @@
 	"exclude": ["node_modules"],
 	"include": [".plasmo/index.d.ts", "./**/*.ts", "./**/*.tsx"],
 	"compilerOptions": {
+		"maxNodeModuleJsDepth": 20,
 		"paths": {
 			"~*": ["./*"]
 		},

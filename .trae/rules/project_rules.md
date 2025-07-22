@@ -6,6 +6,7 @@ always: true
 生成的代码格式按照 [biome.json](../../biome.json) 规则
 
 # 项目技术栈
+- 插件框架：plasmo
 - UI框架: React 18
 - 编程语言: TypeScript
 - 组件库: Semi

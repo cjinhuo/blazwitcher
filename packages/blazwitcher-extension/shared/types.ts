@@ -42,6 +42,7 @@ export interface ItemTypeSet {
 	[ItemType.Tab]: TabItemType
 	[ItemType.Bookmark]: BookmarkItemType
 	[ItemType.History]: HistoryItemType
+	[ItemType.Plugin]: CommandPlugin
 }
 
 export enum ItemType {
@@ -49,6 +50,7 @@ export enum ItemType {
 	Bookmark = 'bookmark',
 	History = 'history',
 	Divide = 'divide',
+	Plugin = 'plugin',
 }
 
 export interface ListItemType<T extends ItemType = ItemType> {

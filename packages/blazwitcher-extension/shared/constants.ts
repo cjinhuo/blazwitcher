@@ -1,4 +1,4 @@
-import type { TabGroupColorMapType } from './types'
+import { ItemType, type TabGroupColorMapType } from './types'
 
 // class name
 export const MAIN_CONTENT_CLASS = 'main-content'
@@ -115,3 +115,10 @@ export const EXTENSION_STORAGE_HISTORY_MAX_RESULTS = 'historyMaxResults'
 export const EXTENSION_STORAGE_WINDOW_WIDTH = 'windowWidth'
 export const EXTENSION_STORAGE_WINDOW_HEIGHT = 'windowHeight'
 export const EXTENSION_STORAGE_DISPLAY_MODE = 'displayMode'
+
+export const FOOTER_DESCRIPTION_I18N_MAP = {
+	[ItemType.Tab]: 'tab_footer_description',
+	[ItemType.Bookmark]: 'bookmark_footer_description',
+	[ItemType.History]: 'history_footer_description',
+	[ItemType.Plugin]: 'plugin_footer_description',
+} as const
