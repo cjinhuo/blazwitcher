@@ -1,4 +1,4 @@
-import { IconCustomerSupport, IconDesktop, IconKey, IconSearch } from '@douyinfe/semi-icons'
+import { IconCustomerSupport, IconDesktop, IconHistory, IconKey, IconSearch } from '@douyinfe/semi-icons'
 import { Layout, Nav } from '@douyinfe/semi-ui'
 import { useAtomValue } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { i18nAtom } from '~sidepanel/atom'
 import { useTheme } from '~sidepanel/hooks/useTheme'
 import { AppearancePanel } from './appearance-panel'
+import { ChangelogPanel } from './changelog-panel'
 import { ContactPanel } from './contact-panel'
 import { KeyboardPanel } from './keyboard-panel'
 import { SearchPanel } from './search-panel'
@@ -14,6 +15,7 @@ enum SettingPanelKey {
 	APPEARANCE = 'appearance',
 	KEYBOARD = 'keyboard',
 	SEARCH = 'search',
+	CHANGELOG = 'changelog',
 	CONTACT = 'contact',
 }
 
@@ -31,12 +33,12 @@ const styles = {
     display: flex;
     flex-direction: row;
   `,
-	content: styled(Content)`
+	content: styled(Content)<{ $disableScroll?: boolean }>`
     flex: 1;
     padding: 12px;
     display: flex;
     justify-content: center;
-    overflow: auto;
+    overflow: ${(props) => (props.$disableScroll ? 'hidden' : 'auto')};
   `,
 	wrapper: styled.div`
     width: 100%;
@@ -90,6 +92,11 @@ export const SettingPanels: React.FC = () => {
 			text: i18n(SettingPanelKey.KEYBOARD),
 		},
 		{
+			itemKey: SettingPanelKey.CHANGELOG,
+			icon: <IconHistory />,
+			text: i18n(SettingPanelKey.CHANGELOG),
+		},
+		{
 			itemKey: SettingPanelKey.CONTACT,
 			icon: <IconCustomerSupport />,
 			text: i18n(SettingPanelKey.CONTACT),
@@ -104,6 +111,8 @@ export const SettingPanels: React.FC = () => {
 				return <KeyboardPanel />
 			case SettingPanelKey.SEARCH:
 				return <SearchPanel />
+			case SettingPanelKey.CHANGELOG:
+				return <ChangelogPanel />
 			case SettingPanelKey.CONTACT:
 				return <ContactPanel />
 			default:
@@ -122,7 +131,7 @@ export const SettingPanels: React.FC = () => {
 					defaultIsCollapsed={isCollapsed}
 				/>
 			</Sider>
-			<styles.content>
+			<styles.content $disableScroll={activeKey === SettingPanelKey.CHANGELOG}>
 				<styles.wrapper>{renderPanel()}</styles.wrapper>
 			</styles.content>
 		</styles.layout>
