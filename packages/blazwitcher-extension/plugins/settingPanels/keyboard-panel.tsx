@@ -13,7 +13,7 @@ import { collectPressedKeys, isValidShortcut, standardizeKeyOrder } from '~sidep
 const styles = {
 	card: styled(Card)`
     width: 100%;
-  `,
+  ` as typeof Card,
 	shortcutDisplay: styled.div`
     font-family: monospace;
     background-color: var(--semi-color-fill-0);
@@ -64,7 +64,7 @@ const styles = {
   `,
 	editButton: styled(Button)`
     flex-shrink: 0;
-  `,
+  ` as typeof Button,
 	modalSection: styled.div`
     margin-bottom: 16px;
     

@@ -1,10 +1,45 @@
+import EnterSvg from 'react:~assets/enter.svg'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
+import styled from 'styled-components'
 import { FOOTER_DESCRIPTION_I18N_MAP } from '~shared/constants'
 import { ItemType } from '~shared/types'
 import { getItemType } from '~shared/utils'
 import { activeItemAtom } from '~sidepanel/atom'
 import useI18n from '~sidepanel/hooks/useI18n'
+
+const Container = styled.div`
+	display: flex;
+  cursor: pointer;
+	gap: 6px;
+	align-items: center;
+	padding: 2px 6px;
+	border-radius: 4px;
+	color: var(--color-neutral-5);
+	font-size: 11px;
+	font-weight: 600;
+	&:hover {
+		background-color: var(--semi-color-fill-0);
+		color: var(--color-neutral-3);
+		svg {
+      fill: var(--color-neutral-3);
+    }
+	}
+	&:active {
+		background-color: var(--semi-color-fill-1);
+	}
+`
+
+const SvgWithStrokeStyle = styled.div`
+  display: flex;
+	padding: 0px 4px;
+	border-radius: 4px;
+	border: none;
+	background-color: var(--semi-color-fill-1);
+  > svg {
+    fill: var(--color-neutral-5);
+  }
+`
 
 export default function ActiveItemDescription() {
 	const i18n = useI18n()
@@ -24,5 +59,12 @@ export default function ActiveItemDescription() {
 		}
 	}, [activeItem, i18n])
 	console.log('activeItem', activeItem)
-	return <>{descriptionKey}</>
+	return (
+		<Container>
+			{descriptionKey}
+			<SvgWithStrokeStyle>
+				<EnterSvg width={18} height={18} />
+			</SvgWithStrokeStyle>
+		</Container>
+	)
 }

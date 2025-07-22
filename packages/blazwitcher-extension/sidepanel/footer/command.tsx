@@ -20,6 +20,9 @@ const CommandContainer = styled.div`
 		background-color: var(--semi-color-fill-0);
 		color: var(--color-neutral-3);
 	}
+	&:active {
+		background-color: var(--semi-color-fill-1);
+	}
 `
 
 const CommandLabel = styled.span`

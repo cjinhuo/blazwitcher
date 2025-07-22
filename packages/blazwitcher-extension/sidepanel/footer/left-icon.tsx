@@ -24,6 +24,9 @@ const SvgWithStrokeStyle = styled.button`
       stroke: var(--color-neutral-3);
     }
   }
+	&:active {
+		background-color: var(--semi-color-fill-1);
+	}
 `
 
 const SvgWithFileStyle = styled.div`
@@ -42,6 +45,9 @@ const SvgWithFileStyle = styled.div`
       fill: var(--color-neutral-3);
     }
   }
+	&:active {
+		background-color: var(--semi-color-fill-1);
+	}
 `
 
 const LeftIconContainer = styled.div`

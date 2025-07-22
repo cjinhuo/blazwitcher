@@ -1,8 +1,8 @@
-import type { CommandPlugin } from '~shared/types'
+import type { CommandPlugin, ItemType, ListItemType } from '~shared/types'
 
-export function matchPlugin(plugins: CommandPlugin[], value: string) {
+export function matchPlugin(plugins: ListItemType<ItemType.Plugin>[], value: string) {
 	const pluginMap = plugins.reduce<Record<string, CommandPlugin>>((acc, plugin) => {
-		acc[plugin.command] = plugin
+		acc[plugin.data.command] = plugin.data
 		return acc
 	}, {})
 	for (let i = 0; i < value.length; i++) {

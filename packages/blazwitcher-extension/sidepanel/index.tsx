@@ -99,13 +99,7 @@ export default function SidePanel() {
 		if (searchValue.startsWith('/')) {
 			const [hitPlugin, mainSearchValue] = matchPlugin(plugins(i18n), searchValue)
 			if (!hitPlugin)
-				return (
-					<List
-						list={plugins(i18n) as any}
-						handleItemClick={handlePluginItemClick as any}
-						RenderItem={RenderPluginItem as any}
-					/>
-				)
+				return <List list={plugins(i18n)} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem} />
 			if (hitPlugin.render) {
 				return hitPlugin.render()
 			}

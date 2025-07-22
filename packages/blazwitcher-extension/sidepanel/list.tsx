@@ -141,6 +141,9 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 
 	useEffect(() => {
 		setActiveItem(list[activeIndex])
+		return () => {
+			setActiveItem(undefined)
+		}
 	}, [activeIndex, list, setActiveItem])
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
