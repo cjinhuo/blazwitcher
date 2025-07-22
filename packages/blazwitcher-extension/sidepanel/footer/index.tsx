@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import ActiveItemDescription from './active-item-description'
 import { Command } from './command'
 import LeftIcon from './left-icon'
 
@@ -12,6 +13,18 @@ const FooterContainer = styled.div`
 	justify-content: space-between;
   gap: 10px;
 `
+const RightContainer = styled.div`
+	display: flex;
+	gap: 8px;
+	align-items: center;
+`
+
+const ColumnDivide = styled.div`
+	width: 2px;
+	height: 14px;
+	border-radius: 4px;
+	background-color: var(--color-neutral-7);
+`
 
 export default function Footer() {
 	const handleMouseDown = (e: React.MouseEvent) => {
@@ -22,7 +35,11 @@ export default function Footer() {
 	return (
 		<FooterContainer onMouseDown={handleMouseDown}>
 			<LeftIcon />
-			<Command />
+			<RightContainer>
+				<ActiveItemDescription />
+				<ColumnDivide />
+				<Command />
+			</RightContainer>
 		</FooterContainer>
 	)
 }

@@ -1,6 +1,6 @@
 import { IllustrationNoResult, IllustrationNoResultDark } from '@douyinfe/semi-illustrations'
 import { Empty, List as ListComponent } from '@douyinfe/semi-ui'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { HIGHLIGHT_TEXT_CLASS, HOST_CLASS, IMAGE_CLASS, NORMAL_TEXT_CLASS, SVG_CLASS } from '~shared/common-styles'
@@ -8,7 +8,7 @@ import type { ListItemType } from '~shared/types'
 import { useKeyboardListen } from '~sidepanel/hooks/useKeyboardListen'
 import { DIVIDE_CLASS, LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS, VISIBILITY_CLASS } from '../shared/constants'
 import { closeCurrentWindowAndClearStorage, isDivideItem, scrollIntoViewIfNeeded } from '../shared/utils'
-import { compositionAtom, i18nAtom } from './atom'
+import { activeItemAtom, compositionAtom, i18nAtom } from './atom'
 
 const ListContainer = styled.div`
   padding: 6px;
@@ -112,10 +112,6 @@ const setScrollTopIfNeeded = () => {
 	scrollIntoViewIfNeeded(activeItem, mainContent, divideItem)
 }
 
-const emptyStyle = {
-	padding: 30,
-}
-
 interface ListProps<T extends ListItemType = ListItemType> {
 	list: T[]
 	// 通过 props 传进来就可以在外面控制如何渲染和点击事件
@@ -126,9 +122,11 @@ interface ListProps<T extends ListItemType = ListItemType> {
 export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 	const i18n = useAtomValue(i18nAtom)
 	const isComposition = useAtomValue(compositionAtom)
+	const setActiveItem = useSetAtom(activeItemAtom)
 	const [activeIndex, setActiveIndex] = useState<number>(-1)
 	const i = useRef(activeIndex)
 	const timer = useRef<NodeJS.Timeout>()
+	// 累积的偏移量，用于在快速连续按键时收集所有偏移量，通过防抖机制批量处理，避免频繁更新 activeIndex 造成性能问题
 	const accumulatedOffset = useRef(0)
 
 	// listen shortcut
@@ -141,21 +139,47 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 		i.current = firstValidIndex
 	}, [list])
 
+	useEffect(() => {
+		setActiveItem(list[activeIndex])
+	}, [activeIndex, list, setActiveItem])
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useLayoutEffect(() => {
+		setScrollTopIfNeeded()
+	}, [activeIndex])
+
 	const changeActiveIndex = useCallback(
 		(offset: number) => {
-			const currentIndex = i.current
-			let index = currentIndex + offset
-			if (index < 0) {
-				index = list.length - 1
+			let targetIndex = i.current + offset
+
+			// 处理边界情况
+			if (targetIndex < 0) {
+				targetIndex = list.length - 1
 			}
-			if (index >= list.length) {
-				index = list.findIndex((item) => !isDivideItem(item))
+			if (targetIndex >= list.length) {
+				targetIndex = list.findIndex((item) => !isDivideItem(item))
 			}
-			i.current = index
-			setActiveIndex(index)
+
+			// 跳过分隔项
+			while (targetIndex >= 0 && targetIndex < list.length && isDivideItem(list[targetIndex])) {
+				targetIndex += offset > 0 ? 1 : -1
+
+				// 再次处理边界
+				if (targetIndex < 0) {
+					targetIndex = list.length - 1
+				}
+				if (targetIndex >= list.length) {
+					targetIndex = list.findIndex((item) => !isDivideItem(item))
+					break
+				}
+			}
+
+			i.current = targetIndex
+			setActiveIndex(targetIndex)
 		},
 		[list]
 	)
+
 	const debounceChangeActiveIndex = useCallback(() => {
 		if (timer.current) {
 			clearTimeout(timer.current)
@@ -172,27 +196,14 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 	const keyActionsChangeIndex = useCallback(
 		(offset: number) => {
 			accumulatedOffset.current += offset
-
-			while (true) {
-				const nextIndex = i.current + accumulatedOffset.current
-				if (nextIndex < 0 || nextIndex >= list.length) break
-				const item = list[nextIndex]
-				if (!isDivideItem(item)) break
-				accumulatedOffset.current += offset > 0 ? 1 : -1
-			}
 			debounceChangeActiveIndex()
 		},
-		[debounceChangeActiveIndex, list]
+		[debounceChangeActiveIndex]
 	)
 
 	const handleEnterEvent = useCallback(() => {
 		handleItemClick(list[activeIndex])
 	}, [activeIndex, list, handleItemClick])
-
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useLayoutEffect(() => {
-		setScrollTopIfNeeded()
-	}, [activeIndex])
 
 	const keydownHandler = useCallback(
 		(event: KeyboardEvent) => {
@@ -237,7 +248,9 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 						image={<IllustrationNoResult style={{ width: 150, height: 150 }} />}
 						darkModeImage={<IllustrationNoResultDark style={{ width: 150, height: 150 }} />}
 						description={i18n('emptySearch')}
-						style={emptyStyle}
+						style={{
+							padding: 30,
+						}}
 					/>
 				}
 				renderItem={(item, index) => {
