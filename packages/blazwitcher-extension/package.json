@@ -6,17 +6,15 @@
 	"author": "cjinhuo@qq.com",
 	"scripts": {
 		"prebuild": "npx tsx scripts/pre-build.ts",
-		"generateChangelog": "node scripts/generate-changelog.js",
-		"dev": "pnpm run prebuild && pnpm run generateChangelog && plasmo dev",
-		"build": "pnpm run prebuild && pnpm run generateChangelog && plasmo build",
+		"dev": "pnpm run prebuild && plasmo dev",
+		"build": "pnpm run prebuild && plasmo build",
 		"package": "plasmo build && plasmo package",
 		"help": "plasmo --help",
 		"debug": "plasmo dev --verbose",
-		"scan-cn": "node scripts/scan-cn.js",
 		"fetch-releases": "npx tsx scripts/fetch-github-releases.ts",
 		"push-release": "npx tsx scripts/push-new-release.ts"
 	},
-	"dependencies": { 
+	"dependencies": {
 		"@commitlint/config-conventional": "^19.2.2",
 		"@douyinfe/semi-icons": "^2.62.0",
 		"@douyinfe/semi-illustrations": "^2.74.0",
@@ -24,13 +22,15 @@
 		"dotenv": "^17.2.0",
 		"jotai": "^2.9.3",
 		"lodash-es": "^4.17.21",
+		"marked": "^16.1.1",
 		"observable-hooks": "^4.2.4",
 		"plasmo": "0.90.3",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"rxjs": "8.0.0-alpha.14",
 		"styled-components": "^6.1.11",
-		"text-search-engine": "1.5.0"
+		"text-search-engine": "1.5.0",
+		"turndown": "^7.2.0"
 	},
 	"devDependencies": {
 		"@babel/parser": "^7.26.3",

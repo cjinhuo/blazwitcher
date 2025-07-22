@@ -33,12 +33,12 @@ const styles = {
     display: flex;
     flex-direction: row;
   `,
-	content: styled(Content)`
+	content: styled(Content)<{ $disableScroll?: boolean }>`
     flex: 1;
     padding: 12px;
     display: flex;
     justify-content: center;
-    overflow: auto;
+    overflow: ${(props) => (props.$disableScroll ? 'hidden' : 'auto')};
   `,
 	wrapper: styled.div`
     width: 100%;
@@ -131,7 +131,7 @@ export const SettingPanels: React.FC = () => {
 					defaultIsCollapsed={isCollapsed}
 				/>
 			</Sider>
-			<styles.content>
+			<styles.content $disableScroll={activeKey === SettingPanelKey.CHANGELOG}>
 				<styles.wrapper>{renderPanel()}</styles.wrapper>
 			</styles.content>
 		</styles.layout>
