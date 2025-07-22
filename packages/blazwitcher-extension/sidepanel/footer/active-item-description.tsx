@@ -1,14 +1,20 @@
 import EnterSvg from 'react:~assets/enter.svg'
 import { useAtomValue } from 'jotai'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
+import { usePluginClickItem } from '~plugins/render-item'
 import { FOOTER_DESCRIPTION_I18N_MAP } from '~shared/constants'
 import { ItemType } from '~shared/types'
-import { getItemType } from '~shared/utils'
+import { getItemType, handleItemClick, isPluginItem } from '~shared/utils'
 import { activeItemAtom } from '~sidepanel/atom'
 import useI18n from '~sidepanel/hooks/useI18n'
 
 const Container = styled.div`
+	display: flex;
+	align-items: center;
+`
+
+const EnterContainer = styled.div`
 	display: flex;
   cursor: pointer;
 	gap: 6px;
@@ -41,8 +47,18 @@ const SvgWithStrokeStyle = styled.div`
   }
 `
 
+const ColumnDivide = styled.div`
+	width: 2px;
+	height: 14px;
+	border-radius: 4px;
+	margin: 0 6px;
+	background-color: var(--color-neutral-7);
+`
+
 export default function ActiveItemDescription() {
 	const i18n = useI18n()
+	const handlePluginItemClick = usePluginClickItem()
+
 	const activeItem = useAtomValue(activeItemAtom)
 	const descriptionKey = useMemo(() => {
 		if (!activeItem) return undefined
@@ -58,13 +74,25 @@ export default function ActiveItemDescription() {
 				return i18n(FOOTER_DESCRIPTION_I18N_MAP.plugin)
 		}
 	}, [activeItem, i18n])
-	console.log('activeItem', activeItem)
-	return (
-		<Container>
-			{descriptionKey}
-			<SvgWithStrokeStyle>
-				<EnterSvg width={18} height={18} />
-			</SvgWithStrokeStyle>
+
+	const handleClick = useCallback(() => {
+		if (!activeItem) return
+		if (isPluginItem(activeItem)) {
+			handlePluginItemClick(activeItem)
+			return
+		}
+		handleItemClick(activeItem)
+	}, [activeItem, handlePluginItemClick])
+
+	return descriptionKey ? (
+		<Container onClick={handleClick}>
+			<EnterContainer>
+				{descriptionKey}
+				<SvgWithStrokeStyle>
+					<EnterSvg width={18} height={18} />
+				</SvgWithStrokeStyle>
+			</EnterContainer>
+			<ColumnDivide />
 		</Container>
-	)
+	) : null
 }

@@ -15,15 +15,7 @@ const FooterContainer = styled.div`
 `
 const RightContainer = styled.div`
 	display: flex;
-	gap: 8px;
 	align-items: center;
-`
-
-const ColumnDivide = styled.div`
-	width: 2px;
-	height: 14px;
-	border-radius: 4px;
-	background-color: var(--color-neutral-7);
 `
 
 export default function Footer() {
@@ -37,7 +29,6 @@ export default function Footer() {
 			<LeftIcon />
 			<RightContainer>
 				<ActiveItemDescription />
-				<ColumnDivide />
 				<Command />
 			</RightContainer>
 		</FooterContainer>
