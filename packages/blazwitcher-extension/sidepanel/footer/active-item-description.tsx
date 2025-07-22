@@ -78,15 +78,14 @@ export default function ActiveItemDescription() {
 	const handleClick = useCallback(() => {
 		if (!activeItem) return
 		if (isPluginItem(activeItem)) {
-			handlePluginItemClick(activeItem)
-			return
+			return handlePluginItemClick(activeItem)
 		}
 		handleItemClick(activeItem)
 	}, [activeItem, handlePluginItemClick])
 
 	return descriptionKey ? (
-		<Container onClick={handleClick}>
-			<EnterContainer>
+		<Container>
+			<EnterContainer onClick={handleClick}>
 				{descriptionKey}
 				<SvgWithStrokeStyle>
 					<EnterSvg width={18} height={18} />
