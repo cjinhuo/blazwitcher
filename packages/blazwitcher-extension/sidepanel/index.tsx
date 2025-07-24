@@ -15,6 +15,7 @@ import { ItemType, type ListItemType } from '~shared/types'
 import { i18nAtom, searchConfigAtom } from '~sidepanel/atom'
 import useOriginalList from '~sidepanel/hooks/useOriginalList'
 import { useTheme } from '~sidepanel/hooks/useTheme'
+import { useVersionCheck } from '~sidepanel/hooks/useVersionCheck'
 import Footer from './footer'
 import List from './list'
 import { RenderItem as ListItemRenderItem } from './list-item'
@@ -41,6 +42,7 @@ export default function SidePanel() {
 	const handlePluginItemClick = usePluginClickItem()
 
 	useTheme()
+	useVersionCheck()
 
 	const RenderList = useCallback(
 		(list: ListItemType[], hasInput: boolean) => {

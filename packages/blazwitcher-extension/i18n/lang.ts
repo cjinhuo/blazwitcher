@@ -288,6 +288,26 @@ export const lang = {
 		[LanguageType.zh]: '访问 GitHub 获取更多信息',
 		[LanguageType.en]: 'Visit GitHub page for more information',
 	},
+	updateNotificationTooltip: {
+		[LanguageType.zh]: '查看最新版本更新内容',
+		[LanguageType.en]: 'View latest version updates',
+	},
+	newVersionAvailable: {
+		[LanguageType.zh]: '发现新版本',
+		[LanguageType.en]: 'New Version Available',
+	},
+	latestUpdates: {
+		[LanguageType.zh]: '最新更新',
+		[LanguageType.en]: 'Latest Updates',
+	},
+	viewDetails: {
+		[LanguageType.zh]: '查看详情',
+		[LanguageType.en]: 'View Details',
+	},
+	markAsRead: {
+		[LanguageType.zh]: '标记为已读',
+		[LanguageType.en]: 'Mark as Read',
+	},
 	// footer
 	[FOOTER_DESCRIPTION_I18N_MAP.tab]: {
 		[LanguageType.zh]: '切换标签页',

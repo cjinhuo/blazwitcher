@@ -9,6 +9,7 @@ export * from './shortcutAtom'
 export * from './i18nAtom'
 export * from './searchConfigAtom'
 export * from './windowAtom'
+export * from './versionAtom'
 
 export const themeAtom = atomWithStorage<'dark' | 'light' | 'system'>(PAGE_STORAGE_THEME_COLOR, 'system')
 export const activeItemAtom = atomWithReset<ListItemType | null>(null)

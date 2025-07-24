@@ -6,6 +6,7 @@ import { PopoverWrapper } from '~shared/common-styles'
 import { GITHUB_ISSUE_URL, GITHUB_URL } from '~shared/constants'
 import { createTabWithUrl } from '~shared/utils'
 import { i18nAtom } from '../atom'
+import UpdateNotification from './update-notification'
 
 const SvgWithStrokeStyle = styled.button`
   cursor: pointer;
@@ -61,6 +62,7 @@ export default function LeftIcon() {
 
 	return (
 		<LeftIconContainer>
+			<UpdateNotification />
 			<PopoverWrapper content={i18n('githubTooltip')} position='top'>
 				<SvgWithStrokeStyle onClick={() => createTabWithUrl(GITHUB_URL)}>
 					<GithubSvg style={{ width: '18px', height: '18px' }} />

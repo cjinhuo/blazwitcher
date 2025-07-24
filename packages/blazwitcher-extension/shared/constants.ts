@@ -108,6 +108,7 @@ export const PAGE_STORAGE_LANGUAGE_KEY = 'language'
 export const PAGE_STORAGE_SHORTCUT_MAPPINGS = 'shortcut_mappings'
 export const PAGE_STORAGE_THEME_COLOR = 'theme_color'
 export const PAGE_STORAGE_SEARCH_CONFIG = 'search_config'
+export const PAGE_STORAGE_LAST_SEEN_VERSION = 'last_seen_version'
 
 // extension storage keys
 export const EXTENSION_STORAGE_HISTORY_MAX_DAYS = 'historyMaxDays'
