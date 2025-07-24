@@ -31,12 +31,20 @@ const appendContextMenus = () => {
 }
 
 async function main() {
+	console.log(111)
 	weakUpWindowIfActiveByUser()
 	appendContextMenus()
 
 	// It can not be an sync calculation, since maybe the bookmarks data of user is way too large.
 	const getProcessedData = dataProcessing()
 	chrome.runtime.onConnect.addListener(async (port) => {
+		port.onDisconnect.addListener(() => {
+			// 关闭popup（update notification）时
+			if (port.name !== MAIN_WINDOW) {
+				chrome.action.setPopup({ popup: '' })
+				chrome.action.setBadgeText({ text: '' })
+			}
+		})
 		if (port.name === MAIN_WINDOW) {
 			// 第一版简单点，background 实时计算 tabs 和 bookmarks 数据，在用户打开 window 时，同步发送过去
 			port.postMessage(await getProcessedData())
