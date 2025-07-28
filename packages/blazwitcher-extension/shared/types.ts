@@ -76,18 +76,18 @@ export const OperationItemTitleMap: Record<string, TranslationKeys> = {
 }
 
 export interface CommandPlugin {
-	// 命令
-	command: string
-	// 别名，暂时不做
-	alias?: string
-	icon: React.ReactNode
-	// 输入框背景的占位符
-	description: string
-	// 数据处理
-	dataProcessing?: (data: ListItemType[]) => ListItemType[]
-	// 渲染
-	render?: () => React.ReactNode
-}
+		// 命令
+		command: string
+		// 别名，暂时不做
+		alias?: string
+		icon: React.ReactNode
+		// 输入框背景的占位符
+		description: string
+		// 数据处理
+		dataProcessing?: (data: ListItemType[]) => ListItemType[]
+		// 渲染
+		render?: (settingMode?: string) => React.ReactNode
+	}
 
 type ColorKey = 'grey' | 'blue' | 'red' | 'yellow' | 'green' | 'pink' | 'purple' | 'cyan' | 'orange'
 

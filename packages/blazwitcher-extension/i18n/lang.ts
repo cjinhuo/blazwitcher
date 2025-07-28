@@ -295,14 +295,6 @@ export const lang = {
 	/**
 	 * 更新notification文案
 	 */
-	updateNotificationDesc: {
-		[LanguageType.zh]: '搜索插件已更新！',
-		[LanguageType.en]: 'Your search plugin has been updated!',
-	},
-	hopeYouLikeIt: {
-		[LanguageType.zh]: '期望得到你的好评和反馈',
-		[LanguageType.en]: 'Mind drop a good review',
-	},
 	clickToViewUpdateLog: {
 		[LanguageType.zh]: '点击查看更新日志',
 		[LanguageType.en]: 'Click to view update log',

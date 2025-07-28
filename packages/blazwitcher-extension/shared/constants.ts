@@ -31,16 +31,12 @@ export enum LanguageType {
 }
 
 export const PERSONAL_GITHUB_URL = 'https://github.com/cjinhuo'
-export const GITHUB_RELEASES_URL = `${PERSONAL_GITHUB_URL}/blazwitcher/releases`
-export const GITHUB_ISSUES_URL = `${PERSONAL_GITHUB_URL}/blazwitcher/issues`
 export const GITHUB_URL = `${PERSONAL_GITHUB_URL}/blazwitcher`
 export const GITHUB_ISSUE_URL = `${GITHUB_URL}/issues/new?template=feature_bug.md`
 export const BLOG_URL = 'https://cjinhuo.github.io'
 export const EMAIL_URL = 'cjinhuo@qq.com'
 
 export const CHROME_EXTENSIONS_SHORTCUTS_URL = 'chrome://extensions/shortcuts'
-export const CHROME_EXTENSIONS_URL =
-	'https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg'
 
 export const ONE_DAY_MILLISECONDS = 24 * 60 * 60 * 1000
 
@@ -112,6 +108,7 @@ export const PAGE_STORAGE_LANGUAGE_KEY = 'language'
 export const PAGE_STORAGE_SHORTCUT_MAPPINGS = 'shortcut_mappings'
 export const PAGE_STORAGE_THEME_COLOR = 'theme_color'
 export const PAGE_STORAGE_SEARCH_CONFIG = 'search_config'
+export const PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION = 'show_update_notification'
 
 // extension storage keys
 export const EXTENSION_STORAGE_HISTORY_MAX_DAYS = 'historyMaxDays'
@@ -127,4 +124,10 @@ export const FOOTER_DESCRIPTION_I18N_MAP = {
 	[ItemType.Plugin]: 'plugin_footer_description',
 } as const
 
-export const EXTENSION_ID = 'fgmogngnfagcgcpfdclfeebmjoadekhd'
+export enum SettingPanelKey {
+	APPEARANCE = 'appearance',
+	KEYBOARD = 'keyboard',
+	SEARCH = 'search',
+	CHANGELOG = 'changelog',
+	CONTACT = 'contact',
+}

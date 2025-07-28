@@ -1,53 +1,69 @@
 import GithubSvg from 'react:~assets/github.svg'
 import IssueSvg from 'react:~assets/issue.svg'
-import { useAtomValue } from 'jotai'
-import styled from 'styled-components'
+import { IconBellStroked } from '@douyinfe/semi-icons'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+import styled, { css } from 'styled-components'
 import { PopoverWrapper } from '~shared/common-styles'
-import { GITHUB_ISSUE_URL, GITHUB_URL } from '~shared/constants'
+import { GITHUB_ISSUE_URL, GITHUB_URL, SettingPanelKey } from '~shared/constants'
 import { createTabWithUrl } from '~shared/utils'
-import { i18nAtom } from '../atom'
+import { i18nAtom, searchValueAtom, showUpdateNotificationAtom } from '~sidepanel/atom'
 
-const SvgWithStrokeStyle = styled.button`
+const CommonSvgStyle = css`
   cursor: pointer;
+  padding: 3px 4px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
   display: flex;
-	padding: 3px 4px;
-	border-radius: 4px;
-	border: none;
-	background: transparent;
-  > svg {
-    stroke: var(--color-neutral-5);
-    stroke-width: 3px;
-  }
-  &:hover {
-		background-color: var(--semi-color-fill-0);
+	&:hover {
+    background-color: var(--semi-color-fill-0);
     > svg {
       stroke: var(--color-neutral-3);
     }
   }
-	&:active {
-		background-color: var(--semi-color-fill-1);
-	}
+  
+  &:active {
+    background-color: var(--semi-color-fill-1);
+  }
 `
 
-const SvgWithFileStyle = styled.div`
-  cursor: pointer;
-	padding: 3px 4px;
-	border-radius: 4px;
-	border: none;
-	background: transparent;
-  display: flex;
+const SvgWithStrokeStyle = styled.button`
+  ${CommonSvgStyle}
+  
+  > svg {
+    stroke: var(--color-neutral-5);
+    stroke-width: 3px;
+  }
+  
+`
+
+const SvgWithFileStyle = styled.button`
+  ${CommonSvgStyle}
+  
   > svg {
     fill: var(--color-neutral-5);
   }
-  &:hover {
-		background-color: var(--semi-color-fill-0);
-    > svg {
-      fill: var(--color-neutral-3);
-    }
-  }
-	&:active {
-		background-color: var(--semi-color-fill-1);
-	}
+  
+`
+
+const UpdateNotificationButton = styled.button`
+  ${CommonSvgStyle}
+	color: var(--color-neutral-5);
+  position: relative;
+  align-items: center;
+  justify-content: center;
+`
+
+const UpdateDot = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+  border-radius: 50%;
+  border: 1px solid white;
+  transition: all 0.2s ease;
 `
 
 const LeftIconContainer = styled.div`
@@ -58,6 +74,22 @@ const LeftIconContainer = styled.div`
 
 export default function LeftIcon() {
 	const i18n = useAtomValue(i18nAtom)
+	const setSearchValue = useSetAtom(searchValueAtom)
+	const [showUpdateNotification, setShowUpdateNotification] = useAtom(showUpdateNotificationAtom)
+
+	// 创建更新提示内容
+	const updateContent = (
+		<div style={{ textAlign: 'left' }}>
+			<div style={{ fontSize: '11px', marginBottom: '2px' }}>{i18n('clickToViewUpdateLog')}</div>
+		</div>
+	)
+
+	const handleUpdateClick = () => {
+		setShowUpdateNotification(false)
+		setSearchValue({
+			value: `/s ${SettingPanelKey.CHANGELOG}`,
+		})
+	}
 
 	return (
 		<LeftIconContainer>
@@ -74,6 +106,12 @@ export default function LeftIcon() {
 				>
 					<IssueSvg style={{ width: '18px', height: '18px' }} />
 				</SvgWithFileStyle>
+			</PopoverWrapper>
+			<PopoverWrapper content={updateContent} position='top'>
+				<UpdateNotificationButton onClick={handleUpdateClick}>
+					<IconBellStroked style={{ width: '18px', height: '18px' }} />
+					{showUpdateNotification && <UpdateDot />}
+				</UpdateNotificationButton>
 			</PopoverWrapper>
 		</LeftIconContainer>
 	)

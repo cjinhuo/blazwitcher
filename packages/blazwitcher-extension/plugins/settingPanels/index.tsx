@@ -1,23 +1,16 @@
 import { IconCustomerSupport, IconDesktop, IconHistory, IconKey, IconSearch } from '@douyinfe/semi-icons'
 import { Layout, Nav } from '@douyinfe/semi-ui'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { i18nAtom } from '~sidepanel/atom'
+import { SettingPanelKey } from '~shared/constants'
+import { i18nAtom, searchValueAtom } from '~sidepanel/atom'
 import { useTheme } from '~sidepanel/hooks/useTheme'
 import { AppearancePanel } from './appearance-panel'
 import { ChangelogPanel } from './changelog-panel'
 import { ContactPanel } from './contact-panel'
 import { KeyboardPanel } from './keyboard-panel'
 import { SearchPanel } from './search-panel'
-
-enum SettingPanelKey {
-	APPEARANCE = 'appearance',
-	KEYBOARD = 'keyboard',
-	SEARCH = 'search',
-	CHANGELOG = 'changelog',
-	CONTACT = 'contact',
-}
 
 interface MenuItem {
 	itemKey: SettingPanelKey
@@ -47,11 +40,23 @@ const styles = {
   `,
 }
 
-export const SettingPanels: React.FC = () => {
+interface SettingPanelsProps {
+	initialPanel?: SettingPanelKey
+}
+
+export const SettingPanels: React.FC<SettingPanelsProps> = ({ initialPanel }) => {
 	const i18n = useAtomValue(i18nAtom)
-	const [activeKey, setActiveKey] = useState<SettingPanelKey>(SettingPanelKey.APPEARANCE)
+	const setSearchValue = useSetAtom(searchValueAtom)
+	const [activeKey, setActiveKey] = useState<SettingPanelKey>(initialPanel || SettingPanelKey.APPEARANCE)
 	useTheme()
 	const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth)
+
+	// 监听 initialPanel 变化，更新 activeKey
+	useEffect(() => {
+		if (initialPanel) {
+			setActiveKey(initialPanel)
+		}
+	}, [initialPanel])
 
 	// Track window resize for responsive design
 	useEffect(() => {
@@ -120,6 +125,11 @@ export const SettingPanels: React.FC = () => {
 		}
 	}
 
+	const handleNavSelect = (data) => {
+		setActiveKey(data.itemKey as SettingPanelKey)
+		setSearchValue({ value: `/s ${data.itemKey}` })
+	}
+
 	return (
 		<styles.layout>
 			<Sider>
@@ -127,7 +137,7 @@ export const SettingPanels: React.FC = () => {
 					style={{ width: navWidth, height: '100%' }}
 					items={menuItems}
 					selectedKeys={[activeKey]}
-					onSelect={(data) => setActiveKey(data.itemKey as SettingPanelKey)}
+					onSelect={(data) => handleNavSelect(data)}
 					defaultIsCollapsed={isCollapsed}
 				/>
 			</Sider>
