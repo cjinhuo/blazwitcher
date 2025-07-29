@@ -5,6 +5,7 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import styled, { css } from 'styled-components'
 import { PopoverWrapper } from '~shared/common-styles'
 import { GITHUB_ISSUE_URL, GITHUB_URL, SettingPanelKey } from '~shared/constants'
+import releases from '~shared/releases.json'
 import { createTabWithUrl } from '~shared/utils'
 import { i18nAtom, searchValueAtom, showUpdateNotificationAtom } from '~sidepanel/atom'
 
@@ -76,6 +77,7 @@ export default function LeftIcon() {
 	const i18n = useAtomValue(i18nAtom)
 	const setSearchValue = useSetAtom(searchValueAtom)
 	const [showUpdateNotification, setShowUpdateNotification] = useAtom(showUpdateNotificationAtom)
+	const newestVersion = releases?.[0]?.tag_name
 
 	// 创建更新提示内容
 	const updateContent = (
@@ -85,7 +87,7 @@ export default function LeftIcon() {
 	)
 
 	const handleUpdateClick = () => {
-		setShowUpdateNotification(false)
+		setShowUpdateNotification(newestVersion)
 		setSearchValue({
 			value: `/s ${SettingPanelKey.CHANGELOG}`,
 		})
@@ -107,12 +109,14 @@ export default function LeftIcon() {
 					<IssueSvg style={{ width: '18px', height: '18px' }} />
 				</SvgWithFileStyle>
 			</PopoverWrapper>
-			<PopoverWrapper content={updateContent} position='top'>
-				<UpdateNotificationButton onClick={handleUpdateClick}>
-					<IconBellStroked style={{ width: '18px', height: '18px' }} />
-					{showUpdateNotification && <UpdateDot />}
-				</UpdateNotificationButton>
-			</PopoverWrapper>
+			{showUpdateNotification !== newestVersion && (
+				<PopoverWrapper content={updateContent} position='top'>
+					<UpdateNotificationButton onClick={handleUpdateClick}>
+						<IconBellStroked style={{ width: '18px', height: '18px' }} />
+						<UpdateDot />
+					</UpdateNotificationButton>
+				</PopoverWrapper>
+			)}
 		</LeftIconContainer>
 	)
 }

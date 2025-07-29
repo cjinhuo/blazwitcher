@@ -17,7 +17,7 @@ export const compositionAtom = atomWithReset<boolean>(false)
 export const hitPluginAtom = atomWithReset<CommandPlugin | null>(null)
 export const searchValueAtom = atomWithReset<{ value: string }>({ value: '' })
 // 展示更新通知footer
-export const showUpdateNotificationAtom = atomWithStorage<boolean>(PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION, true)
+export const showUpdateNotificationAtom = atomWithStorage<string>(PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION, '')
 
 // restore appearance panel settings、
 export const restoreAppearanceSettingsAtom = atom(
