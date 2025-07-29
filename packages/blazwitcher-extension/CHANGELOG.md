@@ -1,5 +1,18 @@
 # blazwitcher
 
+## 0.6.0
+
+### Minor Changes
+
+- feat: add changelog panel and enhance footer with update notifications @Julian0197 · 2025-07-29 · [#b626f03e](https://github.com/cjinhuo/pure-search/commit/b626f03edce0e0b51b73568e0d7324816d77d794)
+- feat: 添加更新日志面板并增强底部栏功能 @Julian0197 · 2025-07-29 · [#b626f03e](https://github.com/cjinhuo/pure-search/commit/b626f03edce0e0b51b73568e0d7324816d77d794)
+
+### Patch Changes
+
+- upgrade text-search-engine@1.5.0 to support isConsecutiveForChar @cjinhuo · 2025-06-25 · [#ca2558b9](https://github.com/cjinhuo/pure-search/commit/ca2558b95d3b354cec8ddb29f4696e2c97cfdc3e)
+- feat: show more information in footer,includes Setting command shortcut and the description of the enter operation for the currently active item @cjinhuo · 2025-07-22 · [#00ec5212](https://github.com/cjinhuo/pure-search/commit/00ec5212ba2e39a449ce156c6bcb4f9f1a3357ac)
+- feat: 在 footer 展示更多信息,包括进入设置页的快捷方式和当前选中条目的 enter 操作描述 @cjinhuo · 2025-07-22 · [#00ec5212](https://github.com/cjinhuo/pure-search/commit/00ec5212ba2e39a449ce156c6bcb4f9f1a3357ac)
+
 ## 0.5.4
 
 ### Patch Changes
@@ -24,6 +37,7 @@
 ## 0.5.1
 
 ### Patch Changes
+
 - feat: new icon for setting entrance and separate css for options page @MSK · 2025-03-12 · [#9e2a53f](https://github.com/cjinhuo/blazwitcher/commit/9e2a53f)
 - feat: 设置入口新图标和选项页面独立 CSS @MSK · 2025-03-12 · [#9e2a53f](https://github.com/cjinhuo/blazwitcher/commit/9e2a53f)
 
