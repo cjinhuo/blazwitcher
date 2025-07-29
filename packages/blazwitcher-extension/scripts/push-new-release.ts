@@ -100,7 +100,7 @@ async function createGitHubRelease(version: string, changelog: ChangelogEntry): 
 		console.log(`🚀 正在创建 GitHub Release: ${version}`)
 
 		// 构建 release body
-		const releaseBody = `## 版本 ${version}\n\n${changelog.content}`
+		const releaseBody = `${changelog.content}`
 
 		const response = await fetch(GITHUB_CONFIG.RELEASES_URL, {
 			method: 'POST',
