@@ -1,21 +1,16 @@
-import { IconCustomerSupport, IconDesktop, IconKey, IconSearch } from '@douyinfe/semi-icons'
+import { IconCustomerSupport, IconDesktop, IconHistory, IconKey, IconSearch } from '@douyinfe/semi-icons'
 import { Layout, Nav } from '@douyinfe/semi-ui'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { i18nAtom } from '~sidepanel/atom'
+import { SettingPanelKey } from '~shared/constants'
+import { i18nAtom, searchValueAtom } from '~sidepanel/atom'
 import { useTheme } from '~sidepanel/hooks/useTheme'
 import { AppearancePanel } from './appearance-panel'
+import { ChangelogPanel } from './changelog-panel'
 import { ContactPanel } from './contact-panel'
 import { KeyboardPanel } from './keyboard-panel'
 import { SearchPanel } from './search-panel'
-
-enum SettingPanelKey {
-	APPEARANCE = 'appearance',
-	KEYBOARD = 'keyboard',
-	SEARCH = 'search',
-	CONTACT = 'contact',
-}
 
 interface MenuItem {
 	itemKey: SettingPanelKey
@@ -31,12 +26,12 @@ const styles = {
     display: flex;
     flex-direction: row;
   `,
-	content: styled(Content)`
+	content: styled(Content)<{ $disableScroll?: boolean }>`
     flex: 1;
     padding: 12px;
     display: flex;
     justify-content: center;
-    overflow: auto;
+    overflow: ${(props) => (props.$disableScroll ? 'hidden' : 'auto')};
   `,
 	wrapper: styled.div`
     width: 100%;
@@ -45,11 +40,23 @@ const styles = {
   `,
 }
 
-export const SettingPanels: React.FC = () => {
+interface SettingPanelsProps {
+	initialPanel?: SettingPanelKey
+}
+
+export const SettingPanels: React.FC<SettingPanelsProps> = ({ initialPanel }) => {
 	const i18n = useAtomValue(i18nAtom)
-	const [activeKey, setActiveKey] = useState<SettingPanelKey>(SettingPanelKey.APPEARANCE)
+	const setSearchValue = useSetAtom(searchValueAtom)
+	const [activeKey, setActiveKey] = useState<SettingPanelKey>(initialPanel || SettingPanelKey.APPEARANCE)
 	useTheme()
 	const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth)
+
+	// 监听 initialPanel 变化，更新 activeKey
+	useEffect(() => {
+		if (initialPanel) {
+			setActiveKey(initialPanel)
+		}
+	}, [initialPanel])
 
 	// Track window resize for responsive design
 	useEffect(() => {
@@ -90,6 +97,11 @@ export const SettingPanels: React.FC = () => {
 			text: i18n(SettingPanelKey.KEYBOARD),
 		},
 		{
+			itemKey: SettingPanelKey.CHANGELOG,
+			icon: <IconHistory />,
+			text: i18n(SettingPanelKey.CHANGELOG),
+		},
+		{
 			itemKey: SettingPanelKey.CONTACT,
 			icon: <IconCustomerSupport />,
 			text: i18n(SettingPanelKey.CONTACT),
@@ -104,11 +116,18 @@ export const SettingPanels: React.FC = () => {
 				return <KeyboardPanel />
 			case SettingPanelKey.SEARCH:
 				return <SearchPanel />
+			case SettingPanelKey.CHANGELOG:
+				return <ChangelogPanel />
 			case SettingPanelKey.CONTACT:
 				return <ContactPanel />
 			default:
 				return null
 		}
+	}
+
+	const handleNavSelect = (data) => {
+		setActiveKey(data.itemKey as SettingPanelKey)
+		setSearchValue({ value: `/s ${data.itemKey}` })
 	}
 
 	return (
@@ -118,11 +137,11 @@ export const SettingPanels: React.FC = () => {
 					style={{ width: navWidth, height: '100%' }}
 					items={menuItems}
 					selectedKeys={[activeKey]}
-					onSelect={(data) => setActiveKey(data.itemKey as SettingPanelKey)}
+					onSelect={(data) => handleNavSelect(data)}
 					defaultIsCollapsed={isCollapsed}
 				/>
 			</Sider>
-			<styles.content>
+			<styles.content $disableScroll={activeKey === SettingPanelKey.CHANGELOG}>
 				<styles.wrapper>{renderPanel()}</styles.wrapper>
 			</styles.content>
 		</styles.layout>

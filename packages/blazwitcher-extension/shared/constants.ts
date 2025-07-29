@@ -108,6 +108,7 @@ export const PAGE_STORAGE_LANGUAGE_KEY = 'language'
 export const PAGE_STORAGE_SHORTCUT_MAPPINGS = 'shortcut_mappings'
 export const PAGE_STORAGE_THEME_COLOR = 'theme_color'
 export const PAGE_STORAGE_SEARCH_CONFIG = 'search_config'
+export const PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION = 'show_update_notification'
 
 // extension storage keys
 export const EXTENSION_STORAGE_HISTORY_MAX_DAYS = 'historyMaxDays'
@@ -122,3 +123,11 @@ export const FOOTER_DESCRIPTION_I18N_MAP = {
 	[ItemType.History]: 'history_footer_description',
 	[ItemType.Plugin]: 'plugin_footer_description',
 } as const
+
+export enum SettingPanelKey {
+	APPEARANCE = 'appearance',
+	KEYBOARD = 'keyboard',
+	SEARCH = 'search',
+	CHANGELOG = 'changelog',
+	CONTACT = 'contact',
+}

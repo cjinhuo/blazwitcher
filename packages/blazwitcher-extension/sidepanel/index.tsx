@@ -101,7 +101,7 @@ export default function SidePanel() {
 			if (!hitPlugin)
 				return <List list={plugins(i18n)} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem} />
 			if (hitPlugin.render) {
-				return hitPlugin.render()
+				return hitPlugin.render(searchValue)
 			}
 			realList = hitPlugin.dataProcessing(originalList)
 			realSearchValue = mainSearchValue

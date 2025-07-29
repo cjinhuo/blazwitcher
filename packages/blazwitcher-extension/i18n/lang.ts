@@ -103,6 +103,10 @@ export const lang = {
 		[LanguageType.zh]: '搜索',
 		[LanguageType.en]: 'Search',
 	},
+	changelog: {
+		[LanguageType.zh]: '更新日志',
+		[LanguageType.en]: 'Change Log',
+	},
 	contact: {
 		[LanguageType.zh]: '联系',
 		[LanguageType.en]: 'Contact',
@@ -287,6 +291,13 @@ export const lang = {
 	githubTooltip: {
 		[LanguageType.zh]: '访问 GitHub 获取更多信息',
 		[LanguageType.en]: 'Visit GitHub page for more information',
+	},
+	/**
+	 * 更新notification文案
+	 */
+	clickToViewUpdateLog: {
+		[LanguageType.zh]: '点击查看更新日志',
+		[LanguageType.en]: 'Click to view update log',
 	},
 	// footer
 	[FOOTER_DESCRIPTION_I18N_MAP.tab]: {
