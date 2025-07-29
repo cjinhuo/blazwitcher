@@ -16,8 +16,8 @@ export const originalListAtom = atomWithReset<ListItemType[]>([])
 export const compositionAtom = atomWithReset<boolean>(false)
 export const hitPluginAtom = atomWithReset<CommandPlugin | null>(null)
 export const searchValueAtom = atomWithReset<{ value: string }>({ value: '' })
-// 展示更新通知footer
-export const showUpdateNotificationAtom = atomWithStorage<string>(PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION, '')
+// 存储用户最后查看的版本号，用于控制更新通知的显示
+export const lastViewedVersionAtom = atomWithStorage<string>(PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION, '')
 
 // restore appearance panel settings、
 export const restoreAppearanceSettingsAtom = atom(

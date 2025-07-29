@@ -7,7 +7,7 @@ import { PopoverWrapper } from '~shared/common-styles'
 import { GITHUB_ISSUE_URL, GITHUB_URL, SettingPanelKey } from '~shared/constants'
 import releases from '~shared/releases.json'
 import { createTabWithUrl } from '~shared/utils'
-import { i18nAtom, searchValueAtom, showUpdateNotificationAtom } from '~sidepanel/atom'
+import { i18nAtom, lastViewedVersionAtom, searchValueAtom } from '~sidepanel/atom'
 
 const CommonSvgStyle = css`
   cursor: pointer;
@@ -18,9 +18,6 @@ const CommonSvgStyle = css`
   display: flex;
 	&:hover {
     background-color: var(--semi-color-fill-0);
-    > svg {
-      stroke: var(--color-neutral-3);
-    }
   }
   
   &:active {
@@ -35,15 +32,24 @@ const SvgWithStrokeStyle = styled.button`
     stroke: var(--color-neutral-5);
     stroke-width: 3px;
   }
+	&:hover {
+		> svg {
+      stroke: var(--color-neutral-3);
+    }
+	}
   
 `
 
 const SvgWithFileStyle = styled.button`
   ${CommonSvgStyle}
-  
   > svg {
     fill: var(--color-neutral-5);
   }
+	&:hover {
+		> svg {
+    fill: var(--color-neutral-3);
+    }
+	}
   
 `
 
@@ -53,6 +59,9 @@ const UpdateNotificationButton = styled.button`
   position: relative;
   align-items: center;
   justify-content: center;
+	&:hover {
+		color: var(--color-neutral-3);
+	}
 `
 
 const UpdateDot = styled.div`
@@ -64,7 +73,6 @@ const UpdateDot = styled.div`
   background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
   border-radius: 50%;
   border: 1px solid white;
-  transition: all 0.2s ease;
 `
 
 const LeftIconContainer = styled.div`
@@ -76,7 +84,7 @@ const LeftIconContainer = styled.div`
 export default function LeftIcon() {
 	const i18n = useAtomValue(i18nAtom)
 	const setSearchValue = useSetAtom(searchValueAtom)
-	const [showUpdateNotification, setShowUpdateNotification] = useAtom(showUpdateNotificationAtom)
+	const [lastViewedVersion, setLastViewedVersion] = useAtom(lastViewedVersionAtom)
 	const newestVersion = releases?.[0]?.tag_name
 
 	// 创建更新提示内容
@@ -87,7 +95,7 @@ export default function LeftIcon() {
 	)
 
 	const handleUpdateClick = () => {
-		setShowUpdateNotification(newestVersion)
+		setLastViewedVersion(newestVersion)
 		setSearchValue({
 			value: `/s ${SettingPanelKey.CHANGELOG}`,
 		})
@@ -109,7 +117,7 @@ export default function LeftIcon() {
 					<IssueSvg style={{ width: '18px', height: '18px' }} />
 				</SvgWithFileStyle>
 			</PopoverWrapper>
-			{showUpdateNotification !== newestVersion && (
+			{lastViewedVersion !== newestVersion && (
 				<PopoverWrapper content={updateContent} position='top'>
 					<UpdateNotificationButton onClick={handleUpdateClick}>
 						<IconBellStroked style={{ width: '18px', height: '18px' }} />
