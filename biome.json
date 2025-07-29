@@ -12,7 +12,7 @@
 	"formatter": {
 		"enabled": true,
 		"formatWithErrors": false,
-		"ignore": ["package.json"],
+		"ignore": ["package.json", "releases.json"],
 		"attributePosition": "auto",
 		"indentStyle": "tab",
 		"indentWidth": 2,

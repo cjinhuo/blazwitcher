@@ -32,7 +32,7 @@
   },
   "lint-staged": {
     "**.{js,ts,jsx,tsx,json}": [
-      "biome check --files-ignore-unknown=true",
+      "biome check --files-ignore-unknown=false",
       "biome check --write --no-errors-on-unmatched",
       "biome check --write --organize-imports-enabled=false --no-errors-on-unmatched",
       "biome check --write --unsafe --no-errors-on-unmatched",
