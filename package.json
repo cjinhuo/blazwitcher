@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "server"
   ],
   "scripts": {
     "dev": "pnpm --parallel --filter \"./packages/blazwitcher-extension\" run dev",
@@ -15,7 +16,7 @@
     "fetch_releases": "dotenv -e .env -- pnpm --filter blazwitcher fetch-releases",
     "bump_and_push_and_fetch": "pnpm bump_version && pnpm push_release && pnpm fetch_releases",
     "lint": "biome check --files-ignore-unknown=true ./packages/**/*.{ts,tsx}",
-    "format": "biome format --write ./packages/**/*.{ts,tsx}",
+    "format": "biome format --write ./{packages,server}/**/*.{ts,tsx,json}",
     "commit": "git add . && czg"
   },
   "devDependencies": {

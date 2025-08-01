@@ -55,7 +55,8 @@
 				"noForEach": "off"
 			},
 			"style": {
-				"useSelfClosingElements": "off"
+				"useSelfClosingElements": "off",
+				"useImportType": "off"
 			}
 		}
 	}
