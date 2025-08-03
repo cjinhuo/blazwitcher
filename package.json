@@ -15,8 +15,8 @@
     "push_release": "dotenv -e .env -- pnpm --filter blazwitcher push-release",
     "fetch_releases": "dotenv -e .env -- pnpm --filter blazwitcher fetch-releases",
     "bump_and_push_and_fetch": "pnpm bump_version && pnpm push_release && pnpm fetch_releases",
-    "lint": "biome check --files-ignore-unknown=true ./packages/**/*.{ts,tsx}",
-    "format": "biome format --write ./{packages,server}/**/*.{ts,tsx,json}",
+    "lint": "find ./packages ./server -name '*.ts' -o -name '*.tsx' | xargs pnpm exec biome check",
+    "format": "find ./packages ./server -name '*.ts' -o -name '*.tsx' -o -name '*.json' | xargs pnpm exec biome format --write",
     "commit": "git add . && czg"
   },
   "devDependencies": {
@@ -33,7 +33,7 @@
   },
   "lint-staged": {
     "**.{js,ts,jsx,tsx,json}": [
-      "biome check --files-ignore-unknown=false",
+      "biome check --files-ignore-unknown=true",
       "biome check --write --no-errors-on-unmatched",
       "biome check --write --organize-imports-enabled=false --no-errors-on-unmatched",
       "biome check --write --unsafe --no-errors-on-unmatched",
