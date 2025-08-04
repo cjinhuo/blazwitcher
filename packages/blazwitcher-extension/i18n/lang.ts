@@ -316,4 +316,12 @@ export const lang = {
 		[LanguageType.zh]: '启动命令',
 		[LanguageType.en]: 'Open Command',
 	},
+	pinCurrentTab: {
+		[LanguageType.zh]: '固定当前标签页',
+		[LanguageType.en]: 'Pin Current Tab',
+	},
+	duplicateCurrentTab: {
+		[LanguageType.zh]: '复制当前标签页',
+		[LanguageType.en]: 'Duplicate Current Tab',
+	},
 }

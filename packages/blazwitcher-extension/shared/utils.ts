@@ -142,6 +142,24 @@ export const closeTab = async (item: ListItemType<ItemType.Tab>) => {
 	await chrome.tabs.remove(item.data.id)
 }
 
+export const pinCurrentTab = async () => {
+	const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
+	const activeTab = tabs[0]
+	if (activeTab?.id) {
+		await chrome.tabs.update(activeTab.id, { pinned: !activeTab.pinned })
+		closeCurrentWindowAndClearStorage()
+	}
+}
+
+export const duplicateCurrentTab = async () => {
+	const tabs = await chrome.tabs.query({ active: true, currentWindow: true })
+	const activeTab = tabs[0]
+	if (activeTab?.id) {
+		await chrome.tabs.duplicate(activeTab.id)
+		closeCurrentWindowAndClearStorage()
+	}
+}
+
 export const deleteItem = async (item: ListItemType) => {
 	if (isHistoryItem(item)) {
 		return await chrome.history.deleteUrl({ url: item.data.url })
