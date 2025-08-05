@@ -6,11 +6,11 @@ import styled from 'styled-components'
 import { SettingPanelKey } from '~shared/constants'
 import { i18nAtom, searchValueAtom } from '~sidepanel/atom'
 import { useTheme } from '~sidepanel/hooks/useTheme'
-import { AppearancePanel } from './appearance-panel'
-import { ChangelogPanel } from './changelog-panel'
-import { ContactPanel } from './contact-panel'
-import { KeyboardPanel } from './keyboard-panel'
-import { SearchPanel } from './search-panel'
+import { AppearancePanel } from './appearance'
+import { ChangelogPanel } from './changelog'
+import { ContactPanel } from './contact'
+import { KeyboardPanel } from './keyboard'
+import { SearchPanel } from './search'
 
 interface MenuItem {
 	itemKey: SettingPanelKey
@@ -80,33 +80,73 @@ export const SettingPanels: React.FC<SettingPanelsProps> = ({ initialPanel }) =>
 		}
 	}, [windowWidth])
 
-	const menuItems: MenuItem[] = [
-		{
-			itemKey: SettingPanelKey.APPEARANCE,
-			icon: <IconDesktop />,
-			text: i18n(SettingPanelKey.APPEARANCE),
-		},
-		{
-			itemKey: SettingPanelKey.SEARCH,
-			icon: <IconSearch />,
-			text: i18n(SettingPanelKey.SEARCH),
-		},
-		{
-			itemKey: SettingPanelKey.KEYBOARD,
-			icon: <IconKey />,
-			text: i18n(SettingPanelKey.KEYBOARD),
-		},
-		{
-			itemKey: SettingPanelKey.CHANGELOG,
-			icon: <IconHistory />,
-			text: i18n(SettingPanelKey.CHANGELOG),
-		},
-		{
-			itemKey: SettingPanelKey.CONTACT,
-			icon: <IconCustomerSupport />,
-			text: i18n(SettingPanelKey.CONTACT),
-		},
-	]
+	const menuItems: MenuItem[] = useMemo(
+		() => [
+			{
+				itemKey: SettingPanelKey.APPEARANCE,
+				icon: <IconDesktop />,
+				text: i18n(SettingPanelKey.APPEARANCE),
+			},
+			{
+				itemKey: SettingPanelKey.SEARCH,
+				icon: <IconSearch />,
+				text: i18n(SettingPanelKey.SEARCH),
+			},
+			{
+				itemKey: SettingPanelKey.KEYBOARD,
+				icon: <IconKey />,
+				text: i18n(SettingPanelKey.KEYBOARD),
+			},
+			{
+				itemKey: SettingPanelKey.CHANGELOG,
+				icon: <IconHistory />,
+				text: i18n(SettingPanelKey.CHANGELOG),
+			},
+			{
+				itemKey: SettingPanelKey.CONTACT,
+				icon: <IconCustomerSupport />,
+				text: i18n(SettingPanelKey.CONTACT),
+			},
+		],
+		[i18n]
+	)
+
+	// 键盘导航功能
+	useEffect(() => {
+		const handleKeyDown = (event: KeyboardEvent) => {
+			const currentIndex = menuItems.findIndex((item) => item.itemKey === activeKey)
+			if (currentIndex === -1) return
+
+			let nextIndex = currentIndex
+
+			switch (event.key) {
+				case 'ArrowUp':
+					event.preventDefault()
+					nextIndex = currentIndex > 0 ? currentIndex - 1 : menuItems.length - 1
+					break
+				case 'ArrowDown':
+					event.preventDefault()
+					nextIndex = currentIndex < menuItems.length - 1 ? currentIndex + 1 : 0
+					break
+				default:
+					return
+			}
+
+			const nextItem = menuItems[nextIndex]
+			if (nextItem) {
+				setActiveKey(nextItem.itemKey)
+				setSearchValue({ value: `/s ${nextItem.itemKey}` })
+			}
+		}
+
+		// 添加键盘事件监听器
+		window.addEventListener('keydown', handleKeyDown)
+
+		// 清理事件监听器
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown)
+		}
+	}, [activeKey, menuItems, setSearchValue])
 
 	const renderPanel = () => {
 		switch (activeKey) {

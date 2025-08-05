@@ -1,5 +1,5 @@
 import SettingSvg from 'react:~assets/setting.svg'
-import { SettingPanels } from '~plugins/settingPanels'
+import { SettingPanels } from '~plugins/ui/setting-panels'
 import { SettingPanelKey } from '~shared/constants'
 import type { CommandPlugin } from '~shared/types'
 import type { i18nFunction } from '~sidepanel/atom'
