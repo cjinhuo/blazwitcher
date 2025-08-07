@@ -62,8 +62,8 @@ export const lang = {
 		[LanguageType.en]: (weeks: number) => `Visited ${weeks} weeks ago`,
 	},
 	placeholder: {
-		[LanguageType.zh]: '输入搜索内容',
-		[LanguageType.en]: 'Type to search',
+		[LanguageType.zh]: '搜索标签页、书签、历史记录，或输入 / 查看 commands',
+		[LanguageType.en]: 'Search Tab, Bookmark, History or type / for commands',
 	},
 	searchOpenTab: {
 		[LanguageType.zh]: '在打开的标签页中搜索',
