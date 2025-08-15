@@ -56,8 +56,24 @@
 			},
 			"style": {
 				"useSelfClosingElements": "off",
-				"useImportType": "off"
+				"useImportType": "off",
+				"useNodejsImportProtocol": "warn"
 			}
 		}
-	}
+	},
+	"overrides": [
+		{
+			"include": ["server/**/*.ts"],
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"noExplicitAny": "off"
+					},
+					"style": {
+						"useNodejsImportProtocol": "warn"
+					}
+				}
+			}
+		}
+	]
 }
