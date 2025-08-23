@@ -1,7 +1,7 @@
 import { useAtomValue } from 'jotai'
 import { marked } from 'marked'
 import releases from '~shared/releases.json'
-import { themeAtom } from '~sidepanel/atom'
+import { languageAtom, themeAtom } from '~sidepanel/atom'
 import { isDarkMode } from '~sidepanel/hooks/useTheme'
 
 marked.setOptions({
@@ -41,6 +41,7 @@ function formatDate(dateString: string): string {
 
 export function ChangelogPanel() {
 	const themeColor = useAtomValue(themeAtom)
+	const language = useAtomValue(languageAtom)
 	const isDark = isDarkMode(themeColor)
 
 	// Helper to generate HTML for iframe
@@ -171,9 +172,10 @@ export function ChangelogPanel() {
 			}
 		`
 
+		const langCode = language === 'zh' ? 'zh-CN' : 'en'
 		return `
 			<!DOCTYPE html>
-			<html lang='zh-CN'>
+			<html lang='${langCode}'>
 			<head>
 				<meta charset='UTF-8' />
 				<meta name='viewport' content='width=device-width, initial-scale=1.0' />
