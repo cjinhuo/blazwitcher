@@ -1,4 +1,5 @@
-import { Body, Controller, Post, Res } from '@nestjs/common'
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common'
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler'
 import type { Response } from 'express'
 import { ArkService } from './ark.service'
 
@@ -7,6 +8,8 @@ interface CategorizeTabsRequestDto {
 }
 
 @Controller('ark')
+@UseGuards(ThrottlerGuard)
+@Throttle({ default: { ttl: 60 * 60 * 1000, limit: 20 } })
 export class ArkController {
 	constructor(private readonly arkService: ArkService) {}
 
