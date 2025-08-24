@@ -1,15 +1,18 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
-import { RateLimitMiddleware } from '../middleware/rate-limit.middleware'
+import { Module } from '@nestjs/common'
+import { ThrottlerModule } from '@nestjs/throttler'
 import { ArkController } from './ark.controller'
 import { ArkService } from './ark.service'
 
 @Module({
-	imports: [],
+	imports: [
+		ThrottlerModule.forRoot([
+			{
+				ttl: 60 * 60 * 1000, // 1小时时间窗口
+				limit: 1, // 每小时最多20次请求
+			},
+		]),
+	],
 	controllers: [ArkController],
-	providers: [ArkService, RateLimitMiddleware],
+	providers: [ArkService],
 })
-export class AppModule implements NestModule {
-	configure(consumer: MiddlewareConsumer) {
-		consumer.apply(RateLimitMiddleware).forRoutes('ark/*') // 只对 ark 路由应用限流
-	}
-}
+export class AppModule {}
