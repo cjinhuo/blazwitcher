@@ -11,6 +11,7 @@ import {
 	SELF_WINDOW_ID_KEY,
 	SELF_WINDOW_STATE,
 	ThemeColor,
+	URL_DARK_PARAM,
 } from './constants'
 import { storageGet, storageRemove } from './promisify'
 import { ItemType, type ListItemType, type Matrix } from './types'
@@ -348,7 +349,16 @@ export const getExecuteActionShortcuts = async () => {
 }
 
 export const isSystemDarkMode = () => {
-	return window.matchMedia?.('(prefers-color-scheme: dark)').matches
+	// 在 iframe 环境中，尝试从 URL 参数获取系统主题信息，在 inject modal 时会手动注入
+	try {
+		// 首先检查 URL 参数中是否有系统主题信息（由注入脚本传递）
+		const urlParams = new URLSearchParams(window.location.search)
+		const systemDarkParam = urlParams.get(URL_DARK_PARAM)
+		return !!systemDarkParam || window.matchMedia?.('(prefers-color-scheme: dark)').matches
+	} catch (error) {
+		console.error('Error getting system dark mode from URL:', error)
+		return window.matchMedia?.('(prefers-color-scheme: dark)').matches
+	}
 }
 
 export const isDarkMode = (theme: ThemeColor) =>

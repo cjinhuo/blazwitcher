@@ -5,11 +5,11 @@ import {
 	SELF_WINDOW_ID_KEY,
 	SELF_WINDOW_STATE,
 	ThemeColor,
+	URL_DARK_PARAM,
 	type WindowConfig,
 } from './constants'
 import { getWindowConfig } from './data-processing'
 import { getCurrentWindow, getDisplayInfo, getWindowById, storageGet, storageSet, tabsQuery } from './promisify'
-import { isDarkMode } from './utils'
 
 async function activeWindow() {
 	const sessionStorage = await storageGet(SELF_WINDOW_ID_KEY)
@@ -81,12 +81,39 @@ async function activeWindow() {
 	})
 }
 
+/**
+ * 获取实际的主题颜色，如果是系统主题则在页面上下文中检测，在某些页面 sidepanel.html 下的 window.matchMedia?.('(prefers-color-scheme: dark)') 值和系统不符合
+ */
+async function getActualThemeByTab(theme: ThemeColor, tabId?: number): Promise<ThemeColor> {
+	if (theme !== ThemeColor.System) {
+		return theme
+	}
+	if (!tabId) {
+		return ThemeColor.Light
+	}
+	try {
+		const result = await chrome.scripting.executeScript({
+			target: { tabId },
+			world: 'ISOLATED',
+			func: () => {
+				return window.matchMedia?.('(prefers-color-scheme: dark)').matches
+			},
+			injectImmediately: true,
+		})
+		return result[0]?.result ? ThemeColor.Dark : ThemeColor.Light
+	} catch (error) {
+		console.error('Failed to detect system theme, fallback to light', error)
+		return ThemeColor.Light
+	}
+}
+
 async function injectScriptToOpenModal(windowConfig: WindowConfig) {
 	try {
 		const tabs = await tabsQuery({ active: true, currentWindow: true })
-		const bodyBackground =
-			BodyBackgroundThemeColorMap[isDarkMode(windowConfig.theme) ? ThemeColor.Dark : ThemeColor.Light]
 		const activeTab = tabs[0]
+		const actualTheme = await getActualThemeByTab(windowConfig.theme, activeTab.id)
+		const bodyBackground = BodyBackgroundThemeColorMap[actualTheme]
+
 		if (activeTab.id) {
 			const url = chrome.runtime.getURL('sidepanel.html')
 			// https://chromewebstore.google.com/  插件商店也不能注入脚本
@@ -95,7 +122,7 @@ async function injectScriptToOpenModal(windowConfig: WindowConfig) {
 				target: { tabId: activeTab.id },
 				world: 'ISOLATED',
 				func: injectModal,
-				args: [url, windowConfig, bodyBackground, chrome.runtime.id],
+				args: [{ url, windowConfig, bodyBackground, urlDarkParam: URL_DARK_PARAM }, chrome.runtime.id],
 				injectImmediately: true,
 			})
 		}
@@ -106,7 +133,23 @@ async function injectScriptToOpenModal(windowConfig: WindowConfig) {
 	return true
 }
 
-async function injectModal(url: string, windowConfig: WindowConfig, bodyBackground: string, id?: string) {
+/**
+ * 注入 modal 到页面中，不能使用外部变量，只能通过参数传进来
+ * @param url
+ * @param windowConfig
+ * @param bodyBackground
+ * @param id
+ * @returns
+ */
+async function injectModal(
+	{
+		url,
+		windowConfig,
+		bodyBackground,
+		urlDarkParam,
+	}: { url: string; windowConfig: WindowConfig; bodyBackground: string; urlDarkParam: string },
+	id?: string
+) {
 	const iframeWidth = windowConfig.width
 	// 27 是浏览器标题栏高度
 	const iframeHeight = windowConfig.height - 27
@@ -131,7 +174,8 @@ async function injectModal(url: string, windowConfig: WindowConfig, bodyBackgrou
 	`
 
 	const iframe = document.createElement('iframe')
-	iframe.src = url
+	const isSystemDarkMode = window.matchMedia?.('(prefers-color-scheme: dark)').matches
+	iframe.src = isSystemDarkMode ? `${url}?${urlDarkParam}=${isSystemDarkMode}` : url
 	iframe.style.cssText = `
 		width: 100%;
 		height: 100%;

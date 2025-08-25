@@ -70,6 +70,8 @@ export enum ThemeColor {
 	System = 'system',
 }
 
+export const URL_DARK_PARAM = 'is_system_dark'
+
 export const BodyBackgroundThemeColorMap = {
 	[ThemeColor.Light]: 'rgb(255, 255, 255)',
 	[ThemeColor.Dark]: 'rgb(33, 34, 34)',
