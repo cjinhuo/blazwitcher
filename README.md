@@ -41,7 +41,7 @@ Those people who are looking for quick action and speed, like:
 
 
 ## shortcut
-The default **shortcut key** to active Blazwitcher Extension is `Command+.(Command+Period)` on Mac, and `Ctrl+.(Ctrl+Period)` on Windows. Of course, you could visit [chrome://extensions/shortcuts](chrome://extensions/shortcuts) to modify it to suit your habits.
+The default **shortcut key** to active Blazwitcher Extension is `Command+Shift+K` on Mac, and `Ctrl+Shift+K` on Windows. Of course, you could visit [chrome://extensions/shortcuts](chrome://extensions/shortcuts) to modify it to suit your habits.
 
 # Contributing
 Please see the [contributing guidelines](./CONTRIBUTING.md) to learn more.

@@ -36,7 +36,7 @@
 
 
 ## 快捷方式
-激活 Blazwitcher 扩展的默认快捷键是Mac上的`Command+.(Command+Period)`，Windows上的`Ctrl+.(Ctrl+Period)`。当然，你可以访问 [chrome://extensions/shortcuts](chrome://extensions/shortcuts) 来修改它以适应你的习惯。
+激活 Blazwitcher 扩展的默认快捷键是Mac上的`Command+Shift+K`，Windows上的`Ctrl+Shift+K`。当然，你可以访问 [chrome://extensions/shortcuts](chrome://extensions/shortcuts) 来修改它以适应你的习惯。
 
 
 # 贡献
