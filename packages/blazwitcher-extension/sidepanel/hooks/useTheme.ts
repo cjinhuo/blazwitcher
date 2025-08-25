@@ -7,12 +7,15 @@ const isSystemDarkMode = () => {
 	return window.matchMedia?.('(prefers-color-scheme: dark)').matches
 }
 
-const setThemeClass = (isDark: boolean) => {
-	document.body.classList.toggle('dark', isDark)
+export const setThemeClass = (isDark: boolean) => {
 	if (isDark) {
+		// 控制 skin.css 变量
+		document.body.classList.add('dark')
+		// 控制 semi 的主题
 		document.body.setAttribute('theme-mode', 'dark')
 	} else {
 		document.body.removeAttribute('theme-mode')
+		document.body.classList.remove('dark')
 	}
 }
 

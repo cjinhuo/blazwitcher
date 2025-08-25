@@ -2,6 +2,7 @@ import { atom } from 'jotai'
 import { atomWithReset, atomWithStorage } from 'jotai/utils'
 import { PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION, PAGE_STORAGE_THEME_COLOR } from '~shared/constants'
 import type { CommandPlugin, ListItemType } from '~shared/types'
+import { createSyncStorage } from './common'
 import { defaultLanguage, languageAtom } from './i18nAtom'
 import { restoreWindowConfigAtom } from './windowAtom'
 
@@ -10,7 +11,12 @@ export * from './i18nAtom'
 export * from './searchConfigAtom'
 export * from './windowAtom'
 
-export const themeAtom = atomWithStorage<'dark' | 'light' | 'system'>(PAGE_STORAGE_THEME_COLOR, 'system')
+export const themeAtom = atomWithStorage<'dark' | 'light' | 'system'>(
+	PAGE_STORAGE_THEME_COLOR,
+	'system',
+	createSyncStorage<'dark' | 'light' | 'system'>(),
+	{ getOnInit: true }
+)
 export const activeItemAtom = atomWithReset<ListItemType | null>(null)
 export const originalListAtom = atomWithReset<ListItemType[]>([])
 export const compositionAtom = atomWithReset<boolean>(false)

@@ -19,7 +19,6 @@ html, body {
 }
 body {
   	background-color: var(--color-normal-bg);
-  	background-image: linear-gradient(var(--color-linear-bg-start) 0%, var(--color-linear-bg-end) 100%);
 }
 #__plasmo {
   width: 100%;

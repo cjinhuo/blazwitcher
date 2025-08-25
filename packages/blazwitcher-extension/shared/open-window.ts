@@ -117,7 +117,7 @@ async function injectModal(url: string, windowConfig: WindowConfig, id?: string)
 		transform: translate(-50%, -50%);
 		width: ${iframeWidth}px;
 		height: ${iframeHeight}px;
-		background: white;
+		background: black;
 		z-index: 10000000;
 		border-radius: 10px;
 		overflow: hidden;
