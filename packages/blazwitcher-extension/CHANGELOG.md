@@ -1,5 +1,23 @@
 # blazwitcher
 
+## 0.7.0
+
+### Minor Changes
+
+- feat: refactor plugins module structure and add keyboard navigation @64144942+Julian0197@users.noreply.github.com · 2025-08-07 · [#aa8bfaff](https://github.com/cjinhuo/pure-search/commit/aa8bfaffb8f76ed452af07ba1e036ae5edbffd5f)
+- feat: 重构 plugins 模块结构并添加键盘导航功能 @64144942+Julian0197@users.noreply.github.com · 2025-08-07 · [#aa8bfaff](https://github.com/cjinhuo/pure-search/commit/aa8bfaffb8f76ed452af07ba1e036ae5edbffd5f)
+
+### Patch Changes
+
+- chore: change suggested_key from Command+. to Command+Shift+K @cjinhuo@qq.com · 2025-08-25 · [#cfc5e70b](https://github.com/cjinhuo/pure-search/commit/cfc5e70b2e53fcaa3757b59ce4ac7b798e95e26c)
+- fix: get system theme from current tab via excuteScript to solve window is undefined in background env @cjinhuo@qq.com · 2025-08-25 · [#cfc5e70b](https://github.com/cjinhuo/pure-search/commit/cfc5e70b2e53fcaa3757b59ce4ac7b798e95e26c)
+- chore: 默认快捷键从 cmd+. 改成 Command+Shift+k @cjinhuo@qq.com · 2025-08-25 · [#cfc5e70b](https://github.com/cjinhuo/pure-search/commit/cfc5e70b2e53fcaa3757b59ce4ac7b798e95e26c)
+- fix: 通过注入脚本获取系统主题来解决在 background 下拿不到 window 对象 @cjinhuo@qq.com · 2025-08-25 · [#cfc5e70b](https://github.com/cjinhuo/pure-search/commit/cfc5e70b2e53fcaa3757b59ce4ac7b798e95e26c)
+- feat: reduce the flickering of body background-color when open window in iframe mode @cjinhuo@qq.com · 2025-08-25 · [#816dc4f6](https://github.com/cjinhuo/pure-search/commit/816dc4f67da26a06cf20628b5644528bee94bf36)
+- feat: 当以 iframe 模式打开时减少背景颜色闪烁 @cjinhuo@qq.com · 2025-08-25 · [#816dc4f6](https://github.com/cjinhuo/pure-search/commit/816dc4f67da26a06cf20628b5644528bee94bf36)
+- feat: dynamically set html lang attribute with jotai atom @cjinhuo@qq.com · 2025-08-23 · [#4df9653c](https://github.com/cjinhuo/pure-search/commit/4df9653ca977493ee9204e5610502971ed981ee5)
+- feat: 根据 jotai 原子动态设置 html 语言属性 @cjinhuo@qq.com · 2025-08-23 · [#4df9653c](https://github.com/cjinhuo/pure-search/commit/4df9653ca977493ee9204e5610502971ed981ee5)
+
 ## 0.6.0
 
 ### Minor Changes
