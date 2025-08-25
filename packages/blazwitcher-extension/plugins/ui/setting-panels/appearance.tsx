@@ -11,7 +11,13 @@ import {
 import { Button, Card, InputNumber, Radio, RadioGroup, Tooltip } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import styled from 'styled-components'
-import { DisplayMode, LanguageType, SEARCH_WINDOW_HEIGHT, SEARCH_WINDOW_WIDTH } from '~shared/constants'
+import {
+	DisplayMode,
+	LanguageType,
+	SEARCH_WINDOW_HEIGHT,
+	SEARCH_WINDOW_WIDTH,
+	type ThemeColor,
+} from '~shared/constants'
 import { i18nAtom, languageAtom, restoreAppearanceSettingsAtom, themeAtom } from '~sidepanel/atom'
 import { displayModeAtom, heightAtom, widthAtom } from '~sidepanel/atom/windowAtom'
 
@@ -83,7 +89,7 @@ export const AppearancePanel: React.FC = () => {
 		setLanguage(value as LanguageType)
 	}
 
-	const handleThemeChange = (value: 'dark' | 'light' | 'system') => {
+	const handleThemeChange = (value: ThemeColor) => {
 		setThemeColor(value)
 	}
 

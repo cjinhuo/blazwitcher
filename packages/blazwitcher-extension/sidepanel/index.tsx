@@ -20,6 +20,7 @@ import { useLanguage } from './hooks/useLanguage'
 import List from './list'
 import { RenderItem as ListItemRenderItem } from './list-item'
 import Search from './search'
+import { startup } from './utils/startup'
 
 const { Header, Content } = Layout
 const Container = styled(Layout)`
@@ -34,6 +35,7 @@ const ContentWrapper = styled(Content)`
   padding: 0;
 `
 
+startup()
 export default function SidePanel() {
 	useTheme()
 	useLanguage()

@@ -1,12 +1,15 @@
 import {
+	BodyBackgroundThemeColorMap,
 	DisplayMode,
 	LAST_ACTIVE_WINDOW_ID_KEY,
 	SELF_WINDOW_ID_KEY,
 	SELF_WINDOW_STATE,
+	ThemeColor,
 	type WindowConfig,
 } from './constants'
 import { getWindowConfig } from './data-processing'
 import { getCurrentWindow, getDisplayInfo, getWindowById, storageGet, storageSet, tabsQuery } from './promisify'
+import { isDarkMode } from './utils'
 
 async function activeWindow() {
 	const sessionStorage = await storageGet(SELF_WINDOW_ID_KEY)
@@ -81,6 +84,8 @@ async function activeWindow() {
 async function injectScriptToOpenModal(windowConfig: WindowConfig) {
 	try {
 		const tabs = await tabsQuery({ active: true, currentWindow: true })
+		const bodyBackground =
+			BodyBackgroundThemeColorMap[isDarkMode(windowConfig.theme) ? ThemeColor.Dark : ThemeColor.Light]
 		const activeTab = tabs[0]
 		if (activeTab.id) {
 			const url = chrome.runtime.getURL('sidepanel.html')
@@ -90,23 +95,24 @@ async function injectScriptToOpenModal(windowConfig: WindowConfig) {
 				target: { tabId: activeTab.id },
 				world: 'ISOLATED',
 				func: injectModal,
-				args: [url, windowConfig, chrome.runtime.id],
+				args: [url, windowConfig, bodyBackground, chrome.runtime.id],
 				injectImmediately: true,
 			})
 		}
-	} catch (_error) {
+	} catch (error) {
+		console.error('injectScriptToOpenModal error', error)
 		return false
 	}
 	return true
 }
 
-async function injectModal(url: string, windowConfig: WindowConfig, id?: string) {
+async function injectModal(url: string, windowConfig: WindowConfig, bodyBackground: string, id?: string) {
 	const iframeWidth = windowConfig.width
 	// 27 是浏览器标题栏高度
 	const iframeHeight = windowConfig.height - 27
 	const NAMESPACE = `blazwitcher-chrome-ext-modal-${id || chrome.runtime.id}`
 	if (process.env.NODE_ENV !== 'production') {
-		console.log('injectModal', NAMESPACE, 'windowConfig', windowConfig)
+		console.log('injectModal', NAMESPACE, 'windowConfig', windowConfig, 'bodyBackground', bodyBackground)
 	}
 	if (document.getElementById(NAMESPACE)) return
 	const modal = document.createElement('div')
@@ -117,11 +123,11 @@ async function injectModal(url: string, windowConfig: WindowConfig, id?: string)
 		transform: translate(-50%, -50%);
 		width: ${iframeWidth}px;
 		height: ${iframeHeight}px;
-		background: white;
+		background: ${bodyBackground};
 		z-index: 10000000;
 		border-radius: 10px;
 		overflow: hidden;
-		box-shadow: 0 0 10px rgba(0,0,0,0.3);
+		box-shadow: 0 0 10px rgba(0,0,0,0.16);
 	`
 
 	const iframe = document.createElement('iframe')
@@ -142,7 +148,7 @@ async function injectModal(url: string, windowConfig: WindowConfig, id?: string)
 		left: 0;
 		width: 100%;
 		height: 100%;
-		background: rgba(0, 0, 0, 0.3);
+		background: rgba(0, 0, 0, 0.16);
 		z-index: 9999999;
 	`
 

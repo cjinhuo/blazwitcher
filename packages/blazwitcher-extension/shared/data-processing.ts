@@ -2,10 +2,10 @@ import {
 	DEFAULT_HISTORY_MAX_DAYS,
 	DEFAULT_HISTORY_MAX_RESULTS,
 	DefaultWindowConfig,
-	DisplayMode,
 	EXTENSION_STORAGE_DISPLAY_MODE,
 	EXTENSION_STORAGE_HISTORY_MAX_DAYS,
 	EXTENSION_STORAGE_HISTORY_MAX_RESULTS,
+	EXTENSION_STORAGE_THEME,
 	EXTENSION_STORAGE_WINDOW_HEIGHT,
 	EXTENSION_STORAGE_WINDOW_WIDTH,
 	ONE_DAY_MILLISECONDS,
@@ -152,20 +152,29 @@ export const traversalBookmarkTreeNode = (
 
 export async function getExtensionStorageSearchConfig() {
 	const extensionLocalStorage = await storageGetLocal()
+
+	const {
+		[EXTENSION_STORAGE_HISTORY_MAX_DAYS]: historyMaxDays = DEFAULT_HISTORY_MAX_DAYS,
+		[EXTENSION_STORAGE_HISTORY_MAX_RESULTS]: historyMaxResults = DEFAULT_HISTORY_MAX_RESULTS,
+	} = extensionLocalStorage ?? {}
+
 	return {
-		historyMaxDays: Number(extensionLocalStorage?.[EXTENSION_STORAGE_HISTORY_MAX_DAYS] || DEFAULT_HISTORY_MAX_DAYS),
-		historyMaxResults: Number(
-			extensionLocalStorage?.[EXTENSION_STORAGE_HISTORY_MAX_RESULTS] || DEFAULT_HISTORY_MAX_RESULTS
-		),
+		historyMaxDays: Number(historyMaxDays),
+		historyMaxResults: Number(historyMaxResults),
 	}
 }
 
-export async function getWindowConfig() {
+export async function getWindowConfig(): Promise<WindowConfig> {
 	const extensionLocalStorage = await storageGetLocal()
-	const displayMode = extensionLocalStorage?.[EXTENSION_STORAGE_DISPLAY_MODE] || DisplayMode.ISOLATE_WINDOW
-	const width = extensionLocalStorage?.[EXTENSION_STORAGE_WINDOW_WIDTH] || DefaultWindowConfig.width
-	const height = extensionLocalStorage?.[EXTENSION_STORAGE_WINDOW_HEIGHT] || DefaultWindowConfig.height
-	return { displayMode, width, height } as WindowConfig
+
+	const {
+		[EXTENSION_STORAGE_DISPLAY_MODE]: displayMode = DefaultWindowConfig.displayMode,
+		[EXTENSION_STORAGE_WINDOW_WIDTH]: width = DefaultWindowConfig.width,
+		[EXTENSION_STORAGE_WINDOW_HEIGHT]: height = DefaultWindowConfig.height,
+		[EXTENSION_STORAGE_THEME]: theme = DefaultWindowConfig.theme,
+	} = extensionLocalStorage ?? {}
+
+	return { displayMode, width, height, theme }
 }
 
 export function dataProcessing() {

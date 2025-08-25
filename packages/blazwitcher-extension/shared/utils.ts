@@ -10,6 +10,7 @@ import {
 	LAST_ACTIVE_WINDOW_ID_KEY,
 	SELF_WINDOW_ID_KEY,
 	SELF_WINDOW_STATE,
+	ThemeColor,
 } from './constants'
 import { storageGet, storageRemove } from './promisify'
 import { ItemType, type ListItemType, type Matrix } from './types'
@@ -345,3 +346,10 @@ export const getExecuteActionShortcuts = async () => {
 		return null
 	}
 }
+
+export const isSystemDarkMode = () => {
+	return window.matchMedia?.('(prefers-color-scheme: dark)').matches
+}
+
+export const isDarkMode = (theme: ThemeColor) =>
+	theme === ThemeColor.Dark || (theme === ThemeColor.System && isSystemDarkMode())

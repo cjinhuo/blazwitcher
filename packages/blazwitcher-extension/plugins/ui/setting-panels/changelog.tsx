@@ -1,8 +1,8 @@
 import { useAtomValue } from 'jotai'
 import { marked } from 'marked'
 import releases from '~shared/releases.json'
+import { isDarkMode } from '~shared/utils'
 import { languageAtom, themeAtom } from '~sidepanel/atom'
-import { isDarkMode } from '~sidepanel/hooks/useTheme'
 
 marked.setOptions({
 	breaks: true,

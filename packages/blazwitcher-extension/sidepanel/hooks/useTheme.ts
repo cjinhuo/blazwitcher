@@ -1,28 +1,31 @@
 import { useAtomValue } from 'jotai'
 import { useEffect, useMemo } from 'react'
-import { TabGroupColorMap } from '~shared/constants'
+import { PAGE_STORAGE_THEME_COLOR, TabGroupColorMap } from '~shared/constants'
+import { storageSetLocal } from '~shared/promisify'
+import { isDarkMode } from '~shared/utils'
 import { themeAtom } from '~sidepanel/atom'
 
-const isSystemDarkMode = () => {
-	return window.matchMedia?.('(prefers-color-scheme: dark)').matches
-}
-
-const setThemeClass = (isDark: boolean) => {
-	document.body.classList.toggle('dark', isDark)
+export const setThemeClass = (isDark: boolean) => {
+	const body = document.body
 	if (isDark) {
-		document.body.setAttribute('theme-mode', 'dark')
+		// 控制 skin.css 变量
+		body.classList.add('dark')
+		// 控制 semi 的主题
+		body.setAttribute('theme-mode', 'dark')
 	} else {
-		document.body.removeAttribute('theme-mode')
+		body.removeAttribute('theme-mode')
+		body.classList.remove('dark')
 	}
 }
-
-export const isDarkMode = (theme: 'light' | 'dark' | 'system') =>
-	theme === 'dark' || (theme === 'system' && isSystemDarkMode())
 
 export const useTheme = () => {
 	const themeColor = useAtomValue(themeAtom)
 
 	useEffect(() => {
+		// 同步到 chrome.storage.local
+		storageSetLocal({
+			[PAGE_STORAGE_THEME_COLOR]: themeColor,
+		})
 		setThemeClass(isDarkMode(themeColor))
 	}, [themeColor])
 }

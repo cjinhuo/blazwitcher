@@ -32,6 +32,8 @@ export const storageGetLocal = promisifyChromeMethod<{ [key: string]: any }>(
 	chrome.storage.local.get.bind(chrome.storage.local)
 )
 
+export const storageSetLocal = promisifyChromeMethod(chrome.storage.local.set.bind(chrome.storage.local))
+
 export const storageSet = promisifyChromeMethod(chrome.storage.session.set.bind(chrome.storage.session))
 
 export const storageRemove = promisifyChromeMethod(chrome.storage.session.remove.bind(chrome.storage.session))

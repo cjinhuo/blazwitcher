@@ -1,7 +1,8 @@
 import { atom } from 'jotai'
 import { atomWithReset, atomWithStorage } from 'jotai/utils'
-import { PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION, PAGE_STORAGE_THEME_COLOR } from '~shared/constants'
+import { PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION, PAGE_STORAGE_THEME_COLOR, ThemeColor } from '~shared/constants'
 import type { CommandPlugin, ListItemType } from '~shared/types'
+import { createSyncStorage } from './common'
 import { defaultLanguage, languageAtom } from './i18nAtom'
 import { restoreWindowConfigAtom } from './windowAtom'
 
@@ -10,7 +11,12 @@ export * from './i18nAtom'
 export * from './searchConfigAtom'
 export * from './windowAtom'
 
-export const themeAtom = atomWithStorage<'dark' | 'light' | 'system'>(PAGE_STORAGE_THEME_COLOR, 'system')
+export const themeAtom = atomWithStorage<ThemeColor>(
+	PAGE_STORAGE_THEME_COLOR,
+	ThemeColor.System,
+	createSyncStorage<ThemeColor>(),
+	{ getOnInit: true }
+)
 export const activeItemAtom = atomWithReset<ListItemType | null>(null)
 export const originalListAtom = atomWithReset<ListItemType[]>([])
 export const compositionAtom = atomWithReset<boolean>(false)
@@ -23,7 +29,7 @@ export const lastViewedVersionAtom = atomWithStorage<string>(PAGE_STORAGE_SHOW_U
 export const restoreAppearanceSettingsAtom = atom(
 	null, // 读取函数返回 null，因为这个 atom 不需要存储值
 	(_, set) => {
-		set(themeAtom, 'system')
+		set(themeAtom, ThemeColor.System)
 		set(languageAtom, defaultLanguage)
 		set(restoreWindowConfigAtom)
 	}
