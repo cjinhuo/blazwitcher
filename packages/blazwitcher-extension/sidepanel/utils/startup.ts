@@ -13,6 +13,10 @@ function setTheme() {
 	const theme = localStorage.getItem('theme_color')
 	const isDark = theme ? isDarkMode(JSON.parse(theme)) : false
 	setThemeClass(isDark)
+	// 这时候的 --color-normal-bg 变量才有 dark 模式的值
+	const body = document.body
+	body.style.background = 'var(--color-normal-bg)'
+	body.style.backgroundImage = 'linear-gradient(var(--color-linear-bg-start) 0%, var(--color-linear-bg-end) 100%)'
 }
 
 function setLang() {

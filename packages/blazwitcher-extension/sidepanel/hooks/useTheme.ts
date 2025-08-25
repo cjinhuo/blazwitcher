@@ -6,19 +6,16 @@ import { isDarkMode } from '~shared/utils'
 import { themeAtom } from '~sidepanel/atom'
 
 export const setThemeClass = (isDark: boolean) => {
+	const body = document.body
 	if (isDark) {
 		// 控制 skin.css 变量
-		document.body.classList.add('dark')
+		body.classList.add('dark')
 		// 控制 semi 的主题
-		document.body.setAttribute('theme-mode', 'dark')
+		body.setAttribute('theme-mode', 'dark')
 	} else {
-		document.body.removeAttribute('theme-mode')
-		document.body.classList.remove('dark')
+		body.removeAttribute('theme-mode')
+		body.classList.remove('dark')
 	}
-	// 这时候的 --color-normal-bg 变量才有 dark 模式的值
-	document.body.style.background = 'var(--color-normal-bg)'
-	document.body.style.backgroundImage =
-		'linear-gradient(var(--color-linear-bg-start) 0%, var(--color-linear-bg-end) 100%)'
 }
 
 export const useTheme = () => {
