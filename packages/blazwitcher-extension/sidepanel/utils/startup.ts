@@ -3,6 +3,9 @@ import { isDarkMode } from '~shared/utils'
 import { setThemeClass } from '~sidepanel/hooks/useTheme'
 
 let isStartup = false
+/**
+ * 启动时初始化主题和语言
+ */
 export function startup() {
 	if (isStartup) return
 	isStartup = true
@@ -16,8 +19,12 @@ function setTheme() {
 	setThemeClass(isDark)
 	// 这时候的 --color-normal-bg 变量才有 dark 模式的值
 	const body = document.body
-	body.style.background = 'var(--color-normal-bg)'
-	body.style.backgroundImage = 'linear-gradient(var(--color-linear-bg-start) 0%, var(--color-linear-bg-end) 100%)'
+	body.style.setProperty('background', 'var(--color-normal-bg)', 'important')
+	body.style.setProperty(
+		'background-image',
+		'linear-gradient(var(--color-linear-bg-start) 0%, var(--color-linear-bg-end) 100%)',
+		'important'
+	)
 }
 
 function setLang() {
