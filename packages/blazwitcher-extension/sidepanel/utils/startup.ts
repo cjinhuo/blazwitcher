@@ -1,3 +1,4 @@
+import { PAGE_STORAGE_THEME_COLOR } from '~shared/constants'
 import { isDarkMode } from '~shared/utils'
 import { setThemeClass } from '~sidepanel/hooks/useTheme'
 
@@ -10,7 +11,7 @@ export function startup() {
 }
 
 function setTheme() {
-	const theme = localStorage.getItem('theme_color')
+	const theme = localStorage.getItem(PAGE_STORAGE_THEME_COLOR)
 	const isDark = theme ? isDarkMode(JSON.parse(theme)) : false
 	setThemeClass(isDark)
 	// 这时候的 --color-normal-bg 变量才有 dark 模式的值
