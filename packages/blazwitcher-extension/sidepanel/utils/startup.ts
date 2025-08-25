@@ -1,4 +1,5 @@
-import { isDarkMode, setThemeClass } from '~sidepanel/hooks/useTheme'
+import { isDarkMode } from '~shared/utils'
+import { setThemeClass } from '~sidepanel/hooks/useTheme'
 
 let isStartup = false
 export function startup() {

@@ -64,16 +64,29 @@ export enum DisplayMode {
 	ISOLATE_WINDOW = 'isolateWindow',
 }
 
+export enum ThemeColor {
+	Light = 'light',
+	Dark = 'dark',
+	System = 'system',
+}
+
+export const BodyBackgroundThemeColorMap = {
+	[ThemeColor.Light]: 'rgb(255, 255, 255)',
+	[ThemeColor.Dark]: 'rgb(33, 34, 34)',
+}
+
 export interface WindowConfig {
 	displayMode: DisplayMode
 	width: number
 	height: number
+	theme: ThemeColor
 }
 
 export const DefaultWindowConfig: WindowConfig = {
 	displayMode: DisplayMode.ISOLATE_WINDOW,
 	width: SEARCH_WINDOW_WIDTH,
 	height: SEARCH_WINDOW_HEIGHT,
+	theme: ThemeColor.System,
 }
 
 export const TabGroupColorMap: TabGroupColorMapType = {
@@ -116,6 +129,7 @@ export const EXTENSION_STORAGE_HISTORY_MAX_RESULTS = 'historyMaxResults'
 export const EXTENSION_STORAGE_WINDOW_WIDTH = 'windowWidth'
 export const EXTENSION_STORAGE_WINDOW_HEIGHT = 'windowHeight'
 export const EXTENSION_STORAGE_DISPLAY_MODE = 'displayMode'
+export const EXTENSION_STORAGE_THEME = PAGE_STORAGE_THEME_COLOR
 
 export const FOOTER_DESCRIPTION_I18N_MAP = {
 	[ItemType.Tab]: 'tab_footer_description',
