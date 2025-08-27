@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
 import './globals.css'
-import { ModeToggle } from '@/components/mode-toggle'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Analytics } from '@vercel/analytics/react'
 import { NextIntlClientProvider } from 'next-intl'
@@ -46,11 +45,7 @@ export default async function RootLayout({
 			<body className={`${geist.variable} font-sans antialiased`}>
 				<NextIntlClientProvider>
 					{/* 主题提供者 */}
-					<ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
-						{/* 主题切换按钮 */}
-						<div className='fixed top-4 right-4 z-50'>
-							<ModeToggle />
-						</div>
+					<ThemeProvider attribute='class' defaultTheme='light' enableSystem disableTransitionOnChange>
 						{/* 页面内容 */}
 						{children}
 					</ThemeProvider>

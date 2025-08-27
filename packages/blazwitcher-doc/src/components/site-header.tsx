@@ -1,4 +1,3 @@
-import { ModeToggle } from '@/components/mode-toggle'
 import { Button } from '@/components/ui/button'
 import { Github } from 'lucide-react'
 import Link from 'next/link'
@@ -21,8 +20,6 @@ export function SiteHeader() {
 
 				{/* 右侧操作区域 */}
 				<div className='flex items-center space-x-4'>
-					{/* 主题切换按钮 */}
-					<ModeToggle />
 					{/* 语言切换按钮 */}
 					<LanguageSwitcher />
 					{/* GitHub 链接按钮 */}
