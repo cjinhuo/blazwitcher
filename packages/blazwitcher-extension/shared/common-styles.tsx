@@ -15,6 +15,7 @@ export const ContentContainer = styled.div<ContentContainerProps>`
   width: 100%;
 	height: 50px;
 	border-radius: 6px;
+  user-select: none;
   border-left: ${(props) => (props.$tabGroup ? `4px solid ${props.$colorMap[props.$tabGroup.color]}` : 'none')};
 `
 export const IMAGE_CLASS = 'image-container'
@@ -49,7 +50,6 @@ export const TitleContainer = styled.div`
   justify-content: space-between;
   padding: 0 4px;
   overflow: hidden;
-  /* user-select: none; */
 `
 
 export const HIGHLIGHT_TEXT_CLASS = HighlightClasses.highlight
@@ -66,6 +66,9 @@ const OperationTooltip = styled.div`
 	color: #1c1c1c;
 	text-align: center;
 
+  > span {
+    line-height: 16px;
+  }
 	span:first-child {
 		font-weight: 700;
 	}

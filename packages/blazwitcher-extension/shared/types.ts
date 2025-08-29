@@ -71,7 +71,7 @@ export enum OperationItemPropertyTypes {
 export const OperationItemTitleMap: Record<string, TranslationKeys> = {
 	[OperationItemPropertyTypes.open]: 'openCurrentTab',
 	[OperationItemPropertyTypes.switch]: 'openCurrentTab',
-	[OperationItemPropertyTypes.pin]: 'pinTab',
+	[OperationItemPropertyTypes.pin]: 'pin',
 	[OperationItemPropertyTypes.query]: 'query',
 	[OperationItemPropertyTypes.delete]: 'deleteFromHistory',
 	[OperationItemPropertyTypes.close]: 'closeTab',

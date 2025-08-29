@@ -38,7 +38,7 @@ const defaultShortcutConfigs: Shortcut[] = [
 	},
 	{
 		id: OperationItemPropertyTypes.pin,
-		action: 'pinTab',
+		action: 'pin',
 		shortcut: 'Ctrl + Shift + P',
 	},
 ]

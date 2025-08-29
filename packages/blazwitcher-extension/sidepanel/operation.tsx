@@ -82,7 +82,7 @@ const IconWithName = ({
 	)
 
 	const getTitle = useCallback(() => {
-		if (isTabItem(item)) {
+		if (isTabItem(item) && name === OperationItemPropertyTypes.pin) {
 			return item.data.pinned ? i18n('unpinTab') : i18n('pinTab')
 		}
 		return i18n(OperationItemTitleMap[name])
