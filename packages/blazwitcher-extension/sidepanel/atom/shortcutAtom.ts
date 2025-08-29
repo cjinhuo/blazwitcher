@@ -36,6 +36,11 @@ const defaultShortcutConfigs: Shortcut[] = [
 		action: 'deleteFromHistory',
 		shortcut: 'Ctrl + Shift + D',
 	},
+	{
+		id: OperationItemPropertyTypes.pin,
+		action: 'pinTab',
+		shortcut: 'Ctrl + Shift + P',
+	},
 ]
 
 const defaultShortcutMappings = defaultShortcutConfigs.reduce(

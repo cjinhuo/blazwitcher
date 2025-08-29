@@ -1,8 +1,10 @@
 import CloseIcon from 'react:~assets/close.svg'
 import DeleteIcon from 'react:~assets/delete.svg'
 import NewWindow from 'react:~assets/new-window.svg'
+import PinIcon from 'react:~assets/pin.svg'
 import QueryIcon from 'react:~assets/query.svg'
 import RightArrow from 'react:~assets/right-arrow.svg'
+import UnpinIcon from 'react:~assets/unpin.svg'
 import { useAtomValue } from 'jotai'
 import { useCallback } from 'react'
 import React from 'react'
@@ -10,6 +12,7 @@ import styled from 'styled-components'
 import { PopoverWrapper } from '~shared/common-styles'
 import { VISIBILITY_CLASS } from '~shared/constants'
 import { ItemType, type ListItemType, OperationItemPropertyTypes, OperationItemTitleMap } from '~shared/types'
+import { isTabItem } from '~shared/utils'
 import { i18nAtom, shortcutsAtom } from '~sidepanel/atom'
 import { useListOperations } from './hooks/useOperations'
 
@@ -25,6 +28,8 @@ const IconContainer = styled.div`
 		border: 1px solid var(--color-neutral-6);
 		background-color: transparent;
     cursor: pointer;
+
+		
 		
     &:hover {
       transform: scale(1.08);
@@ -62,24 +67,32 @@ const OperationContainer = styled.div`
 const IconWithName = ({
 	children,
 	name,
-}: { children: React.ReactNode; name: OperationItemPropertyTypes; item?: ListItemType }) => {
+	item,
+}: { children: React.ReactNode; name: OperationItemPropertyTypes; item: ListItemType }) => {
 	const shortcutsMap = useAtomValue(shortcutsAtom)
 	const i18n = useAtomValue(i18nAtom)
 	const getShortcut = useCallback(
 		(name: OperationItemPropertyTypes) => {
 			if (name === OperationItemPropertyTypes.switch) {
-				return shortcutsMap.find((item) => item.id === OperationItemPropertyTypes.open).shortcut
+				return shortcutsMap.find((item) => item.id === OperationItemPropertyTypes.open)?.shortcut || ''
 			}
-			return shortcutsMap.find((item) => item.id === name).shortcut
+			return shortcutsMap.find((item) => item.id === name)?.shortcut || ''
 		},
 		[shortcutsMap]
 	)
+
+	const getTitle = useCallback(() => {
+		if (isTabItem(item)) {
+			return item.data.pinned ? i18n('unpinTab') : i18n('pinTab')
+		}
+		return i18n(OperationItemTitleMap[name])
+	}, [name, item, i18n])
 
 	return (
 		<PopoverWrapper
 			content={
 				<>
-					<span>{i18n(OperationItemTitleMap[name])}</span>
+					<span>{getTitle()}</span>
 					<span>{getShortcut(name)}</span>
 				</>
 			}
@@ -91,41 +104,50 @@ const IconWithName = ({
 	)
 }
 
-const Open = (
-	<IconWithName name={OperationItemPropertyTypes.open}>
+const Open = ({ item }: { item: ListItemType }) => (
+	<IconWithName name={OperationItemPropertyTypes.open} item={item}>
 		<NewWindow></NewWindow>
 	</IconWithName>
 )
 
-const Switch = (
-	<IconWithName name={OperationItemPropertyTypes.switch}>
+const Switch = ({ item }: { item: ListItemType }) => (
+	<IconWithName name={OperationItemPropertyTypes.switch} item={item}>
 		<RightArrow></RightArrow>
 	</IconWithName>
 )
 
-const Query = (
-	<IconWithName name={OperationItemPropertyTypes.query}>
+const Query = ({ item }: { item: ListItemType }) => (
+	<IconWithName name={OperationItemPropertyTypes.query} item={item}>
 		<QueryIcon></QueryIcon>
 	</IconWithName>
 )
 
-const Delete = (
-	<IconWithName name={OperationItemPropertyTypes.delete}>
+const Delete = ({ item }: { item: ListItemType }) => (
+	<IconWithName name={OperationItemPropertyTypes.delete} item={item}>
 		<DeleteIcon></DeleteIcon>
 	</IconWithName>
 )
 
-const Close = (
-	<IconWithName name={OperationItemPropertyTypes.close}>
+const Close = ({ item }: { item: ListItemType }) => (
+	<IconWithName name={OperationItemPropertyTypes.close} item={item}>
 		<CloseIcon></CloseIcon>
 	</IconWithName>
 )
 
-export const OperationMap = {
-	[ItemType.Tab]: [Switch, Close],
+const Pin = ({ item }: { item: ListItemType }) => {
+	const isPinned = isTabItem(item) && item.data.pinned
+	return (
+		<IconWithName name={OperationItemPropertyTypes.pin} item={item}>
+			{isPinned ? <PinIcon /> : <UnpinIcon />}
+		</IconWithName>
+	)
+}
+
+export const getOperationMap = () => ({
+	[ItemType.Tab]: [Switch, Pin, Close],
 	[ItemType.Bookmark]: [Open, Query],
 	[ItemType.History]: [Open, Query, Delete],
-}
+})
 
 export const RenderOperation = ({ item }: { item: ListItemType }) => {
 	const { handleOperations } = useListOperations()
@@ -135,11 +157,13 @@ export const RenderOperation = ({ item }: { item: ListItemType }) => {
 		handleOperations(name, item)
 	}
 
+	const operationMap = getOperationMap()
+
 	return (
 		<OperationContainer onClick={(e) => handleClick(e, item)}>
-			{OperationMap[item.itemType].map((node, index) =>
-				React.cloneElement(node, { key: `${item.data.id}-${index}`, item })
-			)}
+			{operationMap[item.itemType].map((Component, index) => (
+				<Component key={`${item.data.id}-${index}`} item={item} />
+			))}
 		</OperationContainer>
 	)
 }
