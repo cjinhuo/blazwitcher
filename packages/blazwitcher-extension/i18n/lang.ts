@@ -189,6 +189,18 @@ export const lang = {
 		[LanguageType.zh]: '打开当前标签',
 		[LanguageType.en]: 'Open current tab',
 	},
+	pin: {
+		[LanguageType.zh]: 'Pin/Unpin 标签页',
+		[LanguageType.en]: 'Pin/Unpin tab',
+	},
+	pinTab: {
+		[LanguageType.zh]: 'Pin 标签页',
+		[LanguageType.en]: 'Pin tab',
+	},
+	unpinTab: {
+		[LanguageType.zh]: 'Unpin 标签页',
+		[LanguageType.en]: 'Unpin tab',
+	},
 	startExtension: {
 		[LanguageType.zh]: '启动扩展',
 		[LanguageType.en]: 'Start Extension',

@@ -13,9 +13,23 @@ export const useListOperations = () => {
 			const _index = item.data.id
 				? originalList.findIndex((i) => i.data.id === item.data.id)
 				: originalList.findIndex((i) => i.data.url === item.data.url)
+			if (~_index) {
+				originalList.splice(_index, 1)
+				setOriginalList([...originalList])
+			}
+		},
+		[originalList, setOriginalList]
+	)
 
-			~_index && originalList.splice(_index, 1)
-			setOriginalList([...originalList])
+	const updateItemInOriginList = useCallback(
+		(item: ListItemType) => {
+			const _index = item.data.id
+				? originalList.findIndex((i) => i.data.id === item.data.id)
+				: originalList.findIndex((i) => i.data.url === item.data.url)
+			if (~_index) {
+				originalList[_index] = item
+				setOriginalList([...originalList])
+			}
 		},
 		[originalList, setOriginalList]
 	)
@@ -41,6 +55,13 @@ export const useListOperations = () => {
 			case OperationItemPropertyTypes.query:
 				if (isHistoryItem(item) || isBookmarkItem(item)) {
 					queryInNewTab(item)
+				}
+				break
+			case OperationItemPropertyTypes.pin:
+				if (isTabItem(item)) {
+					await chrome.tabs.update(item.data.id, { pinned: !item.data.pinned })
+					item.data.pinned = !item.data.pinned
+					updateItemInOriginList(item)
 				}
 				break
 			default:
