@@ -85,26 +85,6 @@
             "tabIds": number[]
         }
     ],
-    "detail": {
-        "addToExistingGroups": [
-            {
-                "tabId": number,
-                "tabTitle": string,
-                "groupId": number,
-                "groupTitle": string,
-                "reasoning": string
-            }
-        ],
-        "createNewGroups": [
-            {
-                "groupTitle": string,
-                "groupColor": string,
-                "tabIds": number[],
-                "tabTitles": string[],
-                "reasoning": string
-            }
-        ],
-    }
 }
 ```
 
@@ -189,4 +169,3 @@
 - 高相似度：与现有分组中标签页标题高度相似，匹配度+20%。
 - 中等相似度：与现有分组中标签页标题中等相似，匹配度+10%。
 - 低相似度：与现有分组中标签页标题低相似，匹配度+5%。
-

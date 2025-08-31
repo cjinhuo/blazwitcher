@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common'
-import { PATHS } from '../utils/paths'
+
+const fs = require('node:fs')
+const path = require('node:path')
 
 @Injectable()
 export class ArkService {
 	private readonly arkApiKey: string
-	private readonly arkApiUrl: string 
+	private readonly arkApiUrl: string
 	private readonly arkApiModel: string
 
 	constructor() {
@@ -14,26 +16,28 @@ export class ArkService {
 	}
 
 	// 流式标签页分类专用方法
-	async categorizeTabsStream(data: any) {
-		const fs = require('node:fs')
-		
-		const systemPrompt = fs.readFileSync(PATHS.AI_GROUPING_PROMPT, 'utf-8')
+	async categorizeTabsStream(data: any, language: string) {
+		const promptFilePath = path.join(process.cwd(), 'prompts', `ai-grouping-prompt-${language}.txt`)
 
-		const messages = [
-			{
-				role: 'system',
-				content: systemPrompt,
-			},
-			{
-				role: 'user',
-				content: JSON.stringify(data),
-			},
-		]
+		try {
+			const systemPrompt = fs.readFileSync(promptFilePath, 'utf-8')
+			const messages = [
+				{
+					role: 'system',
+					content: systemPrompt,
+				},
+				{
+					role: 'user',
+					content: JSON.stringify(data),
+				},
+			]
 
-		return this.stream(messages)
+			console.log('📤 准备发送到 ARK API, 用户数据长度:', JSON.stringify(data).length, '字符')
+			return this.stream(messages)
+		} catch () {}
 	}
 
-		// 流式调用
+	// 流式调用
 	async stream(messages: any[], modelConfigs: any = {}) {
 		try {
 			console.log('开始流式调用 ARK API...')
@@ -48,7 +52,7 @@ export class ArkService {
 				messages,
 				// 禁用thinking
 				thinking: {
-					type: "disabled"
+					type: 'disabled',
 				},
 				...modelConfigs,
 			}
@@ -57,7 +61,7 @@ export class ArkService {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${this.arkApiKey}`,
+					Authorization: `Bearer ${this.arkApiKey}`,
 				},
 				body: JSON.stringify(requestBody),
 			})
@@ -66,6 +70,7 @@ export class ArkService {
 				throw new Error(`ARK API 流式请求失败: ${response.status} ${response.statusText}`)
 			}
 
+			console.log('✅ ARK API 流式请求成功，开始返回响应流')
 			// 在客户端进一步处理流式数据
 			return response
 		} catch (error) {

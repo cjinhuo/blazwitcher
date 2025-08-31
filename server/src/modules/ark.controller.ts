@@ -1,25 +1,25 @@
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common'
-import { Throttle, ThrottlerGuard } from '@nestjs/throttler'
+import { Body, Controller, Post, Res } from '@nestjs/common'
+import { Throttle } from '@nestjs/throttler'
 import type { Response } from 'express'
 import { ArkService } from './ark.service'
 
 interface CategorizeTabsRequestDto {
 	data: any
+	language?: string
 }
 
 @Controller('ark')
-@UseGuards(ThrottlerGuard)
-@Throttle({ default: { ttl: 60 * 60 * 1000, limit: 20 } })
+@Throttle({ default: { ttl: 60 * 60 * 1000, limit: 1 } })
 export class ArkController {
 	constructor(private readonly arkService: ArkService) {}
 
 	@Post('categorize-tabs')
 	async categorizeTabs(@Body() body: CategorizeTabsRequestDto, @Res() res: Response) {
 		try {
-			const { data } = body
+			const { data, language = 'zh' } = body
 			
 			// 流式调用
-			const response = await this.arkService.categorizeTabsStream(data)
+			const response = await this.arkService.categorizeTabsStream(data, language)
 
 			// 设置SSE响应头
 			res.setHeader('Content-Type', 'text/event-stream')

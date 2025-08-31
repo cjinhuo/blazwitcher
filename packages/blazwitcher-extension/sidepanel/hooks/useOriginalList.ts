@@ -1,9 +1,16 @@
-import { useAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
 import { MAIN_WINDOW } from '~shared/constants'
-import { originalListAtom, windowDataListAtom } from '~sidepanel/atom'
-import type { ListItemType, TabItemType, ExistingGroup, WindowData, UngroupedTab } from '~shared/types'
+import type {
+	AiGroupingProgress,
+	ExistingGroup,
+	ListItemType,
+	TabItemType,
+	UngroupedTab,
+	WindowData,
+} from '~shared/types'
 import { ItemType } from '~shared/types'
+import { currentAITabGroupProgressAtom, originalListAtom, windowDataListAtom } from '~sidepanel/atom'
 
 // 提取关键信息
 const extractExistingGroups = (data: ListItemType[]): ExistingGroup[] => {
@@ -13,7 +20,7 @@ const extractExistingGroups = (data: ListItemType[]): ExistingGroup[] => {
 		if (item.itemType === 'tab' && item.data.tabGroup) {
 			const tabItem = item.data as TabItemType
 			const group = tabItem.tabGroup
-			
+
 			if (group) {
 				if (!groupMap.has(group.id)) {
 					groupMap.set(group.id, {
@@ -25,7 +32,7 @@ const extractExistingGroups = (data: ListItemType[]): ExistingGroup[] => {
 						tabs: [],
 					})
 				}
-				
+
 				const groupInfo = groupMap.get(group.id)
 				if (groupInfo) {
 					groupInfo.memberCount++
@@ -103,22 +110,33 @@ const processDataForAI = (data: ListItemType[]): WindowData[] => {
 
 export default function useOriginalList() {
 	const [originalList, setOriginalList] = useAtom(originalListAtom)
-	const [, setWindowDataList] = useAtom(windowDataListAtom)
+	const setWindowDataList = useSetAtom(windowDataListAtom)
+	const setCurrentAITabGroupProgress = useSetAtom(currentAITabGroupProgressAtom)
 
 	useEffect(() => {
 		let portConnectStatus = false
 		const port = chrome.runtime.connect({ name: MAIN_WINDOW })
-		port.onMessage.addListener((processedList: ListItemType[]) => {
-			portConnectStatus = true
-			if (process.env.NODE_ENV !== 'production') {
-				console.log('processedList', processedList)
+		port.onMessage.addListener(
+			(message: {
+				processedList: ListItemType[]
+				currentAITabGroupProgress: AiGroupingProgress
+			}) => {
+				const { processedList, currentAITabGroupProgress } = message
 
+				portConnectStatus = true
+				// TODO:看下是否要在background中处理processedList
 				const windowDataList = processDataForAI(processedList)
-				console.log('windowDataList for AI:', windowDataList)
+				if (process.env.NODE_ENV !== 'production') {
+					console.log('processedList', processedList)
+					console.log('windowDataList for AI:', windowDataList)
+				}
+				setOriginalList(processedList)
 				setWindowDataList(windowDataList)
+
+				// 更新 AI 分组进度状态
+				setCurrentAITabGroupProgress(currentAITabGroupProgress)
 			}
-			setOriginalList(processedList)
-		})
+		)
 
 		const postMessageToCloseWindow = () => {
 			if (!portConnectStatus) return
@@ -130,11 +148,6 @@ export default function useOriginalList() {
 		if (process.env.NODE_ENV === 'production') {
 			window.addEventListener('blur', postMessageToCloseWindow)
 		}
-	}, [setOriginalList, setWindowDataList])
+	}, [setOriginalList, setWindowDataList, setCurrentAITabGroupProgress])
 	return originalList
-}
-
-export function useWindowDataList() {
-	const [windowDataList] = useAtom(windowDataListAtom)
-	return windowDataList
 }

@@ -140,3 +140,11 @@ export interface WindowData {
 	existingGroups: ExistingGroup[]
 	summary: WindowSummary
 }
+
+// ai分组处理进度
+export interface AiGroupingProgress {
+	isProcessing: boolean
+	totalOperations: number
+	completedOperations: number
+	percentage: number
+}
