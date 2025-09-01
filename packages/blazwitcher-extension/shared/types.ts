@@ -141,10 +141,32 @@ export interface WindowData {
 	summary: WindowSummary
 }
 
-// ai分组处理进度
+// AI分组处理进度
 export interface AiGroupingProgress {
 	isProcessing: boolean
 	totalOperations: number
 	completedOperations: number
 	percentage: number
+}
+export interface TabGroupStatistics {
+	tabsToAddToExisting: number
+	tabsToCreateNewGroups: number
+	newGroupsToCreate: number
+}
+
+export interface AddToExistingGroup {
+	tabId: number
+	groupId: number
+}
+
+export interface CreateNewGroup {
+	groupTitle: string
+	groupColor: string
+	tabIds: number[]
+}
+
+export interface TabGroupOperationResult {
+	statistics: TabGroupStatistics
+	addToExistingGroups: AddToExistingGroup[]
+	createNewGroups: CreateNewGroup[]
 }

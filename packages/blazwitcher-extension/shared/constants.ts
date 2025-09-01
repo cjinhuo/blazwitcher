@@ -147,3 +147,12 @@ export enum SettingPanelKey {
 	CHANGELOG = 'changelog',
 	CONTACT = 'contact',
 }
+
+// ai tab group
+export const AI_TAB_GROUP_MESSAGE_TYPE = 'tabGroupProgressUpdate'
+export const SSE_DONE_MARK = '[DONE]'
+export const chunkSize = 10
+// parse stream mark
+export const STATISTICS_MARK = '"statistics"'
+export const ADD_TO_EXISTING_GROUPS_MARK = '"addToExistingGroups"'
+export const CREATE_NEW_GROUPS_MARK = '"createNewGroups"'

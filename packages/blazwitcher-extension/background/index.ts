@@ -132,7 +132,7 @@ async function handleTabGroupOperationsStream(currentWindowData: WindowData, lan
 
 							// 处理 totalOperations = 0 的场景
 							if (currentAITabGroupProgress.totalOperations === 0) {
-								currentAITabGroupProgress.isProcessing = false
+								currentAITabGroupProgress.isProcessing = true
 								currentAITabGroupProgress.completedOperations = 0
 								currentAITabGroupProgress.percentage = 100
 								sendProgressUpdate(currentAITabGroupProgress)
@@ -294,7 +294,7 @@ async function handleTabGroupOperationsStream(currentWindowData: WindowData, lan
 								createNewGroups = newGroupsData
 								checkAndSendCompletion()
 							}
-						} catch (e) {}
+						} catch (error) {}
 					}
 				}
 			} catch (error) {}
@@ -342,11 +342,10 @@ async function handleTabGroupOperationsStream(currentWindowData: WindowData, lan
 		// console.log('📋 添加到现有组的数据:', addToExistingGroups)
 		// console.log('🆕 创建新组的数据:', createNewGroups)
 
-		// 操作完成，延迟重置
 		resetProgressStateWithDelay(3000)
 		return { success: true, message: 'Tab group 操作完成' }
 	} catch (error) {
-		// 错误时立即重置，不延迟
+		// TODO:toast提示error
 		resetProgressState()
 		console.error('流式处理 tabgroup 操作失败:', error)
 		return { success: false, error: error.message }
