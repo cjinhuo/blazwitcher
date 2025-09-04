@@ -105,7 +105,7 @@
 ### 2. createNewGroups（操作指令）
 创建新分组并添加标签页，包含必要信息：
 - `groupTitle`: 新分组名称。创建新分组时，分组名优先从title中匹配，再按照业务含义匹配。
-- `groupColor`: 新分组颜色，和当前已有分组颜色区分开。
+- `groupColor`: 新分组颜色，必须是以下之一：blue, cyan, green, grey, orange, pink, purple, red, yellow。优先选择与当前已有分组颜色不同的颜色。
 - `tabIds`: 要添加到新分组的标签页ID数组（来自ungroupedTabs）。
 
 ## 分组匹配规则（按权重排序）

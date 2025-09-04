@@ -11,6 +11,10 @@ export class ProgressManager {
 		this.sendProgressUpdate = sendProgressUpdate
 	}
 
+	getProgress(): AiGroupingProgress {
+    return {...this.progress}
+  }
+
 	// 开始 AI分组
 	startProcessing() {
 		this.progress.isProcessing = true

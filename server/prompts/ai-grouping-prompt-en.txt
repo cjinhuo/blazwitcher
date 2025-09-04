@@ -107,7 +107,7 @@ Add tabs to existing groups, including necessary information:
 ### 2. createNewGroups (Operation Instructions)
 Create new groups and add tabs, including necessary information:
 - `groupTitle`: New group name. When creating new groups, group names are prioritized from title matching, then by business meaning.
-- `groupColor`: New group color, differentiated from current existing group colors.
+- `groupColor`: New group color, must be one of: blue, cyan, green, grey, orange, pink, purple, red, yellow. Choose a color that is different from current existing group colors first.
 - `tabIds`: Array of tab IDs to add to the new group (from ungroupedTabs).
 
 ## Grouping Matching Rules (Sorted by Weight)

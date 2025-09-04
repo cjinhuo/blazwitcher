@@ -1,6 +1,7 @@
 import { useAtom, useAtomValue } from 'jotai'
 import { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
+import { AI_TAB_GROUP_MESSAGE_TYPE, HANDLE_TAB_GROUP_MESSAGE_TYPE } from '~shared/constants'
 import type { AiGroupingProgress, WindowData } from '~shared/types'
 import { currentAITabGroupProgressAtom, languageAtom, windowDataListAtom } from '~sidepanel/atom'
 import useI18n from '~sidepanel/hooks/useI18n'
@@ -206,12 +207,12 @@ export const TabGroupProgress: React.FC = () => {
 	const i18n = useI18n()
 	const language = useAtomValue(languageAtom)
 
-	console.log('77777', currentAITabGroupProgress.isProcessing, currentAITabGroupProgress.percentage)
+	console.log('进入扩展初始化获取分组数据', currentAITabGroupProgress)
 
 	// 监听来自 background 的实时进度更新
 	useEffect(() => {
 		const handleProgressUpdate = (message: any) => {
-			if (message.type === 'tabGroupProgressUpdate') {
+			if (message.type === AI_TAB_GROUP_MESSAGE_TYPE) {
 				const progress: AiGroupingProgress = message.progress
 				console.log('收到实时进度更新:', progress)
 				setCurrentAITabGroupProgress(progress)
@@ -227,10 +228,8 @@ export const TabGroupProgress: React.FC = () => {
 			}
 		}
 
-		// 监听来自 background 的消息
 		chrome.runtime.onMessage.addListener(handleProgressUpdate)
 
-		// 清理函数
 		return () => {
 			chrome.runtime.onMessage.removeListener(handleProgressUpdate)
 		}
@@ -240,22 +239,11 @@ export const TabGroupProgress: React.FC = () => {
 		if (currentAITabGroupProgress.isProcessing) return
 
 		try {
-			// 设置初始进度状态
-			const initialProgress: AiGroupingProgress = {
-				isProcessing: true,
-				totalOperations: 0,
-				completedOperations: 0,
-				percentage: 0,
-			}
-			setCurrentAITabGroupProgress(initialProgress)
-
 			// 获取当前窗口ID
 			const currentWindow = await chrome.windows.getCurrent()
 			const currentWindowId = currentWindow.id
-
 			// 从windowDataList中找到当前窗口的数据
 			const currentWindowData = windowDataList.find((data) => data.windowId === currentWindowId)
-
 			// AI 分组
 			await handleTabGroupOperations(currentWindowData)
 		} catch (error) {
@@ -266,7 +254,7 @@ export const TabGroupProgress: React.FC = () => {
 	const handleTabGroupOperations = async (currentWindowData: WindowData) => {
 		try {
 			await chrome.runtime.sendMessage({
-				type: 'handleTabGroupOperations',
+				type: HANDLE_TAB_GROUP_MESSAGE_TYPE,
 				currentWindowData,
 				language,
 			})
@@ -296,7 +284,7 @@ export const TabGroupProgress: React.FC = () => {
 
 	return (
 		<>
-			<AIGroupingButton onClick={handleAIGroupingClick} disabled={false}>
+			<AIGroupingButton onClick={handleAIGroupingClick}>
 				<ButtonContent>
 					{isCompleted && <CheckmarkIcon />}
 					{isCompleted ? i18n('aiGroupingCompleted') : i18n('aiGrouping')}

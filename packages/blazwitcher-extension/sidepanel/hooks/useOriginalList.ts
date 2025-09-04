@@ -119,9 +119,9 @@ export default function useOriginalList() {
 		port.onMessage.addListener(
 			(message: {
 				processedList: ListItemType[]
-				currentAITabGroupProgress: AiGroupingProgress
+				lastTimeTabGroupProgress: AiGroupingProgress
 			}) => {
-				const { processedList, currentAITabGroupProgress } = message
+				const { processedList, lastTimeTabGroupProgress } = message
 
 				portConnectStatus = true
 				// TODO:看下是否要在background中处理processedList
@@ -134,7 +134,7 @@ export default function useOriginalList() {
 				setWindowDataList(windowDataList)
 
 				// 更新 AI 分组进度状态
-				setCurrentAITabGroupProgress(currentAITabGroupProgress)
+				setCurrentAITabGroupProgress(lastTimeTabGroupProgress)
 			}
 		)
 

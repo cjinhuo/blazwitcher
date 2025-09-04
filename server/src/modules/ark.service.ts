@@ -34,7 +34,7 @@ export class ArkService {
 
 			console.log('📤 准备发送到 ARK API, 用户数据长度:', JSON.stringify(data).length, '字符')
 			return this.stream(messages)
-		} catch () {}
+		} catch (error) {}
 	}
 
 	// 流式调用
