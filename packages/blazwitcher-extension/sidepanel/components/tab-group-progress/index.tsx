@@ -1,10 +1,6 @@
-import { useAtom, useAtomValue } from 'jotai'
-import { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { AI_TAB_GROUP_MESSAGE_TYPE, HANDLE_TAB_GROUP_MESSAGE_TYPE } from '~shared/constants'
-import type { AiGroupingProgress, WindowData } from '~shared/types'
-import { currentAITabGroupProgressAtom, languageAtom, windowDataListAtom } from '~sidepanel/atom'
 import useI18n from '~sidepanel/hooks/useI18n'
+import { useTabGroup } from './useTabGroup'
 
 const checkmark = keyframes`
   0% { transform: scale(0); opacity: 0; }
@@ -201,81 +197,20 @@ const getProgressColor = (percentage: number) => {
 }
 
 export const TabGroupProgress: React.FC = () => {
-	const [currentAITabGroupProgress, setCurrentAITabGroupProgress] = useAtom(currentAITabGroupProgressAtom)
-	const windowDataList = useAtomValue(windowDataListAtom)
-	const [isCompleted, setIsCompleted] = useState<boolean>(false)
 	const i18n = useI18n()
-	const language = useAtomValue(languageAtom)
-
-	console.log('进入扩展初始化获取分组数据', currentAITabGroupProgress)
-
-	// 监听来自 background 的实时进度更新
-	useEffect(() => {
-		const handleProgressUpdate = (message: any) => {
-			if (message.type === AI_TAB_GROUP_MESSAGE_TYPE) {
-				const progress: AiGroupingProgress = message.progress
-				console.log('收到实时进度更新:', progress)
-				setCurrentAITabGroupProgress(progress)
-
-				// 检查是否完成
-				if (progress.percentage === 100 && !progress.isProcessing) {
-					setIsCompleted(true)
-					// 3秒后重置完成状态
-					setTimeout(() => {
-						setIsCompleted(false)
-					}, 3000)
-				}
-			}
-		}
-
-		chrome.runtime.onMessage.addListener(handleProgressUpdate)
-
-		return () => {
-			chrome.runtime.onMessage.removeListener(handleProgressUpdate)
-		}
-	}, [setCurrentAITabGroupProgress])
-
-	const handleAIGroupingClick = async () => {
-		if (currentAITabGroupProgress.isProcessing) return
-
-		try {
-			// 获取当前窗口ID
-			const currentWindow = await chrome.windows.getCurrent()
-			const currentWindowId = currentWindow.id
-			// 从windowDataList中找到当前窗口的数据
-			const currentWindowData = windowDataList.find((data) => data.windowId === currentWindowId)
-			// AI 分组
-			await handleTabGroupOperations(currentWindowData)
-		} catch (error) {
-			console.error('获取当前窗口数据失败:', error)
-		}
-	}
-
-	const handleTabGroupOperations = async (currentWindowData: WindowData) => {
-		try {
-			await chrome.runtime.sendMessage({
-				type: HANDLE_TAB_GROUP_MESSAGE_TYPE,
-				currentWindowData,
-				language,
-			})
-		} catch (error) {
-			console.error('与 background 通信失败:', error)
-		}
-	}
+	const { isCompleted, isProcessing, percentage, handleAIGroupingClick } = useTabGroup()
 
 	// 如果有正在进行的操作，显示进度条
-	if (currentAITabGroupProgress.isProcessing) {
-		const progressColor = getProgressColor(currentAITabGroupProgress.percentage)
+	if (isProcessing) {
+		const progressColor = getProgressColor(percentage)
 
 		return (
 			<>
 				<Container>
 					<ProgressBarWrapper>
-						<ProgressBar $percentage={currentAITabGroupProgress.percentage} $color={progressColor} />
+						<ProgressBar $percentage={percentage} $color={progressColor} />
 					</ProgressBarWrapper>
-					<ProgressText $percentage={currentAITabGroupProgress.percentage}>
-						{currentAITabGroupProgress.percentage}%
-					</ProgressText>
+					<ProgressText $percentage={percentage}>{percentage}%</ProgressText>
 				</Container>
 				<ColumnDivide />
 			</>

@@ -12,8 +12,8 @@ export class ProgressManager {
 	}
 
 	getProgress(): AiGroupingProgress {
-    return {...this.progress}
-  }
+		return { ...this.progress }
+	}
 
 	// 开始 AI分组
 	startProcessing() {
@@ -62,6 +62,7 @@ export class ProgressManager {
 			clearTimeout(this.resetTimeoutId)
 		}
 		this.progress = this.createInitialProgress()
+		this.sendProgressUpdate(this.progress)
 	}
 
 	// 结束分组
