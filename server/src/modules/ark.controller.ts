@@ -9,7 +9,7 @@ interface CategorizeTabsRequestDto {
 }
 
 @Controller('ark')
-@Throttle({ default: { ttl: 60 * 60 * 1000, limit: 1 } })
+@Throttle({ default: { ttl: 60 * 60 * 1000, limit: 10 } })
 export class ArkController {
 	constructor(private readonly arkService: ArkService) {}
 
@@ -26,7 +26,6 @@ export class ArkController {
 			res.setHeader('Cache-Control', 'no-cache')
 			res.setHeader('Connection', 'keep-alive')
 
-			// 直接透传response body
 			if (response.body) {
 				const reader = response.body.getReader()
 				const decoder = new TextDecoder()
@@ -36,7 +35,33 @@ export class ArkController {
 					if (done) break
 					
 					const chunk = decoder.decode(value)
-					res.write(chunk)
+					
+					const lines = chunk.split('\n').filter((line) => line.trim())
+					
+					for (const line of lines) {
+						if (line.startsWith('data: ')) {
+							const data = line.slice(6)
+							
+							if (data === '[DONE]') {
+								res.write(`data: ${JSON.stringify({ status: 'finished' })}\n\n`)
+								break
+							}
+							
+							try {
+								const parsed = JSON.parse(data)
+								
+								// 提取content和status
+								const content = parsed.choices?.[0]?.delta?.content || ''
+								const status = parsed.choices?.[0]?.finish_reason ? 'finished' : 'streaming'
+								
+								if (content) {
+									res.write(`data: ${JSON.stringify({ content, status })}\n\n`)
+								}
+							} catch (e) {
+								console.log('解析chunk失败:', line, e.message)
+							}
+						}
+					}
 				}
 				res.end()
 			} else {

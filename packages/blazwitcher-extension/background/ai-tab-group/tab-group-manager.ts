@@ -80,7 +80,7 @@ export class TabGroupManager {
 
 			// TODO: server层自定义的错误（ip限流）
 			if (!response.ok) {
-				this.sendErrorMessage()
+				this.sendErrorMessage(response.statusText)
 			}
 
 			await this.processStreamResponse(response.body)
@@ -114,22 +114,37 @@ export class TabGroupManager {
 					}
 
 					try {
-						const parsed = JSON.parse(data)
-						const content = parsed.choices?.[0]?.delta?.content || ''
+						const parsed = JSON.parse(data)						
+						if (parsed.content !== undefined && parsed.status !== undefined) {
+							if (parsed.content) {
+								this.streamState.jsonBuffer += parsed.content
 
-						if (content) {
-							this.streamState.jsonBuffer += content
-
-							// 每10个chunk处理一次
-							if (eventCount % chunkSize === 0) {
-								await this.processStreamData()
+								// 每10个chunk处理一次
+								if (eventCount % chunkSize === 0) {
+									await this.processStreamData()
+								}
 							}
+
+							// 如果状态为finished，退出循环
+							if (parsed.status === 'finished') {
+								console.log('📡 流式处理完成')
+								break
+							}
+						} else if (parsed.error) {
+							console.error('❌ 服务器返回错误:', parsed.error)
+							this.sendErrorMessage(parsed.error)
+							break
 						}
 					} catch (error) {
 						console.error('解析流式数据失败:', error)
 					}
 				}
 			}
+		}
+
+		// 最终处理完整数据
+		if (this.streamState.jsonBuffer) {
+			await this.processStreamData()
 		}
 	}
 
@@ -153,7 +168,7 @@ export class TabGroupManager {
 						`📊 统计信息: 添加现有组 ${statsData?.tabsToAddToExisting} 个标签页, 创建新组 ${statsData?.newGroupsToCreate} 个, 总操作数: ${this.progressManager.progress.totalOperations}`
 					)
 				} catch (error) {
-					console.error('解析统计信息失败:', error)
+					this.sendErrorMessage(error)
 				}
 			}
 		}
@@ -186,7 +201,7 @@ export class TabGroupManager {
 						this.streamState.addToExistingGroups = existingData
 					}
 				} catch (error) {
-					console.error('解析添加到现有组数据失败:', error)
+					this.sendErrorMessage(error)
 				}
 			}
 		}
@@ -217,13 +232,12 @@ export class TabGroupManager {
 									title: group.groupTitle,
 									color: group.groupColor,
 								})
-
 								this.progressManager.incrementCompleted()
 								console.log(`✅ 流式创建新组成功: ${group.groupTitle}`)
 							}
 						}
 					} catch (error) {
-						console.error('解析创建新组数据失败:', error)
+						this.sendErrorMessage(error)
 					}
 				}
 			}

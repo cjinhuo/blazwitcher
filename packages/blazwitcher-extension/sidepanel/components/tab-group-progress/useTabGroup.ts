@@ -22,7 +22,9 @@ export const useTabGroup = () => {
 		const handleProgressUpdate = (message: any) => {
 			if (message.type === AI_TAB_GROUP_MESSAGE_TYPE) {
 				const progress: AiGroupingProgress = message.progress
-				console.log('收到实时进度更新:', progress)
+				if (process.env.NODE_ENV === 'production') {
+					console.log('收到实时进度更新:', progress)
+				}
 				setCurrentAITabGroupProgress(progress)
 
 				// 检查是否完成

@@ -194,7 +194,7 @@ const testSimple = async () => {
 			let statistics = null
 			let addToExistingGroups = []
 			let createNewGroups = []
-			let processedGroups = new Set()
+			const processedGroups = new Set()
 			let jsonBuffer = ''
 
 			while (true) {
@@ -202,7 +202,6 @@ const testSimple = async () => {
 				if (done) break
 
 				const chunk = decoder.decode(value)
-
 				const lines = chunk.split('\n').filter((line) => line.trim())
 
 				for (const line of lines) {
@@ -217,29 +216,51 @@ const testSimple = async () => {
 
 						try {
 							const parsed = JSON.parse(data)
+							console.log('🔍 解析后的JSON:', JSON.stringify(parsed, null, 2))
 
-							const content = parsed.choices?.[0]?.delta?.content || ''
+							// 处理新的简化格式
+							if (parsed.content !== undefined && parsed.status !== undefined) {
+								console.log(`📄 收到简化格式数据: content长度=${parsed.content.length}, status=${parsed.status}`)
+								
+								if (parsed.content) {
+									jsonBuffer += parsed.content
+									console.log('📚 当前jsonBuffer长度:', jsonBuffer.length)
+									console.log('📚 当前jsonBuffer内容:', jsonBuffer)
 
-							if (content) {
-								jsonBuffer += content
-
-								// 每10个chunk处理一次，提高实时性
-								if (eventCount % 10 === 0) {
-									await processStreamData(jsonBuffer)
+									// 每10个chunk处理一次，提高实时性
+									if (eventCount % 10 === 0) {
+										console.log('🔄 处理流式数据...')
+										await processStreamData(jsonBuffer)
+									}
 								}
+
+								// 如果状态为finished，退出循环
+								if (parsed.status === 'finished') {
+									console.log('📡 流式处理完成')
+									break
+								}
+							} else if (parsed.error) {
+								// 处理错误情况
+								console.error('❌ 服务器返回错误:', parsed.error)
+								break
 							}
 						} catch (e) {
-							console.log('解析chunk失败:', line, e.message)
+							console.log('❌ 解析chunk失败:', line, e.message)
 						}
 					}
 				}
 			}
 
 			// 最终处理
+			console.log('🏁 开始最终处理，完整jsonBuffer长度:', jsonBuffer.length)
+			console.log('🏁 完整jsonBuffer内容:', jsonBuffer)
 			await processStreamData(jsonBuffer)
 
 			// 处理流式数据的函数
 			async function processStreamData(jsonBuffer) {
+				console.log('🔧 开始处理流式数据，jsonBuffer长度:', jsonBuffer.length)
+				console.log('🔧 当前jsonBuffer内容:', jsonBuffer)
+				
 				try {
 					// 1. 解析统计信息
 					if (!statistics && jsonBuffer.includes('"statistics"')) {
@@ -251,9 +272,7 @@ const testSimple = async () => {
 								console.log(
 									`📊 统计信息: 添加现有组 ${statsData.tabsToAddToExisting} 个, 创建新组 ${statsData.tabsToCreateNewGroups} 个`
 								)
-							} catch (e) {
-								// 统计信息不完整，继续等待
-							}
+							} catch (e) { }
 						}
 					}
 
