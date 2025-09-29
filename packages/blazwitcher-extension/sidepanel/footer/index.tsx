@@ -1,21 +1,22 @@
 import styled from 'styled-components'
+import { TabGroupProgress } from '~sidepanel/components/tab-group-progress'
 import ActiveItemDescription from './active-item-description'
 import { Command } from './command'
 import LeftIcon from './left-icon'
 
 const FooterContainer = styled.div`
-  flex: 0 0 30px;
-  background-color: var(--color-neutral-8);
-  border-top: 1px solid var(--color-neutral-7);
-  padding: 0 10px;
-  align-items: center;
-  display: flex;
+	display: flex;
 	justify-content: space-between;
-  gap: 10px;
+	align-items: center;
+	padding: 6px;
+	border-top: 1px solid var(--color-neutral-8);
+	background-color: var(--color-linear-bg-start);
 `
+
 const RightContainer = styled.div`
 	display: flex;
 	align-items: center;
+	gap: 8px;
 `
 
 export default function Footer() {
@@ -28,6 +29,7 @@ export default function Footer() {
 		<FooterContainer onMouseDown={handleMouseDown}>
 			<LeftIcon />
 			<RightContainer>
+				<TabGroupProgress />
 				<ActiveItemDescription />
 				<Command />
 			</RightContainer>

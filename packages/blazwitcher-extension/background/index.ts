@@ -1,7 +1,8 @@
-import { CONTEXT_MENU_HOMEPAGE, CONTEXT_MENU_SHORTCUT, GITHUB_URL, MAIN_WINDOW } from '~shared/constants'
+import { CONTEXT_MENU_HOMEPAGE, CONTEXT_MENU_SHORTCUT, GITHUB_URL, HANDLE_TAB_GROUP_MESSAGE_TYPE, MAIN_WINDOW } from '~shared/constants'
 import { dataProcessing } from '~shared/data-processing'
 import { weakUpWindowIfActiveByUser } from '~shared/open-window'
 import { closeCurrentWindowAndClearStorage } from '~shared/utils'
+import { TabGroupManager } from './ai-tab-group/tab-group-manager'
 
 const appendContextMenus = () => {
 	// 先移除所有现有的上下文菜单，避免ID冲突
@@ -34,13 +35,30 @@ async function main() {
 	weakUpWindowIfActiveByUser()
 	appendContextMenus()
 
-	// It can not be an sync calculation, since maybe the bookmarks data of user is way too large.
 	const getProcessedData = dataProcessing()
+	const tabGroupManager = new TabGroupManager()
+
+	// AI TabGroup 分组 (stream)
+	chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
+		if (message.type === HANDLE_TAB_GROUP_MESSAGE_TYPE) {
+			try {
+				const result = await tabGroupManager.execute(message.currentWindowData, message.language)
+				sendResponse(result)
+			} catch (error) {
+				sendResponse({ success: false, error: error.message })
+			}
+			return true
+		}
+	})
+
 	chrome.runtime.onConnect.addListener(async (port) => {
 		if (port.name === MAIN_WINDOW) {
 			// 第一版简单点，background 实时计算 tabs 和 bookmarks 数据，在用户打开 window 时，同步发送过去
-			port.postMessage(await getProcessedData())
-			port.onMessage.addListener((message) => {
+			port.postMessage({
+				processedList: await getProcessedData(),
+				lastTimeTabGroupProgress: tabGroupManager.getProgress(),
+			})
+			port.onMessage.addListener(async (message) => {
 				if (message.type === 'close') {
 					closeCurrentWindowAndClearStorage()
 				}

@@ -96,3 +96,77 @@ export type TabGroupColorMapType = {
 	light: ColorTheme
 	dark: ColorTheme
 }
+
+// 现有分组中的标签页信息
+export interface TabInGroup {
+	title: string
+	url: string
+	host: string
+	windowId: number
+}
+
+// 现有分组信息
+export interface ExistingGroup {
+	id: number
+	title: string
+	color: string
+	memberCount: number
+	hosts: string[]
+	tabs: TabInGroup[]
+}
+
+// 未分组的标签页信息
+export interface UngroupedTab {
+	itemType: ItemType.Tab
+	data: {
+		id: number
+		title: string
+		url: string
+		host: string
+	}
+}
+
+// 窗口数据摘要
+export interface WindowSummary {
+	totalTabs: number
+	ungroupedTabs: number
+	existingGroupsCount: number
+}
+
+// 单个窗口的数据结构
+export interface WindowData {
+	windowId: number
+	ungroupedTabs: UngroupedTab[]
+	existingGroups: ExistingGroup[]
+	summary: WindowSummary
+}
+
+// AI分组处理进度
+export interface AiGroupingProgress {
+	isProcessing: boolean
+	totalOperations: number
+	completedOperations: number
+	percentage: number
+}
+export interface TabGroupStatistics {
+	tabsToAddToExisting: number
+	tabsToCreateNewGroups: number
+	newGroupsToCreate: number
+}
+
+export interface AddToExistingGroup {
+	tabId: number
+	groupId: number
+}
+
+export interface CreateNewGroup {
+	groupTitle: string
+	groupColor: string
+	tabIds: number[]
+}
+
+export interface TabGroupOperationResult {
+	statistics: TabGroupStatistics
+	addToExistingGroups: AddToExistingGroup[]
+	createNewGroups: CreateNewGroup[]
+}
