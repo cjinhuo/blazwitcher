@@ -62,7 +62,7 @@ export class TabGroupManager {
 	}
 
 	// 执行 AI 分组 (stream)
-	async execute(currentWindowData: WindowData, language?: string) {
+	async execute(currentWindowData: WindowData) {
 		try {
 			this.progressManager.startProcessing()
 
@@ -74,7 +74,6 @@ export class TabGroupManager {
 				},
 				body: JSON.stringify({
 					data: currentWindowData,
-					language,
 				}),
 			})
 
@@ -114,7 +113,7 @@ export class TabGroupManager {
 					}
 
 					try {
-						const parsed = JSON.parse(data)						
+						const parsed = JSON.parse(data)
 						if (parsed.content !== undefined && parsed.status !== undefined) {
 							if (parsed.content) {
 								this.streamState.jsonBuffer += parsed.content

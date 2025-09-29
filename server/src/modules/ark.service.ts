@@ -16,8 +16,8 @@ export class ArkService {
 	}
 
 	// 流式标签页分类专用方法
-	async categorizeTabsStream(data: any, language: string) {
-		const promptFilePath = path.join(process.cwd(), 'prompts', `ai-grouping-prompt-${language}.txt`)
+	async categorizeTabsStream(data: any) {
+		const promptFilePath = path.join(process.cwd(), 'prompts', 'ai-grouping-prompt-zh.txt')
 
 		try {
 			const systemPrompt = fs.readFileSync(promptFilePath, 'utf-8')
@@ -34,7 +34,7 @@ export class ArkService {
 
 			console.log('📤 准备发送到 ARK API, 用户数据长度:', JSON.stringify(data).length, '字符')
 			return this.stream(messages)
-		} catch (error) {}
+		} catch (_error) {}
 	}
 
 	// 流式调用

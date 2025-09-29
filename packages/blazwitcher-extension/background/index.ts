@@ -1,4 +1,10 @@
-import { CONTEXT_MENU_HOMEPAGE, CONTEXT_MENU_SHORTCUT, GITHUB_URL, HANDLE_TAB_GROUP_MESSAGE_TYPE, MAIN_WINDOW } from '~shared/constants'
+import {
+	CONTEXT_MENU_HOMEPAGE,
+	CONTEXT_MENU_SHORTCUT,
+	GITHUB_URL,
+	HANDLE_TAB_GROUP_MESSAGE_TYPE,
+	MAIN_WINDOW,
+} from '~shared/constants'
 import { dataProcessing } from '~shared/data-processing'
 import { weakUpWindowIfActiveByUser } from '~shared/open-window'
 import { closeCurrentWindowAndClearStorage } from '~shared/utils'
@@ -42,7 +48,7 @@ async function main() {
 	chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
 		if (message.type === HANDLE_TAB_GROUP_MESSAGE_TYPE) {
 			try {
-				const result = await tabGroupManager.execute(message.currentWindowData, message.language)
+				const result = await tabGroupManager.execute(message.currentWindowData)
 				sendResponse(result)
 			} catch (error) {
 				sendResponse({ success: false, error: error.message })

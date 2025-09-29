@@ -64,6 +64,11 @@
 	"overrides": [
 		{
 			"include": ["server/**/*.ts"],
+			"javascript": {
+				"parser": {
+					"unsafeParameterDecoratorsEnabled": true
+				}
+			},
 			"linter": {
 				"rules": {
 					"suspicious": {
