@@ -8,7 +8,7 @@ import {
 import { dataProcessing } from '~shared/data-processing'
 import { weakUpWindowIfActiveByUser } from '~shared/open-window'
 import { closeCurrentWindowAndClearStorage } from '~shared/utils'
-import { TabGroupManager } from './ai-tab-group/tab-group-manager'
+import { TabGroupManager } from './tab-group-manager'
 
 const appendContextMenus = () => {
 	// 先移除所有现有的上下文菜单，避免ID冲突

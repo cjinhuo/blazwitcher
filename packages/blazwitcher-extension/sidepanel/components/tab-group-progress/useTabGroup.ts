@@ -8,7 +8,7 @@ import {
 	LAST_ACTIVE_WINDOW_ID_KEY,
 } from '~shared/constants'
 import { storageGet } from '~shared/promisify'
-import type { AiGroupingProgress, WindowData } from '~shared/types'
+import type { WindowData } from '~shared/types'
 import { currentAITabGroupProgressAtom, languageAtom, windowDataListAtom } from '~sidepanel/atom'
 
 export const useTabGroup = () => {
@@ -21,14 +21,12 @@ export const useTabGroup = () => {
 	useEffect(() => {
 		const handleProgressUpdate = (message: any) => {
 			if (message.type === AI_TAB_GROUP_MESSAGE_TYPE) {
-				const progress: AiGroupingProgress = message.progress
-				if (process.env.NODE_ENV === 'production') {
-					console.log('收到实时进度更新:', progress)
-				}
+				const progress = message.progress as number
+				console.log('收到实时进度更新:', progress)
 				setCurrentAITabGroupProgress(progress)
 
 				// 检查是否完成
-				if (progress.percentage === 100 && !progress.isProcessing) {
+				if (progress === 100) {
 					setIsCompleted(true)
 					// 3秒后重置完成状态
 					setTimeout(() => {

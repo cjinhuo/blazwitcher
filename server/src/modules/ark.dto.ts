@@ -7,7 +7,7 @@ export interface AIGroupSummary {
 }
 
 export interface AIEffectExistingGroups {
-	tabId: number[]
+	tabIds: number[]
 	groupId: number
 }
 

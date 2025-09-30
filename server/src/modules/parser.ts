@@ -40,10 +40,10 @@ export class LLMResponseParser {
 		// 解析 e_g 标签
 		const hasEG = this.parseXMLTags('e_g', (data) => {
 			data.groupId &&
-				data.tabId &&
-				data.tabId.length > 0 &&
+				data.tabIds &&
+				data.tabIds.length > 0 &&
 				this.effectExistingGroups.push({
-					tabId: data.tabId || [],
+					tabIds: data.tabIds || [],
 					groupId: data.groupId,
 				})
 		})
