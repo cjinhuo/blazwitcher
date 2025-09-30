@@ -6,7 +6,7 @@ export class TabGroupManager {
 
 	constructor() {
 		this.streamState = {
-			process: 0, // 分组统计，用于计算进度
+			process: 0,
 			effectExistingGroups: [],
 			newGroups: [],
 		}
@@ -16,16 +16,14 @@ export class TabGroupManager {
 		return this.streamState.process
 	}
 
-	private sendErrorMessage(error?: any) {
+	private sendErrorMessage(error?: string | Error) {
 		let errorMessage = 'Oops, the server is having a coffee break... ☕️🤖'
 
 		if (error) {
 			if (typeof error === 'string') {
 				errorMessage = error
-			} else if (error instanceof Error) {
+			} else if (error instanceof Error || (typeof error === 'object' && 'message' in error)) {
 				errorMessage = error.message || error.toString()
-			} else if (error.message) {
-				errorMessage = error.message
 			} else {
 				errorMessage = String(error)
 			}
@@ -56,7 +54,7 @@ export class TabGroupManager {
 
 			// TODO: server层自定义的错误（ip限流）
 			if (!response.ok) {
-				this.sendErrorMessage(response.statusText)
+				return this.sendErrorMessage(response.statusText)
 			}
 
 			await this.processStreamResponse(response.body)
@@ -67,8 +65,8 @@ export class TabGroupManager {
 		}
 	}
 
-	private async processStreamResponse(responseBody) {
-		const reader = responseBody?.getReader() // fetch api: get ReadableStream
+	private async processStreamResponse(responseBody: ReadableStream) {
+		const reader = responseBody.getReader() // fetch api: get ReadableStream
 		const decoder = new TextDecoder() // 二进制 => 字符串
 
 		while (true) {
