@@ -1,4 +1,4 @@
-import { AI_TAB_GROUP_MESSAGE_TYPE, ERROR_MESSAGE_TYPE, SSE_DONE_MARK } from '~shared/constants'
+import { AI_TAB_GROUP_MESSAGE_TYPE, ERROR_MESSAGE_TYPE } from '~shared/constants'
 import type { TabGroupOperationResult, WindowData } from '~shared/types'
 
 export class TabGroupManager {
@@ -52,7 +52,6 @@ export class TabGroupManager {
 				}),
 			})
 
-			// TODO: server层自定义的错误（ip限流）
 			if (!response.ok) {
 				return this.sendErrorMessage(response.statusText)
 			}
@@ -62,6 +61,10 @@ export class TabGroupManager {
 			this.sendErrorMessage(error)
 		} finally {
 			this.cleanup()
+			chrome.runtime.sendMessage({
+				type: AI_TAB_GROUP_MESSAGE_TYPE,
+				isProcessing: false,
+			})
 		}
 	}
 
@@ -80,11 +83,6 @@ export class TabGroupManager {
 				if (line.startsWith('data: ')) {
 					const data = line.slice(6) // 去掉data:
 
-					if (data === SSE_DONE_MARK) {
-						console.log('🏁 流式数据接收完毕')
-						break
-					}
-
 					try {
 						const parsed = JSON.parse(data)
 						if (parsed.content && parsed.status) {
@@ -92,6 +90,7 @@ export class TabGroupManager {
 							chrome.runtime.sendMessage({
 								type: AI_TAB_GROUP_MESSAGE_TYPE,
 								progress: parsed.content.process,
+								isProcessing: true,
 							})
 							// 如果状态为finished，退出循环
 							if (parsed.status === 'finished') {

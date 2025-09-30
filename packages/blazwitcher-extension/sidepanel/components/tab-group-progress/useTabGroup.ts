@@ -21,9 +21,10 @@ export const useTabGroup = () => {
 	useEffect(() => {
 		const handleProgressUpdate = (message: any) => {
 			if (message.type === AI_TAB_GROUP_MESSAGE_TYPE) {
-				const progress = message.progress as number
+				const isProcessing = message.isProcessing as boolean
+				const progress = message.progress as number | undefined
 				console.log('收到实时进度更新:', progress)
-				setCurrentAITabGroupProgress(progress)
+				setCurrentAITabGroupProgress({ isProcessing, progress })
 
 				// 检查是否完成
 				if (progress === 100) {
@@ -103,7 +104,7 @@ export const useTabGroup = () => {
 		currentAITabGroupProgress,
 		isCompleted,
 		isProcessing: currentAITabGroupProgress.isProcessing,
-		percentage: currentAITabGroupProgress.percentage,
+		percentage: currentAITabGroupProgress.progress,
 		handleAIGroupingClick,
 		executeAIGrouping,
 		getCurrentWindowData,

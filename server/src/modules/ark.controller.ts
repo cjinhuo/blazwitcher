@@ -5,7 +5,6 @@ import { ArkService } from './ark.service'
 import { LLMResponseParser } from './parser'
 
 @Controller('ark')
-// @Throttle({ default: { ttl: 60 * 60 * 1000, limit: 10 } })
 export class ArkController {
 	constructor(private readonly arkService: ArkService) {}
 

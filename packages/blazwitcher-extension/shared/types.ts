@@ -157,3 +157,8 @@ export interface TabGroupOperationResult {
 	newGroups: AINewGroups[]
 	effectExistingGroups: AIEffectExistingGroups[]
 }
+
+export interface AiGroupingProgress {
+	isProcessing: boolean
+	progress?: number
+}

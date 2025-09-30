@@ -22,9 +22,7 @@ export const originalListAtom = atomWithReset<ListItemType[]>([])
 export const windowDataListAtom = atomWithReset<WindowData[]>([])
 export const currentAITabGroupProgressAtom = atom<AiGroupingProgress>({
 	isProcessing: false,
-	totalOperations: 0,
-	completedOperations: 0,
-	percentage: 0,
+	progress: 0,
 })
 export const compositionAtom = atomWithReset<boolean>(false)
 export const hitPluginAtom = atomWithReset<CommandPlugin | null>(null)

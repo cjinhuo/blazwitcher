@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { APP_GUARD } from '@nestjs/core'
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
+import { THROTTLE_LIMIT, THROTTLE_TTL } from 'src/shared/constants'
 import { ArkController } from './ark.controller'
 import { ArkService } from './ark.service'
 
@@ -8,8 +9,8 @@ import { ArkService } from './ark.service'
 	imports: [
 		ThrottlerModule.forRoot([
 			{
-				ttl: 60 * 60 * 1000, // 1小时
-				limit: 10, // 每小时10次请求
+				ttl: THROTTLE_TTL,
+				limit: THROTTLE_LIMIT,
 			},
 		]),
 	],
