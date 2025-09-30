@@ -9,8 +9,8 @@ export class ArkService {
 	private readonly arkApiUrl: string
 	private readonly arkApiModel: string
 	private readonly defaultModelConfigs = {
-		temperature: 0.3,
-		top_p: 0.5,
+		temperature: 0.2,
+		top_p: 0.8,
 	}
 
 	constructor() {
