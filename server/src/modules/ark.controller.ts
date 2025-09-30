@@ -1,14 +1,11 @@
 import { Body, Controller, Post, Res } from '@nestjs/common'
-import { Throttle } from '@nestjs/throttler'
 import type { Response } from 'express'
+import { CategorizeTabsRequestDto } from './ark.dto'
 import { ArkService } from './ark.service'
-
-interface CategorizeTabsRequestDto {
-	data: any
-}
+import { LLMResponseParser } from './parser'
 
 @Controller('ark')
-@Throttle({ default: { ttl: 60 * 60 * 1000, limit: 10 } })
+// @Throttle({ default: { ttl: 60 * 60 * 1000, limit: 10 } })
 export class ArkController {
 	constructor(private readonly arkService: ArkService) {}
 
@@ -17,6 +14,8 @@ export class ArkController {
 	async categorizeTabs(@Body() body: CategorizeTabsRequestDto, @Res() res: Response) {
 		try {
 			const { data } = body
+
+			console.log('data', data)
 
 			// 流式调用
 			const response = await this.arkService.categorizeTabsStream(data)
@@ -29,7 +28,7 @@ export class ArkController {
 			if (response.body) {
 				const reader = response.body.getReader()
 				const decoder = new TextDecoder()
-
+				const parser = new LLMResponseParser()
 				while (true) {
 					const { done, value } = await reader.read()
 					if (done) break
@@ -43,7 +42,9 @@ export class ArkController {
 							const data = line.slice(6)
 
 							if (data === '[DONE]') {
-								res.write(`data: ${JSON.stringify({ status: 'finished' })}\n\n`)
+								const parsedData = parser.parse(data, true)
+								res.write(`data: ${JSON.stringify({ content: parsedData, status: 'finished' })}\n\n`)
+								parser.destroy()
 								break
 							}
 
@@ -55,7 +56,10 @@ export class ArkController {
 								const status = parsed.choices?.[0]?.finish_reason ? 'finished' : 'streaming'
 
 								if (content) {
-									res.write(`data: ${JSON.stringify({ content, status })}\n\n`)
+									const parsedData = parser.parse(content)
+									if (parsedData) {
+										res.write(`data: ${JSON.stringify({ content: parsedData, status })}\n\n`)
+									}
 								}
 							} catch (e) {
 								console.log('解析chunk失败:', line, e.message)

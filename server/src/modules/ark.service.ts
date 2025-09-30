@@ -8,6 +8,10 @@ export class ArkService {
 	private readonly arkApiKey: string
 	private readonly arkApiUrl: string
 	private readonly arkApiModel: string
+	private readonly defaultModelConfigs = {
+		temperature: 0.3,
+		top_p: 0.5,
+	}
 
 	constructor() {
 		this.arkApiKey = process.env.ARK_API_KEY
@@ -38,7 +42,7 @@ export class ArkService {
 	}
 
 	// 流式调用
-	async stream(messages: any[], modelConfigs: any = {}) {
+	async stream(messages: any[], modelConfigs = this.defaultModelConfigs) {
 		try {
 			console.log('开始流式调用 ARK API...')
 
@@ -47,7 +51,7 @@ export class ArkService {
 			}
 
 			const requestBody = {
-				model: modelConfigs.model || this.arkApiModel,
+				model: this.arkApiModel,
 				stream: true,
 				messages,
 				// 禁用thinking
