@@ -116,8 +116,8 @@ export const lang = {
 		[LanguageType.en]: 'Theme Settings',
 	},
 	appearanceMode: {
-		[LanguageType.zh]: '外观模式',
-		[LanguageType.en]: 'Appearance Mode',
+		[LanguageType.zh]: '外观主题',
+		[LanguageType.en]: 'Appearance Theme',
 	},
 	light: {
 		[LanguageType.zh]: '浅色',
@@ -171,6 +171,23 @@ export const lang = {
 	language: {
 		[LanguageType.zh]: '语言',
 		[LanguageType.en]: 'Language',
+	},
+	// debug settings
+	debug: {
+		[LanguageType.zh]: '调试',
+		[LanguageType.en]: 'Debug',
+	},
+	enableDebug: {
+		[LanguageType.zh]: '开启调试模式',
+		[LanguageType.en]: 'Enable Debug Mode',
+	},
+	disableDebug: {
+		[LanguageType.zh]: '关闭调试模式',
+		[LanguageType.en]: 'Disable Debug Mode',
+	},
+	debugTooltipDesc: {
+		[LanguageType.zh]: '开启后窗口失去焦点时不会自动关闭，便于调试',
+		[LanguageType.en]: 'When enabled, window will not close on blur, helpful for debugging',
 	},
 	// 快捷键设置页
 	keyboardSettings: {
