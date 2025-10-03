@@ -59,6 +59,11 @@ export const DefaultSearchConfig = {
 	enableConsecutiveSearch: DEFAULT_ENABLE_CONSECUTIVE_SEARCH,
 }
 
+export enum DebugMode {
+	OFF = 'off',
+	ON = 'on',
+}
+
 export enum DisplayMode {
 	IFRAME = 'iframe',
 	ISOLATE_WINDOW = 'isolateWindow',
@@ -82,6 +87,7 @@ export interface WindowConfig {
 	width: number
 	height: number
 	theme: ThemeColor
+	debugMode: DebugMode
 }
 
 export const DefaultWindowConfig: WindowConfig = {
@@ -89,6 +95,7 @@ export const DefaultWindowConfig: WindowConfig = {
 	width: SEARCH_WINDOW_WIDTH,
 	height: SEARCH_WINDOW_HEIGHT,
 	theme: ThemeColor.System,
+	debugMode: DebugMode.OFF,
 }
 
 export const TabGroupColorMap: TabGroupColorMapType = {
@@ -132,6 +139,7 @@ export const EXTENSION_STORAGE_WINDOW_WIDTH = 'windowWidth'
 export const EXTENSION_STORAGE_WINDOW_HEIGHT = 'windowHeight'
 export const EXTENSION_STORAGE_DISPLAY_MODE = 'displayMode'
 export const EXTENSION_STORAGE_THEME = PAGE_STORAGE_THEME_COLOR
+export const EXTENSION_STORAGE_DEBUG_MODE = 'debugMode'
 
 export const FOOTER_DESCRIPTION_I18N_MAP = {
 	[ItemType.Tab]: 'tab_footer_description',

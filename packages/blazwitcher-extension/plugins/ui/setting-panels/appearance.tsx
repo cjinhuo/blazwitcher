@@ -7,11 +7,13 @@ import {
 	IconMoon,
 	IconRefresh,
 	IconSun,
+	IconTerminal,
 } from '@douyinfe/semi-icons'
 import { Button, Card, InputNumber, Radio, RadioGroup, Tooltip } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import styled from 'styled-components'
 import {
+	DebugMode,
 	DisplayMode,
 	LanguageType,
 	SEARCH_WINDOW_HEIGHT,
@@ -19,7 +21,7 @@ import {
 	type ThemeColor,
 } from '~shared/constants'
 import { i18nAtom, languageAtom, restoreAppearanceSettingsAtom, themeAtom } from '~sidepanel/atom'
-import { displayModeAtom, heightAtom, widthAtom } from '~sidepanel/atom/windowAtom'
+import { debugAtom, displayModeAtom, heightAtom, widthAtom } from '~sidepanel/atom/windowAtom'
 
 const Container = styled.div`
   display: flex;
@@ -59,8 +61,9 @@ const SizeInputWrapper = styled.div`
 `
 
 const SizeLabel = styled.span`
-  font-size: 12px;
-  color: var(--semi-color-text-2);
+  font-size: 14px;
+	font-weight: 500;
+  color: var(--semi-color-text-1);
 `
 
 const InfoIcon = styled(IconInfoCircle)`
@@ -75,6 +78,7 @@ export const AppearancePanel: React.FC = () => {
 	const [displayMode, setDisplayMode] = useAtom(displayModeAtom)
 	const [iframeWidth, setIframeWidth] = useAtom(widthAtom)
 	const [iframeHeight, setIframeHeight] = useAtom(heightAtom)
+	const [debugMode, setDebugMode] = useAtom(debugAtom)
 	const resetConfig = useSetAtom(restoreAppearanceSettingsAtom)
 
 	const handleChangeWidth = (value: number) => {
@@ -104,7 +108,10 @@ export const AppearancePanel: React.FC = () => {
 		>
 			<Container>
 				<div>
-					<Section>{i18n('appearanceMode')}</Section>
+					<Section>
+						<IconSun />
+						{i18n('appearanceMode')}
+					</Section>
 					<RadioGroup type='button' onChange={(e) => handleThemeChange(e.target.value)} value={themeColor}>
 						<Radio value='light'>
 							<IconWrapper>
@@ -129,6 +136,7 @@ export const AppearancePanel: React.FC = () => {
 
 				<div>
 					<Section>
+						<IconDesktop />
 						{i18n('windowMode')}{' '}
 						<Tooltip content={i18n('restartRequired')} position='right'>
 							<InfoIcon size='small' />
@@ -177,7 +185,10 @@ export const AppearancePanel: React.FC = () => {
 				</div>
 
 				<div>
-					<Section>{i18n('language')}</Section>
+					<Section>
+						<IconLanguage />
+						{i18n('language')}
+					</Section>
 					<RadioGroup onChange={(e) => handleLanguageChange(e.target.value)} type='button' value={language}>
 						<Radio value={LanguageType.en}>
 							<IconWrapper>
@@ -191,6 +202,20 @@ export const AppearancePanel: React.FC = () => {
 								<span>中文</span>
 							</IconWrapper>
 						</Radio>
+					</RadioGroup>
+				</div>
+
+				<div>
+					<Section>
+						<IconTerminal />
+						{i18n('debug')}{' '}
+						<Tooltip content={i18n('debugTooltipDesc')} position='right'>
+							<InfoIcon size='small' />
+						</Tooltip>
+					</Section>
+					<RadioGroup type='button' value={debugMode} onChange={(e) => setDebugMode(e.target.value)}>
+						<Radio value={DebugMode.OFF}>{i18n('disableDebug')}</Radio>
+						<Radio value={DebugMode.ON}>{i18n('enableDebug')}</Radio>
 					</RadioGroup>
 				</div>
 			</Container>

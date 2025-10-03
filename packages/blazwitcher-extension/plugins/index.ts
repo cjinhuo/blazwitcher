@@ -27,7 +27,7 @@ export function matchPlugin(plugins: ListItemType<ItemType.Plugin>[], value: str
 
 // 默认插件列表
 const plugins = (i18n: i18nFunction): ListItemType<ItemType.Plugin>[] =>
-	[filterByTabPlugin(i18n), filterByHistoryPlugin(i18n), filterByBookmarkPlugin(i18n), settingPlugin(i18n)].map(
+	[settingPlugin(i18n), filterByTabPlugin(i18n), filterByHistoryPlugin(i18n), filterByBookmarkPlugin(i18n)].map(
 		(plugin) => ({
 			itemType: ItemType.Plugin,
 			data: plugin,
