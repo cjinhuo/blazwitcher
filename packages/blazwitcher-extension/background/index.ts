@@ -4,6 +4,7 @@ import {
 	GITHUB_URL,
 	HANDLE_TAB_GROUP_MESSAGE_TYPE,
 	MAIN_WINDOW,
+	RESET_AI_TAB_GROUP_MESSAGE_TYPE,
 } from '~shared/constants'
 import { dataProcessing } from '~shared/data-processing'
 import { weakUpWindowIfActiveByUser } from '~shared/open-window'
@@ -48,11 +49,18 @@ async function main() {
 	chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
 		if (message.type === HANDLE_TAB_GROUP_MESSAGE_TYPE) {
 			try {
+				tabGroupManager.setOriginalWindowData(message.currentWindowData)
 				const result = await tabGroupManager.execute(message.currentWindowData)
 				sendResponse(result)
 			} catch (error) {
 				sendResponse({ success: false, error: error.message })
 			}
+			return true
+		}
+
+		if (message.type === RESET_AI_TAB_GROUP_MESSAGE_TYPE) {
+			tabGroupManager.resetToOriginalGrouping()
+			sendResponse({ success: true })
 			return true
 		}
 	})

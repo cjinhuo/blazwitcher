@@ -3,6 +3,8 @@ import type { TabGroupOperationResult, WindowData } from '~shared/types'
 
 export class TabGroupManager {
 	private streamState: TabGroupOperationResult
+	originalWindowData?: WindowData
+	originalWindowId?: number
 
 	constructor() {
 		this.streamState = {
@@ -10,6 +12,13 @@ export class TabGroupManager {
 			effectExistingGroups: [],
 			newGroups: [],
 		}
+		this.originalWindowData = undefined
+		this.originalWindowId = undefined
+	}
+
+	setOriginalWindowData(windowData: WindowData) {
+		this.originalWindowData = windowData
+		this.originalWindowId = windowData.windowId
 	}
 
 	getProgress() {
@@ -113,10 +122,35 @@ export class TabGroupManager {
 
 	private async groupTabs(): Promise<void> {
 		console.log('🔍 开始分组', this.streamState)
+
+		// 定位到分组标签所在的窗口
+		if (this.originalWindowId) chrome.windows.update(this.originalWindowId, { focused: true })
+
+		// 过滤掉特殊页面的标签页，这些页面不允许分组
+		const filterSpecialPages = async (tabIds: number[]) => {
+			const validTabIds: number[] = []
+
+			for (const tabId of tabIds) {
+				try {
+					const tab = await chrome.tabs.get(tabId)
+					// 检查是否为特殊页面
+					if (tab.url && !this.isSpecialPage(tab.url)) {
+						validTabIds.push(tabId)
+					}
+				} catch (error) {
+					console.warn(`获取标签页信息失败: ${tabId}`, error)
+				}
+			}
+			return validTabIds
+		}
+
 		// 处理现有分组的更新
 		const existingGroupPromises = this.streamState.effectExistingGroups.map(async (item) => {
 			try {
-				await chrome.tabs.group({ tabIds: item.tabIds, groupId: item.groupId })
+				const validTabIds = await filterSpecialPages(item.tabIds)
+				if (validTabIds.length > 0) {
+					await chrome.tabs.group({ tabIds: validTabIds, groupId: item.groupId })
+				}
 			} catch (error) {
 				console.error('更新现有分组失败:', error)
 			}
@@ -125,13 +159,16 @@ export class TabGroupManager {
 		// 处理新分组的创建
 		const newGroupPromises = this.streamState.newGroups.map(async (item) => {
 			try {
-				const groupId = await chrome.tabs.group({
-					tabIds: item.tabIds,
-				})
-				await chrome.tabGroups.update(groupId, {
-					title: item.groupTitle,
-					color: item.groupColor as chrome.tabGroups.ColorEnum,
-				})
+				const validTabIds = await filterSpecialPages(item.tabIds)
+				if (validTabIds.length > 0) {
+					const groupId = await chrome.tabs.group({
+						tabIds: validTabIds,
+					})
+					await chrome.tabGroups.update(groupId, {
+						title: item.groupTitle,
+						color: item.groupColor as chrome.tabGroups.ColorEnum,
+					})
+				}
 			} catch (error) {
 				console.error('创建新分组失败:', error)
 			}
@@ -141,11 +178,65 @@ export class TabGroupManager {
 		await Promise.allSettled([...existingGroupPromises, ...newGroupPromises])
 	}
 
+	// 特殊页面无法进行分组操作
+	private isSpecialPage(url: string): boolean {
+		const specialPagePatterns = [
+			/^chrome:\/\//,
+			/^chrome-extension:\/\//,
+			/^about:/,
+			/^edge:\/\//,
+			/^file:\/\//,
+			/^data:/,
+			/^javascript:/,
+		]
+
+		return specialPagePatterns.some((pattern) => pattern.test(url))
+	}
+
 	private cleanup() {
 		this.streamState = {
 			process: 0,
 			effectExistingGroups: [],
 			newGroups: [],
 		}
+	}
+
+	// 复原到 originalWindowData 的分组状态
+	async resetToOriginalGrouping(): Promise<void> {
+		if (!this.originalWindowData) return
+
+		// 定位
+		chrome.windows.update(this.originalWindowId, { focused: true })
+
+		// 1) 还原未分组：将 original 中标记为未分组的 tab 执行 ungroup
+		const ungroupTabIds: number[] = []
+		for (const u of this.originalWindowData.ungroupedTabs) {
+			const maybeId = u.data?.id
+			if (typeof maybeId === 'number') ungroupTabIds.push(maybeId)
+		}
+		if (ungroupTabIds.length > 0) {
+			await chrome.tabs.ungroup(ungroupTabIds).catch(() => {})
+		}
+
+		// 2) 还原已有分组
+		const restoreExistingGroup = async (g: WindowData['existingGroups'][number]) => {
+			const candidateTabIds: number[] = []
+			for (const t of g.tabs as Array<any>) {
+				const id = t?.id
+				if (typeof id === 'number') candidateTabIds.push(id)
+			}
+			if (candidateTabIds.length === 0) return
+
+			try {
+				await chrome.tabs.group({ tabIds: candidateTabIds, groupId: g.id })
+				await chrome.tabGroups.update(g.id, {
+					title: g.title,
+					color: g.color as chrome.tabGroups.ColorEnum,
+				})
+				return
+			} catch {}
+		}
+
+		await Promise.allSettled(this.originalWindowData.existingGroups.map((g) => restoreExistingGroup(g)))
 	}
 }

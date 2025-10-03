@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import useI18n from '~sidepanel/hooks/useI18n'
 import { useTabGroup } from './useTabGroup'
@@ -198,7 +199,18 @@ const getProgressColor = (percentage: number) => {
 
 export const TabGroupProgress: React.FC = () => {
 	const i18n = useI18n()
-	const { isCompleted, isProcessing, percentage, handleAIGroupingClick } = useTabGroup()
+	const { isCompleted, isProcessing, percentage, handleAIGroupingClick, resetAIGrouping } = useTabGroup()
+
+	// 分组完成后 5 秒内展示“重置”按钮
+	const [showReset, setShowReset] = useState(false)
+	useEffect(() => {
+		if (isCompleted) {
+			setShowReset(true)
+			const timer = setTimeout(() => setShowReset(false), 5000)
+			return () => clearTimeout(timer)
+		}
+		setShowReset(false)
+	}, [isCompleted])
 
 	// 如果有正在进行的操作，显示进度条
 	if (isProcessing) {
@@ -219,12 +231,18 @@ export const TabGroupProgress: React.FC = () => {
 
 	return (
 		<>
-			<AIGroupingButton onClick={handleAIGroupingClick}>
-				<ButtonContent>
-					{isCompleted && <CheckmarkIcon />}
-					{isCompleted ? i18n('aiGroupingCompleted') : i18n('aiGrouping')}
-				</ButtonContent>
-			</AIGroupingButton>
+			{showReset ? (
+				<AIGroupingButton onClick={resetAIGrouping}>
+					<ButtonContent>{i18n('reset')}</ButtonContent>
+				</AIGroupingButton>
+			) : (
+				<AIGroupingButton onClick={handleAIGroupingClick}>
+					<ButtonContent>
+						{isCompleted && <CheckmarkIcon />}
+						{isCompleted ? i18n('aiGroupingCompleted') : i18n('aiGrouping')}
+					</ButtonContent>
+				</AIGroupingButton>
+			)}
 			<ColumnDivide />
 		</>
 	)

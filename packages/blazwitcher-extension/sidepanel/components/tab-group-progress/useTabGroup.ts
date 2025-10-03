@@ -1,21 +1,21 @@
+import { Toast } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue } from 'jotai'
 import { useCallback, useEffect, useState } from 'react'
-import toast from '~node_modules/@douyinfe/semi-ui/lib/es/toast'
 import {
 	AI_TAB_GROUP_MESSAGE_TYPE,
 	ERROR_MESSAGE_TYPE,
 	HANDLE_TAB_GROUP_MESSAGE_TYPE,
 	LAST_ACTIVE_WINDOW_ID_KEY,
+	RESET_AI_TAB_GROUP_MESSAGE_TYPE,
 } from '~shared/constants'
 import { storageGet } from '~shared/promisify'
 import type { WindowData } from '~shared/types'
-import { currentAITabGroupProgressAtom, languageAtom, windowDataListAtom } from '~sidepanel/atom'
+import { currentAITabGroupProgressAtom, windowDataListAtom } from '~sidepanel/atom'
 
 export const useTabGroup = () => {
 	const [currentAITabGroupProgress, setCurrentAITabGroupProgress] = useAtom(currentAITabGroupProgressAtom)
 	const windowDataList = useAtomValue(windowDataListAtom)
 	const [isCompleted, setIsCompleted] = useState<boolean>(false)
-	const language = useAtomValue(languageAtom)
 
 	// 监听来自 background 的实时进度更新
 	useEffect(() => {
@@ -23,7 +23,6 @@ export const useTabGroup = () => {
 			if (message.type === AI_TAB_GROUP_MESSAGE_TYPE) {
 				const isProcessing = message.isProcessing as boolean
 				const progress = message.progress as number | undefined
-				console.log('收到实时进度更新:', progress)
 				setCurrentAITabGroupProgress({ isProcessing, progress })
 
 				// 检查是否完成
@@ -39,7 +38,7 @@ export const useTabGroup = () => {
 
 		const handleErrorMessage = (message: any) => {
 			if (message.type === ERROR_MESSAGE_TYPE) {
-				toast.error(message.error)
+				Toast.error(message.error)
 			}
 		}
 
@@ -68,7 +67,9 @@ export const useTabGroup = () => {
 				currentWindowId = currentWindow.id
 			}
 			// 从windowDataList中找到当前窗口的数据
-			return windowDataList.find((data) => data.windowId === currentWindowId)
+			const result = windowDataList.find((data) => data.windowId === currentWindowId)
+			console.log('result', result)
+			return result
 		} catch (error) {
 			console.error('获取当前窗口数据失败:', error)
 			return undefined
@@ -76,21 +77,17 @@ export const useTabGroup = () => {
 	}, [windowDataList])
 
 	// 执行 AI 分组操作
-	const executeAIGrouping = useCallback(
-		async (currentWindowData: WindowData) => {
-			try {
-				await chrome.runtime.sendMessage({
-					type: HANDLE_TAB_GROUP_MESSAGE_TYPE,
-					currentWindowData,
-					language,
-				})
-			} catch (error) {
-				console.error('与 background 通信失败:', error)
-				toast.error('与 background 通信失败')
-			}
-		},
-		[language]
-	)
+	const executeAIGrouping = useCallback(async (currentWindowData: WindowData) => {
+		try {
+			await chrome.runtime.sendMessage({
+				type: HANDLE_TAB_GROUP_MESSAGE_TYPE,
+				currentWindowData,
+			})
+		} catch (error) {
+			console.error('与 background 通信失败:', error)
+			Toast.error('与 background 通信失败')
+		}
+	}, [])
 
 	const handleAIGroupingClick = useCallback(async () => {
 		if (currentAITabGroupProgress.isProcessing) return
@@ -100,12 +97,24 @@ export const useTabGroup = () => {
 		}
 	}, [currentAITabGroupProgress.isProcessing, getCurrentWindowData, executeAIGrouping])
 
+	const resetAIGrouping = useCallback(async () => {
+		try {
+			await chrome.runtime.sendMessage({
+				type: RESET_AI_TAB_GROUP_MESSAGE_TYPE,
+			})
+		} catch (error) {
+			console.error('与 background 通信失败:', error)
+			Toast.error('与 background 通信失败')
+		}
+	}, [])
+
 	return {
 		currentAITabGroupProgress,
 		isCompleted,
 		isProcessing: currentAITabGroupProgress.isProcessing,
 		percentage: currentAITabGroupProgress.progress,
 		handleAIGroupingClick,
+		resetAIGrouping,
 		executeAIGrouping,
 		getCurrentWindowData,
 	}
