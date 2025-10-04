@@ -1,6 +1,6 @@
 import { Toast } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import {
 	AI_TAB_GROUP_MESSAGE_TYPE,
 	ERROR_MESSAGE_TYPE,
@@ -18,39 +18,29 @@ export const useTabGroup = () => {
 	const windowDataList = useAtomValue(windowDataListAtom)
 	const setPluginContext = useSetAtom(pluginContextAtom)
 	const setSearchValue = useSetAtom(searchValueAtom)
-	const [isCompleted, setIsCompleted] = useState<boolean>(false)
 
-	// 监听来自 background 的实时进度更新
+	// 监听来自 background 的消息
 	useEffect(() => {
-		const handleProgressUpdate = (message: any) => {
-			if (message.type === AI_TAB_GROUP_MESSAGE_TYPE) {
-				const isProcessing = message.isProcessing as boolean
-				const progress = message.progress as number | undefined
-				setAITabGroupProgress({ isProcessing, progress })
-
-				// 检查是否完成
-				if (progress === 100) {
-					setIsCompleted(true)
-					// 3秒后重置完成状态
-					setTimeout(() => {
-						setIsCompleted(false)
-					}, 3000)
+		const handleMessage = (message: any) => {
+			switch (message.type) {
+				case AI_TAB_GROUP_MESSAGE_TYPE: {
+					const isProcessing = message.isProcessing as boolean
+					const progress = message.progress as number | undefined
+					const showReset = message.showReset as boolean
+					setAITabGroupProgress({ isProcessing, progress, showReset })
+					break
+				}
+				case ERROR_MESSAGE_TYPE: {
+					Toast.error(message.error)
+					break
 				}
 			}
 		}
 
-		const handleErrorMessage = (message: any) => {
-			if (message.type === ERROR_MESSAGE_TYPE) {
-				Toast.error(message.error)
-			}
-		}
-
-		chrome.runtime.onMessage.addListener(handleProgressUpdate)
-		chrome.runtime.onMessage.addListener(handleErrorMessage)
+		chrome.runtime.onMessage.addListener(handleMessage)
 
 		return () => {
-			chrome.runtime.onMessage.removeListener(handleProgressUpdate)
-			chrome.runtime.onMessage.removeListener(handleErrorMessage)
+			chrome.runtime.onMessage.removeListener(handleMessage)
 		}
 	}, [setAITabGroupProgress])
 
@@ -94,7 +84,7 @@ export const useTabGroup = () => {
 
 	const handleAIGroupingClick = useCallback(async () => {
 		if (aiTabGroupProgress.isProcessing) return
-		setAITabGroupProgress({ isProcessing: true, progress: 0 })
+		setAITabGroupProgress({ isProcessing: true, progress: 0, showReset: false })
 		const currentWindowData = await getCurrentWindowData()
 		if (currentWindowData) {
 			await executeAIGrouping(currentWindowData)
@@ -122,9 +112,6 @@ export const useTabGroup = () => {
 	}, [handleAIGroupingClick, setPluginContext, setSearchValue])
 	return {
 		aiTabGroupProgress,
-		isCompleted,
-		isProcessing: aiTabGroupProgress.isProcessing,
-		percentage: aiTabGroupProgress.progress,
 		handleAIGroupingClick,
 		resetAIGrouping,
 		executeAIGrouping,

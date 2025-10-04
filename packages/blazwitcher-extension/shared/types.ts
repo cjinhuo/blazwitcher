@@ -166,4 +166,5 @@ export interface TabGroupOperationResult extends AiGroupingProgress {
 export interface AiGroupingProgress {
 	isProcessing: boolean
 	progress: number
+	showReset: boolean
 }

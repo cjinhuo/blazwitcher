@@ -354,8 +354,8 @@ export const lang = {
 		[LanguageType.zh]: 'AI 标签分组',
 		[LanguageType.en]: 'AI Tab Grouping',
 	},
-	reset: {
-		[LanguageType.zh]: '重置',
-		[LanguageType.en]: 'Reset',
+	resetAIGrouping: {
+		[LanguageType.zh]: '还原 AI 标签分组',
+		[LanguageType.en]: 'Reset AI Tab Grouping',
 	},
 }

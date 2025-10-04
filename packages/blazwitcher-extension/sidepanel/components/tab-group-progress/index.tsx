@@ -1,13 +1,7 @@
-import { useEffect, useState } from 'react'
-import styled, { keyframes } from 'styled-components'
+import React from 'react'
+import styled from 'styled-components'
 import useI18n from '~sidepanel/hooks/useI18n'
 import { useTabGroup } from './useTabGroup'
-
-const checkmark = keyframes`
-  0% { transform: scale(0); opacity: 0; }
-  50% { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
-`
 
 const Container = styled.div`
 	display: flex;
@@ -161,27 +155,6 @@ const AIGroupingButton = styled.button`
 	}
 `
 
-const CheckmarkIcon = styled.div`
-	width: 16px;
-	height: 16px;
-	margin-right: 8px;
-	position: relative;
-	animation: ${checkmark} 0.5s ease-out;
-
-	&::before {
-		content: '';
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		width: 8px;
-		height: 4px;
-		border: 2px solid white;
-		border-top: none;
-		border-right: none;
-		transform: translate(-50%, -60%) rotate(-45deg);
-	}
-`
-
 const ButtonContent = styled.div`
 	display: flex;
 	align-items: center;
@@ -199,30 +172,20 @@ const getProgressColor = (percentage: number) => {
 
 export const TabGroupProgress: React.FC = () => {
 	const i18n = useI18n()
-	const { isCompleted, isProcessing, percentage, handleAIGroupingClick, resetAIGrouping } = useTabGroup()
 
-	// 分组完成后 5 秒内展示“重置”按钮
-	const [showReset, setShowReset] = useState(false)
-	useEffect(() => {
-		if (isCompleted) {
-			setShowReset(true)
-			const timer = setTimeout(() => setShowReset(false), 5000)
-			return () => clearTimeout(timer)
-		}
-		setShowReset(false)
-	}, [isCompleted])
+	const { aiTabGroupProgress, handleAIGroupingClick, resetAIGrouping } = useTabGroup()
 
 	// 如果有正在进行的操作，显示进度条
-	if (isProcessing) {
-		const progressColor = getProgressColor(percentage)
+	if (aiTabGroupProgress.isProcessing) {
+		const progressColor = getProgressColor(aiTabGroupProgress.progress)
 
 		return (
 			<>
 				<Container>
 					<ProgressBarWrapper>
-						<ProgressBar $percentage={percentage} $color={progressColor} />
+						<ProgressBar $percentage={aiTabGroupProgress.progress} $color={progressColor} />
 					</ProgressBarWrapper>
-					<ProgressText $percentage={percentage}>{percentage}%</ProgressText>
+					<ProgressText $percentage={aiTabGroupProgress.progress}>{aiTabGroupProgress.progress}%</ProgressText>
 				</Container>
 				<ColumnDivide />
 			</>
@@ -231,16 +194,13 @@ export const TabGroupProgress: React.FC = () => {
 
 	return (
 		<>
-			{showReset ? (
+			{aiTabGroupProgress.showReset ? (
 				<AIGroupingButton onClick={resetAIGrouping}>
-					<ButtonContent>{i18n('reset')}</ButtonContent>
+					<ButtonContent>{i18n('resetAIGrouping')}</ButtonContent>
 				</AIGroupingButton>
 			) : (
 				<AIGroupingButton onClick={handleAIGroupingClick}>
-					<ButtonContent>
-						{isCompleted && <CheckmarkIcon />}
-						{isCompleted ? i18n('aiGroupingCompleted') : i18n('aiGrouping')}
-					</ButtonContent>
+					<ButtonContent>{i18n('aiGrouping')}</ButtonContent>
 				</AIGroupingButton>
 			)}
 			<ColumnDivide />

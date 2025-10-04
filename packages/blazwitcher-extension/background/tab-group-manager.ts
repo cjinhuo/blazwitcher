@@ -6,16 +6,19 @@ export class TabGroupManager {
 	private streamState: TabGroupOperationResult
 	originalWindowData?: WindowData
 	originalWindowId?: number
+	private resetButtonTimer?: NodeJS.Timeout
 
 	constructor() {
 		this.streamState = {
 			progress: 0,
+			showReset: false,
 			isProcessing: false,
 			effectExistingGroups: [],
 			newGroups: [],
 		}
 		this.originalWindowData = undefined
 		this.originalWindowId = undefined
+		this.resetButtonTimer = undefined
 	}
 
 	setOriginalWindowData(windowData: WindowData) {
@@ -27,7 +30,37 @@ export class TabGroupManager {
 		return {
 			progress: this.streamState.progress,
 			isProcessing: this.streamState.isProcessing,
+			showReset: this.streamState.showReset,
 		}
+	}
+
+	private showResetButton() {
+		this.sendProgressMessage({
+			showReset: true,
+			isProcessing: false,
+		})
+		// 清除之前的定时器
+		if (this.resetButtonTimer) {
+			clearTimeout(this.resetButtonTimer)
+		}
+
+		// 10秒后隐藏重置按钮
+		this.resetButtonTimer = setTimeout(() => {
+			this.hideResetButton()
+		}, 10000)
+	}
+
+	private hideResetButton() {
+		// 清除定时器
+		if (this.resetButtonTimer) {
+			clearTimeout(this.resetButtonTimer)
+			this.resetButtonTimer = undefined
+		}
+		this.sendProgressMessage({
+			showReset: false,
+		})
+		this.originalWindowData = undefined
+		this.originalWindowId = undefined
 	}
 
 	private sendErrorMessage(error?: string | Error) {
@@ -74,13 +107,27 @@ export class TabGroupManager {
 		} catch (error) {
 			this.sendErrorMessage(error)
 		} finally {
-			this.cleanup()
-			safeSendMessage({
-				type: AI_TAB_GROUP_MESSAGE_TYPE,
+			// 分成两次清理，第一次清理数据，第二次清理 showReset 状态
+			this.sendProgressMessage({
 				isProcessing: false,
 				progress: 0,
+				effectExistingGroups: [],
+				newGroups: [],
 			})
 		}
+	}
+
+	private sendProgressMessage(_streamState?: Partial<TabGroupOperationResult>) {
+		this.streamState = {
+			...this.streamState,
+			..._streamState,
+		}
+		safeSendMessage({
+			type: AI_TAB_GROUP_MESSAGE_TYPE,
+			progress: this.streamState.progress,
+			showReset: this.streamState.showReset,
+			isProcessing: this.streamState.isProcessing,
+		})
 	}
 
 	private async processStreamResponse(responseBody: ReadableStream) {
@@ -101,16 +148,24 @@ export class TabGroupManager {
 					try {
 						const parsed = JSON.parse(data)
 						if (parsed.content && parsed.status) {
-							this.streamState = parsed.content
-							safeSendMessage({
-								type: AI_TAB_GROUP_MESSAGE_TYPE,
-								progress: parsed.content.process,
+							// parsed.content 是 server/src/modules/parser.ts 下的 getStatus，没有包含 isProcessing 和 showReset
+							this.sendProgressMessage({
+								...this.streamState,
+								...parsed.content,
 								isProcessing: true,
 							})
 							// 如果状态为finished，退出循环
 							if (parsed.status === 'finished') {
 								console.log('📡 流式处理完成，一次性分组', this.streamState)
-								this.groupTabs()
+								// progress 是根据 AI 返回的数据来计算，可能到不了 100，结束时强行设置为 100
+								this.sendProgressMessage({
+									...this.streamState,
+									...parsed.content,
+									progress: 100,
+								})
+								await this.groupTabs()
+								// 分组完成后显示重置按钮
+								this.showResetButton()
 								break
 							}
 						} else if (parsed.error) {
@@ -197,15 +252,6 @@ export class TabGroupManager {
 		return specialPagePatterns.some((pattern) => pattern.test(url))
 	}
 
-	private cleanup() {
-		this.streamState = {
-			progress: 0,
-			isProcessing: false,
-			effectExistingGroups: [],
-			newGroups: [],
-		}
-	}
-
 	// 复原到 originalWindowData 的分组状态
 	async resetToOriginalGrouping(): Promise<void> {
 		if (!this.originalWindowData) return
@@ -243,5 +289,8 @@ export class TabGroupManager {
 		}
 
 		await Promise.allSettled(this.originalWindowData.existingGroups.map((g) => restoreExistingGroup(g)))
+
+		// 重置完成后隐藏重置按钮
+		this.hideResetButton()
 	}
 }

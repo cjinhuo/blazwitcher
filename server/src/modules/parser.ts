@@ -5,7 +5,7 @@ import type { AIEffectExistingGroups } from './ark.dto'
 type TagHandler<T> = (data: any) => T
 
 export class LLMResponseParser {
-	private process = 0
+	private progress = 0
 	private summary: AIGroupSummary = {
 		effectExistingGroups: 0,
 		newGroups: 0,
@@ -97,14 +97,14 @@ export class LLMResponseParser {
 			const currentParsed = this.effectExistingGroups.length + this.newGroups.length
 
 			if (totalExpected > 0) {
-				this.process = Math.min(100, Math.round((currentParsed / totalExpected) * 100))
+				this.progress = Math.min(100, Math.round((currentParsed / totalExpected) * 100))
 			}
 		}
 	}
 
 	public getStatus() {
 		return {
-			process: this.process,
+			progress: this.progress,
 			newGroups: this.newGroups,
 			effectExistingGroups: this.effectExistingGroups,
 		}
@@ -112,7 +112,7 @@ export class LLMResponseParser {
 
 	// 重置解析器状态
 	public destroy() {
-		this.process = 0
+		this.progress = 0
 		this.summary = {
 			effectExistingGroups: 0,
 			newGroups: 0,
