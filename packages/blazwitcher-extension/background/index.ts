@@ -47,21 +47,16 @@ async function main() {
 
 	// AI TabGroup 分组 (stream)
 	chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
-		if (message.type === HANDLE_TAB_GROUP_MESSAGE_TYPE) {
-			try {
+		try {
+			if (message.type === HANDLE_TAB_GROUP_MESSAGE_TYPE) {
 				tabGroupManager.setOriginalWindowData(message.currentWindowData)
-				const result = await tabGroupManager.execute(message.currentWindowData)
-				sendResponse(result)
-			} catch (error) {
-				sendResponse({ success: false, error: error.message })
+				await tabGroupManager.execute(message.currentWindowData)
+			} else if (message.type === RESET_AI_TAB_GROUP_MESSAGE_TYPE) {
+				await tabGroupManager.resetToOriginalGrouping()
 			}
-			return true
-		}
-
-		if (message.type === RESET_AI_TAB_GROUP_MESSAGE_TYPE) {
-			tabGroupManager.resetToOriginalGrouping()
-			sendResponse({ success: true })
-			return true
+			return sendResponse({ success: true })
+		} catch (error) {
+			return sendResponse({ success: false, error: error.message })
 		}
 	})
 

@@ -62,13 +62,12 @@ export const useTabGroup = () => {
 				const storage = await storageGet()
 				const lastActiveWindowId = storage[LAST_ACTIVE_WINDOW_ID_KEY]
 				currentWindowId = lastActiveWindowId
-				await chrome.windows.update(lastActiveWindowId, { focused: true })
 			} else {
 				currentWindowId = currentWindow.id
 			}
 			// 从windowDataList中找到当前窗口的数据
 			const result = windowDataList.find((data) => data.windowId === currentWindowId)
-			console.log('result', result)
+			console.log('get window data', result)
 			return result
 		} catch (error) {
 			console.error('获取当前窗口数据失败:', error)
@@ -84,8 +83,8 @@ export const useTabGroup = () => {
 				currentWindowData,
 			})
 		} catch (error) {
-			console.error('与 background 通信失败:', error)
-			Toast.error('与 background 通信失败')
+			console.error('executeAIGrouping: communicate with background error:', error)
+			Toast.error('executeAIGrouping: communicate with background error')
 		}
 	}, [])
 

@@ -121,8 +121,6 @@ export class TabGroupManager {
 	}
 
 	private async groupTabs(): Promise<void> {
-		console.log('🔍 开始分组', this.streamState)
-
 		// 定位到分组标签所在的窗口
 		if (this.originalWindowId) chrome.windows.update(this.originalWindowId, { focused: true })
 

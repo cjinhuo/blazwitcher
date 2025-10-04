@@ -351,7 +351,7 @@ export const lang = {
 		[LanguageType.en]: 'Grouping Completed',
 	},
 	aiGrouping: {
-		[LanguageType.zh]: 'AI标签分类',
+		[LanguageType.zh]: 'AI 标签分组',
 		[LanguageType.en]: 'AI Tab Grouping',
 	},
 	reset: {
