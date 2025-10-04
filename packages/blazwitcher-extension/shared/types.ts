@@ -158,13 +158,12 @@ export interface AINewGroups {
 	tabIds: number[]
 }
 
-export interface TabGroupOperationResult {
-	process: number
+export interface TabGroupOperationResult extends AiGroupingProgress {
 	newGroups: AINewGroups[]
 	effectExistingGroups: AIEffectExistingGroups[]
 }
 
 export interface AiGroupingProgress {
 	isProcessing: boolean
-	progress?: number
+	progress: number
 }

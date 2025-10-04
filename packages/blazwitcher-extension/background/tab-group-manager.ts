@@ -9,7 +9,8 @@ export class TabGroupManager {
 
 	constructor() {
 		this.streamState = {
-			process: 0,
+			progress: 0,
+			isProcessing: false,
 			effectExistingGroups: [],
 			newGroups: [],
 		}
@@ -23,7 +24,10 @@ export class TabGroupManager {
 	}
 
 	getProgress() {
-		return this.streamState.process
+		return {
+			progress: this.streamState.progress,
+			isProcessing: this.streamState.isProcessing,
+		}
 	}
 
 	private sendErrorMessage(error?: string | Error) {
@@ -74,6 +78,7 @@ export class TabGroupManager {
 			safeSendMessage({
 				type: AI_TAB_GROUP_MESSAGE_TYPE,
 				isProcessing: false,
+				progress: 0,
 			})
 		}
 	}
@@ -194,7 +199,8 @@ export class TabGroupManager {
 
 	private cleanup() {
 		this.streamState = {
-			process: 0,
+			progress: 0,
+			isProcessing: false,
 			effectExistingGroups: [],
 			newGroups: [],
 		}

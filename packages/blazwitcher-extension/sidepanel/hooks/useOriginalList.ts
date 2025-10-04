@@ -2,7 +2,7 @@ import { useAtom, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
 import { MAIN_WINDOW } from '~shared/constants'
 import type { AiGroupingProgress, ListItemType } from '~shared/types'
-import { currentAITabGroupProgressAtom, originalListAtom, windowDataListAtom } from '~sidepanel/atom'
+import { aiTabGroupProgressAtom, originalListAtom, windowDataListAtom } from '~sidepanel/atom'
 import { processTabsForAI } from '../../shared/process-tabs-by-window'
 import { useDebug } from './useDebug'
 
@@ -10,7 +10,7 @@ export default function useOriginalList() {
 	const debug = useDebug()
 	const [originalList, setOriginalList] = useAtom(originalListAtom)
 	const setWindowDataList = useSetAtom(windowDataListAtom)
-	const setCurrentAITabGroupProgress = useSetAtom(currentAITabGroupProgressAtom)
+	const setAITabGroupProgress = useSetAtom(aiTabGroupProgressAtom)
 
 	useEffect(() => {
 		let portConnectStatus = false
@@ -33,7 +33,8 @@ export default function useOriginalList() {
 				setWindowDataList(windowDataList)
 
 				// 更新 AI 分组进度状态
-				setCurrentAITabGroupProgress(lastTimeTabGroupProgress)
+				console.log('lastTimeTabGroupProgress', lastTimeTabGroupProgress)
+				setAITabGroupProgress(lastTimeTabGroupProgress)
 			}
 		)
 
@@ -53,6 +54,6 @@ export default function useOriginalList() {
 			window.removeEventListener('unload', postMessageToCloseWindow)
 			window.removeEventListener('blur', postMessageToCloseWindow)
 		}
-	}, [setOriginalList, setWindowDataList, setCurrentAITabGroupProgress, debug])
+	}, [setOriginalList, setWindowDataList, setAITabGroupProgress, debug])
 	return originalList
 }

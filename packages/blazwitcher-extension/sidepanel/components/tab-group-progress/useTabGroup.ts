@@ -11,10 +11,10 @@ import {
 import { storageGet } from '~shared/promisify'
 import type { WindowData } from '~shared/types'
 import { safeSendMessage } from '~shared/utils'
-import { currentAITabGroupProgressAtom, pluginContextAtom, searchValueAtom, windowDataListAtom } from '~sidepanel/atom'
+import { aiTabGroupProgressAtom, pluginContextAtom, searchValueAtom, windowDataListAtom } from '~sidepanel/atom'
 
 export const useTabGroup = () => {
-	const [currentAITabGroupProgress, setCurrentAITabGroupProgress] = useAtom(currentAITabGroupProgressAtom)
+	const [aiTabGroupProgress, setAITabGroupProgress] = useAtom(aiTabGroupProgressAtom)
 	const windowDataList = useAtomValue(windowDataListAtom)
 	const setPluginContext = useSetAtom(pluginContextAtom)
 	const setSearchValue = useSetAtom(searchValueAtom)
@@ -26,7 +26,7 @@ export const useTabGroup = () => {
 			if (message.type === AI_TAB_GROUP_MESSAGE_TYPE) {
 				const isProcessing = message.isProcessing as boolean
 				const progress = message.progress as number | undefined
-				setCurrentAITabGroupProgress({ isProcessing, progress })
+				setAITabGroupProgress({ isProcessing, progress })
 
 				// 检查是否完成
 				if (progress === 100) {
@@ -52,7 +52,7 @@ export const useTabGroup = () => {
 			chrome.runtime.onMessage.removeListener(handleProgressUpdate)
 			chrome.runtime.onMessage.removeListener(handleErrorMessage)
 		}
-	}, [setCurrentAITabGroupProgress])
+	}, [setAITabGroupProgress])
 
 	// 获取当前窗口数据
 	const getCurrentWindowData = useCallback(async (): Promise<WindowData | undefined> => {
@@ -93,13 +93,13 @@ export const useTabGroup = () => {
 	}, [])
 
 	const handleAIGroupingClick = useCallback(async () => {
-		if (currentAITabGroupProgress.isProcessing) return
-		setCurrentAITabGroupProgress({ isProcessing: true, progress: 0 })
+		if (aiTabGroupProgress.isProcessing) return
+		setAITabGroupProgress({ isProcessing: true, progress: 0 })
 		const currentWindowData = await getCurrentWindowData()
 		if (currentWindowData) {
 			await executeAIGrouping(currentWindowData)
 		}
-	}, [currentAITabGroupProgress.isProcessing, getCurrentWindowData, executeAIGrouping, setCurrentAITabGroupProgress])
+	}, [aiTabGroupProgress.isProcessing, getCurrentWindowData, executeAIGrouping, setAITabGroupProgress])
 
 	const resetAIGrouping = useCallback(async () => {
 		safeSendMessage(
@@ -120,12 +120,11 @@ export const useTabGroup = () => {
 			setSearchValue: (value) => setSearchValue({ value }),
 		}))
 	}, [handleAIGroupingClick, setPluginContext, setSearchValue])
-
 	return {
-		currentAITabGroupProgress,
+		aiTabGroupProgress,
 		isCompleted,
-		isProcessing: currentAITabGroupProgress.isProcessing,
-		percentage: currentAITabGroupProgress.progress,
+		isProcessing: aiTabGroupProgress.isProcessing,
+		percentage: aiTabGroupProgress.progress,
 		handleAIGroupingClick,
 		resetAIGrouping,
 		executeAIGrouping,

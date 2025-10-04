@@ -21,7 +21,7 @@ export const themeAtom = atomWithStorage<ThemeColor>(
 export const activeItemAtom = atomWithReset<ListItemType | null>(null)
 export const originalListAtom = atomWithReset<ListItemType[]>([])
 export const windowDataListAtom = atomWithReset<WindowData[]>([])
-export const currentAITabGroupProgressAtom = atom<AiGroupingProgress>({
+export const aiTabGroupProgressAtom = atomWithReset<AiGroupingProgress>({
 	isProcessing: false,
 	progress: 0,
 })
