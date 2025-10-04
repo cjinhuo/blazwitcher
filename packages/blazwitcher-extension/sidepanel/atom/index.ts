@@ -10,6 +10,7 @@ export * from './shortcutAtom'
 export * from './i18nAtom'
 export * from './searchConfigAtom'
 export * from './windowAtom'
+export * from './plugin-context-atom'
 
 export const themeAtom = atomWithStorage<ThemeColor>(
 	PAGE_STORAGE_THEME_COLOR,

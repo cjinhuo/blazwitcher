@@ -77,6 +77,11 @@ export const OperationItemTitleMap: Record<string, TranslationKeys> = {
 	[OperationItemPropertyTypes.close]: 'closeTab',
 }
 
+export interface PluginContext {
+	handleAIGroupingClick?: () => Promise<void>
+	setSearchValue?: (value: string) => void
+}
+
 export interface CommandPlugin {
 	command: string
 	alias?: string
@@ -84,6 +89,7 @@ export interface CommandPlugin {
 	description: string
 	dataProcessing?: (data: ListItemType[]) => ListItemType[]
 	render?: (searchValue?: string) => React.ReactNode
+	action?: (context?: PluginContext) => void
 }
 
 type ColorKey = 'grey' | 'blue' | 'red' | 'yellow' | 'green' | 'pink' | 'purple' | 'cyan' | 'orange'

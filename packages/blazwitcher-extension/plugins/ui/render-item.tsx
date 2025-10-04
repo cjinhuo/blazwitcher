@@ -1,4 +1,4 @@
-import { useSetAtom } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import styled from 'styled-components'
 import {
 	ContentContainer,
@@ -9,7 +9,7 @@ import {
 	TitleContainer,
 } from '~shared/common-styles'
 import type { ItemType, ListItemType } from '~shared/types'
-import { searchValueAtom } from '~sidepanel/atom'
+import { pluginContextAtom, searchValueAtom } from '~sidepanel/atom'
 
 interface RenderPluginItemProps {
 	item: ListItemType<ItemType.Plugin>
@@ -40,8 +40,16 @@ export function RenderPluginItem({ item: { data } }: RenderPluginItemProps) {
 
 export function usePluginClickItem() {
 	const setSearchValue = useSetAtom(searchValueAtom)
+	const pluginContext = useAtomValue(pluginContextAtom)
 
 	const handlePluginClick = (plugin: ListItemType<ItemType.Plugin>) => {
+		// 如果插件有 action 函数，直接执行
+		if (plugin.data.action) {
+			plugin.data.action(pluginContext)
+			return
+		}
+
+		// 否则设置搜索值，让插件通过 render 或 dataProcessing 处理
 		// 额外添加一个空格，方便按住 alt 快捷删除单个单词
 		setSearchValue({ value: `${plugin.data.command} ` })
 	}

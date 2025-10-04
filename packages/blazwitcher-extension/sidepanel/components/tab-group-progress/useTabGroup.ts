@@ -1,5 +1,5 @@
 import { Toast } from '@douyinfe/semi-ui'
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useCallback, useEffect, useState } from 'react'
 import {
 	AI_TAB_GROUP_MESSAGE_TYPE,
@@ -10,11 +10,14 @@ import {
 } from '~shared/constants'
 import { storageGet } from '~shared/promisify'
 import type { WindowData } from '~shared/types'
-import { currentAITabGroupProgressAtom, windowDataListAtom } from '~sidepanel/atom'
+import { safeSendMessage } from '~shared/utils'
+import { currentAITabGroupProgressAtom, pluginContextAtom, searchValueAtom, windowDataListAtom } from '~sidepanel/atom'
 
 export const useTabGroup = () => {
 	const [currentAITabGroupProgress, setCurrentAITabGroupProgress] = useAtom(currentAITabGroupProgressAtom)
 	const windowDataList = useAtomValue(windowDataListAtom)
+	const setPluginContext = useSetAtom(pluginContextAtom)
+	const setSearchValue = useSetAtom(searchValueAtom)
 	const [isCompleted, setIsCompleted] = useState<boolean>(false)
 
 	// 监听来自 background 的实时进度更新
@@ -77,35 +80,46 @@ export const useTabGroup = () => {
 
 	// 执行 AI 分组操作
 	const executeAIGrouping = useCallback(async (currentWindowData: WindowData) => {
-		try {
-			await chrome.runtime.sendMessage({
+		safeSendMessage(
+			{
 				type: HANDLE_TAB_GROUP_MESSAGE_TYPE,
 				currentWindowData,
-			})
-		} catch (error) {
-			console.error('executeAIGrouping: communicate with background error:', error)
-			Toast.error('executeAIGrouping: communicate with background error')
-		}
+			},
+			(error) => {
+				console.error('executeAIGrouping: communicate with background error:', error)
+				Toast.error('executeAIGrouping: communicate with background error')
+			}
+		)
 	}, [])
 
 	const handleAIGroupingClick = useCallback(async () => {
 		if (currentAITabGroupProgress.isProcessing) return
+		setCurrentAITabGroupProgress({ isProcessing: true, progress: 0 })
 		const currentWindowData = await getCurrentWindowData()
 		if (currentWindowData) {
 			await executeAIGrouping(currentWindowData)
 		}
-	}, [currentAITabGroupProgress.isProcessing, getCurrentWindowData, executeAIGrouping])
+	}, [currentAITabGroupProgress.isProcessing, getCurrentWindowData, executeAIGrouping, setCurrentAITabGroupProgress])
 
 	const resetAIGrouping = useCallback(async () => {
-		try {
-			await chrome.runtime.sendMessage({
+		safeSendMessage(
+			{
 				type: RESET_AI_TAB_GROUP_MESSAGE_TYPE,
-			})
-		} catch (error) {
-			console.error('与 background 通信失败:', error)
-			Toast.error('与 background 通信失败')
-		}
+			},
+			(error) => {
+				console.error('resetAIGrouping: communicate with background error:', error)
+				Toast.error('resetAIGrouping: communicate with background error')
+			}
+		)
 	}, [])
+
+	useEffect(() => {
+		setPluginContext((prev) => ({
+			...prev,
+			handleAIGroupingClick,
+			setSearchValue: (value) => setSearchValue({ value }),
+		}))
+	}, [handleAIGroupingClick, setPluginContext, setSearchValue])
 
 	return {
 		currentAITabGroupProgress,

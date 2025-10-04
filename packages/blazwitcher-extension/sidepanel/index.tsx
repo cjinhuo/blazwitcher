@@ -44,6 +44,7 @@ export default function SidePanel() {
 	const searchConfig = useAtomValue(searchConfigAtom)
 	const originalList = useOriginalList()
 	const [searchValue, setSearchValue] = useState('')
+
 	const handlePluginItemClick = usePluginClickItem()
 
 	const RenderList = useCallback(

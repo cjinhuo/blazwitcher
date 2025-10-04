@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { MAIN_WINDOW } from '~shared/constants'
 import type { AiGroupingProgress, ListItemType } from '~shared/types'
 import { currentAITabGroupProgressAtom, originalListAtom, windowDataListAtom } from '~sidepanel/atom'
-import { processTabsForAI } from '../utils/process-tabs-by-window'
+import { processTabsForAI } from '../../shared/process-tabs-by-window'
 import { useDebug } from './useDebug'
 
 export default function useOriginalList() {

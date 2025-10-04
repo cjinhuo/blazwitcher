@@ -1,7 +1,13 @@
 // 插件模块统一导出
 import { type CommandPlugin, ItemType, type ListItemType } from '~shared/types'
 import type { i18nFunction } from '~sidepanel/atom'
-import { filterByBookmarkPlugin, filterByHistoryPlugin, filterByTabPlugin, settingPlugin } from './commands'
+import {
+	aiGroupingPlugin,
+	filterByBookmarkPlugin,
+	filterByHistoryPlugin,
+	filterByTabPlugin,
+	settingPlugin,
+} from './commands'
 
 // UI组件导出
 export { RenderPluginItem, usePluginClickItem } from './ui/render-item'
@@ -11,7 +17,7 @@ export { SettingPanels } from './ui/setting-panels'
 export { filterByBookmarkPlugin, filterByHistoryPlugin, filterByTabPlugin, settingPlugin } from './commands'
 
 // 插件匹配工具函数
-export function matchPlugin(plugins: ListItemType<ItemType.Plugin>[], value: string) {
+export function matchPlugin(plugins: ListItemType<ItemType.Plugin>[], value: string): [CommandPlugin | null, string] {
 	const pluginMap = plugins.reduce<Record<string, CommandPlugin>>((acc, plugin) => {
 		acc[plugin.data.command] = plugin.data
 		return acc
@@ -27,11 +33,15 @@ export function matchPlugin(plugins: ListItemType<ItemType.Plugin>[], value: str
 
 // 默认插件列表
 const plugins = (i18n: i18nFunction): ListItemType<ItemType.Plugin>[] =>
-	[settingPlugin(i18n), filterByTabPlugin(i18n), filterByHistoryPlugin(i18n), filterByBookmarkPlugin(i18n)].map(
-		(plugin) => ({
-			itemType: ItemType.Plugin,
-			data: plugin,
-		})
-	)
+	[
+		settingPlugin(i18n),
+		aiGroupingPlugin(i18n),
+		filterByTabPlugin(i18n),
+		filterByHistoryPlugin(i18n),
+		filterByBookmarkPlugin(i18n),
+	].map((plugin) => ({
+		itemType: ItemType.Plugin,
+		data: plugin,
+	}))
 
 export default plugins

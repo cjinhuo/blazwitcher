@@ -1,5 +1,6 @@
 import { AI_TAB_GROUP_MESSAGE_TYPE, ERROR_MESSAGE_TYPE } from '~shared/constants'
 import type { TabGroupOperationResult, WindowData } from '~shared/types'
+import { safeSendMessage } from '~shared/utils'
 
 export class TabGroupManager {
 	private streamState: TabGroupOperationResult
@@ -70,7 +71,7 @@ export class TabGroupManager {
 			this.sendErrorMessage(error)
 		} finally {
 			this.cleanup()
-			chrome.runtime.sendMessage({
+			safeSendMessage({
 				type: AI_TAB_GROUP_MESSAGE_TYPE,
 				isProcessing: false,
 			})
@@ -96,7 +97,7 @@ export class TabGroupManager {
 						const parsed = JSON.parse(data)
 						if (parsed.content && parsed.status) {
 							this.streamState = parsed.content
-							chrome.runtime.sendMessage({
+							safeSendMessage({
 								type: AI_TAB_GROUP_MESSAGE_TYPE,
 								progress: parsed.content.process,
 								isProcessing: true,
