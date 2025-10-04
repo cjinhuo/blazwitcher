@@ -167,4 +167,5 @@ export interface AiGroupingProgress {
 	isProcessing: boolean
 	progress: number
 	showReset: boolean
+	countdown?: number
 }

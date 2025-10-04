@@ -24,10 +24,7 @@ export const useTabGroup = () => {
 		const handleMessage = (message: any) => {
 			switch (message.type) {
 				case AI_TAB_GROUP_MESSAGE_TYPE: {
-					const isProcessing = message.isProcessing as boolean
-					const progress = message.progress as number | undefined
-					const showReset = message.showReset as boolean
-					setAITabGroupProgress({ isProcessing, progress, showReset })
+					setAITabGroupProgress({ ...message })
 					break
 				}
 				case ERROR_MESSAGE_TYPE: {

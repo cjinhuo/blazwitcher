@@ -1,4 +1,4 @@
-import { AI_TAB_GROUP_MESSAGE_TYPE, ERROR_MESSAGE_TYPE } from '~shared/constants'
+import { AI_GROUPING_RESET_COUNTDOWN_SECONDS, AI_TAB_GROUP_MESSAGE_TYPE, ERROR_MESSAGE_TYPE } from '~shared/constants'
 import type { TabGroupOperationResult, WindowData } from '~shared/types'
 import { safeSendMessage } from '~shared/utils'
 
@@ -6,7 +6,7 @@ export class TabGroupManager {
 	private streamState: TabGroupOperationResult
 	originalWindowData?: WindowData
 	originalWindowId?: number
-	private resetButtonTimer?: NodeJS.Timeout
+	private countdownTimer?: NodeJS.Timeout
 
 	constructor() {
 		this.streamState = {
@@ -18,7 +18,7 @@ export class TabGroupManager {
 		}
 		this.originalWindowData = undefined
 		this.originalWindowId = undefined
-		this.resetButtonTimer = undefined
+		this.countdownTimer = undefined
 	}
 
 	setOriginalWindowData(windowData: WindowData) {
@@ -31,33 +31,44 @@ export class TabGroupManager {
 			progress: this.streamState.progress,
 			isProcessing: this.streamState.isProcessing,
 			showReset: this.streamState.showReset,
+			countdown: this.streamState.countdown,
 		}
 	}
 
 	private showResetButton() {
+		// 清除之前的定时器
+		if (this.countdownTimer) {
+			clearInterval(this.countdownTimer)
+		}
+
+		// 开始倒计时
+		this.streamState.countdown = AI_GROUPING_RESET_COUNTDOWN_SECONDS
 		this.sendProgressMessage({
 			showReset: true,
 			isProcessing: false,
 		})
-		// 清除之前的定时器
-		if (this.resetButtonTimer) {
-			clearTimeout(this.resetButtonTimer)
-		}
 
-		// 10秒后隐藏重置按钮
-		this.resetButtonTimer = setTimeout(() => {
-			this.hideResetButton()
-		}, 10000)
+		// 每秒发送倒计时更新
+		this.countdownTimer = setInterval(() => {
+			this.streamState.countdown--
+			this.sendProgressMessage()
+
+			// 当倒计时为 0 时隐藏重置按钮
+			if (this.streamState.countdown <= 0) {
+				this.hideResetButton()
+			}
+		}, 1000)
 	}
 
 	private hideResetButton() {
 		// 清除定时器
-		if (this.resetButtonTimer) {
-			clearTimeout(this.resetButtonTimer)
-			this.resetButtonTimer = undefined
+		if (this.countdownTimer) {
+			clearInterval(this.countdownTimer)
+			this.countdownTimer = undefined
 		}
 		this.sendProgressMessage({
 			showReset: false,
+			countdown: undefined,
 		})
 		this.originalWindowData = undefined
 		this.originalWindowId = undefined
@@ -127,6 +138,7 @@ export class TabGroupManager {
 			progress: this.streamState.progress,
 			showReset: this.streamState.showReset,
 			isProcessing: this.streamState.isProcessing,
+			countdown: this.streamState.countdown,
 		})
 	}
 

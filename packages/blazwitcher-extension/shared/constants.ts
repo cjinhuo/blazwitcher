@@ -161,9 +161,8 @@ export const AI_TAB_GROUP_MESSAGE_TYPE = 'tabGroupProgressUpdate'
 export const ERROR_MESSAGE_TYPE = 'errorMessage'
 export const HANDLE_TAB_GROUP_MESSAGE_TYPE = 'handleTabGroupOperations'
 export const RESET_AI_TAB_GROUP_MESSAGE_TYPE = 'resetAITabGroupOperations'
-export const RESET_BUTTON_STATE_MESSAGE_TYPE = 'resetButtonStateUpdate'
 export const SSE_DONE_MARK = '[DONE]'
-export const chunkSize = 10
+export const AI_GROUPING_RESET_COUNTDOWN_SECONDS = 10
 // parse stream mark
 export const STATISTICS_MARK = '"statistics"'
 export const ADD_TO_EXISTING_GROUPS_MARK = '"addToExistingGroups"'

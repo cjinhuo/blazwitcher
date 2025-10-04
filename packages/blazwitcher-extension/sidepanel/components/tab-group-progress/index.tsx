@@ -196,7 +196,12 @@ export const TabGroupProgress: React.FC = () => {
 		<>
 			{aiTabGroupProgress.showReset ? (
 				<AIGroupingButton onClick={resetAIGrouping}>
-					<ButtonContent>{i18n('resetAIGrouping')}</ButtonContent>
+					<ButtonContent>
+						{i18n('resetAIGrouping')}
+						{aiTabGroupProgress.countdown !== undefined && (
+							<span style={{ marginLeft: '4px', opacity: 0.8 }}>({aiTabGroupProgress.countdown}s)</span>
+						)}
+					</ButtonContent>
 				</AIGroupingButton>
 			) : (
 				<AIGroupingButton onClick={handleAIGroupingClick}>

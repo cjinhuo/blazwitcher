@@ -25,6 +25,7 @@ export const aiTabGroupProgressAtom = atomWithReset<AiGroupingProgress>({
 	isProcessing: false,
 	progress: 0,
 	showReset: false,
+	countdown: undefined,
 })
 export const compositionAtom = atomWithReset<boolean>(false)
 export const hitPluginAtom = atomWithReset<CommandPlugin | null>(null)
