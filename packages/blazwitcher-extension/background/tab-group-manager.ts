@@ -2,6 +2,11 @@ import { AI_GROUPING_RESET_COUNTDOWN_SECONDS, AI_TAB_GROUP_MESSAGE_TYPE, ERROR_M
 import type { TabGroupOperationResult, WindowData } from '~shared/types'
 import { safeSendMessage } from '~shared/utils'
 
+// https://blazwitcher-server.vercel.app/
+const REMOTE_SERVER_URL = 'https://blazwitcher-server-git-release-ai-smar-fb39b9-cjinhuos-projects.vercel.app/'
+const LOCAL_SERVER_URL = 'http://localhost:3000'
+const _SERVER_URL = process.env.NODE_ENV === 'development' ? LOCAL_SERVER_URL : REMOTE_SERVER_URL
+
 export class TabGroupManager {
 	private streamState: TabGroupOperationResult
 	originalWindowData?: WindowData
@@ -99,8 +104,7 @@ export class TabGroupManager {
 	// 执行 AI 分组 (stream)
 	async execute(currentWindowData: WindowData) {
 		try {
-			// TODO: @Shanks 部署后修改域名
-			const response = await fetch('http://localhost:3000/ark/categorize-tabs', {
+			const response = await fetch(`${REMOTE_SERVER_URL}/ark/categorize-tabs`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

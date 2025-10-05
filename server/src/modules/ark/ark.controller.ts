@@ -4,7 +4,7 @@ import type { CategorizeTabsRequestDto } from './ark.dto'
 import { ArkService } from './ark.service'
 import { LLMResponseParser } from './parser'
 
-// 定义 SSE 响应接口，使用交叉类型避免继承问题
+// 修复 vercel 线上报错问题
 type SSEResponse = Response & {
 	setHeader(name: string, value: string): void
 	write(chunk: string): boolean
