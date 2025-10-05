@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Res } from '@nestjs/common'
 import type { Response } from 'express'
-import { CategorizeTabsRequestDto } from './ark.dto'
+import type { CategorizeTabsRequestDto } from './ark.dto'
 import { ArkService } from './ark.service'
 import { LLMResponseParser } from './parser'
 
@@ -9,8 +9,10 @@ export class ArkController {
 	constructor(private readonly arkService: ArkService) {}
 
 	@Post('categorize-tabs')
-	// @ts-ignore
-	async categorizeTabs(@Body() body: CategorizeTabsRequestDto, @Res() res: Response) {
+	async categorizeTabs(
+		@Body() body: CategorizeTabsRequestDto,
+		@Res({ passthrough: false }) res: Response
+	): Promise<void> {
 		try {
 			const { data } = body
 
