@@ -33,7 +33,7 @@ export class ArkController {
 			res.setHeader('Content-Type', 'text/event-stream')
 			res.setHeader('Cache-Control', 'no-cache')
 			res.setHeader('Connection', 'keep-alive')
-
+			console.log('response', response)
 			if (response.body) {
 				const reader = response.body.getReader()
 				const decoder = new TextDecoder()

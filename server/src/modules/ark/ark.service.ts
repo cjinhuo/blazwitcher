@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 
-const fs = require('node:fs')
-const path = require('node:path')
+import fs from 'node:fs'
+import path from 'node:path'
 
 @Injectable()
 export class ArkService {
@@ -23,10 +23,12 @@ export class ArkService {
 	async categorizeTabsStream(data: any) {
 		console.log('process.env', process.env)
 		console.log('env', this.arkApiKey, this.arkApiUrl, this.arkApiModel)
-		const promptFilePath = path.join(process.cwd(), 'prompts', 'ai-grouping-prompt-zh.txt')
+		const promptFilePath = path.join(process.cwd(), 'prompts', 'ai-grouping-prompt.txt')
 
 		try {
+			console.log('promptFilePath', promptFilePath)
 			const systemPrompt = fs.readFileSync(promptFilePath, 'utf-8')
+			console.log('systemPrompt', systemPrompt)
 			const messages = [
 				{
 					role: 'system',
@@ -40,7 +42,9 @@ export class ArkService {
 
 			console.log('📤 准备发送到 ARK API, 用户数据长度:', JSON.stringify(data).length, '字符')
 			return this.stream(messages)
-		} catch (_error) {}
+		} catch (_error) {
+			console.error('ARK API 流式调用失败:', _error)
+		}
 	}
 
 	// 流式调用
@@ -71,6 +75,8 @@ export class ArkService {
 				},
 				body: JSON.stringify(requestBody),
 			})
+
+			console.log('response', response)
 
 			if (!response.ok) {
 				throw new Error(`ARK API 流式请求失败: ${response.status} ${response.statusText}`)
