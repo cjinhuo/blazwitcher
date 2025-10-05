@@ -104,7 +104,7 @@ export class TabGroupManager {
 	// 执行 AI 分组 (stream)
 	async execute(currentWindowData: WindowData) {
 		try {
-			const response = await fetch(`${REMOTE_SERVER_URL}/ark/categorize-tabs`, {
+			const response = await fetch(`${LOCAL_SERVER_URL}/ark/categorize-tabs`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

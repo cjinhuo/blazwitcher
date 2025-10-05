@@ -1,7 +1,5 @@
 import { Injectable } from '@nestjs/common'
-
-import fs from 'node:fs'
-import path from 'node:path'
+import AI_GROUPING_PROMPT from '../../prompts/ai-grouping-prompt'
 
 @Injectable()
 export class ArkService {
@@ -23,16 +21,12 @@ export class ArkService {
 	async categorizeTabsStream(data: any) {
 		console.log('process.env', process.env)
 		console.log('env', this.arkApiKey, this.arkApiUrl, this.arkApiModel)
-		const promptFilePath = path.join(process.cwd(), 'prompts', 'ai-grouping-prompt.txt')
 
 		try {
-			console.log('promptFilePath', promptFilePath)
-			const systemPrompt = fs.readFileSync(promptFilePath, 'utf-8')
-			console.log('systemPrompt', systemPrompt)
 			const messages = [
 				{
 					role: 'system',
-					content: systemPrompt,
+					content: AI_GROUPING_PROMPT,
 				},
 				{
 					role: 'user',
