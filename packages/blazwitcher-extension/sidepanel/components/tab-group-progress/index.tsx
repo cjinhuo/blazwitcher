@@ -1,5 +1,9 @@
+import { useAtomValue } from 'jotai'
 import React from 'react'
 import styled from 'styled-components'
+import { TabGroupColorMap } from '~shared/constants'
+import { isDarkMode } from '~shared/utils'
+import { themeAtom } from '~sidepanel/atom'
 import useI18n from '~sidepanel/hooks/useI18n'
 import { useTabGroup } from './useTabGroup'
 
@@ -11,7 +15,7 @@ const Container = styled.div`
 	height: 26px;
 	padding: 0 12px;
 	border-radius: 4px;
-	background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  background: linear-gradient(135deg, var(--semi-color-fill-0) 0%, var(--semi-color-fill-1) 100%);
 	position: relative;
 	overflow: hidden;
 
@@ -22,7 +26,7 @@ const Container = styled.div`
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+    background: linear-gradient(135deg, var(--semi-color-fill-0) 0%, transparent 100%);
 		pointer-events: none;
 	}
 `
@@ -84,7 +88,10 @@ const ProgressBar = styled.div<{ $percentage: number; $color: string }>`
 const ProgressText = styled.span<{ $percentage: number }>`
 	font-size: 12px;
 	font-weight: 700;
-	color: ${(props) => getProgressColor(props.$percentage)};
+	color: ${(props) =>
+		typeof window !== 'undefined' && document?.body?.classList.contains('semi-always-dark')
+			? getProgressColor(props.$percentage, true)
+			: getProgressColor(props.$percentage, false)};
 	transition: all 0.3s ease;
 	min-width: 32px;
 	text-align: center;
@@ -163,21 +170,24 @@ const ButtonContent = styled.div`
 `
 
 // 提取颜色选择逻辑为工具函数
-const getProgressColor = (percentage: number) => {
-	if (percentage === 100) return '#52c41a' // 绿色
-	if (percentage >= 80) return '#1890ff' // 蓝色
-	if (percentage >= 50) return '#faad14' // 橙色
-	return '#ff4d4f' // 红色
+const getProgressColor = (percentage: number, isDark: boolean) => {
+	const palette = TabGroupColorMap[isDark ? 'dark' : 'light']
+	if (percentage === 100) return palette.green
+	if (percentage >= 80) return palette.blue
+	if (percentage >= 50) return palette.orange
+	return palette.red
 }
 
 export const TabGroupProgress: React.FC = () => {
 	const i18n = useI18n()
+	const themeColor = useAtomValue(themeAtom)
+	const isDark = isDarkMode(themeColor)
 
 	const { aiTabGroupProgress, handleAIGroupingClick, resetAIGrouping } = useTabGroup()
 
 	// 如果有正在进行的操作，显示进度条
 	if (aiTabGroupProgress.isProcessing) {
-		const progressColor = getProgressColor(aiTabGroupProgress.progress)
+		const progressColor = getProgressColor(aiTabGroupProgress.progress, isDark)
 
 		return (
 			<>
