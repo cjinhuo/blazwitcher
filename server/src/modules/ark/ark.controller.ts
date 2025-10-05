@@ -9,7 +9,7 @@ type SSEResponse = Response & {
 	setHeader(name: string, value: string): void
 	write(chunk: string): boolean
 	end(): void
-	status(code: number): Response
+	status(code: number): SSEResponse
 }
 
 @Controller('ark')
