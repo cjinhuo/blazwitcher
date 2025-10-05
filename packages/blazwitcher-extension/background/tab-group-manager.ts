@@ -5,7 +5,7 @@ import { safeSendMessage } from '~shared/utils'
 // https://blazwitcher-server.vercel.app
 const REMOTE_SERVER_URL = 'https://blazwitcher-server-git-release-ai-smar-fb39b9-cjinhuos-projects.vercel.app'
 const LOCAL_SERVER_URL = 'http://localhost:3000'
-const _SERVER_URL = process.env.NODE_ENV === 'development' ? LOCAL_SERVER_URL : REMOTE_SERVER_URL
+const SERVER_URL = process.env.NODE_ENV === 'development' ? LOCAL_SERVER_URL : REMOTE_SERVER_URL
 
 export class TabGroupManager {
 	private streamState: TabGroupOperationResult
@@ -104,7 +104,7 @@ export class TabGroupManager {
 	// 执行 AI 分组 (stream)
 	async execute(currentWindowData: WindowData) {
 		try {
-			const response = await fetch(`${LOCAL_SERVER_URL}/ark/categorize-tabs`, {
+			const response = await fetch(`${SERVER_URL}/ark/categorize-tabs`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

@@ -19,9 +19,6 @@ export class ArkService {
 
 	// 流式标签页分类专用方法
 	async categorizeTabsStream(data: any) {
-		console.log('process.env', process.env)
-		console.log('env', this.arkApiKey, this.arkApiUrl, this.arkApiModel)
-
 		try {
 			const messages = [
 				{
