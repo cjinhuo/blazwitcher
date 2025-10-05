@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common'
 import { APP_GUARD } from '@nestjs/core'
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler'
 import { THROTTLE_LIMIT, THROTTLE_TTL } from 'src/shared/constants'
-import { ArkController } from './ark.controller'
-import { ArkService } from './ark.service'
+import { ArkController } from './modules/ark/ark.controller'
+import { ArkService } from './modules/ark/ark.service'
+import { RootController } from './modules/root/root.controller'
 
 @Module({
 	imports: [
@@ -14,7 +15,7 @@ import { ArkService } from './ark.service'
 			},
 		]),
 	],
-	controllers: [ArkController],
+	controllers: [ArkController, RootController],
 	providers: [
 		ArkService,
 		{

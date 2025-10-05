@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core'
-import { AppModule } from './modules/app.module'
+import { AppModule } from './app.module'
 
 // 加载环境变量
 import * as dotenv from 'dotenv'
