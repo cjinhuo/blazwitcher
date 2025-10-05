@@ -2,7 +2,6 @@
 	"compilerOptions": {
 		"module": "nodenext",
 		"moduleResolution": "nodenext",
-		"resolvePackageJsonExports": true,
 		"esModuleInterop": true,
 		"isolatedModules": true,
 		"declaration": true,
@@ -10,7 +9,7 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"allowSyntheticDefaultImports": true,
-		"target": "ES2023",
+		"target": "ESNext",
 		"sourceMap": true,
 		"outDir": "./dist",
 		"baseUrl": "./",

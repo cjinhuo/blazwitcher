@@ -4,6 +4,14 @@ import type { CategorizeTabsRequestDto } from './ark.dto'
 import { ArkService } from './ark.service'
 import { LLMResponseParser } from './parser'
 
+// 定义 SSE 响应接口，使用交叉类型避免继承问题
+type SSEResponse = Response & {
+	setHeader(name: string, value: string): void
+	write(chunk: string): boolean
+	end(): void
+	status(code: number): Response
+}
+
 @Controller('ark')
 export class ArkController {
 	constructor(private readonly arkService: ArkService) {}
@@ -11,7 +19,7 @@ export class ArkController {
 	@Post('categorize-tabs')
 	async categorizeTabs(
 		@Body() body: CategorizeTabsRequestDto,
-		@Res({ passthrough: false }) res: Response
+		@Res({ passthrough: false }) res: SSEResponse
 	): Promise<void> {
 		try {
 			const { data } = body
