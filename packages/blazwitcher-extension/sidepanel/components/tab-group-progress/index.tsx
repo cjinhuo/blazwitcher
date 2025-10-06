@@ -15,20 +15,9 @@ const Container = styled.div`
 	height: 26px;
 	padding: 0 12px;
 	border-radius: 4px;
-  background: linear-gradient(135deg, var(--semi-color-fill-0) 0%, var(--semi-color-fill-1) 100%);
+  background: linear-gradient(135deg, var(--color-neutral-9) 0%, var(--color-neutral-8) 100%);
 	position: relative;
 	overflow: hidden;
-
-	&::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-    background: linear-gradient(135deg, var(--semi-color-fill-0) 0%, transparent 100%);
-		pointer-events: none;
-	}
 `
 
 const ProgressBarWrapper = styled.div`
@@ -36,7 +25,7 @@ const ProgressBarWrapper = styled.div`
 	min-width: 80px;
 	max-width: 140px;
 	height: 6px;
-	background: rgba(255, 255, 255, 0.1);
+	background: color-mix(in srgb, var(--color-neutral-1) 10%, transparent);
 	border-radius: 3px;
 	overflow: hidden;
 	position: relative;
@@ -49,8 +38,8 @@ const ProgressBarWrapper = styled.div`
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
-		animation: shimmer 2s infinite;
+		background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--color-neutral-1) 10%, transparent) 50%, transparent 100%);
+		animation: shimmer 1s infinite;
 	}
 
 	@keyframes shimmer {
