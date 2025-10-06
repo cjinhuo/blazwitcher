@@ -363,3 +363,12 @@ export const isSystemDarkMode = () => {
 
 export const isDarkMode = (theme: ThemeColor) =>
 	theme === ThemeColor.Dark || (theme === ThemeColor.System && isSystemDarkMode())
+
+export async function safeSendMessage(message: any, errorCallback?: (error: Error) => void) {
+	try {
+		await chrome.runtime.sendMessage(message)
+	} catch (error) {
+		console.error('Error sending message:', error)
+		errorCallback?.(error)
+	}
+}

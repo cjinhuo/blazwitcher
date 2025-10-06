@@ -44,6 +44,7 @@ export default function SidePanel() {
 	const searchConfig = useAtomValue(searchConfigAtom)
 	const originalList = useOriginalList()
 	const [searchValue, setSearchValue] = useState('')
+
 	const handlePluginItemClick = usePluginClickItem()
 
 	const RenderList = useCallback(
@@ -101,14 +102,16 @@ export default function SidePanel() {
 
 		// 插件匹配
 		if (searchValue.startsWith('/')) {
-			const [hitPlugin, mainSearchValue] = matchPlugin(plugins(i18n), searchValue)
-			if (!hitPlugin)
-				return <List list={plugins(i18n)} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem} />
+			const [hitPlugin, pluginList, mainSearchValue] = matchPlugin(plugins(i18n), searchValue)
+			if (!hitPlugin || hitPlugin?.action)
+				return <List list={pluginList} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem} />
 			if (hitPlugin.render) {
-				return hitPlugin.render(searchValue)
+				return hitPlugin.render(mainSearchValue)
 			}
-			realList = hitPlugin.dataProcessing(originalList)
-			realSearchValue = mainSearchValue
+			if (hitPlugin.dataProcessing) {
+				realList = hitPlugin.dataProcessing(originalList)
+				realSearchValue = mainSearchValue
+			}
 		}
 
 		const filteredList = searchWithList(realList, realSearchValue, searchConfig)

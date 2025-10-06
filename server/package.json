@@ -5,8 +5,9 @@
   "description": "Nest TypeScript starter repository",
   "license": "MIT",
   "scripts": {
-    "dev": "nest start --watch",
+    "dev": "pnpm run parse-prompt && nest start --watch",
     "build": "nest build",
+    "parse-prompt": "bun src/prompts/parse-prompt.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:debug": "nest start --debug --watch",
@@ -25,6 +26,8 @@
     "@nestjs/common": "^11.1.5",
     "@nestjs/core": "^11.1.5",
     "@nestjs/platform-express": "^11.1.5",
+    "@nestjs/throttler": "^6.4.0",
+    "dotenv": "^16.6.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2"
   },

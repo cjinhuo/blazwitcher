@@ -77,6 +77,11 @@ export const OperationItemTitleMap: Record<string, TranslationKeys> = {
 	[OperationItemPropertyTypes.close]: 'closeTab',
 }
 
+export interface PluginContext {
+	handleAIGroupingClick?: () => Promise<void>
+	setSearchValue?: (value: string) => void
+}
+
 export interface CommandPlugin {
 	command: string
 	alias?: string
@@ -84,6 +89,7 @@ export interface CommandPlugin {
 	description: string
 	dataProcessing?: (data: ListItemType[]) => ListItemType[]
 	render?: (searchValue?: string) => React.ReactNode
+	action?: (context?: PluginContext) => void
 }
 
 type ColorKey = 'grey' | 'blue' | 'red' | 'yellow' | 'green' | 'pink' | 'purple' | 'cyan' | 'orange'
@@ -95,4 +101,71 @@ export type ColorTheme = {
 export type TabGroupColorMapType = {
 	light: ColorTheme
 	dark: ColorTheme
+}
+
+// 现有分组中的标签页信息
+export interface TabInGroup {
+	title: string
+	url: string
+	host: string
+	windowId: number
+}
+
+// 现有分组信息
+export interface ExistingGroup {
+	id: number
+	title: string
+	color: string
+	memberCount: number
+	hosts: string[]
+	tabs: TabInGroup[]
+}
+
+// 未分组的标签页信息
+export interface UngroupedTab {
+	itemType: ItemType.Tab
+	data: {
+		id: number
+		title: string
+		url: string
+		host: string
+	}
+}
+
+// 窗口数据摘要
+export interface WindowSummary {
+	totalTabs: number
+	ungroupedTabs: number
+	existingGroupsCount: number
+}
+
+// 单个窗口的数据结构
+export interface WindowData {
+	windowId: number
+	ungroupedTabs: UngroupedTab[]
+	existingGroups: ExistingGroup[]
+	summary: WindowSummary
+}
+
+export interface AIEffectExistingGroups {
+	tabIds: number[]
+	groupId: number
+}
+
+export interface AINewGroups {
+	groupTitle: string
+	groupColor: string
+	tabIds: number[]
+}
+
+export interface TabGroupOperationResult extends AiGroupingProgress {
+	newGroups: AINewGroups[]
+	effectExistingGroups: AIEffectExistingGroups[]
+}
+
+export interface AiGroupingProgress {
+	isProcessing: boolean
+	progress: number
+	showReset: boolean
+	countdown?: number
 }

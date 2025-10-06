@@ -56,8 +56,29 @@
 			},
 			"style": {
 				"useSelfClosingElements": "off",
-				"useImportType": "off"
+				"useImportType": "off",
+				"useNodejsImportProtocol": "warn"
 			}
 		}
-	}
+	},
+	"overrides": [
+		{
+			"include": ["server/**/*.ts"],
+			"javascript": {
+				"parser": {
+					"unsafeParameterDecoratorsEnabled": true
+				}
+			},
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"noExplicitAny": "off"
+					},
+					"style": {
+						"useNodejsImportProtocol": "warn"
+					}
+				}
+			}
+		}
+	]
 }

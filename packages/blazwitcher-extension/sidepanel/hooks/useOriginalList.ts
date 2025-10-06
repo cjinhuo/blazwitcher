@@ -1,22 +1,42 @@
-import { useAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
 import { MAIN_WINDOW } from '~shared/constants'
-import { originalListAtom } from '~sidepanel/atom'
+import type { AiGroupingProgress, ListItemType } from '~shared/types'
+import { aiTabGroupProgressAtom, originalListAtom, windowDataListAtom } from '~sidepanel/atom'
+import { processTabsForAI } from '../../shared/process-tabs-by-window'
 import { useDebug } from './useDebug'
 
 export default function useOriginalList() {
-	const [originalList, setOriginalList] = useAtom(originalListAtom)
 	const debug = useDebug()
+	const [originalList, setOriginalList] = useAtom(originalListAtom)
+	const setWindowDataList = useSetAtom(windowDataListAtom)
+	const setAITabGroupProgress = useSetAtom(aiTabGroupProgressAtom)
+
 	useEffect(() => {
 		let portConnectStatus = false
 		const port = chrome.runtime.connect({ name: MAIN_WINDOW })
-		port.onMessage.addListener((processedList) => {
-			portConnectStatus = true
-			if (debug) {
-				console.log('processedList', processedList)
+		port.onMessage.addListener(
+			(message: {
+				processedList: ListItemType[]
+				lastTimeTabGroupProgress: AiGroupingProgress
+			}) => {
+				const { processedList, lastTimeTabGroupProgress } = message
+
+				portConnectStatus = true
+				// TODO:看下是否要在background中处理processedList
+				const windowDataList = processTabsForAI(processedList)
+				if (debug) {
+					console.log('processedList', processedList)
+					console.log('windowDataList for AI:', windowDataList)
+				}
+				setOriginalList(processedList)
+				setWindowDataList(windowDataList)
+
+				// 更新 AI 分组进度状态
+				console.log('lastTimeTabGroupProgress', lastTimeTabGroupProgress)
+				setAITabGroupProgress(lastTimeTabGroupProgress)
 			}
-			setOriginalList(processedList)
-		})
+		)
 
 		const postMessageToCloseWindow = () => {
 			if (!portConnectStatus) return
@@ -34,6 +54,6 @@ export default function useOriginalList() {
 			window.removeEventListener('unload', postMessageToCloseWindow)
 			window.removeEventListener('blur', postMessageToCloseWindow)
 		}
-	}, [setOriginalList, debug])
+	}, [setOriginalList, setWindowDataList, setAITabGroupProgress, debug])
 	return originalList
 }

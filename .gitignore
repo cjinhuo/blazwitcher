@@ -38,3 +38,6 @@ dist/
 # Include zip files
 !*.zip
 .env
+
+# server
+log

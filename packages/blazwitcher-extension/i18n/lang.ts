@@ -345,4 +345,17 @@ export const lang = {
 		[LanguageType.zh]: '启动命令',
 		[LanguageType.en]: 'Open Command',
 	},
+	// AI 分组相关
+	aiGroupingCompleted: {
+		[LanguageType.zh]: '分类完成',
+		[LanguageType.en]: 'Grouping Completed',
+	},
+	aiGrouping: {
+		[LanguageType.zh]: 'AI 标签分组',
+		[LanguageType.en]: 'AI Tab Grouping',
+	},
+	resetAIGrouping: {
+		[LanguageType.zh]: '还原 AI 标签分组',
+		[LanguageType.en]: 'Reset AI Tab Grouping',
+	},
 }
