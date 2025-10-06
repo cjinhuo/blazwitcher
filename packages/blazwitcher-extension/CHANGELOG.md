@@ -1,5 +1,17 @@
 # blazwitcher
 
+## 1.0.0
+
+### Major Changes
+
+- feat: add button and /ai command to grouping tabs by AI @cjinhuo · 2025-10-06 · [#abcd86a0](https://github.com/cjinhuo/pure-search/commit/abcd86a0e476668395fc04f0df37a754de37a364)
+- feat: 新增按钮和 /ai 命令进行 AI 标签分组 @cjinhuo · 2025-10-06 · [#abcd86a0](https://github.com/cjinhuo/pure-search/commit/abcd86a0e476668395fc04f0df37a754de37a364)
+
+### Minor Changes
+
+- feat: new operation button for pin/unpin opened tab @cjinhuo · 2025-08-29 · [#70d5161e](https://github.com/cjinhuo/pure-search/commit/70d5161e16999ab33abb30e079b7b3b51f22c30e)
+- feat: 新增按钮可以 pin/unpin 已打开的标签页 @cjinhuo · 2025-08-29 · [#70d5161e](https://github.com/cjinhuo/pure-search/commit/70d5161e16999ab33abb30e079b7b3b51f22c30e)
+
 ## 0.7.0
 
 ### Minor Changes
