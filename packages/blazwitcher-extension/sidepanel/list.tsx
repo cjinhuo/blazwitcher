@@ -96,9 +96,6 @@ const ListItemWrapper = styled(ListComponent.Item)`
 `
 
 const HeaderItem = styled(ListComponent.Item)`
-  &.semi-list-item {
-    /* background-color: transparent !important; */
-  }
 `
 
 const setScrollTopIfNeeded = () => {
@@ -258,7 +255,12 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 				}
 				renderItem={(item, index) => {
 					if (isDivideItem(item)) {
-						return <HeaderItem className={DIVIDE_CLASS} main={<Divide>{item.data.name}</Divide>} />
+						return (
+							// 点击该元素时不让搜索框失去焦点
+							<div onMouseDown={(e) => e.preventDefault()}>
+								<HeaderItem className={DIVIDE_CLASS} main={<Divide>{item.data.name}</Divide>} />
+							</div>
+						)
 					}
 					return (
 						<ListItemWrapper

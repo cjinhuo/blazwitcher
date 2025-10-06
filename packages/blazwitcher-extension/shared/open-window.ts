@@ -203,18 +203,11 @@ async function injectModal(
 
 	const mount = () => {
 		document.body.appendChild(container)
-		document.addEventListener('keydown', handleEscKey)
+		// 在 sidepanel 中已监听 Escape 键盘事件，不需要重复监听
 	}
 
 	const unmount = () => {
 		container.remove()
-		document.removeEventListener('keydown', handleEscKey)
-	}
-
-	const handleEscKey = (e: KeyboardEvent) => {
-		if (e.key === 'Escape') {
-			unmount()
-		}
 	}
 
 	// 点击遮罩层时移除 container
