@@ -16,6 +16,7 @@ import { i18nAtom, searchConfigAtom } from '~sidepanel/atom'
 import useOriginalList from '~sidepanel/hooks/useOriginalList'
 import { useTheme } from '~sidepanel/hooks/useTheme'
 import Footer from './footer'
+import { useEscapeKey } from './hooks/useEscapeKey'
 import { useLanguage } from './hooks/useLanguage'
 import List from './list'
 import { RenderItem as ListItemRenderItem } from './list-item'
@@ -39,6 +40,7 @@ startup()
 export default function SidePanel() {
 	useTheme()
 	useLanguage()
+	useEscapeKey()
 
 	const i18n = useAtomValue(i18nAtom)
 	const searchConfig = useAtomValue(searchConfigAtom)

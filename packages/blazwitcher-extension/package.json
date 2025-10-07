@@ -1,8 +1,8 @@
 {
 	"name": "blazwitcher",
-	"displayName": "Blazwitcher: Fuzzy Pinyin Search & Tab Switch In Blazing Speed",
+	"displayName": "Blazwitcher: Blaze through browser with fuzzy Pinyin search",
 	"version": "1.0.0",
-	"description": "Blazwitcher is a local tool for searching tabs, bookmarks, and history, with support for fuzzy Pinyin search.",
+	"description": "Blazwitcher blazes through your tabs, bookmarks, and history — with powerful fuzzy Pinyin search.",
 	"author": "cjinhuo@qq.com",
 	"scripts": {
 		"prebuild": "npx tsx scripts/pre-build.ts",

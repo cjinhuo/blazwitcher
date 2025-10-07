@@ -7,7 +7,7 @@ import { HIGHLIGHT_TEXT_CLASS, HOST_CLASS, IMAGE_CLASS, NORMAL_TEXT_CLASS, SVG_C
 import type { ListItemType } from '~shared/types'
 import { useKeyboardListen } from '~sidepanel/hooks/useKeyboardListen'
 import { DIVIDE_CLASS, LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS, VISIBILITY_CLASS } from '../shared/constants'
-import { closeCurrentWindowAndClearStorage, isDivideItem, scrollIntoViewIfNeeded } from '../shared/utils'
+import { isDivideItem, scrollIntoViewIfNeeded } from '../shared/utils'
 import { activeItemAtom, compositionAtom, i18nAtom } from './atom'
 
 const ListContainer = styled.div`
@@ -212,7 +212,6 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 				Tab: () => keyActionsChangeIndex(1),
 				ArrowDown: () => keyActionsChangeIndex(1),
 				Enter: handleEnterEvent,
-				Escape: closeCurrentWindowAndClearStorage,
 			}
 
 			const action = keyActions[event.code]
