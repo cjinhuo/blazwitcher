@@ -1,8 +1,8 @@
 {
-	"name": "blazwitcher",
-	"displayName": "Blazwitcher: Blaze through browser with fuzzy Pinyin search",
+	"name": "Blazwitcher",
+	"displayName": "Blazwitcher - 全局模糊搜索",
 	"version": "1.0.0",
-	"description": "Blazwitcher blazes through your tabs, bookmarks, and history — with powerful fuzzy Pinyin search.",
+	"description": "内置极致丝滑的拼音模糊搜索，全局搜索你的标签页、书签和历史记录并快速切换或打开标签，大幅提升冲浪效率，且支持 AI 标签分组（代码已开源）。",
 	"author": "cjinhuo@qq.com",
 	"scripts": {
 		"prebuild": "npx tsx scripts/pre-build.ts",
