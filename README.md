@@ -4,7 +4,14 @@
     </a>
 
 
-![https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg](https://img.shields.io/badge/chrome-extension?style=flat&label=extension&color=deepskyblue)
+<a href="https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg" target="_blank">
+<img src="https://img.shields.io/badge/chrome-extension?style=flat&label=extension&color=deepskyblue" alt="chrome-extension">
+</a>
+<a href="https://github.com/cjinhuo/blazwitcher/releases" target="_blank">
+<img src="https://img.shields.io/github/v/release/cjinhuo/blazwitcher?style=flat&label=release&color=green" alt="github-release">
+</a>
+
+
 
 <p>A Chrome Extension to blaze through your tabs, bookmarks, and history — with powerful fuzzy Pinyin search and grouping tabs by AI</p>
 

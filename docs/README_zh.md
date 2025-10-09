@@ -3,7 +3,12 @@
     <img src="./1.0-english-880x440-radius.png" alt="logo" height="200">
     </a>
 
-![https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg](https://img.shields.io/badge/chrome-extension?style=flat&label=extension&color=deepskyblue)
+<a href="https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg" target="_blank">
+<img src="https://img.shields.io/badge/chrome-extension?style=flat&label=extension&color=deepskyblue" alt="chrome-extension">
+</a>
+<a href="https://github.com/cjinhuo/blazwitcher/releases" target="_blank">
+<img src="https://img.shields.io/github/v/release/cjinhuo/blazwitcher?style=flat&label=release&color=green" alt="github-release">
+</a>
 
 <p>一款可以全局搜索标签、书签和历史记录的 Chrome 浏览器扩展，支持拼音模糊搜索和 AI 标签分组</p>
 </div>
