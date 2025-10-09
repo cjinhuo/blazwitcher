@@ -27,6 +27,9 @@ export const ImageContainer = styled.div`
   align-items: center;
   justify-content: center;
   background-color: var(--color-neutral-8);
+
+  /* 截图预览 */
+  /* background-color: var(--color-neutral-3); */
 `
 
 export const SecondaryContainer = styled.div`

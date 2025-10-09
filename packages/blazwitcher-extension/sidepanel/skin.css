@@ -52,6 +52,8 @@ html {
 /* scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
+  /* 截图预览 */
+  /* width: 0px; */
 }
 
 ::-webkit-scrollbar-track {

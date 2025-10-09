@@ -54,6 +54,9 @@ const TabGroup = styled.div<ContentContainerProps>`
 	overflow: hidden;
 	position: relative;
 
+		/* 截图预览 */
+	/* color: transparent; */
+
 	&::after {
 		content: '';
 		position: absolute;
@@ -87,6 +90,9 @@ const Tag = styled.div`
 	background-color: var(--color-neutral-8);
 	color: var(--color-neutral-4);
 	text-wrap: nowrap;
+
+	/* 截图预览 */
+	/* color: transparent; */
 `
 
 const TabLabel = ({ data }: { data: TabItemType }) => {

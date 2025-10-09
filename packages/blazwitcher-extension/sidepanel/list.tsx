@@ -43,10 +43,20 @@ const ListItemWrapper = styled(ListComponent.Item)`
   }
 	 .${NORMAL_TEXT_CLASS} {
     color: var(--color-neutral-3);
+
+		/* 截图预览 */
+		/* border-radius: 4px;
+		background-color: var(--color-neutral-3); */
+
   }
   .${HIGHLIGHT_TEXT_CLASS} {
-    color: var(--highlight-text);
+		color: var(--highlight-text);
     background-color: var(--highlight-bg);
+
+		/* 截图预览 */
+		/* margin: 0 4px;
+    color: transparent;
+		border-radius: 4px; */
   }
   &:hover {
     background-color: var(--color-neutral-4);
@@ -76,9 +86,15 @@ const ListItemWrapper = styled(ListComponent.Item)`
     }
     .${NORMAL_TEXT_CLASS} {
       color: var(--color-neutral-8);
+
+			/* 截图预览 */
+			/* background-color: var(--color-neutral-8); */
     }
     .${HIGHLIGHT_TEXT_CLASS} {
       background-color: var(--highlight-selected-bg);
+
+			/* 截图预览 */
+			/* color: transparent; */
     }
     .${HOST_CLASS} {
       color: var(--color-neutral-6);
