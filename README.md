@@ -1,6 +1,6 @@
 <div align="center">
     <a href="#" target="_blank">
-      <img src="./docs/1400_560.png" alt="logo" height="100">
+      <img style="border-radius: 8px;" src="./docs/1.0-english-880x560.png" alt="logo" height="200">
     </a>
 
 
