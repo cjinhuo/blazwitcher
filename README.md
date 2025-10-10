@@ -13,10 +13,8 @@
 </a>
 </div>
 
-
-
+<div align="center">
 <p>A Chrome Extension to blaze through your tabs, bookmarks, and history — with powerful fuzzy Pinyin search and grouping tabs by AI</p>
-
 </div>
 
 
