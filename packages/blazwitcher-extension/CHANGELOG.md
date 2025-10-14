@@ -1,5 +1,12 @@
 # blazwitcher
 
+## 1.0.1
+
+### Patch Changes
+
+- perf: optimize history retrieval which can reduce startup time @cjinhuo · 2025-10-14 · [#93765217](https://github.com/cjinhuo/pure-search/commit/937652179f33b5fd52c58b31b3345b2cb0a94b8e)
+- perf: 优化历史记录检索以减少启动耗时 @cjinhuo · 2025-10-14 · [#93765217](https://github.com/cjinhuo/pure-search/commit/937652179f33b5fd52c58b31b3345b2cb0a94b8e)
+
 ## 1.0.0
 
 ### Major Changes

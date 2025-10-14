@@ -1,7 +1,7 @@
 {
 	"name": "Blazwitcher",
 	"displayName": "Blazwitcher - 全局模糊搜索",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "内置极致丝滑的拼音模糊搜索算法，全局检索你的标签页、书签和历史记录并通过快捷键快速切换，且支持 AI 标签分组，提升冲浪效率",
 	"author": "cjinhuo@qq.com",
 	"scripts": {
