@@ -1,5 +1,5 @@
 {
-	"name": "Blazwitcher",
+	"name": "blazwitcher",
 	"displayName": "Blazwitcher - 全局模糊搜索",
 	"version": "1.0.1",
 	"description": "内置极致丝滑的拼音模糊搜索算法，全局检索你的标签页、书签和历史记录并通过快捷键快速切换，且支持 AI 标签分组，提升冲浪效率",
@@ -8,7 +8,7 @@
 		"prebuild": "npx tsx scripts/pre-build.ts",
 		"dev": "pnpm run prebuild && plasmo dev",
 		"build": "pnpm run prebuild && plasmo build",
-		"package": "plasmo build && plasmo package",
+		"package": "pnpm run build && plasmo package",
 		"help": "plasmo --help",
 		"debug": "plasmo dev --verbose",
 		"fetch-releases": "npx tsx scripts/fetch-github-releases.ts",
