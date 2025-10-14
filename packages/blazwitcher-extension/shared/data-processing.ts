@@ -2,6 +2,7 @@ import {
 	DEFAULT_HISTORY_MAX_DAYS,
 	DEFAULT_HISTORY_MAX_RESULTS,
 	DefaultWindowConfig,
+	EXTENSION_STORAGE_DEBUG_MODE,
 	EXTENSION_STORAGE_DISPLAY_MODE,
 	EXTENSION_STORAGE_HISTORY_MAX_DAYS,
 	EXTENSION_STORAGE_HISTORY_MAX_RESULTS,
@@ -14,7 +15,7 @@ import {
 import { storageGetLocal } from './promisify'
 import { getBookmarksById, getBookmarksTree, getTabGroupById, historySearch, tabsQuery } from './promisify'
 import { getCompositeSourceAndHost } from './text-search-pinyin'
-import { type BookmarkItemType, type HistoryItemType, ItemType } from './types'
+import { type BookmarkItemType, ItemType } from './types'
 import { faviconURL } from './utils'
 
 export async function tabsProcessing() {
@@ -102,24 +103,26 @@ function processedBookmarkItem(bookmark: chrome.bookmarks.BookmarkTreeNode, fold
  * @returns
  */
 async function retrieveRecentHistories(count = DEFAULT_HISTORY_MAX_RESULTS, maxDays = DEFAULT_HISTORY_MAX_DAYS) {
-	const data: HistoryItemType[] = []
-	for (let day = 1; day < maxDays; day++) {
-		const rawData = await historySearch({
-			startTime: Date.now() - day * ONE_DAY_MILLISECONDS,
-			endTime: Date.now() - (day - 1) * ONE_DAY_MILLISECONDS,
-			maxResults: count - data.length,
-			text: '',
-		})
+	if (count <= 0 || maxDays <= 0) return []
+	const endTime = Date.now()
+	const startTime = endTime - maxDays * ONE_DAY_MILLISECONDS
 
-		const historyProcessed = rawData
-			// filter the history that is not a valid url or is a chrome-extension url
-			.filter((item) => item.url && !item.url.startsWith('chrome-extension:'))
-			.map((item) => processHistoryItem(item))
+	// Query history in a single operation
+	const rawData = await historySearch({
+		startTime,
+		endTime,
+		maxResults: count,
+		text: '',
+	})
 
-		data.push(...historyProcessed)
-		if (data.length >= count) return data
-	}
-	return data
+	// Process the results
+	const historyProcessed = rawData
+		// filter the history that is not a valid url or is a chrome-extension url
+		.filter((item) => item.url && !item.url.startsWith('chrome-extension:'))
+		.map((item) => processHistoryItem(item))
+
+	// Return up to count results
+	return historyProcessed.slice(0, count)
 }
 
 export async function historyProcessing() {
@@ -172,9 +175,10 @@ export async function getWindowConfig(): Promise<WindowConfig> {
 		[EXTENSION_STORAGE_WINDOW_WIDTH]: width = DefaultWindowConfig.width,
 		[EXTENSION_STORAGE_WINDOW_HEIGHT]: height = DefaultWindowConfig.height,
 		[EXTENSION_STORAGE_THEME]: theme = DefaultWindowConfig.theme,
+		[EXTENSION_STORAGE_DEBUG_MODE]: debugMode = DefaultWindowConfig.debugMode,
 	} = extensionLocalStorage ?? {}
 
-	return { displayMode, width, height, theme }
+	return { displayMode, width, height, theme, debugMode }
 }
 
 export function dataProcessing() {

@@ -3,6 +3,13 @@ import { Button, Card, Col, InputNumber, Row, Switch, Tooltip } from '@douyinfe/
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import styled from 'styled-components'
 import {
+	MAX_BOOKMARK_DISPLAY_COUNT,
+	MAX_DAYS_HISTORY_CAN_RETRIEVE,
+	MAX_HISTORY_DISPLAY_COUNT,
+	MAX_RESULTS_HISTORY_CAN_RETRIEVE,
+	MAX_TOP_SUGGESTIONS_DISPLAY_COUNT,
+} from '~shared/constants'
+import {
 	historyMaxDaysAtom,
 	historyMaxResultsAtom,
 	i18nAtom,
@@ -58,8 +65,8 @@ export const SearchPanel: React.FC = () => {
 					<ConfigItem>
 						<Section>{i18n('historyMaxDays')}</Section>
 						<StyledInputNumber
-							min={7}
-							max={100}
+							min={0}
+							max={MAX_DAYS_HISTORY_CAN_RETRIEVE}
 							value={historyMaxDays}
 							onChange={(value: number) => setHistoryMaxDays(value)}
 						/>
@@ -70,8 +77,8 @@ export const SearchPanel: React.FC = () => {
 					<ConfigItem>
 						<Section>{i18n('historyMaxResults')}</Section>
 						<StyledInputNumber
-							min={100}
-							max={2000}
+							min={0}
+							max={MAX_RESULTS_HISTORY_CAN_RETRIEVE}
 							value={historyMaxResults}
 							onChange={(value: number) => setHistoryMaxResults(value)}
 						/>
@@ -83,7 +90,7 @@ export const SearchPanel: React.FC = () => {
 						<Section>{i18n('historyDisplayCount')}</Section>
 						<StyledInputNumber
 							min={1}
-							max={20}
+							max={MAX_HISTORY_DISPLAY_COUNT}
 							value={config.historyDisplayCount}
 							onChange={(value: number) => handleConfigChange('historyDisplayCount', value)}
 						/>
@@ -95,7 +102,7 @@ export const SearchPanel: React.FC = () => {
 						<Section>{i18n('bookmarkDisplayCount')}</Section>
 						<StyledInputNumber
 							min={1}
-							max={20}
+							max={MAX_BOOKMARK_DISPLAY_COUNT}
 							value={config.bookmarkDisplayCount}
 							onChange={(value: number) => handleConfigChange('bookmarkDisplayCount', value)}
 						/>
@@ -107,7 +114,7 @@ export const SearchPanel: React.FC = () => {
 						<Section>{i18n('topSuggestionsCount')}</Section>
 						<StyledInputNumber
 							min={1}
-							max={10}
+							max={MAX_TOP_SUGGESTIONS_DISPLAY_COUNT}
 							value={config.topSuggestionsCount}
 							onChange={(value: number) => handleConfigChange('topSuggestionsCount', value)}
 						/>
