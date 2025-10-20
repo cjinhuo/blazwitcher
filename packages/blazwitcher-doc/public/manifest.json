@@ -1,0 +1,17 @@
+{
+	"name": "BlazWitcher - Pinyin Search Engine",
+	"short_name": "BlazWitcher",
+	"description": "Advanced pinyin search Chrome extension for tabs, bookmarks, and history with fuzzy search capabilities",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#ffffff",
+	"theme_color": "#000000",
+	"icons": [
+		{
+			"src": "/icon.svg",
+			"sizes": "any",
+			"type": "image/svg+xml",
+			"purpose": "any maskable"
+		}
+	]
+}
