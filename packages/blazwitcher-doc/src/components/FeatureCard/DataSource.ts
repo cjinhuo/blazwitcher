@@ -1,7 +1,7 @@
-import CustomSetting from '@/public/custom-setting.gif'
-import MultiResource from '@/public/multi-resource.gif'
-import MultiSearch from '@/public/multi-search.gif'
-import OnlyKeyboard from '@/public/only-keyboard.gif'
+import AiGroupingGif from '@/public/ai_grouping.gif'
+import CommandFilterGif from '@/public/command_filter.gif'
+import SearchGif from '@/public/search.gif'
+import SettingGif from '@/public/setting.gif'
 
 export interface ResultItem {
 	type: string
@@ -27,24 +27,24 @@ export const features: Feature[] = [
 		id: 1,
 		title: 'features.list.1.title',
 		description: 'features.list.1.description',
-		gifUrl: MultiSearch,
+		gifUrl: SearchGif,
 	},
 	{
 		id: 2,
 		title: 'features.list.2.title',
 		description: 'features.list.2.description',
-		gifUrl: MultiResource,
+		gifUrl: AiGroupingGif,
 	},
 	{
 		id: 3,
 		title: 'features.list.3.title',
 		description: 'features.list.3.description',
-		gifUrl: OnlyKeyboard,
+		gifUrl: CommandFilterGif,
 	},
 	{
 		id: 4,
 		title: 'features.list.4.title',
 		description: 'features.list.4.description',
-		gifUrl: CustomSetting,
+		gifUrl: SettingGif,
 	},
 ]

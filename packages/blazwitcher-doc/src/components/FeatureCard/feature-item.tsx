@@ -49,7 +49,7 @@ const FeatureItem: React.FC<FeatureItemProps> = ({ feature, isReversed = false }
 		>
 			{/* 文字介绍部分 - 占用较小宽度 */}
 			<div
-				className={`w-full lg:w-1/3 space-y-4 text-center lg:text-left transition-all duration-1000 ease-out delay-200 ${
+				className={`w-full lg:w-1/4 space-y-4 text-center lg:text-left transition-all duration-1000 ease-out delay-200 ${
 					isVisible ? 'opacity-100 translate-x-0' : `opacity-0 ${isReversed ? 'translate-x-8' : '-translate-x-8'}`
 				}`}
 			>
@@ -59,7 +59,7 @@ const FeatureItem: React.FC<FeatureItemProps> = ({ feature, isReversed = false }
 
 			{/* 动态图片部分 - 占用较大宽度 */}
 			<div
-				className={`w-full lg:w-2/3 transition-all duration-1000 ease-out delay-400 ${
+				className={`w-full lg:w-3/4 transition-all duration-1000 ease-out delay-400 ${
 					isVisible
 						? 'opacity-100 translate-x-0 scale-100'
 						: `opacity-0 ${isReversed ? '-translate-x-8' : 'translate-x-8'} scale-95`

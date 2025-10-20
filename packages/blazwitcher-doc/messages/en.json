@@ -4,7 +4,7 @@
 			"line1": "Ultimate Smooth",
 			"line2": "Pinyin Search"
 		},
-		"description": "A Browser Extension for searching tabs, bookmarks, and history, with support for fuzzy Pinyin search.",
+		"description": "A Chrome Extension to blaze through your tabs, bookmarks, and history — with powerful fuzzy Pinyin search and grouping tags by AI",
 		"actions": {
 			"install_store": "Install via Extension Store",
 			"get_algorithm": "Get the same Pinyin algorithm",
@@ -15,20 +15,20 @@
 			"subtitle": "Smart Recognition for Smoother Browsing",
 			"list": {
 				"1": {
-					"title": "Smart Pinyin Search",
-					"description": "Supports Chinese/English hybrid search with 20,000+ pinyin library"
+					"title": "Fuzzy Pinyin Search",
+					"description": "Supports Chinese/English hybrid fuzzy search, sorted by weight and recent usage for faster targeting"
 				},
 				"2": {
-					"title": "Multi-source Integration",
-					"description": "Simultaneous search across tabs, history and bookmarks"
+					"title": "AI Grouping",
+					"description": "AI-powered tab grouping based on domain and title, with 16-second snapshot recovery"
 				},
 				"3": {
-					"title": "Keyboard Navigation",
-					"description": "Full keyboard support with arrow keys selection and Enter to navigate"
+					"title": "Global Second-level Search",
+					"description": "Search all tabs, bookmarks and 14-day history, supports /t /b /h targeted search"
 				},
 				"4": {
-					"title": "Custom Settings",
-					"description": "Type /s to access personalized configuration"
+					"title": "Full Keyboard Operation",
+					"description": "Shortcut key activation,/ commands to trigger, type /s to enter configuration page for custom appearance and shortcuts"
 				}
 			}
 		},
