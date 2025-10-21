@@ -60,8 +60,6 @@ Also supports targeted search: type `/t` to search only opened tabs, similarly t
 
 ![setting.gif](./docs/setting.gif)
 
-![landing](./docs/landing.png)
-
 ## Ideal For
 Those people who are looking for quick action and speed, like:
 - 🧑‍💻 Developers
