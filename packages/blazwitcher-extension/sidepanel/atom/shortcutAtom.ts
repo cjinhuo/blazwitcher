@@ -22,6 +22,11 @@ const defaultShortcutConfigs: Shortcut[] = [
 		shortcut: 'Enter',
 	},
 	{
+		id: OperationItemPropertyTypes.openInNewTab,
+		action: 'openInNewTab',
+		shortcut: 'Shift + ↵',
+	},
+	{
 		id: OperationItemPropertyTypes.close,
 		action: 'closeTab',
 		shortcut: 'Ctrl + Shift + W',

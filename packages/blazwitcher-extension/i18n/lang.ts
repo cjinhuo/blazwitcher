@@ -206,6 +206,10 @@ export const lang = {
 		[LanguageType.zh]: '打开当前标签',
 		[LanguageType.en]: 'Open current tab',
 	},
+	openInNewTab: {
+		[LanguageType.zh]: '在新标签页中打开',
+		[LanguageType.en]: 'Open in new tab',
+	},
 	pin: {
 		[LanguageType.zh]: 'Pin/Unpin 标签页',
 		[LanguageType.en]: 'Pin/Unpin tab',
