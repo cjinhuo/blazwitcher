@@ -1,4 +1,4 @@
-import { GITHUB_CONFIG, type GitHubRelease, PATHS, getGitHubHeaders, writeJsonFile } from './common'
+import { GITHUB_CONFIG, type GitHubRelease, getGitHubHeaders, PATHS, writeJsonFile } from './common'
 
 export async function fetchGitHubReleases(): Promise<void> {
 	try {

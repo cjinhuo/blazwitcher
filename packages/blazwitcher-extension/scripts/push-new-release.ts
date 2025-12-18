@@ -1,11 +1,11 @@
 import * as fs from 'node:fs'
 import {
 	type ChangelogEntry,
+	compareVersions,
 	GITHUB_CONFIG,
 	type GitHubRelease,
-	PATHS,
-	compareVersions,
 	getGitHubHeaders,
+	PATHS,
 	readJsonFile,
 } from './common'
 import { fetchGitHubReleases } from './fetch-github-releases'

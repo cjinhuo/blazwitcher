@@ -206,6 +206,10 @@ export const lang = {
 		[LanguageType.zh]: '打开当前标签',
 		[LanguageType.en]: 'Open current tab',
 	},
+	openHere: {
+		[LanguageType.zh]: '在当前标签页打开',
+		[LanguageType.en]: 'Open in current tab',
+	},
 	pin: {
 		[LanguageType.zh]: 'Pin/Unpin 标签页',
 		[LanguageType.en]: 'Pin/Unpin tab',

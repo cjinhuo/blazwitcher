@@ -6,11 +6,11 @@ import { createSyncStorage } from './common'
 import { defaultLanguage, languageAtom } from './i18nAtom'
 import { restoreWindowConfigAtom } from './windowAtom'
 
-export * from './shortcutAtom'
 export * from './i18nAtom'
-export * from './searchConfigAtom'
-export * from './windowAtom'
 export * from './plugin-context-atom'
+export * from './searchConfigAtom'
+export * from './shortcutAtom'
+export * from './windowAtom'
 
 export const themeAtom = atomWithStorage<ThemeColor>(
 	PAGE_STORAGE_THEME_COLOR,

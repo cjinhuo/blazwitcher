@@ -27,7 +27,6 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 
 			const orderedKeys = standardizeKeyOrder(keys)
 			const pressedShortcut = orderedKeys.join(' + ')
-
 			// 查找匹配的快捷键
 			const matchedShortcut = shortcuts.find((s) => s.shortcut.toLowerCase() === pressedShortcut.toLowerCase())
 			if (matchedShortcut) {

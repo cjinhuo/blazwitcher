@@ -85,7 +85,7 @@ export function getItemType(item: ListItemType) {
 
 // todo 需要做一个每次首次都不需要等待的节流函数
 export function throttle(delay: number) {
-	let timer = undefined
+	let timer: ReturnType<typeof setTimeout> | null | undefined
 	return function (fn: (args: any) => void, ...args) {
 		if (timer) return
 		if (timer === undefined) {
@@ -133,6 +133,16 @@ export const createTabWithUrl = async (url: string) => {
 		await chrome.windows.update(lastActiveWindowId, { focused: true })
 	}
 	await chrome.tabs.create({ url, windowId: lastActiveWindowId })
+	closeCurrentWindowAndClearStorage()
+}
+
+export const navigateCurrentTab = async (url: string) => {
+	const storage = await storageGet()
+	const lastActiveWindowId = storage[LAST_ACTIVE_WINDOW_ID_KEY]
+	const [activeTab] = await chrome.tabs.query({ active: true, windowId: lastActiveWindowId })
+	if (activeTab?.id) {
+		await chrome.tabs.update(activeTab.id, { url })
+	}
 	closeCurrentWindowAndClearStorage()
 }
 

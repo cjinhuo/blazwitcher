@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core'
-import { AppModule } from './app.module'
-
 // 加载环境变量
 import * as dotenv from 'dotenv'
+import { AppModule } from './app.module'
+
 dotenv.config()
 
 async function bootstrap() {

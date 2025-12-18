@@ -1,8 +1,8 @@
-import type { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 import { cva } from 'class-variance-authority'
 import Link from 'next/link'
 import type { ComponentPropsWithoutRef } from 'react'
+import type { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 interface LinkButtonProps extends ComponentPropsWithoutRef<typeof Link> {
 	variant?: ComponentPropsWithoutRef<typeof Button>['variant']

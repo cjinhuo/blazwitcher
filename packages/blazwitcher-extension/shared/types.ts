@@ -61,6 +61,7 @@ export interface ListItemType<T extends ItemType = ItemType> {
 export enum OperationItemPropertyTypes {
 	start = 'start',
 	open = 'open',
+	openHere = 'openHere',
 	switch = 'switch',
 	pin = 'pin',
 	query = 'query',
@@ -71,6 +72,7 @@ export enum OperationItemPropertyTypes {
 export const OperationItemTitleMap: Record<string, TranslationKeys> = {
 	[OperationItemPropertyTypes.open]: 'openCurrentTab',
 	[OperationItemPropertyTypes.switch]: 'openCurrentTab',
+	[OperationItemPropertyTypes.openHere]: 'openHere',
 	[OperationItemPropertyTypes.pin]: 'pin',
 	[OperationItemPropertyTypes.query]: 'query',
 	[OperationItemPropertyTypes.delete]: 'deleteFromHistory',

@@ -21,7 +21,7 @@
     "commit": "git add . && czg"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.8.3",
+    "@biomejs/biome": "^2.3.10",
     "@changesets/cli": "^2.27.8",
     "@commitlint/config-conventional": "^19.2.2",
     "changesets-toolkit": "0.0.3",
@@ -34,12 +34,7 @@
   },
   "lint-staged": {
     "**.{js,ts,jsx,tsx,json}": [
-      "biome check --files-ignore-unknown=true",
-      "biome check --write --no-errors-on-unmatched",
-      "biome check --write --organize-imports-enabled=false --no-errors-on-unmatched",
-      "biome check --write --unsafe --no-errors-on-unmatched",
-      "biome format --write --no-errors-on-unmatched",
-      "biome lint --write --no-errors-on-unmatched"
+      "biome check --write --unsafe --files-ignore-unknown=true --no-errors-on-unmatched"
     ]
   }
 }

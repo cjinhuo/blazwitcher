@@ -1,9 +1,9 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import { Languages } from 'lucide-react'
-import { useLocale } from 'next-intl'
 import { useRouter } from 'next/navigation'
+import { useLocale } from 'next-intl'
+import { Button } from '@/components/ui/button'
 
 /**
  * 语言切换器组件

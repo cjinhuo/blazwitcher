@@ -142,9 +142,6 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 	// 累积的偏移量，用于在快速连续按键时收集所有偏移量，通过防抖机制批量处理，避免频繁更新 activeIndex 造成性能问题
 	const accumulatedOffset = useRef(0)
 
-	// listen shortcut
-	useKeyboardListen(list, activeIndex)
-
 	useEffect(() => {
 		// reset active index to first non-divide item
 		const firstValidIndex = list.findIndex((item) => !isDivideItem(item))
@@ -159,7 +156,7 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 		}
 	}, [activeIndex, list, setActiveItem])
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	// biome-ignore lint/correctness/useExhaustiveDependencies: intentionally limit deps to activeIndex
 	useLayoutEffect(() => {
 		setScrollTopIfNeeded()
 	}, [activeIndex])
@@ -223,11 +220,16 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 
 	const keydownHandler = useCallback(
 		(event: KeyboardEvent) => {
+			// 如果 Enter 键配合修饰键（如 Shift），走 useKeyboardListen 的监听
+			if (event.code === 'Enter' && (event.shiftKey || event.ctrlKey || event.metaKey || event.altKey)) {
+				return
+			}
+
 			const keyActions: { [key: string]: () => void } = {
 				ArrowUp: () => keyActionsChangeIndex(-1),
 				Tab: () => keyActionsChangeIndex(1),
 				ArrowDown: () => keyActionsChangeIndex(1),
-				Enter: handleEnterEvent,
+				Enter: handleEnterEvent, // 按下 Enter 键，执行 handleEnterEvent
 			}
 
 			const action = keyActions[event.code]
@@ -239,6 +241,9 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 		[handleEnterEvent, keyActionsChangeIndex]
 	)
 
+	// listen shortcut event (注意键位可能有冲突，这边监听了两个keydown事件)
+	useKeyboardListen(list, activeIndex)
+	// listen default event
 	useEffect(() => {
 		// only listen to keydown when not in composition（type chinese）
 		!isComposition && window.addEventListener('keydown', keydownHandler)
@@ -271,7 +276,7 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 				renderItem={(item, index) => {
 					if (isDivideItem(item)) {
 						return (
-							// 点击该元素时不让搜索框失去焦点
+							// biome-ignore lint/a11y/noStaticElementInteractions: prevent blur when clicking divide header
 							<div onMouseDown={(e) => e.preventDefault()}>
 								<HeaderItem className={DIVIDE_CLASS} main={<Divide>{item.data.name}</Divide>} />
 							</div>

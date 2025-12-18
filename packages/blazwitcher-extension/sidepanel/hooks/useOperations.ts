@@ -1,7 +1,15 @@
 import { useAtom, useAtomValue } from 'jotai'
 import { useCallback } from 'react'
 import { type ListItemType, OperationItemPropertyTypes } from '~shared/types'
-import { deleteItem, handleItemClick, isBookmarkItem, isHistoryItem, isTabItem, queryInNewTab } from '~shared/utils'
+import {
+	deleteItem,
+	handleItemClick,
+	isBookmarkItem,
+	isHistoryItem,
+	isTabItem,
+	navigateCurrentTab,
+	queryInNewTab,
+} from '~shared/utils'
 import { i18nAtom, originalListAtom } from '~sidepanel/atom'
 
 export const useListOperations = () => {
@@ -40,6 +48,11 @@ export const useListOperations = () => {
 			case OperationItemPropertyTypes.switch:
 			case OperationItemPropertyTypes.open:
 				handleItemClick(item)
+				break
+			case OperationItemPropertyTypes.openHere:
+				if (isBookmarkItem(item) || isHistoryItem(item)) {
+					await navigateCurrentTab(item.data.url)
+				}
 				break
 			case OperationItemPropertyTypes.close:
 				isTabItem(item) &&
