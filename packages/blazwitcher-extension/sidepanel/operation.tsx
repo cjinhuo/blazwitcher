@@ -6,8 +6,7 @@ import QueryIcon from 'react:~assets/query.svg'
 import RightArrow from 'react:~assets/right-arrow.svg'
 import UnpinIcon from 'react:~assets/unpin.svg'
 import { useAtomValue } from 'jotai'
-import { useCallback } from 'react'
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { PopoverWrapper } from '~shared/common-styles'
 import { VISIBILITY_CLASS } from '~shared/constants'
@@ -68,7 +67,11 @@ const IconWithName = ({
 	children,
 	name,
 	item,
-}: { children: React.ReactNode; name: OperationItemPropertyTypes; item: ListItemType }) => {
+}: {
+	children: React.ReactNode
+	name: OperationItemPropertyTypes
+	item: ListItemType
+}) => {
 	const shortcutsMap = useAtomValue(shortcutsAtom)
 	const i18n = useAtomValue(i18nAtom)
 	const getShortcut = useCallback(

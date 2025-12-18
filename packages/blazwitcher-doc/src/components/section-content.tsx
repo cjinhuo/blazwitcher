@@ -1,9 +1,9 @@
 // 主页核心内容区块组件
 'use client'
 
-import { LinkButton } from '@/components/ui/link-button'
 import { motion } from 'motion/react'
 import { useTranslations } from 'next-intl'
+import { LinkButton } from '@/components/ui/link-button'
 
 /**
  * 首页主内容区块组件

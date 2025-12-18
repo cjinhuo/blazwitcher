@@ -6,8 +6,13 @@ import styled from 'styled-components'
 import { CHROME_EXTENSIONS_SHORTCUTS_URL } from '~shared/constants'
 import { OperationItemPropertyTypes } from '~shared/types'
 import { createTabWithUrl, getExecuteActionShortcuts } from '~shared/utils'
-import { type Shortcut, i18nAtom, shortcutsAtom, updateShortcutAtom } from '~sidepanel/atom'
-import { restoreDefaultShortcutsAtom } from '~sidepanel/atom'
+import {
+	i18nAtom,
+	restoreDefaultShortcutsAtom,
+	type Shortcut,
+	shortcutsAtom,
+	updateShortcutAtom,
+} from '~sidepanel/atom'
 import { collectPressedKeys, isValidShortcut, standardizeKeyOrder } from '~sidepanel/utils/keyboardUtils'
 
 const styles = {

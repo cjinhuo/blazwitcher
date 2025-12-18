@@ -16,10 +16,7 @@ export default function useOriginalList() {
 		let portConnectStatus = false
 		const port = chrome.runtime.connect({ name: MAIN_WINDOW })
 		port.onMessage.addListener(
-			(message: {
-				processedList: ListItemType[]
-				lastTimeTabGroupProgress: AiGroupingProgress
-			}) => {
+			(message: { processedList: ListItemType[]; lastTimeTabGroupProgress: AiGroupingProgress }) => {
 				const { processedList, lastTimeTabGroupProgress } = message
 
 				portConnectStatus = true

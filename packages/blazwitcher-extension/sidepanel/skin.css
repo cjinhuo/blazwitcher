@@ -1,72 +1,72 @@
 html {
-  --color-neutral-1: #171717;
-  --color-neutral-2: #262626;
-  --color-neutral-3: #404040;
-  --color-neutral-4: #525252;
-  --color-neutral-5: #737373;
-  --color-neutral-6: #a3a3a3;
-  --color-neutral-7: #d4d4d4;
-  --color-neutral-8: #e5e5e5;
-  --color-neutral-9: #f5f5f5;
-  --color-neutral-10: #fafafa;
+	--color-neutral-1: #171717;
+	--color-neutral-2: #262626;
+	--color-neutral-3: #404040;
+	--color-neutral-4: #525252;
+	--color-neutral-5: #737373;
+	--color-neutral-6: #a3a3a3;
+	--color-neutral-7: #d4d4d4;
+	--color-neutral-8: #e5e5e5;
+	--color-neutral-9: #f5f5f5;
+	--color-neutral-10: #fafafa;
 
-  --color-normal-bg: rgb(246, 246, 246);
-  --color-normal-bg-reverse: rgb(6, 12, 18);
+	--color-normal-bg: rgb(246, 246, 246);
+	--color-normal-bg-reverse: rgb(6, 12, 18);
 
-  --color-linear-bg-start: rgb(255, 255, 255);
-  --color-linear-bg-end: rgb(230, 236, 242, 0);
-  --color-link-href: rgb(90, 160, 223);
+	--color-linear-bg-start: rgb(255, 255, 255);
+	--color-linear-bg-end: rgb(230, 236, 242, 0);
+	--color-link-href: rgb(90, 160, 223);
 
-  --bg-selected-item: rgb(1, 75, 220);
+	--bg-selected-item: rgb(1, 75, 220);
 
-  --highlight-bg: rgb(35, 141, 255);
-  --highlight-selected-bg: rgb(65, 157, 255);
-  --highlight-text: var(--color-neutral-9);
+	--highlight-bg: rgb(35, 141, 255);
+	--highlight-selected-bg: rgb(65, 157, 255);
+	--highlight-text: var(--color-neutral-9);
 }
 
-
 .dark {
-  --color-neutral-10: #171717;
-  --color-neutral-9: #262626;
-  --color-neutral-8: #404040;
-  --color-neutral-7: #525252;
-  --color-neutral-6: #737373;
-  --color-neutral-5: #a3a3a3;
-  --color-neutral-4: #d4d4d4;
-  --color-neutral-3: #e5e5e5;
-  --color-neutral-2: #f5f5f5;
-  --color-neutral-1: #fafafa;
+	--color-neutral-10: #171717;
+	--color-neutral-9: #262626;
+	--color-neutral-8: #404040;
+	--color-neutral-7: #525252;
+	--color-neutral-6: #737373;
+	--color-neutral-5: #a3a3a3;
+	--color-neutral-4: #d4d4d4;
+	--color-neutral-3: #e5e5e5;
+	--color-neutral-2: #f5f5f5;
+	--color-neutral-1: #fafafa;
 
-  --color-normal-bg: rgb(6, 12, 18);
-  --color-normal-bg-reverse: rgb(230, 236, 242);
+	--color-normal-bg: rgb(6, 12, 18);
+	--color-normal-bg-reverse: rgb(230, 236, 242);
 
-  --color-linear-bg-start: rgb(33, 34, 34);
-  --color-linear-bg-end: rgb(230, 236, 242, 0.06);
-  --color-link-href: rgb(90, 160, 223);
+	--color-linear-bg-start: rgb(33, 34, 34);
+	--color-linear-bg-end: rgb(230, 236, 242, 0.06);
+	--color-link-href: rgb(90, 160, 223);
 
-  --highlight-selected-bg: rgb(35, 141, 255);
-  --highlight-bg: rgb(65, 157, 255);
-  --highlight-text: var(--color-neutral-2);
+	--highlight-selected-bg: rgb(35, 141, 255);
+	--highlight-bg: rgb(65, 157, 255);
+	--highlight-text: var(--color-neutral-2);
 }
 
 /* scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  /* 截图预览 */
-  /* width: 0px; */
+	width: 6px;
+	/* 截图预览 */
+	/* width: 0px; */
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-normal-bg);
-  border-radius: 2px;
+	background: var(--color-normal-bg);
+	border-radius: 2px;
 }
 
 /* -webkit-scrollbar-corner: 当同时有垂直滚动条和水平滚动条时交汇的部分 */
-::-webkit-scrollbar-thumb, ::-webkit-scrollbar-corner {
-  background: var(--color-neutral-7);
-  border-radius: 10px;
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-corner {
+	background: var(--color-neutral-7);
+	border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-neutral-6);
+	background: var(--color-neutral-6);
 }

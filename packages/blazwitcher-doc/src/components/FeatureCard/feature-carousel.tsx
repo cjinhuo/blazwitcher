@@ -84,20 +84,16 @@ const FeatureCarousel: React.FC<CarouselProps> = ({ children, onSlideChange, act
 			{/* Command bar for feature selection, always visible at bottom */}
 			<div className='absolute bottom-4 left-0 right-0 flex justify-center space-x-4'>
 				{features.map((_, index) => (
-					<div
+					<button
 						// Replace the index with a unique identifier from the features array
 						key={features[index].id || index}
+						type='button'
 						className={`feature-command ${activeIndex === index ? 'active' : ''}`}
 						onClick={() => handleSlideChange(index)}
-						onKeyUp={(e) => {
-							if (e.key === 'Enter' || e.key === ' ') {
-								handleSlideChange(index)
-							}
-						}}
 						aria-label={`Feature ${index + 1}`}
 					>
 						{renderFeatureIcon(index)}
-					</div>
+					</button>
 				))}
 			</div>
 		</div>

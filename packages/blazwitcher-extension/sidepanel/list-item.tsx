@@ -2,23 +2,21 @@ import chromeIcon from 'data-base64:~assets/chrome-icon.svg'
 import BookmarkSvg from 'react:~assets/bookmark.svg'
 import HistorySvg from 'react:~assets/history.svg'
 import TabSvg from 'react:~assets/tab.svg'
-import styled from 'styled-components'
-
-import { timeAgo } from '~shared/time'
-import type { BookmarkItemType, HistoryItemType, ListItemType, TabItemType } from '~shared/types'
-import { isBookmarkItem, isTabItem } from '~shared/utils'
-
 import { useAtomValue } from 'jotai'
+import styled from 'styled-components'
 import {
 	ContentContainer,
 	type ContentContainerProps,
 	IMAGE_CLASS,
 	ImageContainer,
 	InlineSvgWrapper,
-	SVG_CLASS,
 	SecondaryContainer,
+	SVG_CLASS,
 	TitleContainer,
 } from '~shared/common-styles'
+import { timeAgo } from '~shared/time'
+import type { BookmarkItemType, HistoryItemType, ListItemType, TabItemType } from '~shared/types'
+import { isBookmarkItem, isTabItem } from '~shared/utils'
 import { i18nAtom } from '~sidepanel/atom'
 import { useColorMap } from '~sidepanel/hooks/useTheme'
 import HighlightText from './highlight-text'

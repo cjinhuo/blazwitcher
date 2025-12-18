@@ -12,8 +12,14 @@ import {
 	ONE_DAY_MILLISECONDS,
 	type WindowConfig,
 } from './constants'
-import { storageGetLocal } from './promisify'
-import { getBookmarksById, getBookmarksTree, getTabGroupById, historySearch, tabsQuery } from './promisify'
+import {
+	getBookmarksById,
+	getBookmarksTree,
+	getTabGroupById,
+	historySearch,
+	storageGetLocal,
+	tabsQuery,
+} from './promisify'
 import { getCompositeSourceAndHost } from './text-search-pinyin'
 import { type BookmarkItemType, ItemType } from './types'
 import { faviconURL } from './utils'

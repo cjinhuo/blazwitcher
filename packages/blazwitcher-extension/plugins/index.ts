@@ -9,12 +9,11 @@ import {
 	settingPlugin,
 } from './commands'
 
+// 命令插件导出
+export { filterByBookmarkPlugin, filterByHistoryPlugin, filterByTabPlugin, settingPlugin } from './commands'
 // UI组件导出
 export { RenderPluginItem, usePluginClickItem } from './ui/render-item'
 export { SettingPanels } from './ui/setting-panels'
-
-// 命令插件导出
-export { filterByBookmarkPlugin, filterByHistoryPlugin, filterByTabPlugin, settingPlugin } from './commands'
 
 // 插件匹配工具函数
 export function matchPlugin(

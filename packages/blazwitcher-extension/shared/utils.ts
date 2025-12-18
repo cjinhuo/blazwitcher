@@ -85,7 +85,7 @@ export function getItemType(item: ListItemType) {
 
 // todo 需要做一个每次首次都不需要等待的节流函数
 export function throttle(delay: number) {
-	let timer = undefined
+	let timer: ReturnType<typeof setTimeout> | null | undefined
 	return function (fn: (args: any) => void, ...args) {
 		if (timer) return
 		if (timer === undefined) {

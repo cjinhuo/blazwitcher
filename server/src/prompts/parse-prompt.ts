@@ -25,7 +25,9 @@ function convertTxtToTs() {
 		}
 
 		console.log(`找到 ${txtFiles.length} 个 .txt 文件:`)
-		txtFiles.forEach((file) => console.log(`  - ${file}`))
+		txtFiles.forEach((file) => {
+			console.log(`  - ${file}`)
+		})
 
 		// 转换每个 .txt 文件
 		for (const txtFile of txtFiles) {

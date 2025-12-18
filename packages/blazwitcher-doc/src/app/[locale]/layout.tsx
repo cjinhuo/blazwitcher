@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
 import './globals.css'
-import { StructuredData } from '@/components/structured-data'
-import { ThemeProvider } from '@/components/theme-provider'
 import { Analytics } from '@vercel/analytics/react'
 import { NextIntlClientProvider } from 'next-intl'
+import { StructuredData } from '@/components/structured-data'
+import { ThemeProvider } from '@/components/theme-provider'
 
 // 配置 Geist 字体
 const geist = Geist({
@@ -102,7 +102,10 @@ export const metadata: Metadata = {
 export default async function RootLayout({
 	children,
 	params,
-}: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
+}: {
+	children: React.ReactNode
+	params: Promise<{ locale: string }>
+}) {
 	const { locale } = await params
 
 	return (

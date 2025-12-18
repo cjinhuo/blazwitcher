@@ -1,6 +1,4 @@
-import type { AIGroupSummary, AINewGroups } from './ark.dto'
-
-import type { AIEffectExistingGroups } from './ark.dto'
+import type { AIEffectExistingGroups, AIGroupSummary, AINewGroups } from './ark.dto'
 
 type TagHandler<T> = (data: any) => T
 

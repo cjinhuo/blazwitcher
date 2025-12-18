@@ -159,7 +159,7 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 		}
 	}, [activeIndex, list, setActiveItem])
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	// biome-ignore lint/correctness/useExhaustiveDependencies: intentionally limit deps to activeIndex
 	useLayoutEffect(() => {
 		setScrollTopIfNeeded()
 	}, [activeIndex])
@@ -271,7 +271,7 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 				renderItem={(item, index) => {
 					if (isDivideItem(item)) {
 						return (
-							// 点击该元素时不让搜索框失去焦点
+							// biome-ignore lint/a11y/noStaticElementInteractions: prevent blur when clicking divide header
 							<div onMouseDown={(e) => e.preventDefault()}>
 								<HeaderItem className={DIVIDE_CLASS} main={<Divide>{item.data.name}</Divide>} />
 							</div>
