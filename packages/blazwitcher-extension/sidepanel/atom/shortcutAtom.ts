@@ -19,7 +19,7 @@ const defaultShortcutConfigs: Shortcut[] = [
 	{
 		id: OperationItemPropertyTypes.open,
 		action: 'openCurrentTab',
-		shortcut: 'Enter',
+		shortcut: '↵',
 	},
 	{
 		id: OperationItemPropertyTypes.openHere,

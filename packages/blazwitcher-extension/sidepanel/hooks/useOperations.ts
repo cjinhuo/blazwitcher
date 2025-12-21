@@ -50,9 +50,7 @@ export const useListOperations = () => {
 				handleItemClick(item)
 				break
 			case OperationItemPropertyTypes.openHere:
-				if (isBookmarkItem(item) || isHistoryItem(item)) {
-					await navigateCurrentTab(item.data.url)
-				}
+				await navigateCurrentTab(item.data.url)
 				break
 			case OperationItemPropertyTypes.close:
 				isTabItem(item) &&

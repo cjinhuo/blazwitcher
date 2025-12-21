@@ -83,11 +83,27 @@ export const standardizeKeyOrder = (keys: string[]): string[] => {
 	return result
 }
 
-// 检查快捷键是否有效（至少包含两个键，且至少一个是修饰键）
-export const isValidShortcut = (keys: string[]): boolean => {
-	if (keys.length < 2) return false
+// 允许作为单个按键的特殊键列表
+const SINGLE_KEY_ALLOWED = [
+	'↵', // Enter
+	'⇥', // Tab
+	'←', // ArrowLeft
+	'→', // ArrowRight
+]
 
-	// 检查是否至少包含一个修饰键
+// 检查快捷键是否有效
+// 支持两种情况：
+// 1. 单个特殊键（Enter、Tab、ArrowLeft、ArrowRight）
+// 2. 组合键（至少包含一个修饰键和一个普通键）
+export const isValidShortcut = (keys: string[]): boolean => {
+	if (keys.length === 0) return false
+
+	if (keys.length === 1) {
+		// 单个按键：只允许特殊键
+		return SINGLE_KEY_ALLOWED.includes(keys[0])
+	}
+
+	// 多个按键：必须至少包含一个修饰键
 	const hasModifier = keys.some((key) => ['Ctrl', '⌘', 'Alt', 'Shift'].includes(key))
 	return hasModifier
 }

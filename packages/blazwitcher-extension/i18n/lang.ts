@@ -203,8 +203,8 @@ export const lang = {
 		[LanguageType.en]: 'Close current tab',
 	},
 	openCurrentTab: {
-		[LanguageType.zh]: '打开当前标签',
-		[LanguageType.en]: 'Open current tab',
+		[LanguageType.zh]: '切换标签页',
+		[LanguageType.en]: 'Switch to tab',
 	},
 	openHere: {
 		[LanguageType.zh]: '在当前标签页打开',

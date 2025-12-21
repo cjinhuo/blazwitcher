@@ -125,10 +125,6 @@ export const KeyboardPanel: React.FC = () => {
 	const [tempKeys, setTempKeys] = useState<string>('')
 	const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
 
-	const isEditable = (shortcut: Shortcut) => {
-		return shortcut.id !== OperationItemPropertyTypes.open
-	}
-
 	// 打开编辑快捷键弹窗
 	const handleEdit = (item: Shortcut) => {
 		if (item.id === OperationItemPropertyTypes.start) {
@@ -209,17 +205,7 @@ export const KeyboardPanel: React.FC = () => {
 								<Text ellipsis={{ showTooltip: true }}>{i18n(item.action)}</Text>
 							</styles.actionTitle>
 						</styles.mainContent>
-						<styles.editButton
-							icon={<IconEdit />}
-							theme='borderless'
-							type='tertiary'
-							onClick={() => handleEdit(item)}
-							disabled={!isEditable(item)}
-							style={{
-								cursor: isEditable(item) ? 'pointer' : 'not-allowed',
-								opacity: isEditable(item) ? 1 : 0.5,
-							}}
-						>
+						<styles.editButton icon={<IconEdit />} theme='borderless' type='tertiary' onClick={() => handleEdit(item)}>
 							{i18n('edit')}
 						</styles.editButton>
 					</styles.listItem>

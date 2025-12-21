@@ -5,10 +5,13 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import styled from 'styled-components'
 import { HIGHLIGHT_TEXT_CLASS, HOST_CLASS, IMAGE_CLASS, NORMAL_TEXT_CLASS, SVG_CLASS } from '~shared/common-styles'
 import type { ListItemType } from '~shared/types'
+import { OperationItemPropertyTypes } from '~shared/types'
 import { useKeyboardListen } from '~sidepanel/hooks/useKeyboardListen'
 import { DIVIDE_CLASS, LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS, VISIBILITY_CLASS } from '../shared/constants'
 import { isDivideItem, scrollIntoViewIfNeeded } from '../shared/utils'
-import { activeItemAtom, compositionAtom, i18nAtom } from './atom'
+import { activeItemAtom, compositionAtom, i18nAtom, shortcutsAtom } from './atom'
+import { useListOperations } from './hooks/useOperations'
+import { collectPressedKeys, standardizeKeyOrder } from './utils/keyboardUtils'
 
 const ListContainer = styled.div`
   padding: 6px;
@@ -136,6 +139,8 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 	const i18n = useAtomValue(i18nAtom)
 	const isComposition = useAtomValue(compositionAtom)
 	const setActiveItem = useSetAtom(activeItemAtom)
+	const shortcuts = useAtomValue(shortcutsAtom)
+	const { handleOperations } = useListOperations()
 	const [activeIndex, setActiveIndex] = useState<number>(-1)
 	const i = useRef(activeIndex)
 	const timer = useRef<NodeJS.Timeout>()
@@ -225,6 +230,30 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 				return
 			}
 
+			// 检查 Enter 键是否匹配配置的快捷键
+			if (event.code === 'Enter' && !event.shiftKey && !event.ctrlKey && !event.metaKey && !event.altKey) {
+				const keys = collectPressedKeys(event)
+				const orderedKeys = standardizeKeyOrder(keys)
+				const pressedShortcut = orderedKeys.join(' + ')
+				const activeItem = list[activeIndex]
+
+				// 查找匹配的快捷键
+				const matchedShortcut = shortcuts.find((s) => s.shortcut.toLowerCase() === pressedShortcut.toLowerCase())
+
+				if (matchedShortcut && activeItem) {
+					// 如果 Enter 匹配 open 或 openHere 快捷键，执行对应操作
+					if (
+						matchedShortcut.id === OperationItemPropertyTypes.open ||
+						matchedShortcut.id === OperationItemPropertyTypes.openHere ||
+						matchedShortcut.id === OperationItemPropertyTypes.switch
+					) {
+						event.preventDefault()
+						handleOperations(matchedShortcut.id, activeItem)
+						return
+					}
+				}
+			}
+
 			const keyActions: { [key: string]: () => void } = {
 				ArrowUp: () => keyActionsChangeIndex(-1),
 				Tab: () => keyActionsChangeIndex(1),
@@ -238,7 +267,7 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 				action()
 			}
 		},
-		[handleEnterEvent, keyActionsChangeIndex]
+		[handleEnterEvent, keyActionsChangeIndex, shortcuts, list, activeIndex, handleOperations]
 	)
 
 	// listen shortcut event (注意键位可能有冲突，这边监听了两个keydown事件)
