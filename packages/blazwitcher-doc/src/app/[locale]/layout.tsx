@@ -14,6 +14,7 @@ const geist = Geist({
 
 // 页面元数据配置
 export const metadata: Metadata = {
+	metadataBase: new URL('https://blazwitcher.vercel.app'),
 	title: 'BlazWitcher - Ultimate Pinyin Search Engine for Chrome Extension',
 	description:
 		'BlazWitcher is a powerful Chrome extension with advanced pinyin search capabilities. Search tabs, bookmarks, and history with fuzzy pinyin search, text search engine, and AI grouping. 拼音模糊搜索浏览器扩展.',
