@@ -47,9 +47,17 @@ export const useListOperations = () => {
 		switch (name) {
 			case OperationItemPropertyTypes.switch:
 			case OperationItemPropertyTypes.open:
+			case OperationItemPropertyTypes.tabOpen:
+			case OperationItemPropertyTypes.historyOpen:
+			case OperationItemPropertyTypes.bookmarkOpen:
+				// Tab: 切换到标签页，History/Bookmark: 打开新标签页
 				handleItemClick(item)
 				break
 			case OperationItemPropertyTypes.openHere:
+			case OperationItemPropertyTypes.tabOpenHere:
+			case OperationItemPropertyTypes.historyOpenHere:
+			case OperationItemPropertyTypes.bookmarkOpenHere:
+				// 在当前页打开
 				await navigateCurrentTab(item.data.url)
 				break
 			case OperationItemPropertyTypes.close:

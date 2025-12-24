@@ -74,8 +74,8 @@ export const lang = {
 		[LanguageType.en]: 'Search from Bookmarks',
 	},
 	searchHistory: {
-		[LanguageType.zh]: '在历史记录中搜索',
-		[LanguageType.en]: 'Search from History',
+		[LanguageType.zh]: '在书签/历史记录中查询',
+		[LanguageType.en]: 'Query in Bookmarks/History',
 	},
 	setting: {
 		[LanguageType.zh]: '设置',
@@ -281,6 +281,54 @@ export const lang = {
 	unknownOperation: {
 		[LanguageType.zh]: '未知按键',
 		[LanguageType.en]: 'unknown operation',
+	},
+	shortcutConflictInSameType: {
+		[LanguageType.zh]: '该快捷键在同类型中已被使用',
+		[LanguageType.en]: 'This shortcut is already used in the same type',
+	},
+	// 快捷键分组标题
+	tabShortcuts: {
+		[LanguageType.zh]: 'Tab 快捷键',
+		[LanguageType.en]: 'Tab Shortcuts',
+	},
+	historyShortcuts: {
+		[LanguageType.zh]: '历史记录快捷键',
+		[LanguageType.en]: 'History Shortcuts',
+	},
+	bookmarkShortcuts: {
+		[LanguageType.zh]: '书签快捷键',
+		[LanguageType.en]: 'Bookmark Shortcuts',
+	},
+	commonShortcuts: {
+		[LanguageType.zh]: '通用快捷键',
+		[LanguageType.en]: 'Common Shortcuts',
+	},
+	// Tab 专用快捷键
+	tabOpen: {
+		[LanguageType.zh]: '切换到标签页',
+		[LanguageType.en]: 'Switch to Tab',
+	},
+	tabOpenHere: {
+		[LanguageType.zh]: '在当前页打开标签',
+		[LanguageType.en]: 'Open Tab Here',
+	},
+	// History 专用快捷键
+	historyOpen: {
+		[LanguageType.zh]: '打开历史记录',
+		[LanguageType.en]: 'Open History',
+	},
+	historyOpenHere: {
+		[LanguageType.zh]: '在当前页打开历史记录',
+		[LanguageType.en]: 'Open History Here',
+	},
+	// Bookmark 专用快捷键
+	bookmarkOpen: {
+		[LanguageType.zh]: '打开书签',
+		[LanguageType.en]: 'Open Bookmark',
+	},
+	bookmarkOpenHere: {
+		[LanguageType.zh]: '在当前页打开书签',
+		[LanguageType.en]: 'Open Bookmark Here',
 	},
 	// 搜索参数配置页
 	searchSettings: {

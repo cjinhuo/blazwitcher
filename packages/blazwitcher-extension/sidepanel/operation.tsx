@@ -12,6 +12,7 @@ import { VISIBILITY_CLASS } from '~shared/constants'
 import { ItemType, type ListItemType, OperationItemPropertyTypes, OperationItemTitleMap } from '~shared/types'
 import { isTabItem } from '~shared/utils'
 import { i18nAtom, shortcutsAtom } from '~sidepanel/atom'
+import { getOpenOperationIds } from '~sidepanel/utils/shortcutMappingUtils'
 import { useListOperations } from './hooks/useOperations'
 
 export const OPERATION_ICON_CLASS = 'operation-icon'
@@ -132,13 +133,16 @@ const Open = ({ item }: { item: ListItemType }) => {
 	const shortcutsMap = useAtomValue(shortcutsAtom)
 	const i18n = useAtomValue(i18nAtom)
 
+	// 根据 item 类型获取对应的操作 ID
+	const { openId, openHereId } = getOpenOperationIds(item.itemType)
+
 	const openInfo = {
-		title: i18n(OperationItemTitleMap[OperationItemPropertyTypes.open]),
-		shortcut: shortcutsMap.find((item) => item.id === OperationItemPropertyTypes.open)?.shortcut || '',
+		title: i18n(OperationItemTitleMap[openId]),
+		shortcut: shortcutsMap.find((s) => s.id === openId)?.shortcut || '',
 	}
 	const openHereInfo = {
-		title: i18n(OperationItemTitleMap[OperationItemPropertyTypes.openHere]),
-		shortcut: shortcutsMap.find((item) => item.id === OperationItemPropertyTypes.openHere)?.shortcut || '',
+		title: i18n(OperationItemTitleMap[openHereId]),
+		shortcut: shortcutsMap.find((s) => s.id === openHereId)?.shortcut || '',
 	}
 
 	const customContent = (

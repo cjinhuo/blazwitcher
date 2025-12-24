@@ -67,6 +67,15 @@ export enum OperationItemPropertyTypes {
 	query = 'query',
 	delete = 'delete',
 	close = 'close',
+	// Tab 专用快捷键
+	tabOpen = 'tabOpen',
+	tabOpenHere = 'tabOpenHere',
+	// History 专用快捷键
+	historyOpen = 'historyOpen',
+	historyOpenHere = 'historyOpenHere',
+	// Bookmark 专用快捷键
+	bookmarkOpen = 'bookmarkOpen',
+	bookmarkOpenHere = 'bookmarkOpenHere',
 }
 
 export const OperationItemTitleMap: Record<string, TranslationKeys> = {
@@ -77,6 +86,15 @@ export const OperationItemTitleMap: Record<string, TranslationKeys> = {
 	[OperationItemPropertyTypes.query]: 'query',
 	[OperationItemPropertyTypes.delete]: 'deleteFromHistory',
 	[OperationItemPropertyTypes.close]: 'closeTab',
+	// Tab 专用
+	[OperationItemPropertyTypes.tabOpen]: 'tabOpen',
+	[OperationItemPropertyTypes.tabOpenHere]: 'tabOpenHere',
+	// History 专用
+	[OperationItemPropertyTypes.historyOpen]: 'historyOpen',
+	[OperationItemPropertyTypes.historyOpenHere]: 'historyOpenHere',
+	// Bookmark 专用
+	[OperationItemPropertyTypes.bookmarkOpen]: 'bookmarkOpen',
+	[OperationItemPropertyTypes.bookmarkOpenHere]: 'bookmarkOpenHere',
 }
 
 export interface PluginContext {

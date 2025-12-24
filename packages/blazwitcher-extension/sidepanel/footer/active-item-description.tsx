@@ -3,10 +3,11 @@ import { useCallback, useMemo } from 'react'
 import styled from 'styled-components'
 import { usePluginClickItem } from '~plugins/ui/render-item'
 import { FOOTER_DESCRIPTION_I18N_MAP } from '~shared/constants'
-import { ItemType, OperationItemPropertyTypes } from '~shared/types'
+import { ItemType } from '~shared/types'
 import { getItemType, handleItemClick, isPluginItem } from '~shared/utils'
 import { activeItemAtom, shortcutsAtom } from '~sidepanel/atom'
 import useI18n from '~sidepanel/hooks/useI18n'
+import { getOpenOperationId } from '~sidepanel/utils/shortcutMappingUtils'
 
 const Container = styled.div`
 	display: flex;
@@ -60,10 +61,15 @@ export default function ActiveItemDescription() {
 
 	const activeItem = useAtomValue(activeItemAtom)
 	const shortcuts = useAtomValue(shortcutsAtom)
-	const openShortcut = useMemo(
-		() => shortcuts.find((s) => s.id === OperationItemPropertyTypes.open)?.shortcut,
-		[shortcuts]
-	)
+
+	// 根据激活项类型获取对应的快捷键
+	const openShortcut = useMemo(() => {
+		if (!activeItem) return ''
+		const itemType = getItemType(activeItem)
+		if (!itemType) return ''
+		const operationId = getOpenOperationId(itemType)
+		return shortcuts.find((s) => s.id === operationId)?.shortcut || ''
+	}, [shortcuts, activeItem])
 
 	const descriptionKey = useMemo(() => {
 		if (!activeItem) return undefined

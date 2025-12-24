@@ -30,24 +30,57 @@ const defaultShortcutConfigs: Shortcut[] = [
 		tooltip: 'openHereTooltip',
 	},
 	{
+		id: OperationItemPropertyTypes.query,
+		action: 'searchHistory',
+		shortcut: 'Ctrl + Shift + H',
+	},
+	// Tab 专用快捷键
+	{
+		id: OperationItemPropertyTypes.tabOpen,
+		action: 'tabOpen',
+		shortcut: '↵',
+	},
+	{
+		id: OperationItemPropertyTypes.tabOpenHere,
+		action: 'tabOpenHere',
+		shortcut: 'Shift + ↵',
+	},
+	{
+		id: OperationItemPropertyTypes.pin,
+		action: 'pin',
+		shortcut: 'Ctrl + Shift + P',
+	},
+	{
 		id: OperationItemPropertyTypes.close,
 		action: 'closeTab',
 		shortcut: 'Ctrl + Shift + W',
 	},
+	// History 专用快捷键
 	{
-		id: OperationItemPropertyTypes.query,
-		action: 'searchHistory',
-		shortcut: 'Ctrl + Shift + H',
+		id: OperationItemPropertyTypes.historyOpen,
+		action: 'historyOpen',
+		shortcut: '↵',
+	},
+	{
+		id: OperationItemPropertyTypes.historyOpenHere,
+		action: 'historyOpenHere',
+		shortcut: 'Shift + ↵',
 	},
 	{
 		id: OperationItemPropertyTypes.delete,
 		action: 'deleteFromHistory',
 		shortcut: 'Ctrl + Shift + D',
 	},
+	// Bookmark 专用快捷键
 	{
-		id: OperationItemPropertyTypes.pin,
-		action: 'pin',
-		shortcut: 'Ctrl + Shift + P',
+		id: OperationItemPropertyTypes.bookmarkOpen,
+		action: 'bookmarkOpen',
+		shortcut: '↵',
+	},
+	{
+		id: OperationItemPropertyTypes.bookmarkOpenHere,
+		action: 'bookmarkOpenHere',
+		shortcut: 'Shift + ↵',
 	},
 ]
 

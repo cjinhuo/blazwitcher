@@ -1,7 +1,7 @@
 import { IconEdit, IconInfoCircle, IconRefresh } from '@douyinfe/semi-icons'
 import { Button, Card, List, Modal, Toast, Tooltip, Typography } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { CHROME_EXTENSIONS_SHORTCUTS_URL } from '~shared/constants'
 import { OperationItemPropertyTypes } from '~shared/types'
@@ -14,6 +14,33 @@ import {
 	updateShortcutAtom,
 } from '~sidepanel/atom'
 import { collectPressedKeys, isValidShortcut, standardizeKeyOrder } from '~sidepanel/utils/keyboardUtils'
+
+// 快捷键类型分组映射
+const shortcutTypeGroups: Record<string, OperationItemPropertyTypes[]> = {
+	tab: [
+		OperationItemPropertyTypes.tabOpen,
+		OperationItemPropertyTypes.tabOpenHere,
+		OperationItemPropertyTypes.pin,
+		OperationItemPropertyTypes.close,
+	],
+	history: [
+		OperationItemPropertyTypes.historyOpen,
+		OperationItemPropertyTypes.historyOpenHere,
+		OperationItemPropertyTypes.delete,
+	],
+	bookmark: [OperationItemPropertyTypes.bookmarkOpen, OperationItemPropertyTypes.bookmarkOpenHere],
+	common: [OperationItemPropertyTypes.start, OperationItemPropertyTypes.query],
+}
+
+// 获取快捷键所属的分组
+const getShortcutGroup = (id: OperationItemPropertyTypes): keyof typeof shortcutTypeGroups | null => {
+	for (const [group, ids] of Object.entries(shortcutTypeGroups)) {
+		if (ids.includes(id)) {
+			return group as keyof typeof shortcutTypeGroups
+		}
+	}
+	return null
+}
 
 const styles = {
 	card: styled(Card)`
@@ -117,6 +144,17 @@ const styles = {
       border-color: var(--semi-color-primary);
     }
   `,
+	groupSection: styled.div`
+    margin-bottom: 24px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  `,
+	groupTitle: styled(Typography.Title)`
+    margin: 16px 0 8px 0 !important;
+    font-size: 16px !important;
+  ` as typeof Typography.Title,
 }
 
 export const KeyboardPanel: React.FC = () => {
@@ -129,7 +167,7 @@ export const KeyboardPanel: React.FC = () => {
 	useEffect(() => {
 		const fetchStartExtensionShortcut = async () => {
 			const shortcut = await getExecuteActionShortcuts()
-			setStartExtensionShortcut(shortcut.split('').join(' + '))
+			setStartExtensionShortcut(shortcut?.split('').join(' + ') || '')
 		}
 		fetchStartExtensionShortcut()
 	}, [])
@@ -141,6 +179,16 @@ export const KeyboardPanel: React.FC = () => {
 	// 快捷键字符串 用 + 连接
 	const [tempKeys, setTempKeys] = useState<string>('')
 	const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
+
+	// 将快捷键按类型分组
+	const groupedShortcuts = useMemo(() => {
+		return {
+			common: shortcuts.filter((s) => shortcutTypeGroups.common.includes(s.id)),
+			tab: shortcuts.filter((s) => shortcutTypeGroups.tab.includes(s.id)),
+			history: shortcuts.filter((s) => shortcutTypeGroups.history.includes(s.id)),
+			bookmark: shortcuts.filter((s) => shortcutTypeGroups.bookmark.includes(s.id)),
+		}
+	}, [shortcuts])
 
 	// 打开编辑快捷键弹窗
 	const handleEdit = (item: Shortcut) => {
@@ -175,12 +223,22 @@ export const KeyboardPanel: React.FC = () => {
 			return
 		}
 
-		const isDuplicate = shortcuts.some(
-			(s) => s.id !== currentShortcut.id && s.shortcut.toLowerCase() === tempKeys.toLowerCase()
+		// 获取当前快捷键所属的分组
+		const currentGroup = getShortcutGroup(currentShortcut.id)
+		if (!currentGroup) {
+			Toast.error(i18n('unknownOperation'))
+			return
+		}
+
+		// 只检查同组内的快捷键是否冲突
+		const groupIds = shortcutTypeGroups[currentGroup]
+		const isDuplicateInSameGroup = shortcuts.some(
+			(s) =>
+				groupIds.includes(s.id) && s.id !== currentShortcut.id && s.shortcut.toLowerCase() === tempKeys.toLowerCase()
 		)
 
-		if (isDuplicate) {
-			Toast.error(i18n('duplicateShortcut'))
+		if (isDuplicateInSameGroup) {
+			Toast.error(i18n('shortcutConflictInSameType'))
 			return
 		}
 
@@ -200,6 +258,28 @@ export const KeyboardPanel: React.FC = () => {
 		setTempKeys('')
 	}
 
+	// 渲染快捷键列表项
+	const renderShortcutItem = (item: Shortcut) => (
+		<styles.listItem key={item.id}>
+			<styles.shortcutDisplay>{item?.shortcut || startExtensionShortcut}</styles.shortcutDisplay>
+			<styles.mainContent>
+				<styles.actionTitle>
+					<styles.actionTitleText>
+						<Text ellipsis={{ showTooltip: true }}>{i18n(item.action)}</Text>
+						{item.tooltip && (
+							<Tooltip content={i18n(item.tooltip)} trigger='hover'>
+								<styles.tooltipIcon size='small' />
+							</Tooltip>
+						)}
+					</styles.actionTitleText>
+				</styles.actionTitle>
+			</styles.mainContent>
+			<styles.editButton icon={<IconEdit />} theme='borderless' type='tertiary' onClick={() => handleEdit(item)}>
+				{i18n('edit')}
+			</styles.editButton>
+		</styles.listItem>
+	)
+
 	return (
 		<styles.card
 			title={i18n('keyboardSettings')}
@@ -212,29 +292,34 @@ export const KeyboardPanel: React.FC = () => {
 				alignItems: 'center',
 			}}
 		>
-			<List
-				dataSource={shortcuts}
-				renderItem={(item) => (
-					<styles.listItem>
-						<styles.shortcutDisplay>{item?.shortcut || startExtensionShortcut}</styles.shortcutDisplay>
-						<styles.mainContent>
-							<styles.actionTitle>
-								<styles.actionTitleText>
-									<Text ellipsis={{ showTooltip: true }}>{i18n(item.action)}</Text>
-									{item.tooltip && (
-										<Tooltip content={i18n(item.tooltip)} trigger='hover'>
-											<styles.tooltipIcon size='small' />
-										</Tooltip>
-									)}
-								</styles.actionTitleText>
-							</styles.actionTitle>
-						</styles.mainContent>
-						<styles.editButton icon={<IconEdit />} theme='borderless' type='tertiary' onClick={() => handleEdit(item)}>
-							{i18n('edit')}
-						</styles.editButton>
-					</styles.listItem>
-				)}
-			/>
+			{/* 通用快捷键 - 不显示标题 */}
+			{groupedShortcuts.common.length > 0 && (
+				<List dataSource={groupedShortcuts.common} renderItem={renderShortcutItem} />
+			)}
+
+			{/* Tab 快捷键 */}
+			{groupedShortcuts.tab.length > 0 && (
+				<styles.groupSection>
+					<styles.groupTitle heading={5}>{i18n('tabShortcuts')}</styles.groupTitle>
+					<List dataSource={groupedShortcuts.tab} renderItem={renderShortcutItem} />
+				</styles.groupSection>
+			)}
+
+			{/* History 快捷键 */}
+			{groupedShortcuts.history.length > 0 && (
+				<styles.groupSection>
+					<styles.groupTitle heading={5}>{i18n('historyShortcuts')}</styles.groupTitle>
+					<List dataSource={groupedShortcuts.history} renderItem={renderShortcutItem} />
+				</styles.groupSection>
+			)}
+
+			{/* Bookmark 快捷键 */}
+			{groupedShortcuts.bookmark.length > 0 && (
+				<styles.groupSection>
+					<styles.groupTitle heading={5}>{i18n('bookmarkShortcuts')}</styles.groupTitle>
+					<List dataSource={groupedShortcuts.bookmark} renderItem={renderShortcutItem} />
+				</styles.groupSection>
+			)}
 
 			<Modal title={i18n('editShortcut')} visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
 				{currentShortcut && (
