@@ -5,10 +5,13 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import styled from 'styled-components'
 import { HIGHLIGHT_TEXT_CLASS, HOST_CLASS, IMAGE_CLASS, NORMAL_TEXT_CLASS, SVG_CLASS } from '~shared/common-styles'
 import type { ListItemType } from '~shared/types'
+import { OperationItemPropertyTypes } from '~shared/types'
 import { useKeyboardListen } from '~sidepanel/hooks/useKeyboardListen'
 import { DIVIDE_CLASS, LIST_ITEM_ACTIVE_CLASS, MAIN_CONTENT_CLASS, VISIBILITY_CLASS } from '../shared/constants'
 import { isDivideItem, scrollIntoViewIfNeeded } from '../shared/utils'
-import { activeItemAtom, compositionAtom, i18nAtom } from './atom'
+import { activeItemAtom, compositionAtom, i18nAtom, shortcutsAtom } from './atom'
+import { useListOperations } from './hooks/useOperations'
+import { collectPressedKeys, standardizeKeyOrder } from './utils/keyboardUtils'
 
 const ListContainer = styled.div`
   padding: 6px;
@@ -136,14 +139,13 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 	const i18n = useAtomValue(i18nAtom)
 	const isComposition = useAtomValue(compositionAtom)
 	const setActiveItem = useSetAtom(activeItemAtom)
+	const shortcuts = useAtomValue(shortcutsAtom)
+	const { handleOperations } = useListOperations()
 	const [activeIndex, setActiveIndex] = useState<number>(-1)
 	const i = useRef(activeIndex)
 	const timer = useRef<NodeJS.Timeout>()
 	// 累积的偏移量，用于在快速连续按键时收集所有偏移量，通过防抖机制批量处理，避免频繁更新 activeIndex 造成性能问题
 	const accumulatedOffset = useRef(0)
-
-	// listen shortcut
-	useKeyboardListen(list, activeIndex)
 
 	useEffect(() => {
 		// reset active index to first non-divide item
@@ -223,11 +225,40 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 
 	const keydownHandler = useCallback(
 		(event: KeyboardEvent) => {
+			// 如果 Enter 键配合修饰键（如 Shift），走 useKeyboardListen 的监听
+			if (event.code === 'Enter' && (event.shiftKey || event.ctrlKey || event.metaKey || event.altKey)) {
+				return
+			}
+
+			// 检查 Enter 键是否匹配配置的快捷键
+			if (event.code === 'Enter' && !event.shiftKey && !event.ctrlKey && !event.metaKey && !event.altKey) {
+				const keys = collectPressedKeys(event)
+				const orderedKeys = standardizeKeyOrder(keys)
+				const pressedShortcut = orderedKeys.join(' + ')
+				const activeItem = list[activeIndex]
+
+				// 查找匹配的快捷键
+				const matchedShortcut = shortcuts.find((s) => s.shortcut.toLowerCase() === pressedShortcut.toLowerCase())
+
+				if (matchedShortcut && activeItem) {
+					// 如果 Enter 匹配 open 或 openHere 快捷键，执行对应操作
+					if (
+						matchedShortcut.id === OperationItemPropertyTypes.open ||
+						matchedShortcut.id === OperationItemPropertyTypes.openHere ||
+						matchedShortcut.id === OperationItemPropertyTypes.switch
+					) {
+						event.preventDefault()
+						handleOperations(matchedShortcut.id, activeItem)
+						return
+					}
+				}
+			}
+
 			const keyActions: { [key: string]: () => void } = {
 				ArrowUp: () => keyActionsChangeIndex(-1),
 				Tab: () => keyActionsChangeIndex(1),
 				ArrowDown: () => keyActionsChangeIndex(1),
-				Enter: handleEnterEvent,
+				Enter: handleEnterEvent, // 按下 Enter 键，执行 handleEnterEvent
 			}
 
 			const action = keyActions[event.code]
@@ -236,9 +267,12 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 				action()
 			}
 		},
-		[handleEnterEvent, keyActionsChangeIndex]
+		[handleEnterEvent, keyActionsChangeIndex, shortcuts, list, activeIndex, handleOperations]
 	)
 
+	// listen shortcut event (注意键位可能有冲突，这边监听了两个keydown事件)
+	useKeyboardListen(list, activeIndex)
+	// listen default event
 	useEffect(() => {
 		// only listen to keydown when not in composition（type chinese）
 		!isComposition && window.addEventListener('keydown', keydownHandler)

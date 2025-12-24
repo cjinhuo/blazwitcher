@@ -1,5 +1,5 @@
-import { IconEdit, IconRefresh } from '@douyinfe/semi-icons'
-import { Button, Card, List, Modal, Toast, Typography } from '@douyinfe/semi-ui'
+import { IconEdit, IconInfoCircle, IconRefresh } from '@douyinfe/semi-icons'
+import { Button, Card, List, Modal, Toast, Tooltip, Typography } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -49,6 +49,23 @@ const styles = {
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.5;
+  `,
+	actionTitleText: styled.div`
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+  `,
+	tooltipIcon: styled(IconInfoCircle)`
+    position: absolute;
+    top: 0;
+    right: -16px;
+    color: var(--semi-color-text-2);
+    cursor: pointer;
+    flex-shrink: 0;
+    
+    &:hover {
+      color: var(--semi-color-text-1);
+    }
   `,
 	description: styled.div`
     color: var(--semi-color-text-2);
@@ -124,10 +141,6 @@ export const KeyboardPanel: React.FC = () => {
 	// 快捷键字符串 用 + 连接
 	const [tempKeys, setTempKeys] = useState<string>('')
 	const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
-
-	const isEditable = (shortcut: Shortcut) => {
-		return shortcut.id !== OperationItemPropertyTypes.open
-	}
 
 	// 打开编辑快捷键弹窗
 	const handleEdit = (item: Shortcut) => {
@@ -206,20 +219,17 @@ export const KeyboardPanel: React.FC = () => {
 						<styles.shortcutDisplay>{item?.shortcut || startExtensionShortcut}</styles.shortcutDisplay>
 						<styles.mainContent>
 							<styles.actionTitle>
-								<Text ellipsis={{ showTooltip: true }}>{i18n(item.action)}</Text>
+								<styles.actionTitleText>
+									<Text ellipsis={{ showTooltip: true }}>{i18n(item.action)}</Text>
+									{item.tooltip && (
+										<Tooltip content={i18n(item.tooltip)} trigger='hover'>
+											<styles.tooltipIcon size='small' />
+										</Tooltip>
+									)}
+								</styles.actionTitleText>
 							</styles.actionTitle>
 						</styles.mainContent>
-						<styles.editButton
-							icon={<IconEdit />}
-							theme='borderless'
-							type='tertiary'
-							onClick={() => handleEdit(item)}
-							disabled={!isEditable(item)}
-							style={{
-								cursor: isEditable(item) ? 'pointer' : 'not-allowed',
-								opacity: isEditable(item) ? 1 : 0.5,
-							}}
-						>
+						<styles.editButton icon={<IconEdit />} theme='borderless' type='tertiary' onClick={() => handleEdit(item)}>
 							{i18n('edit')}
 						</styles.editButton>
 					</styles.listItem>

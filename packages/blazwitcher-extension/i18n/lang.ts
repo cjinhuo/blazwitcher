@@ -203,8 +203,20 @@ export const lang = {
 		[LanguageType.en]: 'Close current tab',
 	},
 	openCurrentTab: {
-		[LanguageType.zh]: '打开当前标签',
-		[LanguageType.en]: 'Open current tab',
+		[LanguageType.zh]: '切换/打开标签页',
+		[LanguageType.en]: 'Switch/Open tab',
+	},
+	openCurrentTabTooltip: {
+		[LanguageType.zh]: '标签页: 切换页面; 历史记录/书签: 打开新标签页',
+		[LanguageType.en]: 'Tab: switch to tab; History/Bookmark: open new tab',
+	},
+	openHere: {
+		[LanguageType.zh]: '在当前页打开',
+		[LanguageType.en]: 'Open in current tab',
+	},
+	openHereTooltip: {
+		[LanguageType.zh]: '标签页/历史记录/书签: 在当前页打开',
+		[LanguageType.en]: 'Tab/History/Bookmark: open in current tab',
 	},
 	pin: {
 		[LanguageType.zh]: 'Pin/Unpin 标签页',

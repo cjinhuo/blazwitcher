@@ -8,6 +8,7 @@ export interface Shortcut {
 	action: TranslationKeys
 	shortcut: string
 	id: OperationItemPropertyTypes
+	tooltip?: TranslationKeys
 }
 
 const defaultShortcutConfigs: Shortcut[] = [
@@ -19,7 +20,14 @@ const defaultShortcutConfigs: Shortcut[] = [
 	{
 		id: OperationItemPropertyTypes.open,
 		action: 'openCurrentTab',
-		shortcut: 'Enter',
+		shortcut: '↵',
+		tooltip: 'openCurrentTabTooltip',
+	},
+	{
+		id: OperationItemPropertyTypes.openHere,
+		action: 'openHere',
+		shortcut: 'Shift + ↵',
+		tooltip: 'openHereTooltip',
 	},
 	{
 		id: OperationItemPropertyTypes.close,
@@ -68,6 +76,7 @@ export const shortcutsAtom = atom((get) => {
 		id: config.id,
 		action: config.action,
 		shortcut: mappings[config.id] || config.shortcut,
+		tooltip: config.tooltip,
 	}))
 })
 
