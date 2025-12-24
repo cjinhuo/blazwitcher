@@ -152,7 +152,7 @@ const styles = {
     }
   `,
 	groupTitle: styled(Typography.Title)`
-    margin: 16px 0 8px 0 !important;
+    margin: 6px 0 6px 0 !important;
     font-size: 16px !important;
   ` as typeof Typography.Title,
 }

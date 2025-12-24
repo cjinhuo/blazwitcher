@@ -202,14 +202,6 @@ export const lang = {
 		[LanguageType.zh]: '关闭当前标签页',
 		[LanguageType.en]: 'Close current tab',
 	},
-	openCurrentTab: {
-		[LanguageType.zh]: '切换/打开标签页',
-		[LanguageType.en]: 'Switch/Open tab',
-	},
-	openCurrentTabTooltip: {
-		[LanguageType.zh]: '标签页: 切换页面; 历史记录/书签: 打开新标签页',
-		[LanguageType.en]: 'Tab: switch to tab; History/Bookmark: open new tab',
-	},
 	openHere: {
 		[LanguageType.zh]: '在当前页打开',
 		[LanguageType.en]: 'Open in current tab',

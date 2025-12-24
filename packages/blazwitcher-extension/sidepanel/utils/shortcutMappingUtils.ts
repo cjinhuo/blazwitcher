@@ -12,7 +12,7 @@ export const getOpenOperationId = (itemType: ItemType): OperationItemPropertyTyp
 		case ItemType.Bookmark:
 			return OperationItemPropertyTypes.bookmarkOpen
 		default:
-			return OperationItemPropertyTypes.open
+			return OperationItemPropertyTypes.tabOpen
 	}
 }
 
@@ -28,7 +28,7 @@ export const getOpenHereOperationId = (itemType: ItemType): OperationItemPropert
 		case ItemType.Bookmark:
 			return OperationItemPropertyTypes.bookmarkOpenHere
 		default:
-			return OperationItemPropertyTypes.openHere
+			return OperationItemPropertyTypes.tabOpenHere
 	}
 }
 

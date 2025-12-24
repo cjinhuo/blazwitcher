@@ -79,19 +79,16 @@ export enum OperationItemPropertyTypes {
 }
 
 export const OperationItemTitleMap: Record<string, TranslationKeys> = {
-	[OperationItemPropertyTypes.open]: 'openCurrentTab',
-	[OperationItemPropertyTypes.switch]: 'openCurrentTab',
-	[OperationItemPropertyTypes.openHere]: 'openHere',
-	[OperationItemPropertyTypes.pin]: 'pin',
 	[OperationItemPropertyTypes.query]: 'query',
-	[OperationItemPropertyTypes.delete]: 'deleteFromHistory',
-	[OperationItemPropertyTypes.close]: 'closeTab',
 	// Tab 专用
 	[OperationItemPropertyTypes.tabOpen]: 'tabOpen',
 	[OperationItemPropertyTypes.tabOpenHere]: 'tabOpenHere',
+	[OperationItemPropertyTypes.pin]: 'pin',
+	[OperationItemPropertyTypes.close]: 'closeTab',
 	// History 专用
 	[OperationItemPropertyTypes.historyOpen]: 'historyOpen',
 	[OperationItemPropertyTypes.historyOpenHere]: 'historyOpenHere',
+	[OperationItemPropertyTypes.delete]: 'deleteFromHistory',
 	// Bookmark 专用
 	[OperationItemPropertyTypes.bookmarkOpen]: 'bookmarkOpen',
 	[OperationItemPropertyTypes.bookmarkOpenHere]: 'bookmarkOpenHere',

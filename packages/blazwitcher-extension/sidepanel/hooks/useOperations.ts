@@ -45,15 +45,12 @@ export const useListOperations = () => {
 	// watch click and keyboard input
 	const handleOperations = async (name: OperationItemPropertyTypes, item: ListItemType) => {
 		switch (name) {
-			case OperationItemPropertyTypes.switch:
-			case OperationItemPropertyTypes.open:
 			case OperationItemPropertyTypes.tabOpen:
 			case OperationItemPropertyTypes.historyOpen:
 			case OperationItemPropertyTypes.bookmarkOpen:
 				// Tab: 切换到标签页，History/Bookmark: 打开新标签页
 				handleItemClick(item)
 				break
-			case OperationItemPropertyTypes.openHere:
 			case OperationItemPropertyTypes.tabOpenHere:
 			case OperationItemPropertyTypes.historyOpenHere:
 			case OperationItemPropertyTypes.bookmarkOpenHere:

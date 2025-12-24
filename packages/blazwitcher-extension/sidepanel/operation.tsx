@@ -96,9 +96,6 @@ const IconWithName = ({
 	const i18n = useAtomValue(i18nAtom)
 	const getShortcut = useCallback(
 		(name: OperationItemPropertyTypes) => {
-			if (name === OperationItemPropertyTypes.switch) {
-				return shortcutsMap.find((item) => item.id === OperationItemPropertyTypes.open)?.shortcut || ''
-			}
 			return shortcutsMap.find((item) => item.id === name)?.shortcut || ''
 		},
 		[shortcutsMap]

@@ -18,18 +18,6 @@ const defaultShortcutConfigs: Shortcut[] = [
 		shortcut: '',
 	},
 	{
-		id: OperationItemPropertyTypes.open,
-		action: 'openCurrentTab',
-		shortcut: '↵',
-		tooltip: 'openCurrentTabTooltip',
-	},
-	{
-		id: OperationItemPropertyTypes.openHere,
-		action: 'openHere',
-		shortcut: 'Shift + ↵',
-		tooltip: 'openHereTooltip',
-	},
-	{
 		id: OperationItemPropertyTypes.query,
 		action: 'searchHistory',
 		shortcut: 'Ctrl + Shift + H',
