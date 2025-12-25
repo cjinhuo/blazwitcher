@@ -1,6 +1,5 @@
 import CloseIcon from 'react:~assets/close.svg'
 import DeleteIcon from 'react:~assets/delete.svg'
-import NewWindow from 'react:~assets/new-window.svg'
 import PinIcon from 'react:~assets/pin.svg'
 import QueryIcon from 'react:~assets/query.svg'
 import RightArrow from 'react:~assets/right-arrow.svg'
@@ -13,6 +12,7 @@ import { VISIBILITY_CLASS } from '~shared/constants'
 import { ItemType, type ListItemType, OperationItemPropertyTypes, OperationItemTitleMap } from '~shared/types'
 import { isTabItem } from '~shared/utils'
 import { i18nAtom, shortcutsAtom } from '~sidepanel/atom'
+import { getOpenOperationIds } from '~sidepanel/utils/shortcutMappingUtils'
 import { useListOperations } from './hooks/useOperations'
 
 export const OPERATION_ICON_CLASS = 'operation-icon'
@@ -63,22 +63,39 @@ const OperationContainer = styled.div`
 	position: relative; 
 `
 
+const TooltipContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`
+
+const TooltipRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+`
+
+const ShortcutText = styled.span`
+  opacity: 0.6;
+  font-size: 0.9em;
+`
+
 const IconWithName = ({
 	children,
 	name,
 	item,
+	customContent,
 }: {
 	children: React.ReactNode
 	name: OperationItemPropertyTypes
 	item: ListItemType
+	customContent?: React.ReactNode
 }) => {
 	const shortcutsMap = useAtomValue(shortcutsAtom)
 	const i18n = useAtomValue(i18nAtom)
 	const getShortcut = useCallback(
 		(name: OperationItemPropertyTypes) => {
-			if (name === OperationItemPropertyTypes.switch) {
-				return shortcutsMap.find((item) => item.id === OperationItemPropertyTypes.open)?.shortcut || ''
-			}
 			return shortcutsMap.find((item) => item.id === name)?.shortcut || ''
 		},
 		[shortcutsMap]
@@ -94,10 +111,12 @@ const IconWithName = ({
 	return (
 		<PopoverWrapper
 			content={
-				<>
-					<span>{getTitle()}</span>
-					<span>{getShortcut(name)}</span>
-				</>
+				customContent || (
+					<>
+						<span>{getTitle()}</span>
+						<span>{getShortcut(name)}</span>
+					</>
+				)
 			}
 		>
 			<IconContainer className={`${OPERATION_ICON_CLASS} ${VISIBILITY_CLASS}`} data-name={name}>
@@ -107,17 +126,41 @@ const IconWithName = ({
 	)
 }
 
-const Open = ({ item }: { item: ListItemType }) => (
-	<IconWithName name={OperationItemPropertyTypes.open} item={item}>
-		<NewWindow></NewWindow>
-	</IconWithName>
-)
+const Open = ({ item }: { item: ListItemType }) => {
+	const shortcutsMap = useAtomValue(shortcutsAtom)
+	const i18n = useAtomValue(i18nAtom)
 
-const Switch = ({ item }: { item: ListItemType }) => (
-	<IconWithName name={OperationItemPropertyTypes.switch} item={item}>
-		<RightArrow></RightArrow>
-	</IconWithName>
-)
+	// 根据 item 类型获取对应的操作 ID
+	const { openId, openHereId } = getOpenOperationIds(item.itemType)
+
+	const openInfo = {
+		title: i18n(OperationItemTitleMap[openId]),
+		shortcut: shortcutsMap.find((s) => s.id === openId)?.shortcut || '',
+	}
+	const openHereInfo = {
+		title: i18n(OperationItemTitleMap[openHereId]),
+		shortcut: shortcutsMap.find((s) => s.id === openHereId)?.shortcut || '',
+	}
+
+	const customContent = (
+		<TooltipContainer>
+			<TooltipRow>
+				<span>{openInfo.title}</span>
+				<ShortcutText>{openInfo.shortcut}</ShortcutText>
+			</TooltipRow>
+			<TooltipRow>
+				<span>{openHereInfo.title}</span>
+				<ShortcutText>{openHereInfo.shortcut}</ShortcutText>
+			</TooltipRow>
+		</TooltipContainer>
+	)
+
+	return (
+		<IconWithName name={OperationItemPropertyTypes.open} item={item} customContent={customContent}>
+			<RightArrow></RightArrow>
+		</IconWithName>
+	)
+}
 
 const Query = ({ item }: { item: ListItemType }) => (
 	<IconWithName name={OperationItemPropertyTypes.query} item={item}>
@@ -147,7 +190,7 @@ const Pin = ({ item }: { item: ListItemType }) => {
 }
 
 export const getOperationMap = () => ({
-	[ItemType.Tab]: [Switch, Pin, Close],
+	[ItemType.Tab]: [Open, Pin, Close],
 	[ItemType.Bookmark]: [Open, Query],
 	[ItemType.History]: [Open, Query, Delete],
 })

@@ -136,6 +136,16 @@ export const createTabWithUrl = async (url: string) => {
 	closeCurrentWindowAndClearStorage()
 }
 
+export const navigateCurrentTab = async (url: string) => {
+	const storage = await storageGet()
+	const lastActiveWindowId = storage[LAST_ACTIVE_WINDOW_ID_KEY]
+	const [activeTab] = await chrome.tabs.query({ active: true, windowId: lastActiveWindowId })
+	if (activeTab?.id) {
+		await chrome.tabs.update(activeTab.id, { url })
+	}
+	closeCurrentWindowAndClearStorage()
+}
+
 export const handleItemClick = async (item: ListItemType) => {
 	isTabItem(item) ? await activeTab(item) : await createTabWithUrl(item.data.url)
 }

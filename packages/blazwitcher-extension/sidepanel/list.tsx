@@ -142,9 +142,6 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 	// 累积的偏移量，用于在快速连续按键时收集所有偏移量，通过防抖机制批量处理，避免频繁更新 activeIndex 造成性能问题
 	const accumulatedOffset = useRef(0)
 
-	// listen shortcut
-	useKeyboardListen(list, activeIndex)
-
 	useEffect(() => {
 		// reset active index to first non-divide item
 		const firstValidIndex = list.findIndex((item) => !isDivideItem(item))
@@ -217,17 +214,13 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 		[debounceChangeActiveIndex]
 	)
 
-	const handleEnterEvent = useCallback(() => {
-		handleItemClick(list[activeIndex])
-	}, [activeIndex, list, handleItemClick])
-
+	// 处理上下方向键 和 Tab 键
 	const keydownHandler = useCallback(
 		(event: KeyboardEvent) => {
 			const keyActions: { [key: string]: () => void } = {
 				ArrowUp: () => keyActionsChangeIndex(-1),
 				Tab: () => keyActionsChangeIndex(1),
 				ArrowDown: () => keyActionsChangeIndex(1),
-				Enter: handleEnterEvent,
 			}
 
 			const action = keyActions[event.code]
@@ -236,9 +229,12 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 				action()
 			}
 		},
-		[handleEnterEvent, keyActionsChangeIndex]
+		[keyActionsChangeIndex]
 	)
 
+	// 根据不同类型触发快捷键，不同类型的快捷键互不干扰
+	useKeyboardListen(list, activeIndex)
+	// listen default event
 	useEffect(() => {
 		// only listen to keydown when not in composition（type chinese）
 		!isComposition && window.addEventListener('keydown', keydownHandler)

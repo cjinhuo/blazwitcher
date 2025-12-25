@@ -61,20 +61,37 @@ export interface ListItemType<T extends ItemType = ItemType> {
 export enum OperationItemPropertyTypes {
 	start = 'start',
 	open = 'open',
+	openHere = 'openHere',
 	switch = 'switch',
 	pin = 'pin',
 	query = 'query',
 	delete = 'delete',
 	close = 'close',
+	// Tab 专用快捷键
+	tabOpen = 'tabOpen',
+	tabOpenHere = 'tabOpenHere',
+	// History 专用快捷键
+	historyOpen = 'historyOpen',
+	historyOpenHere = 'historyOpenHere',
+	// Bookmark 专用快捷键
+	bookmarkOpen = 'bookmarkOpen',
+	bookmarkOpenHere = 'bookmarkOpenHere',
 }
 
 export const OperationItemTitleMap: Record<string, TranslationKeys> = {
-	[OperationItemPropertyTypes.open]: 'openCurrentTab',
-	[OperationItemPropertyTypes.switch]: 'openCurrentTab',
-	[OperationItemPropertyTypes.pin]: 'pin',
 	[OperationItemPropertyTypes.query]: 'query',
-	[OperationItemPropertyTypes.delete]: 'deleteFromHistory',
+	// Tab 专用
+	[OperationItemPropertyTypes.tabOpen]: 'tabOpen',
+	[OperationItemPropertyTypes.tabOpenHere]: 'tabOpenHere',
+	[OperationItemPropertyTypes.pin]: 'pin',
 	[OperationItemPropertyTypes.close]: 'closeTab',
+	// History 专用
+	[OperationItemPropertyTypes.historyOpen]: 'historyOpen',
+	[OperationItemPropertyTypes.historyOpenHere]: 'historyOpenHere',
+	[OperationItemPropertyTypes.delete]: 'deleteFromHistory',
+	// Bookmark 专用
+	[OperationItemPropertyTypes.bookmarkOpen]: 'bookmarkOpen',
+	[OperationItemPropertyTypes.bookmarkOpenHere]: 'bookmarkOpenHere',
 }
 
 export interface PluginContext {
