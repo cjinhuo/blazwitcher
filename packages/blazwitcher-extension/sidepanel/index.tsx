@@ -2,7 +2,7 @@ import './sidepanel.css'
 
 import { Empty, Layout } from '@douyinfe/semi-ui'
 import { useAtomValue } from 'jotai'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import plugins, { matchPlugin } from '~plugins'
 import { RenderPluginItem, usePluginClickItem } from '~plugins/ui/render-item'
@@ -35,6 +35,9 @@ const ContentWrapper = styled(Content)`
 
 startup()
 export default function SidePanel() {
+	// 记录 sidepanel 加载时间
+	performance.mark('sidepanel-start')
+
 	useTheme()
 	useLanguage()
 	useEscapeKey()
@@ -42,6 +45,22 @@ export default function SidePanel() {
 	const i18n = useAtomValue(i18nAtom)
 	const searchConfig = useAtomValue(searchConfigAtom)
 	const originalList = useOriginalList()
+
+	useEffect(() => {
+		// 记录 sidepanel 加载完成时间
+		if (originalList.length > 0) {
+			performance.mark('sidepanel-first-render')
+			performance.measure('sidepanel-tti', 'sidepanel-start', 'sidepanel-first-render')
+
+			const measure = performance.getEntriesByName('sidepanel-tti')[0]
+			console.log(`Sidepanel TTI: ${measure.duration}ms`)
+
+			// 清理标记，避免重复测量
+			performance.clearMarks()
+			performance.clearMeasures()
+		}
+	}, [originalList])
+
 	const [searchValue, setSearchValue] = useState('')
 
 	const handlePluginItemClick = usePluginClickItem()

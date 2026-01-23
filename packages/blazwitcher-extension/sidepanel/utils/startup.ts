@@ -8,6 +8,31 @@ let isStartup = false
  */
 export function startup() {
 	if (isStartup) return
+
+	if (window.PerformanceObserver) {
+		const observer = new PerformanceObserver((list) => {
+			for (const entry of list.getEntries()) {
+				// 收集长任务信息
+				console.log('Long task detected:', {
+					duration: entry.duration,
+					startTime: entry.startTime,
+					// 打印 attribution 数组
+					attribution: (entry as any).attribution.map((attr: any) => ({
+						name: attr.name,
+						entryType: attr.entryType,
+						startTime: attr.startTime,
+						duration: attr.duration,
+						containerType: attr.containerType,
+						containerSrc: attr.containerSrc,
+						containerId: attr.containerId,
+						containerName: attr.containerName,
+					})),
+				})
+				// 此处可将数据发送到分析服务器
+			}
+		})
+		observer.observe({ type: 'longtask', buffered: true })
+	}
 	isStartup = true
 	setTheme()
 	setLang()
