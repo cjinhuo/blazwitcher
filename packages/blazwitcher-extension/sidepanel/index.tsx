@@ -53,7 +53,7 @@ export default function SidePanel() {
 			performance.measure('sidepanel-tti', 'sidepanel-start', 'sidepanel-first-render')
 
 			const measure = performance.getEntriesByName('sidepanel-tti')[0]
-			console.log(`Sidepanel TTI: ${measure.duration}ms`)
+			console.log(`看看 tti: ${measure.duration}ms`)
 
 			// 清理标记，避免重复测量
 			performance.clearMarks()

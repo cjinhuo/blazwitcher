@@ -16,22 +16,33 @@ export default function useOriginalList() {
 		let portConnectStatus = false
 		const port = chrome.runtime.connect({ name: MAIN_WINDOW })
 		port.onMessage.addListener(
-			(message: { processedList: ListItemType[]; lastTimeTabGroupProgress: AiGroupingProgress }) => {
-				const { processedList, lastTimeTabGroupProgress } = message
-
+			(message: {
+				type: 'tab_data' | 'history_data' | 'bookmark_data' | 'tab_group_progress'
+				data?: ListItemType[]
+				isInitial?: boolean
+				chunkIndex?: number
+				isLastChunk?: boolean
+				lastTimeTabGroupProgress?: AiGroupingProgress
+				startTime?: number
+			}) => {
+				const { type, data = [], isInitial, lastTimeTabGroupProgress, startTime } = message
+				if (startTime) console.log('post message time:', Date.now() - startTime)
 				portConnectStatus = true
-				// TODO:看下是否要在background中处理processedList
-				const windowDataList = processTabsForAI(processedList)
-				if (debug) {
-					console.log('processedList', processedList)
-					console.log('windowDataList for AI:', windowDataList)
+				if (type === 'tab_data') {
+					setOriginalList((prev) => {
+						const nextList = isInitial ? data : [...prev, ...data]
+						setWindowDataList(processTabsForAI(nextList))
+						return nextList
+					})
+				} else if (type === 'history_data') {
+					console.log('history_data', data)
+					setOriginalList((prev) => [...prev, ...data])
+				} else if (type === 'bookmark_data') {
+					console.log('bookmark_data', data)
+					setOriginalList((prev) => [...prev, ...data])
+				} else if (type === 'tab_group_progress' && lastTimeTabGroupProgress) {
+					setAITabGroupProgress(lastTimeTabGroupProgress)
 				}
-				setOriginalList(processedList)
-				setWindowDataList(windowDataList)
-
-				// 更新 AI 分组进度状态
-				console.log('lastTimeTabGroupProgress', lastTimeTabGroupProgress)
-				setAITabGroupProgress(lastTimeTabGroupProgress)
 			}
 		)
 

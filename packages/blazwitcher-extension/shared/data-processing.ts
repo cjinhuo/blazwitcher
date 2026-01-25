@@ -20,22 +20,85 @@ import {
 	storageGetLocal,
 	tabsQuery,
 } from './promisify'
+import { extractBoundaryMapping } from 'text-search-engine'
 import { getCompositeSourceAndHost } from './text-search-pinyin'
-import { type BookmarkItemType, ItemType } from './types'
+import { type BookmarkItemType, ItemType, type ListItemType } from './types'
 import { faviconURL } from './utils'
 
-export async function tabsProcessing() {
+export function chunkArray<T>(arr: T[], chunkSize: number): T[][] {
+	if (chunkSize <= 0) return [arr]
+	if (arr.length === 0) return []
+	const result: T[][] = []
+	for (let i = 0; i < arr.length; i += chunkSize) {
+		result.push(arr.slice(i, i + chunkSize))
+	}
+	return result
+}
+
+export const filterValidTabs = (tabs: chrome.tabs.Tab[]) =>
+	tabs.filter((tab) => tab.url && tab.title && !tab.url.startsWith('chrome://') && !tab.url.includes(chrome.runtime.id))
+
+export const sortTabsRawForInitial = (tabs: chrome.tabs.Tab[]) =>
+	tabs
+		.slice()
+		.sort((a, b) => {
+			// active first
+			if (!!a.active !== !!b.active) return a.active ? -1 : 1
+			// then lastAccessed desc
+			return (b.lastAccessed ?? 0) - (a.lastAccessed ?? 0)
+		})
+
+export async function tabsProcessingFromRawTabs(tabs: chrome.tabs.Tab[]): Promise<ListItemType<ItemType.Tab>[]> {
+	return await Promise.all(
+		tabs.map(
+			async (tab) =>
+				({
+					itemType: ItemType.Tab,
+					data: await processTabItem(tab),
+				}) satisfies ListItemType<ItemType.Tab>
+		)
+	)
+}
+
+export async function tabsProcessing(): Promise<ListItemType<ItemType.Tab>[]> {
 	const processedTabs = await tabsQuery({})
 	// filter the tabs that start with chrome://
 	const filteredTabs = processedTabs.filter((item) => !(item.url.startsWith('chrome://') || !item.url || !item.title))
 	return await Promise.all(
-		filteredTabs.map(async (tab) => ({ itemType: ItemType.Tab, data: await processTabItem(tab) }))
+		filteredTabs.map(
+			async (tab) =>
+				({
+					itemType: ItemType.Tab,
+					data: await processTabItem(tab),
+				}) satisfies ListItemType<ItemType.Tab>
+		)
 	)
+}
+
+export const sortTabsForDisplay = (tabs: ListItemType[]) => {
+	const tabItems = tabs.filter((item): item is ListItemType<ItemType.Tab> => item.itemType === ItemType.Tab)
+
+	const compareForLastAccess = (a: ListItemType<ItemType.Tab>, b: ListItemType<ItemType.Tab>) =>
+		a.data.lastAccessed ? (b.data.lastAccessed ?? 0) - a.data.lastAccessed : 1
+
+	const compareForActiveStatus = (a: ListItemType<ItemType.Tab>, _b: ListItemType<ItemType.Tab>) =>
+		a.data.active ? -1 : 1
+
+	return tabItems
+		.filter((item) => !item.data.url.includes(chrome.runtime.id))
+		.toSorted(compareForLastAccess)
+		.toSorted(compareForActiveStatus)
+}
+
+export async function tabsProcessingInitial(count: number): Promise<ListItemType<ItemType.Tab>[]> {
+	const tabs = await tabsProcessing()
+	return sortTabsForDisplay(tabs).slice(0, count)
 }
 
 async function processTabItem(tab: chrome.tabs.Tab) {
 	return {
 		...tab,
+		titleBoundaryMapping: extractBoundaryMapping(tab.title.toLocaleLowerCase().trim()),
 		tabGroup: await tabGroupProcessing(tab.groupId),
 		...getCompositeSourceAndHost(tab.title, tab.url),
 		favIconUrl: faviconURL(tab.url),
@@ -83,6 +146,18 @@ export function bookmarksProcessing() {
 			itemType: ItemType.Bookmark,
 			data: bookmark,
 		}))
+}
+
+export async function bookmarksProcessingOnce(): Promise<ListItemType<ItemType.Bookmark>[]> {
+	const bookmarksTree = await getBookmarksTree()
+	const processedBookmarks = traversalBookmarkTreeNode(bookmarksTree)
+	return processedBookmarks.map(
+		(bookmark) =>
+			({
+				itemType: ItemType.Bookmark,
+				data: bookmark,
+			}) satisfies ListItemType<ItemType.Bookmark>
+	)
 }
 
 function processHistoryItem(history: chrome.history.HistoryItem) {
@@ -135,10 +210,13 @@ export async function historyProcessing() {
 	// 通过 extension storage 来获取 historyMaxResults 和 historyMaxDays
 	const { historyMaxResults, historyMaxDays } = await getExtensionStorageSearchConfig()
 	const processedHistory = await retrieveRecentHistories(historyMaxResults, historyMaxDays)
-	return processedHistory.map((item) => ({
-		itemType: ItemType.History,
-		data: item,
-	}))
+	return processedHistory.map(
+		(item) =>
+			({
+				itemType: ItemType.History,
+				data: item,
+			}) satisfies ListItemType<ItemType.History>
+	)
 }
 
 export const traversalBookmarkTreeNode = (

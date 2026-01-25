@@ -3,10 +3,18 @@ import {
 	CONTEXT_MENU_SHORTCUT,
 	GITHUB_URL,
 	HANDLE_TAB_GROUP_MESSAGE_TYPE,
+	INITIAL_TABS_COUNT,
 	MAIN_WINDOW,
 	RESET_AI_TAB_GROUP_MESSAGE_TYPE,
 } from '~shared/constants'
-import { dataProcessing } from '~shared/data-processing'
+import { tabsQuery } from '~shared/promisify'
+import {
+	bookmarksProcessingOnce,
+	filterValidTabs,
+	historyProcessing,
+	sortTabsRawForInitial,
+	tabsProcessingFromRawTabs,
+} from '~shared/data-processing'
 import { weakUpWindowIfActiveByUser } from '~shared/open-window'
 import { closeCurrentWindowAndClearStorage } from '~shared/utils'
 import { TabGroupManager } from './tab-group-manager'
@@ -42,10 +50,74 @@ async function main() {
 	weakUpWindowIfActiveByUser()
 	appendContextMenus()
 
-	const getProcessedData = dataProcessing()
-	const tabGroupManager = new TabGroupManager()
+	// 初始化Tab、History、Bookmark数据，传输给 sidepanel
+	chrome.runtime.onConnect.addListener(async (port) => {
+		if (port.name === MAIN_WINDOW) {
+			const startTime = Date.now() // 测试记录时间用
+
+			// 1) 首屏优先：先发送 tabs 的前 INITIAL_TABS_COUNT 条
+			// Critical path: only query+sort raw tabs, then process top N only
+			const rawTabs = await tabsQuery({})
+			const sortedRawTabs = sortTabsRawForInitial(filterValidTabs(rawTabs))
+			const initialRawTabs = sortedRawTabs.slice(0, INITIAL_TABS_COUNT)
+			const remainingRawTabs = sortedRawTabs.slice(INITIAL_TABS_COUNT)
+			const initialTabs = await tabsProcessingFromRawTabs(initialRawTabs)
+
+			port.postMessage({
+				type: 'tab_data',
+				data: initialTabs,
+				isInitial: true,
+				startTime,
+			})
+
+			port.postMessage({
+				type: 'tab_group_progress',
+				lastTimeTabGroupProgress: tabGroupManager.getProgress(),
+				startTime,
+			})
+
+			// 2) 异步补齐：剩余 tabs + history + bookmarks（不分片）
+			setTimeout(() => {
+				if (remainingRawTabs.length === 0) return
+				void (async () => {
+					const remainingTabs = await tabsProcessingFromRawTabs(remainingRawTabs)
+					port.postMessage({
+						type: 'tab_data',
+						data: remainingTabs,
+						isInitial: false,
+						startTime,
+					})
+				})()
+			}, 0)
+
+			void (async () => {
+				try {
+					const [history, bookmarks] = await Promise.all([historyProcessing(), bookmarksProcessingOnce()])
+					port.postMessage({
+						type: 'history_data',
+						data: history,
+						startTime,
+					})
+					port.postMessage({
+						type: 'bookmark_data',
+						data: bookmarks,
+						startTime,
+					})
+				} catch (error) {
+					console.error('Error processing data for sidepanel:', error)
+				}
+			})()
+
+			port.onMessage.addListener(async (message) => {
+				if (message.type === 'close') {
+					closeCurrentWindowAndClearStorage()
+				}
+			})
+		}
+	})
 
 	// AI TabGroup 分组 (stream)
+	const tabGroupManager = new TabGroupManager()
 	chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
 		try {
 			if (message.type === HANDLE_TAB_GROUP_MESSAGE_TYPE) {
@@ -57,21 +129,6 @@ async function main() {
 			return sendResponse({ success: true })
 		} catch (error) {
 			return sendResponse({ success: false, error: error.message })
-		}
-	})
-
-	chrome.runtime.onConnect.addListener(async (port) => {
-		if (port.name === MAIN_WINDOW) {
-			// 第一版简单点，background 实时计算 tabs 和 bookmarks 数据，在用户打开 window 时，同步发送过去
-			port.postMessage({
-				processedList: await getProcessedData(),
-				lastTimeTabGroupProgress: tabGroupManager.getProgress(),
-			})
-			port.onMessage.addListener(async (message) => {
-				if (message.type === 'close') {
-					closeCurrentWindowAndClearStorage()
-				}
-			})
 		}
 	})
 }
