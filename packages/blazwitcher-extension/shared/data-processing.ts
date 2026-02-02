@@ -21,13 +21,29 @@ import {
 	tabsQuery,
 } from './promisify'
 import { getCompositeSourceAndHost } from './text-search-pinyin'
-import { type BookmarkItemType, ItemType } from './types'
+import { type BookmarkItemType, ItemType, type ListItemType } from './types'
 import { faviconURL } from './utils'
+
+export function chunkArray<T>(arr: T[], size: number): T[][] {
+	if (size <= 0) return [arr]
+	if (arr.length === 0) return []
+	const result: T[][] = []
+	for (let i = 0; i < arr.length; i += size) {
+		result.push(arr.slice(i, i + size))
+	}
+	return result
+}
+
+// filter the tabs that start with chrome://
+export const filterValidTabs = (rawTabs: chrome.tabs.Tab[]): chrome.tabs.Tab[] => {
+	return rawTabs.filter(
+		(tab) => tab.url && tab.title && !tab.url.startsWith('chrome://') && !tab.url.includes(chrome.runtime.id)
+	)
+}
 
 export async function tabsProcessing() {
 	const processedTabs = await tabsQuery({})
-	// filter the tabs that start with chrome://
-	const filteredTabs = processedTabs.filter((item) => !(item.url.startsWith('chrome://') || !item.url || !item.title))
+	const filteredTabs = filterValidTabs(processedTabs)
 	return await Promise.all(
 		filteredTabs.map(async (tab) => ({ itemType: ItemType.Tab, data: await processTabItem(tab) }))
 	)
@@ -83,6 +99,15 @@ export function bookmarksProcessing() {
 			itemType: ItemType.Bookmark,
 			data: bookmark,
 		}))
+}
+
+export async function bookmarksProcessingOnce(): Promise<ListItemType<ItemType.Bookmark>[]> {
+	const tree = await getBookmarksTree()
+	const processed = traversalBookmarkTreeNode(tree)
+	return processed.map((bookmark) => ({
+		itemType: ItemType.Bookmark,
+		data: bookmark,
+	}))
 }
 
 function processHistoryItem(history: chrome.history.HistoryItem) {

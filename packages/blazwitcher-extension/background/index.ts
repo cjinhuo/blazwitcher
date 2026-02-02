@@ -1,13 +1,16 @@
 import {
+	CHUNK_SIZE,
 	CONTEXT_MENU_HOMEPAGE,
 	CONTEXT_MENU_SHORTCUT,
 	GITHUB_URL,
 	HANDLE_TAB_GROUP_MESSAGE_TYPE,
+	INITIAL_TABS_COUNT,
 	MAIN_WINDOW,
 	RESET_AI_TAB_GROUP_MESSAGE_TYPE,
 } from '~shared/constants'
-import { dataProcessing } from '~shared/data-processing'
+import { bookmarksProcessingOnce, chunkArray, historyProcessing, tabsProcessing } from '~shared/data-processing'
 import { weakUpWindowIfActiveByUser } from '~shared/open-window'
+import { processTabsForAI } from '~shared/process-tabs-by-window'
 import { closeCurrentWindowAndClearStorage } from '~shared/utils'
 import { TabGroupManager } from './tab-group-manager'
 
@@ -42,7 +45,6 @@ async function main() {
 	weakUpWindowIfActiveByUser()
 	appendContextMenus()
 
-	const getProcessedData = dataProcessing()
 	const tabGroupManager = new TabGroupManager()
 
 	// AI TabGroup 分组 (stream)
@@ -61,18 +63,43 @@ async function main() {
 	})
 
 	chrome.runtime.onConnect.addListener(async (port) => {
-		if (port.name === MAIN_WINDOW) {
-			// 第一版简单点，background 实时计算 tabs 和 bookmarks 数据，在用户打开 window 时，同步发送过去
-			port.postMessage({
-				processedList: await getProcessedData(),
-				lastTimeTabGroupProgress: tabGroupManager.getProgress(),
-			})
-			port.onMessage.addListener(async (message) => {
-				if (message.type === 'close') {
-					closeCurrentWindowAndClearStorage()
-				}
-			})
+		if (port.name !== MAIN_WINDOW) return
+
+		port.onMessage.addListener(async (message) => {
+			if (message.type === 'close') {
+				closeCurrentWindowAndClearStorage()
+			}
+		})
+
+		// 1) 首包：只查 raw tabs、排序、只加工前 INITIAL_TABS_COUNT 条
+		const processedTabs = await tabsProcessing()
+		const initialTabs = processedTabs.slice(0, INITIAL_TABS_COUNT)
+		const remainingProcessedTabs = processedTabs.slice(INITIAL_TABS_COUNT)
+
+		port.postMessage({
+			type: 'initial',
+			processedList: initialTabs,
+			lastTimeTabGroupProgress: tabGroupManager.getProgress(),
+		})
+
+		// 2) 剩余tabs、AI分组数据传输
+		port.postMessage({ type: 'tab_chunk', data: remainingProcessedTabs })
+
+		// 3) history / bookmarks 分片 (chunk_size = 50)
+		try {
+			const [history, bookmarks] = await Promise.all([historyProcessing(), bookmarksProcessingOnce()])
+			for (const chunk of chunkArray(history, CHUNK_SIZE)) {
+				port.postMessage({ type: 'history_chunk', data: chunk })
+			}
+			for (const chunk of chunkArray(bookmarks, CHUNK_SIZE)) {
+				port.postMessage({ type: 'bookmark_chunk', data: chunk })
+			}
+		} catch (error) {
+			console.error('Error loading history/bookmarks for sidepanel:', error)
 		}
+
+		// 4) AI分组数据传输
+		port.postMessage({ type: 'window_data_list', data: processTabsForAI(processedTabs) })
 	})
 }
 
