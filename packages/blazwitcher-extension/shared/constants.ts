@@ -55,7 +55,7 @@ export const DEFAULT_ENABLE_CONSECUTIVE_SEARCH = false
 // 首屏与分片加载：首条消息只发 20 条 tabs
 export const INITIAL_TABS_COUNT = 20
 // 分片大小（tabs / history / bookmarks）
-export const CHUNK_SIZE = 100
+export const DATA_TRANSFER_CHUNK_SIZE = 200
 
 export const MAX_DAYS_HISTORY_CAN_RETRIEVE = 180
 export const MAX_RESULTS_HISTORY_CAN_RETRIEVE = 10000

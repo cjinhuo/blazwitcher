@@ -186,3 +186,10 @@ export interface AiGroupingProgress {
 	showReset: boolean
 	countdown?: number
 }
+
+export type PortMessage =
+	| { type: 'initial'; processedList: ListItemType[]; lastTimeTabGroupProgress: AiGroupingProgress }
+	| { type: 'tab_chunk'; data: ListItemType[] }
+	| { type: 'history_chunk'; data: ListItemType[] }
+	| { type: 'bookmark_chunk'; data: ListItemType[] }
+	| { type: 'window_data_list'; data: WindowData[] }

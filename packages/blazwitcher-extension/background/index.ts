@@ -1,7 +1,7 @@
 import {
-	CHUNK_SIZE,
 	CONTEXT_MENU_HOMEPAGE,
 	CONTEXT_MENU_SHORTCUT,
+	DATA_TRANSFER_CHUNK_SIZE,
 	GITHUB_URL,
 	HANDLE_TAB_GROUP_MESSAGE_TYPE,
 	INITIAL_TABS_COUNT,
@@ -85,13 +85,13 @@ async function main() {
 		// 2) 剩余tabs、AI分组数据传输
 		port.postMessage({ type: 'tab_chunk', data: remainingProcessedTabs })
 
-		// 3) history / bookmarks 分片 (chunk_size = 50)
+		// 3) history / bookmarks 分片传输
 		try {
 			const [history, bookmarks] = await Promise.all([historyProcessing(), bookmarksProcessingOnce()])
-			for (const chunk of chunkArray(history, CHUNK_SIZE)) {
+			for (const chunk of chunkArray(history, DATA_TRANSFER_CHUNK_SIZE)) {
 				port.postMessage({ type: 'history_chunk', data: chunk })
 			}
-			for (const chunk of chunkArray(bookmarks, CHUNK_SIZE)) {
+			for (const chunk of chunkArray(bookmarks, DATA_TRANSFER_CHUNK_SIZE)) {
 				port.postMessage({ type: 'bookmark_chunk', data: chunk })
 			}
 		} catch (error) {
