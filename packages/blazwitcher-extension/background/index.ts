@@ -47,21 +47,7 @@ async function main() {
 
 	const tabGroupManager = new TabGroupManager()
 
-	// AI TabGroup 分组 (stream)
-	chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
-		try {
-			if (message.type === HANDLE_TAB_GROUP_MESSAGE_TYPE) {
-				tabGroupManager.setOriginalWindowData(message.currentWindowData)
-				await tabGroupManager.execute(message.currentWindowData)
-			} else if (message.type === RESET_AI_TAB_GROUP_MESSAGE_TYPE) {
-				await tabGroupManager.resetToOriginalGrouping()
-			}
-			return sendResponse({ success: true })
-		} catch (error) {
-			return sendResponse({ success: false, error: error.message })
-		}
-	})
-
+	// Sidepanel 列表数据传输
 	chrome.runtime.onConnect.addListener(async (port) => {
 		if (port.name !== MAIN_WINDOW) return
 
@@ -71,7 +57,7 @@ async function main() {
 			}
 		})
 
-		// 1) 首包：只查 raw tabs、排序、只加工前 INITIAL_TABS_COUNT 条
+		// 1) 首屏支出：仅传输前 INITIAL_TABS_COUNT 条 tab
 		const processedTabs = await tabsProcessing()
 		const initialTabs = processedTabs.slice(0, INITIAL_TABS_COUNT)
 		const remainingProcessedTabs = processedTabs.slice(INITIAL_TABS_COUNT)
@@ -82,7 +68,7 @@ async function main() {
 			lastTimeTabGroupProgress: tabGroupManager.getProgress(),
 		})
 
-		// 2) 剩余tabs、AI分组数据传输
+		// 2) 剩余tabs
 		port.postMessage({ type: 'tab_chunk', data: remainingProcessedTabs })
 
 		// 3) history / bookmarks 分片传输
@@ -100,6 +86,21 @@ async function main() {
 
 		// 4) AI分组数据传输
 		port.postMessage({ type: 'window_data_list', data: processTabsForAI(processedTabs) })
+	})
+
+	// AI TabGroup 分组 (stream)
+	chrome.runtime.onMessage.addListener(async (message, _sender, sendResponse) => {
+		try {
+			if (message.type === HANDLE_TAB_GROUP_MESSAGE_TYPE) {
+				tabGroupManager.setOriginalWindowData(message.currentWindowData)
+				await tabGroupManager.execute(message.currentWindowData)
+			} else if (message.type === RESET_AI_TAB_GROUP_MESSAGE_TYPE) {
+				await tabGroupManager.resetToOriginalGrouping()
+			}
+			return sendResponse({ success: true })
+		} catch (error) {
+			return sendResponse({ success: false, error: error.message })
+		}
 	})
 }
 

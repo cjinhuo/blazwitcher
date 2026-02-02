@@ -11,12 +11,15 @@ export default function useOriginalList() {
 	const setWindowDataList = useSetAtom(windowDataListAtom)
 	const setAITabGroupProgress = useSetAtom(aiTabGroupProgressAtom)
 
+	// 分片缓冲：暂存 tab/history/bookmark 分片，避免每条消息都触发 setState
 	const pendingChunks = useRef<ListItemType[]>([])
 	const rafId = useRef<number | null>(null)
 
+	// 用 ref 存函数引用，effect 里只依赖 setter，无需把 flush/schedule 放进 deps
 	const flushChunksRef = useRef<() => void>(() => {})
 	const scheduleFlushRef = useRef<() => void>(() => {})
 
+	// 将缓冲区的分片一次性合并进 originalList，并清空缓冲
 	flushChunksRef.current = () => {
 		if (pendingChunks.current.length === 0) return
 		const toAppend = pendingChunks.current
@@ -24,6 +27,7 @@ export default function useOriginalList() {
 		setOriginalList((prev) => [...prev, ...toAppend])
 	}
 
+	// 在下一帧执行 flush，若 flush 后仍有新分片则递归 schedule，合并为一次渲染
 	scheduleFlushRef.current = () => {
 		if (rafId.current !== null) return
 		rafId.current = requestAnimationFrame(() => {
@@ -33,28 +37,32 @@ export default function useOriginalList() {
 		})
 	}
 
+	// 与 background 建立长连接，按序接收：首包 → 分片 → 最终 window 数据；卸载/失焦时通知 background 关闭
 	useEffect(() => {
-		let portConnectStatus = false
+		let portConnectStatus = false // 仅收到过至少一条消息后才允许 close，避免连接未就绪就断开
 		const port = chrome.runtime.connect({ name: MAIN_WINDOW })
 		port.onMessage.addListener((message: PortMessage) => {
 			portConnectStatus = true
 			if (message.type === 'initial') {
+				// 首屏直出：直接setData
 				setOriginalList(message.processedList)
 				setAITabGroupProgress(message.lastTimeTabGroupProgress)
-				if (debug) console.log('initial processedList', message.processedList)
 			} else if (
 				message.type === 'tab_chunk' ||
 				message.type === 'history_chunk' ||
 				message.type === 'bookmark_chunk'
 			) {
+				// 分片：入缓冲 + rAF 调度合并，减少频繁 setState
 				pendingChunks.current.push(...message.data)
 				scheduleFlushRef.current()
 			} else if (message.type === 'window_data_list') {
+				// 最终包：先清空缓冲并合并
 				if (rafId.current !== null) {
 					cancelAnimationFrame(rafId.current)
 					rafId.current = null
 				}
 				flushChunksRef.current()
+				// AI 分组数据
 				setWindowDataList(message.data)
 				if (debug) console.log('window_data_list for AI:', message.data)
 			}
