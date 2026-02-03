@@ -1,7 +1,7 @@
 import { useAtom, useSetAtom } from 'jotai'
 import { useEffect, useRef } from 'react'
 import { MAIN_WINDOW } from '~shared/constants'
-import type { ListItemType, PortMessage } from '~shared/types'
+import { type ListItemType, type PortMessage, PortMessageType } from '~shared/types'
 import { aiTabGroupProgressAtom, originalListAtom, windowDataListAtom } from '~sidepanel/atom'
 import { useDebug } from './useDebug'
 
@@ -38,18 +38,18 @@ export default function useOriginalList() {
 		const port = chrome.runtime.connect({ name: MAIN_WINDOW })
 		port.onMessage.addListener((message: PortMessage) => {
 			portConnectStatus = true
-			if (message.type === 'initial') {
+			if (message.type === PortMessageType.Initial) {
 				setOriginalList(message.processedList)
 				setAITabGroupProgress(message.lastTimeTabGroupProgress)
 				if (debug) console.log('initial processedList', message.processedList)
 			} else if (
-				message.type === 'tab_chunk' ||
-				message.type === 'history_chunk' ||
-				message.type === 'bookmark_chunk'
+				message.type === PortMessageType.TabChunk ||
+				message.type === PortMessageType.HistoryChunk ||
+				message.type === PortMessageType.BookmarkChunk
 			) {
 				pendingChunks.current.push(...message.data)
 				scheduleFlushRef.current()
-			} else if (message.type === 'window_data_list') {
+			} else if (message.type === PortMessageType.WindowDataList) {
 				if (rafId.current !== null) {
 					cancelAnimationFrame(rafId.current)
 					rafId.current = null

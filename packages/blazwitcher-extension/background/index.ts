@@ -11,6 +11,7 @@ import {
 import { bookmarksProcessingOnce, chunkArray, historyProcessing, tabsProcessing } from '~shared/data-processing'
 import { weakUpWindowIfActiveByUser } from '~shared/open-window'
 import { processTabsForAI } from '~shared/process-tabs-by-window'
+import { PortMessageType } from '~shared/types'
 import { closeCurrentWindowAndClearStorage } from '~shared/utils'
 import { TabGroupManager } from './tab-group-manager'
 
@@ -77,29 +78,29 @@ async function main() {
 		const remainingProcessedTabs = processedTabs.slice(INITIAL_TABS_COUNT)
 
 		port.postMessage({
-			type: 'initial',
+			type: PortMessageType.Initial,
 			processedList: initialTabs,
 			lastTimeTabGroupProgress: tabGroupManager.getProgress(),
 		})
 
 		// 2) 剩余tabs、AI分组数据传输
-		port.postMessage({ type: 'tab_chunk', data: remainingProcessedTabs })
+		port.postMessage({ type: PortMessageType.TabChunk, data: remainingProcessedTabs })
 
 		// 3) history / bookmarks 分片传输
 		try {
 			const [history, bookmarks] = await Promise.all([historyProcessing(), bookmarksProcessingOnce()])
 			for (const chunk of chunkArray(history, DATA_TRANSFER_CHUNK_SIZE)) {
-				port.postMessage({ type: 'history_chunk', data: chunk })
+				port.postMessage({ type: PortMessageType.HistoryChunk, data: chunk })
 			}
 			for (const chunk of chunkArray(bookmarks, DATA_TRANSFER_CHUNK_SIZE)) {
-				port.postMessage({ type: 'bookmark_chunk', data: chunk })
+				port.postMessage({ type: PortMessageType.BookmarkChunk, data: chunk })
 			}
 		} catch (error) {
 			console.error('Error loading history/bookmarks for sidepanel:', error)
 		}
 
 		// 4) AI分组数据传输
-		port.postMessage({ type: 'window_data_list', data: processTabsForAI(processedTabs) })
+		port.postMessage({ type: PortMessageType.WindowDataList, data: processTabsForAI(processedTabs) })
 	})
 }
 
