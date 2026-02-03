@@ -1,5 +1,12 @@
 # blazwitcher
 
+## 1.1.1
+
+### Patch Changes
+
+- perf: Process and transmit data in shards to reduce the occurrence of long tasks and improve fluency under extreme circumstances. @Julian0197 · 2026-02-03 · [#9cd7c0f9](https://github.com/cjinhuo/pure-search/commit/9cd7c0f99162a898dbd27c1e03b42c28103296c9)
+- perf: 首次安装和启动时，分片处理和传输数据，在极端情况下减少长任务的出现，提升流畅性 @Julian0197 · 2026-02-03 · [#9cd7c0f9](https://github.com/cjinhuo/pure-search/commit/9cd7c0f99162a898dbd27c1e03b42c28103296c9)
+
 ## 1.1.0
 
 ### Minor Changes
