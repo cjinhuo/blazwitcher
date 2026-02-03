@@ -41,3 +41,4 @@ dist/
 
 # server
 log
+tsconfig.tsbuildinfo

@@ -27,7 +27,7 @@ export function loadEnvFile(): void {
 
 	try {
 		config({ path: envPath })
-		console.log('✅ Environment variables loaded from .env')
+		// console.log('✅ Environment variables loaded from .env')
 	} catch (error) {
 		console.error('❌ Error loading .env file:', error)
 	}

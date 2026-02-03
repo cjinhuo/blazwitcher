@@ -47,7 +47,6 @@ export function Command() {
 		setSearchValue({
 			value: '/s',
 		})
-		console.log('click')
 	}
 	return (
 		<CommandContainer onClick={handleClick}>

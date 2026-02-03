@@ -57,7 +57,6 @@ export const useTabGroup = () => {
 			}
 			// 从windowDataList中找到当前窗口的数据
 			const result = windowDataList.find((data) => data.windowId === currentWindowId)
-			console.log('get window data', result)
 			return result
 		} catch (error) {
 			console.error('获取当前窗口数据失败:', error)

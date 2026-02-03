@@ -15,6 +15,7 @@ import { useTheme } from '~sidepanel/hooks/useTheme'
 import Footer from './footer'
 import { useEscapeKey } from './hooks/useEscapeKey'
 import { useLanguage } from './hooks/useLanguage'
+import { usePerformanceReport } from './hooks/usePerformanceReport'
 import List from './list'
 import { RenderItem as ListItemRenderItem } from './list-item'
 import Search from './search'
@@ -39,9 +40,12 @@ export default function SidePanel() {
 	useLanguage()
 	useEscapeKey()
 
+	const originalList = useOriginalList()
+
+	usePerformanceReport(originalList.length)
+
 	const i18n = useAtomValue(i18nAtom)
 	const searchConfig = useAtomValue(searchConfigAtom)
-	const originalList = useOriginalList()
 	const [searchValue, setSearchValue] = useState('')
 
 	const handlePluginItemClick = usePluginClickItem()
