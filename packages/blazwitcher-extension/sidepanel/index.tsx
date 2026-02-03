@@ -15,6 +15,7 @@ import { useTheme } from '~sidepanel/hooks/useTheme'
 import Footer from './footer'
 import { useEscapeKey } from './hooks/useEscapeKey'
 import { useLanguage } from './hooks/useLanguage'
+import { usePerformanceReport } from './hooks/usePerformanceReport'
 import List from './list'
 import { RenderItem as ListItemRenderItem } from './list-item'
 import Search from './search'
@@ -33,45 +34,19 @@ const ContentWrapper = styled(Content)`
   padding: 0;
 `
 
-// 性能埋点：sidepanel 脚本开始执行
-// if (typeof performance !== 'undefined') performance.mark('sidepanel-start')
-
 startup()
 export default function SidePanel() {
 	useTheme()
 	useLanguage()
 	useEscapeKey()
 
+	const originalList = useOriginalList()
+
+	usePerformanceReport(originalList.length)
+
 	const i18n = useAtomValue(i18nAtom)
 	const searchConfig = useAtomValue(searchConfigAtom)
-	const originalList = useOriginalList()
 	const [searchValue, setSearchValue] = useState('')
-	// const ttiReported = useRef(false)
-
-	// Performance指标上报：debug时开启
-	// useEffect(() => {
-	// 	if (ttiReported.current || originalList.length === 0) return
-	// 	ttiReported.current = true
-	// 	if (typeof performance === 'undefined') return
-	// 	performance.mark('sidepanel-first-data')
-	// 	try {
-	// 		performance.measure('sidepanel-tti', 'sidepanel-start', 'sidepanel-first-data')
-	// 		const tti = performance.getEntriesByName('sidepanel-tti')?.[0]
-	// 		const nav = performance.getEntriesByType('navigation')?.[0] as PerformanceNavigationTiming
-	// 		const report: Record<string, number | string> = {
-	// 			'TTI (首屏有数据) ms': tti?.duration ?? 0,
-	// 		}
-	// 		if (nav) {
-	// 			report['DOMContentLoaded ms'] = nav.domContentLoadedEventEnd - nav.startTime
-	// 			report['load 完成 ms'] = nav.loadEventEnd - nav.startTime
-	// 		}
-	// 		console.log('[Sidepanel 性能]', report)
-	// 	} finally {
-	// 		performance.clearMarks('sidepanel-start')
-	// 		performance.clearMarks('sidepanel-first-data')
-	// 		performance.clearMeasures('sidepanel-tti')
-	// 	}
-	// }, [originalList.length])
 
 	const handlePluginItemClick = usePluginClickItem()
 

@@ -155,7 +155,14 @@ async function injectModal(
 	const iframeHeight = windowConfig.height - 27
 	const NAMESPACE = `blazwitcher-chrome-ext-modal-${id || chrome.runtime.id}`
 	if (process.env.NODE_ENV !== 'production') {
-		console.log('injectModal', NAMESPACE, 'windowConfig', windowConfig, 'bodyBackground', bodyBackground)
+		console.log(
+			'blazwitcher injectModalModal',
+			NAMESPACE,
+			'windowConfig',
+			windowConfig,
+			'bodyBackground',
+			bodyBackground
+		)
 	}
 	if (document.getElementById(NAMESPACE)) return
 	const modal = document.createElement('div')
