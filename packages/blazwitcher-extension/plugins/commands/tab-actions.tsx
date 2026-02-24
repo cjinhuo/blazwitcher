@@ -1,7 +1,7 @@
 import DuplicateSvg from 'react:~assets/duplicate.svg'
 import PinSvg from 'react:~assets/pin.svg'
 import type { CommandPlugin } from '~shared/types'
-import { getActiveTabInUserWindow } from '~shared/utils'
+import { closeCurrentWindowAndClearStorage, getActiveTabInUserWindow } from '~shared/utils'
 import type { i18nFunction } from '~sidepanel/atom'
 
 export const pinCurrentTabPlugin = (i18n: i18nFunction): CommandPlugin => ({
@@ -12,6 +12,7 @@ export const pinCurrentTabPlugin = (i18n: i18nFunction): CommandPlugin => ({
 		const tab = await getActiveTabInUserWindow()
 		if (tab?.id) {
 			await chrome.tabs.update(tab.id, { pinned: !tab.pinned })
+			closeCurrentWindowAndClearStorage()
 		}
 	},
 })
@@ -24,6 +25,7 @@ export const duplicateCurrentTabPlugin = (i18n: i18nFunction): CommandPlugin => 
 		const tab = await getActiveTabInUserWindow()
 		if (tab?.id) {
 			await chrome.tabs.duplicate(tab.id)
+			closeCurrentWindowAndClearStorage()
 		}
 	},
 })

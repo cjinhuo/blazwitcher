@@ -1,7 +1,8 @@
 import { useAtomValue } from 'jotai'
 import { debounce } from 'lodash-es'
-import { useEffect } from 'react'
-import { type ListItemType, OperationItemPropertyTypes } from '~shared/types'
+import { useCallback, useEffect } from 'react'
+import { usePluginClickItem } from '~plugins/ui/render-item'
+import { ItemType, type ListItemType, OperationItemPropertyTypes } from '~shared/types'
 import { compositionAtom, shortcutsAtom } from '~sidepanel/atom'
 import { useListOperations } from '~sidepanel/hooks/useOperations'
 import { collectPressedKeys, isValidShortcut, standardizeKeyOrder } from '~sidepanel/utils/keyboardUtils'
@@ -34,12 +35,19 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 	const isComposition = useAtomValue(compositionAtom)
 	const activeItem = list?.[activeIndex]
 	const { handleOperations } = useListOperations()
+	const handlePluginClick = usePluginClickItem()
 
 	const debouncedOperationHandler = debounce((id: OperationItemPropertyTypes) => {
 		if (activeItem) {
 			handleOperations(id, activeItem)
 		}
 	}, 100)
+
+	const handlePluginEnter = useCallback(() => {
+		if (activeItem?.itemType === ItemType.Plugin) {
+			handlePluginClick(activeItem as ListItemType<ItemType.Plugin>)
+		}
+	}, [activeItem, handlePluginClick])
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
@@ -60,7 +68,13 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 				return
 			}
 
-			// 根据当前激活项的类型匹配对应的快捷键
+			if (activeItem.itemType === ItemType.Plugin && pressedShortcut === '↵') {
+				handlePluginEnter()
+				e.preventDefault()
+				e.stopPropagation()
+				return
+			}
+
 			const operationId = getOperationIdByItemType(activeItem.itemType, pressedShortcut, shortcuts)
 
 			if (operationId) {
@@ -75,5 +89,5 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 		return () => {
 			window.removeEventListener('keydown', handleKeyDown)
 		}
-	}, [shortcuts, debouncedOperationHandler, activeItem, isComposition])
+	}, [shortcuts, debouncedOperationHandler, activeItem, isComposition, handlePluginEnter])
 }
