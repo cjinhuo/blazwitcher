@@ -2,7 +2,7 @@ import { useAtomValue } from 'jotai'
 import { debounce } from 'lodash-es'
 import { useEffect } from 'react'
 import { type ListItemType, OperationItemPropertyTypes } from '~shared/types'
-import { shortcutsAtom } from '~sidepanel/atom'
+import { compositionAtom, shortcutsAtom } from '~sidepanel/atom'
 import { useListOperations } from '~sidepanel/hooks/useOperations'
 import { collectPressedKeys, isValidShortcut, standardizeKeyOrder } from '~sidepanel/utils/keyboardUtils'
 import { getTypeSpecificOperationIds } from '~sidepanel/utils/shortcutMappingUtils'
@@ -31,6 +31,7 @@ const getOperationIdByItemType = (
 
 export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => {
 	const shortcuts = useAtomValue(shortcutsAtom)
+	const isComposition = useAtomValue(compositionAtom)
 	const activeItem = list?.[activeIndex]
 	const { handleOperations } = useListOperations()
 
@@ -42,6 +43,10 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
+			if (isComposition) {
+				return
+			}
+
 			const keys = collectPressedKeys(e)
 
 			if (!isValidShortcut(keys)) {
@@ -70,5 +75,5 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 		return () => {
 			window.removeEventListener('keydown', handleKeyDown)
 		}
-	}, [shortcuts, debouncedOperationHandler, activeItem])
+	}, [shortcuts, debouncedOperationHandler, activeItem, isComposition])
 }
