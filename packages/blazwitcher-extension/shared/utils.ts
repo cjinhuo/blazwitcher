@@ -387,7 +387,6 @@ export async function getActiveTabInUserWindow(): Promise<chrome.tabs.Tab | null
 	try {
 		const currentWindow = await chrome.windows.getCurrent()
 		let windowId: number
-
 		if (currentWindow?.type === 'popup') {
 			const storage = await storageGet()
 			windowId = storage[LAST_ACTIVE_WINDOW_ID_KEY]
