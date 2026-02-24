@@ -1,0 +1,10 @@
+{
+	"version": 1,
+	"skills": {
+		"text-search-engine": {
+			"source": "cjinhuo/text-search-engine",
+			"sourceType": "github",
+			"computedHash": "afdf6280e4f43d4753519e643b9f51a42f86b8d9eb557aaa3aa4cbfe2a5f3911"
+		}
+	}
+}
