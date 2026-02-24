@@ -1,5 +1,12 @@
 # blazwitcher
 
+## 1.1.2
+
+### Patch Changes
+
+- fix: ignore keyboard shortcuts during IME composition, prevents Enter key from opening tabs while typing Chinese @cjinhuo · 2026-02-24 · [#3b32669f](https://github.com/cjinhuo/pure-search/commit/3b32669f04d68e5097f66f1545bfe126be110e2d)
+- fix: 忽略 IME 输入法组合期间的键盘快捷键，防止在输入中文时按 Enter 键打开标签页 @cjinhuo · 2026-02-24 · [#3b32669f](https://github.com/cjinhuo/pure-search/commit/3b32669f04d68e5097f66f1545bfe126be110e2d)
+
 ## 1.1.1
 
 ### Patch Changes
