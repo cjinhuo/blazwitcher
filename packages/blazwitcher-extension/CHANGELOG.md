@@ -1,5 +1,12 @@
 # blazwitcher
 
+## 1.2.0
+
+### Minor Changes
+
+- feat: add /pin and /duplicate commands to toggle pin status and duplicate current tab @cjinhuo · 2026-02-24 · [#59ae6970](https://github.com/cjinhuo/blazwitcher/commit/59ae6970afaeb04ea8e1336731a49f51085e4c96)
+- feat: 新增 /pin 和 /duplicate 命令，用于切换当前标签页的固定状态和复制当前标签页 @cjinhuo · 2026-02-24 · [#59ae6970](https://github.com/cjinhuo/blazwitcher/commit/59ae6970afaeb04ea8e1336731a49f51085e4c96)
+
 ## 1.1.2
 
 ### Patch Changes
