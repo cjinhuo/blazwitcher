@@ -410,4 +410,12 @@ export const lang = {
 		[LanguageType.zh]: '还原 AI 标签分组',
 		[LanguageType.en]: 'Reset AI Tab Grouping',
 	},
+	pinCurrentTab: {
+		[LanguageType.zh]: '固定/取消固定当前标签页',
+		[LanguageType.en]: 'Pin/Unpin Current Tab',
+	},
+	duplicateCurrentTab: {
+		[LanguageType.zh]: '复制当前标签页',
+		[LanguageType.en]: 'Duplicate Current Tab',
+	},
 }

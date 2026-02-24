@@ -382,3 +382,22 @@ export async function safeSendMessage(message: any, errorCallback?: (error: Erro
 		errorCallback?.(error)
 	}
 }
+
+export async function getActiveTabInUserWindow(): Promise<chrome.tabs.Tab | null> {
+	try {
+		const currentWindow = await chrome.windows.getCurrent()
+		let windowId: number
+		if (currentWindow?.type === 'popup') {
+			const storage = await storageGet()
+			windowId = storage[LAST_ACTIVE_WINDOW_ID_KEY]
+		} else {
+			windowId = currentWindow.id
+		}
+
+		const tabs = await chrome.tabs.query({ active: true, windowId })
+		return tabs[0] ?? null
+	} catch (error) {
+		console.error('获取用户窗口激活标签页失败:', error)
+		return null
+	}
+}
