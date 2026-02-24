@@ -3,9 +3,11 @@ import { type CommandPlugin, ItemType, type ListItemType } from '~shared/types'
 import type { i18nFunction } from '~sidepanel/atom'
 import {
 	aiGroupingPlugin,
+	duplicateCurrentTabPlugin,
 	filterByBookmarkPlugin,
 	filterByHistoryPlugin,
 	filterByTabPlugin,
+	pinCurrentTabPlugin,
 	settingPlugin,
 } from './commands'
 
@@ -40,6 +42,8 @@ const plugins = (i18n: i18nFunction): ListItemType<ItemType.Plugin>[] =>
 	[
 		settingPlugin(i18n),
 		aiGroupingPlugin(i18n),
+		pinCurrentTabPlugin(i18n),
+		duplicateCurrentTabPlugin(i18n),
 		filterByTabPlugin(i18n),
 		filterByHistoryPlugin(i18n),
 		filterByBookmarkPlugin(i18n),
