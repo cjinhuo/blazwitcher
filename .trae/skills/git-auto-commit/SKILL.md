@@ -23,26 +23,16 @@ description: Git 自动提交工具。当用户需要提交代码变更、commit
 
 ## Commit Message 规范
 
-**必须严格遵循项目根目录下的 `.commitlintrc.cjs` 配置文件中定义的规范。**
+### 规范来源优先级
 
-读取该配置文件获取：
-- 可用的 commit type 列表及对应的 emoji
-- scope 的允许值
-- 其他提交规则
+1. **优先读取项目根目录下的 `.commitlintrc.xx` 配置文件**
+   - 如果存在该配置文件，严格遵循其中定义的规范
+   - 读取可用的 commit type 列表及对应的 emoji
+   - 读取 scope 的允许值及其他提交规则
 
-## 自动生成规则
-
-根据变更的文件路径和内容，自动判断合适的 type：
-
-| 变更位置 | 推荐 Type |
-| --- | --- |
-| `src/content/blogs/` | `docs` |
-| `src/components/` | `feat`/`fix`/`refactor` |
-| `src/pages/` | `feat`/`fix` |
-| `src/styles/` | `style` |
-| `package.json`、`pnpm-lock.yaml` | `build` |
-| `*.config.*`、`.github/` | `ci`/`chore` |
-| `tests/`、`*.test.*`、`*.spec.*` | `test` |
+2. **如果没有 `.commitlintrc.xx` 配置文件**
+   - 参考 [commit-message-convention.md](./commit-message-convention.md) 中的默认规范
+   - 使用标准的 conventional commits 格式
 
 ## 使用场景
 
