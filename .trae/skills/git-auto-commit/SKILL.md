@@ -5,15 +5,22 @@ description: Git 自动提交工具。当用户需要提交代码变更、commit
 
 # Git 自动提交规范
 
-当用户需要提交 Git 变更时，必须遵循以下规范自动生成 commit message 并执行提交。
+当用户明确要求“提交 / commit / 推送 / 把改动提交到仓库”时，必须遵循以下规范自动生成 commit message 并执行提交。
+
+## 决策顺序与优先级
+
+1. **只在用户明确要求时提交**：未被要求时，不要主动提交或推送。
+2. **与 changeset 的前后顺序**：若用户同一请求里同时要求“添加 changeset + 提交”，必须先生成 changeset 文件，再执行本 skill（保证 changeset 被包含在提交中）。
+3. **安全优先**：提交前必须检查暂存内容，避免把密钥、token、私钥等敏感信息提交到仓库；如发现疑似敏感信息，先停止并提示用户处理。
 
 ## 提交流程
 
 1. 执行 `git status` 查看当前变更
 2. 执行 `git add .` 暂存文件（如果用户没有特别说明，默认提交所有变更文件）
-3. 根据变更内容自动生成符合规范的 commit message
-4. 执行 `git commit -m "<message>"` 提交
-5. 执行 `git push` 推送到远端（**默认行为**，除非用户明确说"不 push"或"不推送"）
+3. 执行 `git diff --cached --name-only` 获取已暂存的关键变更文件列表
+4. 通过 git 命令查看关键变更文件的内容后生成符合规范的 commit message（避免凭空猜测）
+5. 执行 `git commit -m "<message>"` 提交
+6. 执行 `git push` 推送到远端（**默认行为**，除非用户明确说"不 push"或"不推送"）
 
 ## 推送规则
 
@@ -33,6 +40,12 @@ description: Git 自动提交工具。当用户需要提交代码变更、commit
 2. **如果没有 `.commitlintrc.xx` 配置文件**
    - 参考 [commit-message-convention.md](./commit-message-convention.md) 中的默认规范
    - 使用标准的 conventional commits 格式
+
+## 输出要求（必须满足）
+
+1. **提交信息可追溯**：message 必须与暂存的变更内容匹配，不允许与实际改动不一致
+2. **最小惊扰**：默认提交全部变更；若用户只想提交部分文件，必须按用户指定范围暂存
+3. **遵循仓库规范**：存在 commitlint 配置时必须严格遵循，否则按默认规范生成
 
 ## 使用场景
 
