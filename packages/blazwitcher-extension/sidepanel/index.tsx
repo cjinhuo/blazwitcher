@@ -35,6 +35,15 @@ const ContentWrapper = styled(Content)`
 `
 
 startup()
+
+const normalizeSearchValue = (value: string) => {
+	const trimmedValue = value.trim()
+	if (trimmedValue.startsWith('、')) {
+		return `/${trimmedValue.slice(1)}`
+	}
+	return trimmedValue
+}
+
 export default function SidePanel() {
 	useTheme()
 	useLanguage()
@@ -121,9 +130,8 @@ export default function SidePanel() {
 		return RenderList(filteredList, realSearchValue !== '')
 	}, [searchValue, originalList, handlePluginItemClick, i18n, RenderList, searchConfig])
 
-	// 会影响小部分匹配，比如 ab c，输入 ab 加上一个空格，理论上应该匹配 [ab ]，但现在会被 trim 掉，无伤大雅
 	const handleSearch = useCallback((value: string) => {
-		setSearchValue(value.trim())
+		setSearchValue(normalizeSearchValue(value))
 	}, [])
 
 	return (
