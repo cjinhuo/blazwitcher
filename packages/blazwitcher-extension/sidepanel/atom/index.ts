@@ -2,7 +2,7 @@ import { atom } from 'jotai'
 import { atomWithReset, atomWithStorage } from 'jotai/utils'
 import { PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION, PAGE_STORAGE_THEME_COLOR, ThemeColor } from '~shared/constants'
 import type { AiGroupingProgress, CommandPlugin, ListItemType, WindowData } from '~shared/types'
-import { createSyncStorage } from './common'
+import { createChromeSyncStorage } from './common'
 import { defaultLanguage, languageAtom } from './i18nAtom'
 import { restoreWindowConfigAtom } from './windowAtom'
 
@@ -12,10 +12,11 @@ export * from './searchConfigAtom'
 export * from './shortcutAtom'
 export * from './windowAtom'
 
+// 主题使用 chrome.storage.sync，随 Chrome 账号跨设备同步
 export const themeAtom = atomWithStorage<ThemeColor>(
 	PAGE_STORAGE_THEME_COLOR,
 	ThemeColor.System,
-	createSyncStorage<ThemeColor>(),
+	createChromeSyncStorage<ThemeColor>(),
 	{ getOnInit: true }
 )
 export const activeItemAtom = atomWithReset<ListItemType | null>(null)
@@ -30,7 +31,7 @@ export const aiTabGroupProgressAtom = atomWithReset<AiGroupingProgress>({
 export const compositionAtom = atomWithReset<boolean>(false)
 export const hitPluginAtom = atomWithReset<CommandPlugin | null>(null)
 export const searchValueAtom = atomWithReset<{ value: string }>({ value: '' })
-// 存储用户最后查看的版本号，用于控制更新通知的显示
+// 存储用户最后查看的版本号，仅本机（不参与云端同步）
 export const lastViewedVersionAtom = atomWithStorage<string>(PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION, '')
 
 // restore appearance panel settings、
