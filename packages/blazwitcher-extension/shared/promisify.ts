@@ -34,6 +34,13 @@ export const storageGetLocal = promisifyChromeMethod<{ [key: string]: any }>(
 
 export const storageSetLocal = promisifyChromeMethod(chrome.storage.local.set.bind(chrome.storage.local))
 
+/** Chrome Storage Sync API：随 Chrome 账号跨设备自动同步，用于 Setting Panel 配置 */
+export const storageGetSync = promisifyChromeMethod<{ [key: string]: any }>(
+	chrome.storage.sync.get.bind(chrome.storage.sync)
+)
+export const storageSetSync = promisifyChromeMethod(chrome.storage.sync.set.bind(chrome.storage.sync))
+export const storageRemoveSync = promisifyChromeMethod(chrome.storage.sync.remove.bind(chrome.storage.sync))
+
 export const storageSet = promisifyChromeMethod(chrome.storage.session.set.bind(chrome.storage.session))
 
 export const storageRemove = promisifyChromeMethod(chrome.storage.session.remove.bind(chrome.storage.session))

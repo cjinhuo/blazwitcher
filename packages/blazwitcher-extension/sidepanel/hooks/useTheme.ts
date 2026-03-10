@@ -1,7 +1,6 @@
 import { useAtomValue } from 'jotai'
 import { useEffect, useMemo } from 'react'
-import { PAGE_STORAGE_THEME_COLOR, TabGroupColorMap } from '~shared/constants'
-import { storageSetLocal } from '~shared/promisify'
+import { TabGroupColorMap } from '~shared/constants'
 import { isDarkMode } from '~shared/utils'
 import { themeAtom } from '~sidepanel/atom'
 
@@ -22,10 +21,7 @@ export const useTheme = () => {
 	const themeColor = useAtomValue(themeAtom)
 
 	useEffect(() => {
-		// 同步到 chrome.storage.local
-		storageSetLocal({
-			[PAGE_STORAGE_THEME_COLOR]: themeColor,
-		})
+		// theme 已由 themeAtom 写入 chrome.storage.sync，无需在此重复写入；getWindowConfig 从 sync 读取
 		setThemeClass(isDarkMode(themeColor))
 	}, [themeColor])
 }

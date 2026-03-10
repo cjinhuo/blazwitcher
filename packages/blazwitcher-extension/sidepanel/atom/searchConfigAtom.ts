@@ -8,15 +8,21 @@ import {
 	EXTENSION_STORAGE_HISTORY_MAX_RESULTS,
 	PAGE_STORAGE_SEARCH_CONFIG,
 } from '~shared/constants'
-import { createStorageAtom } from './common'
+import { createChromeSyncStorage, createSyncStorageAtom } from './common'
 
-export const historyMaxDaysAtom = createStorageAtom(EXTENSION_STORAGE_HISTORY_MAX_DAYS, DEFAULT_HISTORY_MAX_DAYS)
-export const historyMaxResultsAtom = createStorageAtom(
+// 历史/搜索相关配置使用 sync，随 Chrome 账号跨设备同步
+export const historyMaxDaysAtom = createSyncStorageAtom(EXTENSION_STORAGE_HISTORY_MAX_DAYS, DEFAULT_HISTORY_MAX_DAYS)
+export const historyMaxResultsAtom = createSyncStorageAtom(
 	EXTENSION_STORAGE_HISTORY_MAX_RESULTS,
 	DEFAULT_HISTORY_MAX_RESULTS
 )
 
-export const searchConfigAtom = atomWithStorage(`${PAGE_STORAGE_SEARCH_CONFIG}`, DefaultSearchConfig)
+// 搜索面板配置（书签/历史条数、连续搜索等）使用 sync
+export const searchConfigAtom = atomWithStorage(
+	PAGE_STORAGE_SEARCH_CONFIG,
+	DefaultSearchConfig,
+	createChromeSyncStorage()
+)
 
 export type SearchConfigAtomType = typeof DefaultSearchConfig
 

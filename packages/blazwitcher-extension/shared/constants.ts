@@ -137,13 +137,15 @@ export const TabGroupColorMap: TabGroupColorMapType = {
 // search
 export const DEFAULT_STRICTNESS_COEFFICIENT = 0.6
 
+// 以下 key 用于 Setting Panel 配置，除 show_update_notification 外均存 chrome.storage.sync（跨设备同步）
 export const PAGE_STORAGE_LANGUAGE_KEY = 'language'
 export const PAGE_STORAGE_SHORTCUT_MAPPINGS = 'shortcut_mappings'
 export const PAGE_STORAGE_THEME_COLOR = 'theme_color'
 export const PAGE_STORAGE_SEARCH_CONFIG = 'search_config'
+/** 仅本机，不参与云端同步 */
 export const PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION = 'show_update_notification'
 
-// extension storage keys
+// extension storage keys（上述配置中与窗口/搜索相关的也存 sync）
 export const EXTENSION_STORAGE_HISTORY_MAX_DAYS = 'historyMaxDays'
 export const EXTENSION_STORAGE_HISTORY_MAX_RESULTS = 'historyMaxResults'
 export const EXTENSION_STORAGE_WINDOW_WIDTH = 'windowWidth'
