@@ -201,3 +201,8 @@ export type PortMessage =
 	| { type: PortMessageType.HistoryChunk; data: ListItemType[] }
 	| { type: PortMessageType.BookmarkChunk; data: ListItemType[] }
 	| { type: PortMessageType.WindowDataList; data: WindowData[] }
+
+export interface FontOption {
+	label: string
+	value: string
+}
