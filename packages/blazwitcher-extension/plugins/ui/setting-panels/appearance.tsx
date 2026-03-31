@@ -1,15 +1,5 @@
-import {
-	IconComponent,
-	IconDesktop,
-	IconExpand,
-	IconInfoCircle,
-	IconLanguage,
-	IconMoon,
-	IconRefresh,
-	IconSun,
-	IconTerminal,
-} from '@douyinfe/semi-icons'
-import { Button, Card, InputNumber, Radio, RadioGroup, Tooltip } from '@douyinfe/semi-ui'
+import { IconComponent, IconDesktop, IconExpand, IconFont, IconInfoCircle, IconLanguage, IconMoon, IconRefresh, IconSun, IconTerminal } from '@douyinfe/semi-icons'
+import { Button, Card, InputNumber, Radio, RadioGroup, Select, Tooltip } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import styled from 'styled-components'
 import {
@@ -20,8 +10,9 @@ import {
 	SEARCH_WINDOW_WIDTH,
 	type ThemeColor,
 } from '~shared/constants'
-import { i18nAtom, languageAtom, restoreAppearanceSettingsAtom, themeAtom } from '~sidepanel/atom'
+import { fontFamilyAtom, i18nAtom, languageAtom, restoreAppearanceSettingsAtom, themeAtom } from '~sidepanel/atom'
 import { debugAtom, displayModeAtom, heightAtom, widthAtom } from '~sidepanel/atom/windowAtom'
+import useFontOptions from '~sidepanel/hooks/useFontOptions'
 
 const Container = styled.div`
   display: flex;
@@ -80,6 +71,8 @@ export const AppearancePanel: React.FC = () => {
 	const [iframeHeight, setIframeHeight] = useAtom(heightAtom)
 	const [debugMode, setDebugMode] = useAtom(debugAtom)
 	const resetConfig = useSetAtom(restoreAppearanceSettingsAtom)
+	const [fontFamily, setFontFamily] = useAtom(fontFamilyAtom)
+	const fontOptions = useFontOptions()
 
 	const handleChangeWidth = (value: number) => {
 		setIframeWidth(value)
@@ -182,6 +175,20 @@ export const AppearancePanel: React.FC = () => {
 							/>
 						</SizeInputWrapper>
 					</SizeInputContainer>
+				</div>
+
+				<div>
+					<Section>
+						<IconFont />
+						{i18n('fontFamily')}
+					</Section>
+					<Select
+						style={{ width: '100%' }}
+						value={fontFamily}
+						onChange={(value) => setFontFamily(value as string)}
+						filter
+						optionList={fontOptions}
+					/>
 				</div>
 
 				<div>

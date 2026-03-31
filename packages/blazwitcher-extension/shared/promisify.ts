@@ -82,6 +82,10 @@ export const getBookmarksById = promisifyChromeMethod<chrome.bookmarks.BookmarkT
 	chrome.bookmarks.get.bind(chrome.bookmarks.get)
 )
 
+export const getFontList = chrome.fontSettings?.getFontList
+	? promisifyChromeMethod<chrome.fontSettings.FontName[]>(chrome.fontSettings.getFontList.bind(chrome.fontSettings))
+	: () => Promise.resolve([])
+
 export const getTabGroupById = chrome.tabGroups?.get
 	? promisifyChromeMethod<chrome.tabGroups.TabGroup>(chrome.tabGroups.get.bind(chrome.tabGroups))
 	: () => Promise.resolve(undefined)

@@ -172,6 +172,18 @@ export const lang = {
 		[LanguageType.zh]: '语言',
 		[LanguageType.en]: 'Language',
 	},
+	fontFamily: {
+		[LanguageType.zh]: '字体',
+		[LanguageType.en]: 'Font Family',
+	},
+	fontDefault: {
+		[LanguageType.zh]: '软件默认',
+		[LanguageType.en]: 'App Default',
+	},
+	fontSystem: {
+		[LanguageType.zh]: '系统默认',
+		[LanguageType.en]: 'System Default',
+	},
 	// debug settings
 	debug: {
 		[LanguageType.zh]: '调试',
