@@ -1,0 +1,64 @@
+{
+	"languages": {
+		"JavaScript": {
+			"formatter": "language_server",
+			"code_actions_on_format": {
+				"source.fixAll.biome": true,
+				"source.organizeImports.biome": true
+			}
+		},
+		"TypeScript": {
+			"formatter": "language_server",
+			"code_actions_on_format": {
+				"source.fixAll.biome": true,
+				"source.organizeImports.biome": true
+			}
+		},
+		"TSX": {
+			"formatter": "language_server",
+			"code_actions_on_format": {
+				"source.fixAll.biome": true,
+				"source.organizeImports.biome": true
+			}
+		},
+		"JSX": {
+			"formatter": "language_server",
+			"code_actions_on_format": {
+				"source.fixAll.biome": true,
+				"source.organizeImports.biome": true
+			}
+		},
+		"JSON": {
+			"formatter": "language_server"
+		},
+		"JSONC": {
+			"formatter": "language_server"
+		},
+		"CSS": {
+			"formatter": "language_server"
+		},
+		"HTML": {
+			"formatter": "language_server"
+		},
+		"Astro": {
+			"formatter": "language_server"
+		},
+		"GraphQL": {
+			"formatter": "language_server"
+		},
+		"Svelte": {
+			"formatter": "language_server"
+		},
+		"Vue.js": {
+			"formatter": "language_server"
+		}
+	},
+	"lsp": {
+		"biome": {
+			"settings": {
+				"config_path": "biome.json",
+				"require_config_file": true
+			}
+		}
+	}
+}
