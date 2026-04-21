@@ -2,6 +2,7 @@ import { atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { lang as translations } from '~i18n/lang'
 import { LanguageType, PAGE_STORAGE_LANGUAGE_KEY } from '~shared/constants'
+import { createChromeSyncStorage } from './common'
 
 type TranslationValue = string | ((args: any) => string)
 type SupportedLanguages = keyof typeof LanguageType
@@ -18,11 +19,16 @@ export type i18nFunction = (key: TranslationKeys, args?: any) => string
 
 export const defaultLanguage = navigator.language.toLowerCase().startsWith('zh') ? LanguageType.zh : LanguageType.en
 
-// 默认语言 en
-export const languageAtom = atomWithStorage<LanguageType>(PAGE_STORAGE_LANGUAGE_KEY, defaultLanguage)
+// 语言设置使用 sync，随 Chrome 账号跨设备同步
+export const languageAtom = atomWithStorage<LanguageType>(
+	PAGE_STORAGE_LANGUAGE_KEY,
+	defaultLanguage,
+	createChromeSyncStorage<LanguageType>()
+)
 
 export const i18nAtom = atom((get) => <K extends TranslationKeys>(key: K, args?: any) => {
-	const defaultLang = get(languageAtom)
+	const currentLanguage = get(languageAtom)
+	const defaultLang = currentLanguage instanceof Promise ? defaultLanguage : currentLanguage
 	const translation = translations[key]?.[defaultLang] || translations[key]?.en
 
 	if (typeof translation === 'function') {

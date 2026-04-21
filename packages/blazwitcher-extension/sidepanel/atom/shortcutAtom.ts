@@ -3,6 +3,7 @@ import { atomWithStorage } from 'jotai/utils'
 import { PAGE_STORAGE_SHORTCUT_MAPPINGS } from '~shared/constants'
 import { OperationItemPropertyTypes } from '~shared/types'
 import type { TranslationKeys } from '~sidepanel/atom'
+import { createChromeSyncStorage } from './common'
 
 export interface Shortcut {
 	action: TranslationKeys
@@ -80,9 +81,11 @@ const defaultShortcutMappings = defaultShortcutConfigs.reduce(
 	{} as Record<string, string>
 )
 
+// 快捷键映射使用 sync，随 Chrome 账号跨设备同步
 export const shortcutMappingsAtom = atomWithStorage<Record<string, string>>(
 	PAGE_STORAGE_SHORTCUT_MAPPINGS,
-	defaultShortcutMappings
+	defaultShortcutMappings,
+	createChromeSyncStorage<Record<string, string>>()
 )
 
 export const restoreDefaultShortcutsAtom = atom(null, (_, set) => {

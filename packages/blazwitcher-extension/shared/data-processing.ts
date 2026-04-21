@@ -15,9 +15,11 @@ import {
 import {
 	getBookmarksById,
 	getBookmarksTree,
+	getSyncValueWithLocalFallback,
 	getTabGroupById,
 	historySearch,
 	storageGetLocal,
+	storageGetSync,
 	tabsQuery,
 } from './promisify'
 import { getCompositeSourceAndHost } from './text-search-pinyin'
@@ -184,13 +186,19 @@ export const traversalBookmarkTreeNode = (
 	return result
 }
 
+/** 按 key 从 sync 读取搜索配置；若 sync 缺失则从 local 回退并懒迁移。 */
 export async function getExtensionStorageSearchConfig() {
-	const extensionLocalStorage = await storageGetLocal()
-
-	const {
-		[EXTENSION_STORAGE_HISTORY_MAX_DAYS]: historyMaxDays = DEFAULT_HISTORY_MAX_DAYS,
-		[EXTENSION_STORAGE_HISTORY_MAX_RESULTS]: historyMaxResults = DEFAULT_HISTORY_MAX_RESULTS,
-	} = extensionLocalStorage ?? {}
+	const [syncStorage, localStorage] = await Promise.all([storageGetSync(), storageGetLocal()])
+	const [historyMaxDays, historyMaxResults] = await Promise.all([
+		getSyncValueWithLocalFallback(EXTENSION_STORAGE_HISTORY_MAX_DAYS, DEFAULT_HISTORY_MAX_DAYS, {
+			syncStorage,
+			localStorage,
+		}),
+		getSyncValueWithLocalFallback(EXTENSION_STORAGE_HISTORY_MAX_RESULTS, DEFAULT_HISTORY_MAX_RESULTS, {
+			syncStorage,
+			localStorage,
+		}),
+	])
 
 	return {
 		historyMaxDays: Number(historyMaxDays),
@@ -198,16 +206,25 @@ export async function getExtensionStorageSearchConfig() {
 	}
 }
 
+/** 按 key 从 sync 读取窗口配置；若 sync 缺失则从 local 回退并懒迁移。debugMode 仅从 local 读。 */
 export async function getWindowConfig(): Promise<WindowConfig> {
-	const extensionLocalStorage = await storageGetLocal()
-
-	const {
-		[EXTENSION_STORAGE_DISPLAY_MODE]: displayMode = DefaultWindowConfig.displayMode,
-		[EXTENSION_STORAGE_WINDOW_WIDTH]: width = DefaultWindowConfig.width,
-		[EXTENSION_STORAGE_WINDOW_HEIGHT]: height = DefaultWindowConfig.height,
-		[EXTENSION_STORAGE_THEME]: theme = DefaultWindowConfig.theme,
-		[EXTENSION_STORAGE_DEBUG_MODE]: debugMode = DefaultWindowConfig.debugMode,
-	} = extensionLocalStorage ?? {}
+	const [syncStorage, localStorage] = await Promise.all([storageGetSync(), storageGetLocal()])
+	const [displayMode, width, height, theme] = await Promise.all([
+		getSyncValueWithLocalFallback(EXTENSION_STORAGE_DISPLAY_MODE, DefaultWindowConfig.displayMode, {
+			syncStorage,
+			localStorage,
+		}),
+		getSyncValueWithLocalFallback(EXTENSION_STORAGE_WINDOW_WIDTH, DefaultWindowConfig.width, {
+			syncStorage,
+			localStorage,
+		}),
+		getSyncValueWithLocalFallback(EXTENSION_STORAGE_WINDOW_HEIGHT, DefaultWindowConfig.height, {
+			syncStorage,
+			localStorage,
+		}),
+		getSyncValueWithLocalFallback(EXTENSION_STORAGE_THEME, DefaultWindowConfig.theme, { syncStorage, localStorage }),
+	])
+	const debugMode = localStorage?.[EXTENSION_STORAGE_DEBUG_MODE] ?? DefaultWindowConfig.debugMode
 
 	return { displayMode, width, height, theme, debugMode }
 }
