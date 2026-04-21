@@ -1,124 +1,81 @@
-# Setting Panel 配置云端同步方案（Chrome Storage Sync API）
+# Blazwitcher 配置与存储约定
 
-## 1. 目标
+这份文档只回答三件事：当前有哪些配置、分别放在哪层、后续新增 setting 应该怎么接。
 
-将 Setting Panel 中的配置通过 **Chrome Storage Sync API**（`chrome.storage.sync`）自动在用户已登录的 Chrome 账号下跨设备同步，无需自建后端。
+## 1. 先判断放哪层
 
-## 2. 现状梳理
+新增配置时，先看消费方，不看它挂在哪个面板里。
 
-### 2.1 配置项与当前存储方式
+| 类型 | 谁消费 | 存储位置 | 是否同步 |
+|------|--------|----------|----------|
+| UI 配置 | sidepanel 自己渲染 | `chrome.storage.sync`，兼容旧 `localStorage` 懒迁移 | 是 |
+| Window / Search 配置 | background / shared 也会读 | `chrome.storage.sync`，兼容旧 `chrome.storage.local` 懒迁移 | 是 |
+| 本机专属配置 | 只在当前设备有意义 | `chrome.storage.local` 或 `localStorage` | 否 |
+| 运行时缓存 | 只服务当前一次流程 | `chrome.storage.session` | 否 |
 
-| 配置项 | Storage Key | 当前存储 | 所在面板 |
-|--------|-------------|----------|----------|
-| 主题 | `theme_color` (PAGE_STORAGE_THEME_COLOR) | localStorage + 同步写 local | Appearance |
-| 语言 | `language` (PAGE_STORAGE_LANGUAGE_KEY) | localStorage | Appearance |
-| 窗口显示模式 | `displayMode` | chrome.storage.local | Appearance |
-| 窗口宽高 | `windowWidth`, `windowHeight` | chrome.storage.local | Appearance |
-| 调试模式 | `debugMode` | chrome.storage.local | Appearance |
-| 快捷键映射 | `shortcut_mappings` | localStorage | Keyboard |
-| 历史最大天数/条数 | `historyMaxDays`, `historyMaxResults` | chrome.storage.local | Search |
-| 搜索配置 | `search_config` | localStorage | Search |
-| 更新通知已读版本 | `show_update_notification` | localStorage | - |
+## 2. 当前配置清单
 
-### 2.2 相关代码位置
+| 配置项 | Key | 类型 | 主要入口 | 当前存储 |
+|------|-----|------|----------|----------|
+| 主题 | `theme_color` | UI 配置 | `themeAtom` / `getWindowConfig()` | `sync`，兼容旧 `localStorage` / `local` |
+| 语言 | `language` | UI 配置 | `languageAtom` | `sync`，兼容旧 `localStorage` |
+| 快捷键映射 | `shortcut_mappings` | UI 配置 | `shortcutMappingsAtom` | `sync`，兼容旧 `localStorage` |
+| 搜索面板配置 | `search_config` | UI 配置 | `searchConfigAtom` | `sync`，兼容旧 `localStorage` |
+| 窗口模式 | `displayMode` | Window 配置 | `displayModeAtom` / `getWindowConfig()` | `sync`，兼容旧 `local` |
+| 窗口宽度 | `windowWidth` | Window 配置 | `widthAtom` / `getWindowConfig()` | `sync`，兼容旧 `local` |
+| 窗口高度 | `windowHeight` | Window 配置 | `heightAtom` / `getWindowConfig()` | `sync`，兼容旧 `local` |
+| history 最大天数 | `historyMaxDays` | Search 配置 | `historyMaxDaysAtom` / `getExtensionStorageSearchConfig()` | `sync`，兼容旧 `local` |
+| history 最大条数 | `historyMaxResults` | Search 配置 | `historyMaxResultsAtom` / `getExtensionStorageSearchConfig()` | `sync`，兼容旧 `local` |
+| 调试模式 | `debugMode` | 本机专属配置 | `debugAtom` / `getWindowConfig()` | `chrome.storage.local` |
+| 更新通知已读版本 | `show_update_notification` | 本机专属配置 | `lastViewedVersionAtom` | `localStorage` |
+| 弹窗窗口状态缓存 | `selfWindowId` / `selfWindowState` / `lastActiveWindowId` | 运行时缓存 | `open-window` / `utils` | `chrome.storage.session` |
 
-- **Atom 定义**：`sidepanel/atom/`（common.ts、index.ts、windowAtom、searchConfigAtom、shortcutAtom、i18nAtom）
-- **Storage 封装**：`shared/promisify.ts`（仅有 local/session，无 sync）
-- **后台读取**：`shared/data-processing.ts`（getWindowConfig、getExtensionStorageSearchConfig 读 local）、`shared/utils.ts`（session）
+主要代码位置：
 
-## 3. Chrome Storage Sync 说明
+- atom 存储适配器：`sidepanel/atom/common.ts`
+- atom 定义：`sidepanel/atom/`
+- shared 读取入口：`shared/data-processing.ts`
+- storage 封装：`shared/promisify.ts`
+- key 和默认值：`shared/constants.ts`
 
-- **行为**：用户登录 Chrome 时，`chrome.storage.sync` 会跨设备自动同步；离线时先存本地，上线后同步。
-- **配额**：总约 100KB，单条约 8KB。当前配置体积远低于限制。
-- **权限**：已有 `storage` permission，可直接使用 `chrome.storage.sync`，无需改 manifest。
+## 3. 存储规则
 
-## 4. 方案设计
-
-### 4.1 同步范围
-
-- **纳入同步**：主题、语言、窗口模式/宽高、调试模式、快捷键映射、历史天数/条数、搜索配置（即 Setting Panel 内所有可持久化配置）。
-- **不同步**：`show_update_notification`（仅本机“已读版本”状态）。
-
-### 4.2 架构思路
-
-1. **统一 Sync 读写**：在 `shared/promisify.ts` 中增加 `storageGetSync` / `storageSetSync`（及按需 `storageRemoveSync`）。
-2. **Atom 存储后端**：在 `sidepanel/atom/common.ts` 中新增基于 `chrome.storage.sync` 的 `createSyncStorageAtom`，供需要同步的配置使用。
-3. **配置 Key 常量**：在 `shared/constants.ts` 中集中维护「参与 sync 的 key 列表」，便于迁移与后台读取。
-4. **后台读取**：`getWindowConfig`、`getExtensionStorageSearchConfig` 改为从 `chrome.storage.sync` 读（与 sidepanel 一致）；可选：sync 无则回退 local，便于从旧版本平滑迁移）。
-5. **跨 Tab 一致**（可选）：在 sidepanel 中监听 `chrome.storage.onChanged`（areaName === 'sync'），收到变更时刷新对应 atom，保证多 Tab 同设备一致。
-
-### 4.3 实现要点
-
-#### 4.3.1 新增 Sync API（promisify.ts）
-
-```ts
-// 与现有 storageGetLocal / storageSetLocal 并列
-export const storageGetSync = promisifyChromeMethod<{ [key: string]: any }>(
-  chrome.storage.sync.get.bind(chrome.storage.sync)
-)
-export const storageSetSync = promisifyChromeMethod(
-  chrome.storage.sync.set.bind(chrome.storage.sync)
-)
-export const storageRemoveSync = promisifyChromeMethod(
-  chrome.storage.sync.remove.bind(chrome.storage.sync)
-)
-```
-
-#### 4.3.2 新增 createSyncStorageAtom（atom/common.ts）
-
-- 与 `createStorageAtom` 类似，但 `getItem`/`setItem`/`removeItem` 使用 `chrome.storage.sync`。
-- 这样现有 `createStorageAtom(KEY, default)` 的调用方只需改为 `createSyncStorageAtom(KEY, default)` 即可切到同步。
-
-#### 4.3.3 需要改为 Sync 的 Atom
-
-| 文件 | Atom | 改法 |
+| 场景 | 入口 | 规则 |
 |------|------|------|
-| atom/index.ts | themeAtom | 从 createSyncStorage(localStorage) 改为使用 createSyncStorageAtom(sync)，或新建基于 sync 的 storage 适配器 |
-| atom/index.ts | lastViewedVersionAtom | 保持 localStorage，不改为 sync |
-| atom/i18nAtom.ts | languageAtom | atomWithStorage(..., createSyncStorageAdapter())，适配器用 chrome.storage.sync |
-| atom/shortcutAtom.ts | shortcutMappingsAtom | 同上，用 sync 适配器 |
-| atom/searchConfigAtom.ts | searchConfigAtom, historyMaxDaysAtom, historyMaxResultsAtom | 后两者改为 createSyncStorageAtom；searchConfigAtom 改为 atomWithStorage + sync 适配器 |
-| atom/windowAtom.ts | displayModeAtom, widthAtom, heightAtom, debugAtom | createStorageAtom → createSyncStorageAtom |
+| 旧 `localStorage` -> `sync` | `createChromeSyncStorage()` | 先读 `sync`，没有再读旧 `localStorage`，读到旧值就回写 `sync` |
+| 旧 `chrome.storage.local` -> `sync` | `createSyncStorageAtom()`、`getSyncValueWithLocalFallback()` | 先读 `sync`，没有再读旧 `local`，读到旧值就回写 `sync` |
+| background / shared 读取 | `getWindowConfig()`、`getExtensionStorageSearchConfig()` | 按 key 读取，不能整组在 `sync` / `local` 之间二选一 |
 
-#### 4.3.4 主题与 useTheme
+补充两点：
 
-- 当前：themeAtom 存 localStorage，useTheme 再写一份到 `chrome.storage.local`。
-- 改为：themeAtom 直接使用 sync 后端；useTheme 中不再单独写 storage，或改为写 sync（若仍需要给 background 用，可保留一次 sync 写入，因为 getWindowConfig 会从 sync 读）。
+- `startup.ts` 只负责首屏 theme / language 初始化，但读法和上面的懒迁移规则一致。
+- `debugMode` 不进 `sync`，继续只走本机 `local`。
 
-#### 4.3.5 后台读取（data-processing.ts）
+## 4. 新增配置怎么接
 
-- `getWindowConfig()`：改为 `storageGetSync()` 取 displayMode/width/height/theme/debugMode；若希望兼容旧数据，可 `storageGetSync().then(sync => sync.key ? use(sync) : storageGetLocal())`。
-- `getExtensionStorageSearchConfig()`：同样改为从 `storageGetSync()` 读 historyMaxDays/historyMaxResults，可选 fallback local。
+| 场景 | 放哪里 | 怎么写 |
+|------|--------|--------|
+| 只影响 sidepanel 渲染 | UI 配置 | 新增 sync-backed atom，必要时在 `startup.ts` 或 `useXxx()` 里应用到 DOM / CSS variable |
+| background 打开窗口前就要读 | Window 配置 | 扩展 `WindowConfig`，新增 atom，并更新 `getWindowConfig()` |
+| 影响搜索或 history 行为 | Search 配置 | 新增 atom，shared 也要用时同步更新 `getExtensionStorageSearchConfig()` |
+| 只在当前设备生效 | 本机专属配置 | 继续用 `chrome.storage.local` 或 `localStorage`，不要接到 `sync` |
+| 只在当前流程里暂存 | 运行时缓存 | 放 `chrome.storage.session`，通过 `shared/promisify.ts` 读写 |
 
-#### 4.3.6 迁移（可选）
+像字体、字号、圆角、列表密度这种只影响 sidepanel 展示的配置，直接放 UI 配置，不要进 `getWindowConfig()`。
 
-- 首次启动或版本升级时：若 sync 中某 key 不存在，则从 `chrome.storage.local` / localStorage 读一次并写入 sync，之后只读写 sync。这样老用户可自动迁到同步配置。
+## 5. 自查清单
 
-### 4.4 多 Tab 同步（可选）
+新增一个 setting 时，至少确认这几件事：
 
-- 在 sidepanel 入口或 Provider 内：
-  - `chrome.storage.onChanged.addListener((changes, areaName) => { if (areaName === 'sync') { ... } })`
-  - 根据 `changes` 的 key 更新对应 jotai atom（或触发 refetch），使同一设备多 Tab 配置一致。
+1. 它属于 UI、Window、Search、本机专属，还是运行时缓存。
+2. 它该放 `sync`、`local` 还是 `session`。
+3. 是否需要兼容旧值，旧值原来在 `localStorage` 还是 `chrome.storage.local`。
+4. background / shared 是否也要消费，如果要，不能只改 atom。
+5. 是否影响首屏样式，如果影响，要不要补 `startup.ts` 初始化。
 
-## 5. 文件改动清单
+## 6. 当前约束
 
-| 文件 | 改动 |
-|------|------|
-| `shared/promisify.ts` | 新增 storageGetSync、storageSetSync、storageRemoveSync |
-| `shared/constants.ts` | 可选：增加 SYNC_STORAGE_KEYS 或注释标明哪些 key 走 sync |
-| `sidepanel/atom/common.ts` | 新增 createSyncStorageAtom，使用 chrome.storage.sync |
-| `sidepanel/atom/index.ts` | themeAtom 改为 sync 后端；lastViewedVersionAtom 保持原样 |
-| `sidepanel/atom/i18nAtom.ts` | languageAtom 使用 sync 适配器 |
-| `sidepanel/atom/shortcutAtom.ts` | shortcutMappingsAtom 使用 sync 适配器 |
-| `sidepanel/atom/searchConfigAtom.ts` | historyMaxDays/Results 用 createSyncStorageAtom；searchConfigAtom 用 sync 适配器 |
-| `sidepanel/atom/windowAtom.ts` | displayMode/width/height/debug 改为 createSyncStorageAtom |
-| `sidepanel/hooks/useTheme.ts` | 若 theme 已由 atom 写 sync，可去掉对 storageSetLocal 的写入或改为 storageSetSync（视 getWindowConfig 是否只读 sync） |
-| `shared/data-processing.ts` | getWindowConfig、getExtensionStorageSearchConfig 改为从 storageGetSync 读，可选 local fallback |
-
-## 6. 注意事项
-
-- **jotai atomWithStorage 异步**：当前 createStorageAtom 已是 async get/set，createSyncStorageAtom 同样异步即可；themeAtom 若从同步 localStorage 改为异步 sync，需确认首屏不会闪（getOnInit: true 等）。
-- **sync 配额**：单 key 8KB、总 100KB，当前配置量可忽略。
-- **未登录 Chrome**：sync 仍可用，数据仅存本机，登录后会自动同步到该账号。
-
-按上述步骤实现后，Setting Panel 的配置将随 Chrome 账号自动云端同步，无需额外后端或用户操作。
+- 不要在业务组件里直接手写 `chrome.storage.sync.get/set`，优先复用现有 helper。
+- 不要把所有 setting 都塞进 `getWindowConfig()`。
+- 不要把本机专属配置误接到 `sync`。
+- 懒迁移只做“读旧值并回写 `sync`”，不会删除旧存储。

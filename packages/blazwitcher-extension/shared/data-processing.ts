@@ -15,6 +15,7 @@ import {
 import {
 	getBookmarksById,
 	getBookmarksTree,
+	getSyncValueWithLocalFallback,
 	getTabGroupById,
 	historySearch,
 	storageGetLocal,
@@ -185,17 +186,19 @@ export const traversalBookmarkTreeNode = (
 	return result
 }
 
-/** 从 sync 读取搜索配置；若无则从 local 回退（兼容旧版本迁移） */
+/** 按 key 从 sync 读取搜索配置；若 sync 缺失则从 local 回退并懒迁移。 */
 export async function getExtensionStorageSearchConfig() {
-	const syncStorage = await storageGetSync()
-	const hasSync =
-		EXTENSION_STORAGE_HISTORY_MAX_DAYS in syncStorage || EXTENSION_STORAGE_HISTORY_MAX_RESULTS in syncStorage
-	const source = hasSync ? syncStorage : await storageGetLocal()
-
-	const {
-		[EXTENSION_STORAGE_HISTORY_MAX_DAYS]: historyMaxDays = DEFAULT_HISTORY_MAX_DAYS,
-		[EXTENSION_STORAGE_HISTORY_MAX_RESULTS]: historyMaxResults = DEFAULT_HISTORY_MAX_RESULTS,
-	} = source ?? {}
+	const [syncStorage, localStorage] = await Promise.all([storageGetSync(), storageGetLocal()])
+	const [historyMaxDays, historyMaxResults] = await Promise.all([
+		getSyncValueWithLocalFallback(EXTENSION_STORAGE_HISTORY_MAX_DAYS, DEFAULT_HISTORY_MAX_DAYS, {
+			syncStorage,
+			localStorage,
+		}),
+		getSyncValueWithLocalFallback(EXTENSION_STORAGE_HISTORY_MAX_RESULTS, DEFAULT_HISTORY_MAX_RESULTS, {
+			syncStorage,
+			localStorage,
+		}),
+	])
 
 	return {
 		historyMaxDays: Number(historyMaxDays),
@@ -203,18 +206,24 @@ export async function getExtensionStorageSearchConfig() {
 	}
 }
 
-/** 从 sync 读取窗口配置（displayMode/width/height/theme）；若无则从 local 回退。debugMode 仅从 local 读（不参与同步）。 */
+/** 按 key 从 sync 读取窗口配置；若 sync 缺失则从 local 回退并懒迁移。debugMode 仅从 local 读。 */
 export async function getWindowConfig(): Promise<WindowConfig> {
 	const [syncStorage, localStorage] = await Promise.all([storageGetSync(), storageGetLocal()])
-	const hasSync = EXTENSION_STORAGE_DISPLAY_MODE in syncStorage || EXTENSION_STORAGE_THEME in syncStorage
-	const source = hasSync ? syncStorage : localStorage
-
-	const {
-		[EXTENSION_STORAGE_DISPLAY_MODE]: displayMode = DefaultWindowConfig.displayMode,
-		[EXTENSION_STORAGE_WINDOW_WIDTH]: width = DefaultWindowConfig.width,
-		[EXTENSION_STORAGE_WINDOW_HEIGHT]: height = DefaultWindowConfig.height,
-		[EXTENSION_STORAGE_THEME]: theme = DefaultWindowConfig.theme,
-	} = source ?? {}
+	const [displayMode, width, height, theme] = await Promise.all([
+		getSyncValueWithLocalFallback(EXTENSION_STORAGE_DISPLAY_MODE, DefaultWindowConfig.displayMode, {
+			syncStorage,
+			localStorage,
+		}),
+		getSyncValueWithLocalFallback(EXTENSION_STORAGE_WINDOW_WIDTH, DefaultWindowConfig.width, {
+			syncStorage,
+			localStorage,
+		}),
+		getSyncValueWithLocalFallback(EXTENSION_STORAGE_WINDOW_HEIGHT, DefaultWindowConfig.height, {
+			syncStorage,
+			localStorage,
+		}),
+		getSyncValueWithLocalFallback(EXTENSION_STORAGE_THEME, DefaultWindowConfig.theme, { syncStorage, localStorage }),
+	])
 	const debugMode = localStorage?.[EXTENSION_STORAGE_DEBUG_MODE] ?? DefaultWindowConfig.debugMode
 
 	return { displayMode, width, height, theme, debugMode }

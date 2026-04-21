@@ -27,7 +27,8 @@ export const languageAtom = atomWithStorage<LanguageType>(
 )
 
 export const i18nAtom = atom((get) => <K extends TranslationKeys>(key: K, args?: any) => {
-	const defaultLang = get(languageAtom)
+	const currentLanguage = get(languageAtom)
+	const defaultLang = currentLanguage instanceof Promise ? defaultLanguage : currentLanguage
 	const translation = translations[key]?.[defaultLang] || translations[key]?.en
 
 	if (typeof translation === 'function') {
