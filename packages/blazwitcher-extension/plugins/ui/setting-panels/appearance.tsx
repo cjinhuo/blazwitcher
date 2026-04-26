@@ -1,4 +1,15 @@
-import { IconComponent, IconDesktop, IconExpand, IconFont, IconInfoCircle, IconLanguage, IconMoon, IconRefresh, IconSun, IconTerminal } from '@douyinfe/semi-icons'
+import {
+	IconComponent,
+	IconDesktop,
+	IconExpand,
+	IconFont,
+	IconInfoCircle,
+	IconLanguage,
+	IconMoon,
+	IconRefresh,
+	IconSun,
+	IconTerminal,
+} from '@douyinfe/semi-icons'
 import { Button, Card, InputNumber, Radio, RadioGroup, Select, Tooltip } from '@douyinfe/semi-ui'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import styled from 'styled-components'

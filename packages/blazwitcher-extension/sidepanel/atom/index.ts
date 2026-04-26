@@ -25,12 +25,9 @@ export const themeAtom = atomWithStorage<ThemeColor>(
 	{ getOnInit: true }
 )
 
-export const fontFamilyAtom = atomWithStorage<string>(
-	PAGE_STORAGE_FONT_FAMILY,
-	'',
-	createChromeSyncStorage<string>(),
-	{ getOnInit: true }
-)
+export const fontFamilyAtom = atomWithStorage<string>(PAGE_STORAGE_FONT_FAMILY, '', createChromeSyncStorage<string>(), {
+	getOnInit: true,
+})
 
 export const activeItemAtom = atomWithReset<ListItemType | null>(null)
 export const originalListAtom = atomWithReset<ListItemType[]>([])
