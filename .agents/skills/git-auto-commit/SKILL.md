@@ -32,12 +32,12 @@ description: Git 自动提交工具。当用户需要提交代码变更、commit
 
 ### 规范来源优先级
 
-1. **优先读取项目根目录下的 `.commitlintrc.xx` 配置文件**
+1. **优先读取项目根目录下的 `.commitlint` 配置文件**
    - 如果存在该配置文件，严格遵循其中定义的规范
    - 读取可用的 commit type 列表及对应的 emoji
    - 读取 scope 的允许值及其他提交规则
 
-2. **如果没有 `.commitlintrc.xx` 配置文件**
+2. **如果没有 `.commitlint` 配置文件**
    - 参考 [commit-message-convention.md](./commit-message-convention.md) 中的默认规范
    - 使用标准的 conventional commits 格式
 
