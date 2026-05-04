@@ -1,6 +1,11 @@
 import { atom } from 'jotai'
 import { atomWithReset, atomWithStorage } from 'jotai/utils'
-import { PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION, PAGE_STORAGE_THEME_COLOR, ThemeColor } from '~shared/constants'
+import {
+	PAGE_STORAGE_FONT_FAMILY,
+	PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION,
+	PAGE_STORAGE_THEME_COLOR,
+	ThemeColor,
+} from '~shared/constants'
 import type { AiGroupingProgress, CommandPlugin, ListItemType, WindowData } from '~shared/types'
 import { createChromeSyncStorage } from './common'
 import { defaultLanguage, languageAtom } from './i18nAtom'
@@ -19,6 +24,11 @@ export const themeAtom = atomWithStorage<ThemeColor>(
 	createChromeSyncStorage<ThemeColor>(),
 	{ getOnInit: true }
 )
+
+export const fontFamilyAtom = atomWithStorage<string>(PAGE_STORAGE_FONT_FAMILY, '', createChromeSyncStorage<string>(), {
+	getOnInit: true,
+})
+
 export const activeItemAtom = atomWithReset<ListItemType | null>(null)
 export const originalListAtom = atomWithReset<ListItemType[]>([])
 export const windowDataListAtom = atomWithReset<WindowData[]>([])
@@ -40,6 +50,7 @@ export const restoreAppearanceSettingsAtom = atom(
 	(_, set) => {
 		set(themeAtom, ThemeColor.System)
 		set(languageAtom, defaultLanguage)
+		set(fontFamilyAtom, '')
 		set(restoreWindowConfigAtom)
 	}
 )

@@ -1,8 +1,9 @@
 import { useAtomValue } from 'jotai'
 import { useEffect, useMemo } from 'react'
+import { formatFontFamily } from '~plugins/ui'
 import { TabGroupColorMap } from '~shared/constants'
 import { isDarkMode } from '~shared/utils'
-import { themeAtom } from '~sidepanel/atom'
+import { fontFamilyAtom, themeAtom } from '~sidepanel/atom'
 
 export const setThemeClass = (isDark: boolean) => {
 	const body = document.body
@@ -17,13 +18,27 @@ export const setThemeClass = (isDark: boolean) => {
 	}
 }
 
+export const setFontFamily = (fontFamily: string) => {
+	const body = document.body
+	if (!fontFamily) {
+		body.style.removeProperty('--font-family')
+		return
+	}
+	body.style.setProperty('--font-family', formatFontFamily(fontFamily))
+}
+
 export const useTheme = () => {
 	const themeColor = useAtomValue(themeAtom)
+	const fontFamily = useAtomValue(fontFamilyAtom)
 
 	useEffect(() => {
 		// theme 已由 themeAtom 写入 chrome.storage.sync，无需在此重复写入；getWindowConfig 从 sync 读取
 		setThemeClass(isDarkMode(themeColor))
 	}, [themeColor])
+
+	useEffect(() => {
+		setFontFamily(fontFamily)
+	}, [fontFamily])
 }
 
 export const useColorMap = () => {

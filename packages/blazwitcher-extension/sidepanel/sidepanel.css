@@ -2,7 +2,7 @@
 
 * {
 	box-sizing: border-box;
-	font-family: "SourceCodePro", monospace !important;
+	font-family: var(--font-family) !important;
 }
 html,
 body {
@@ -13,7 +13,7 @@ body {
 	padding: 0;
 }
 @font-face {
-	font-family: "SourceCodePro", monospace;
+	font-family: "SourceCodePro";
 	src: url("data-base64:~assets/SourceCodePro.ttf") format("ttf");
 }
 

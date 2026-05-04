@@ -86,7 +86,8 @@
 			"system.display",
 			"sidePanel",
 			"contextMenus",
-			"scripting"
+			"scripting",
+			"fontSettings"
 		],
 		"offline_enabled": true
 	}

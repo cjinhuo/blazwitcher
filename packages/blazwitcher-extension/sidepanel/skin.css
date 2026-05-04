@@ -1,4 +1,5 @@
 html {
+	--font-family: "SourceCodePro", monospace;
 	--color-neutral-1: #171717;
 	--color-neutral-2: #262626;
 	--color-neutral-3: #404040;

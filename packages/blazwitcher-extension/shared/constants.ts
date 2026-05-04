@@ -141,6 +141,7 @@ export const DEFAULT_STRICTNESS_COEFFICIENT = 0.6
 export const PAGE_STORAGE_LANGUAGE_KEY = 'language'
 export const PAGE_STORAGE_SHORTCUT_MAPPINGS = 'shortcut_mappings'
 export const PAGE_STORAGE_THEME_COLOR = 'theme_color'
+export const PAGE_STORAGE_FONT_FAMILY = 'font_family'
 export const PAGE_STORAGE_SEARCH_CONFIG = 'search_config'
 /** 仅本机，不参与云端同步 */
 export const PAGE_STORAGE_SHOW_UPDATE_NOTIFICATION = 'show_update_notification'
