@@ -42,3 +42,7 @@ dist/
 # server
 log
 tsconfig.tsbuildinfo
+
+
+# trae
+.trae/documents

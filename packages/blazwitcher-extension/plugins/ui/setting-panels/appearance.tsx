@@ -193,13 +193,16 @@ export const AppearancePanel: React.FC = () => {
 						<IconFont />
 						{i18n('fontFamily')}
 					</Section>
-					<Select
-						style={{ width: '100%' }}
-						value={fontFamily}
-						onChange={(value) => setFontFamily(value as string)}
-						filter
-						optionList={fontOptions}
-					/>
+					{/* biome-ignore lint/a11y/noStaticElementInteractions: prevent arrow key propagation to global handler */}
+					<div onKeyDown={(e) => e.nativeEvent.stopPropagation()}>
+						<Select
+							style={{ width: '100%' }}
+							value={fontFamily}
+							onChange={(value) => setFontFamily(value as string)}
+							filter
+							optionList={fontOptions}
+						/>
+					</div>
 				</div>
 
 				<div>
