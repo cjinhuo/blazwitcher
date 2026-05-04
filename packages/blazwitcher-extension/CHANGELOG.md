@@ -1,5 +1,19 @@
 # blazwitcher
 
+## 1.3.0
+
+### Minor Changes
+
+- feat: add font family setting in appearance panel with system font options and persisted preference. @Kwensiu · 2026-05-04 · [#81a6f0f3](https://github.com/cjinhuo/blazwitcher/commit/81a6f0f376f99e627d795441623a9574ed06eef5)
+- feat: 在外观设置面板新增字体选择，支持系统字体选项并持久化用户偏好。 @Kwensiu · 2026-05-04 · [#81a6f0f3](https://github.com/cjinhuo/blazwitcher/commit/81a6f0f376f99e627d795441623a9574ed06eef5)
+
+### Patch Changes
+
+- fix: preserve legacy settings by lazily migrating sync values per key @Julian0197 · 2026-04-21 · [#c6521ea3](https://github.com/cjinhuo/blazwitcher/commit/c6521ea3158c39d3066388f30095e3e96faa30ed)
+- fix: 通过按 key 懒迁移 sync 配置来保留旧版本设置 @Julian0197 · 2026-04-21 · [#c6521ea3](https://github.com/cjinhuo/blazwitcher/commit/c6521ea3158c39d3066388f30095e3e96faa30ed)
+- fix: support using Chinese dunhao as slash command prefix in sidepanel search @cjinhuo · 2026-03-08 · [#0e413de1](https://github.com/cjinhuo/blazwitcher/commit/0e413de16d6a86176eee5190ebe875584c01b734)
+- fix: 在侧边栏搜索中支持将中文顿号识别为斜杠命令前缀 @cjinhuo · 2026-03-08 · [#0e413de1](https://github.com/cjinhuo/blazwitcher/commit/0e413de16d6a86176eee5190ebe875584c01b734)
+
 ## 1.2.0
 
 ### Minor Changes
