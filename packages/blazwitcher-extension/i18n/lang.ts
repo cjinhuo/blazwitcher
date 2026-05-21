@@ -250,6 +250,18 @@ export const lang = {
 		[LanguageType.zh]: '在当前页搜索/打开输入内容',
 		[LanguageType.en]: 'Search/Open Input Here',
 	},
+	goToUrl: {
+		[LanguageType.zh]: '打开',
+		[LanguageType.en]: 'Go to',
+	},
+	searchWithEngine: {
+		[LanguageType.zh]: (engine: string) => `用 ${engine} 搜索`,
+		[LanguageType.en]: 'Search',
+	},
+	searchWithEngineSuffix: {
+		[LanguageType.zh]: '',
+		[LanguageType.en]: (engine: string) => `on ${engine}`,
+	},
 	edit: {
 		[LanguageType.zh]: '编辑',
 		[LanguageType.en]: 'Edit',

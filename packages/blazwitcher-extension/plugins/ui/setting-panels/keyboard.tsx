@@ -50,8 +50,9 @@ const getShortcutGroup = (id: OperationItemPropertyTypes): keyof typeof shortcut
 const isGlobalShortcut = (id: OperationItemPropertyTypes) =>
 	id === OperationItemPropertyTypes.searchOpen || id === OperationItemPropertyTypes.searchOpenHere
 
+// Semi 的类组件类型和 styled-components 在当前 React 类型组合下不完全兼容，这里只隔离样式包装边界。
 const styles = {
-	card: styled(Card)`
+	card: styled(Card as any)`
     width: 100%;
   ` as typeof Card,
 	shortcutDisplay: styled.div`
@@ -97,7 +98,7 @@ const styles = {
     color: var(--semi-color-text-2);
     cursor: pointer;
     flex-shrink: 0;
-    
+
     &:hover {
       color: var(--semi-color-text-1);
     }
@@ -110,7 +111,7 @@ const styles = {
     text-overflow: ellipsis;
     line-height: 1.5;
   `,
-	listItem: styled(List.Item)`
+	listItem: styled(List.Item as any)`
     display: flex;
     align-items: center;
     padding: 12px 16px;
@@ -119,17 +120,17 @@ const styles = {
       background-color: var(--semi-color-fill-0);
     }
   `,
-	editButton: styled(Button)`
+	editButton: styled(Button as any)`
     flex-shrink: 0;
   ` as typeof Button,
 	modalSection: styled.div`
     margin-bottom: 16px;
-    
+
     .label {
       font-weight: 600;
       margin-bottom: 8px;
     }
-    
+
     .content {
       color: var(--semi-color-text-0);
     }
@@ -147,19 +148,19 @@ const styles = {
     font-size: 11px;
     line-height: 1.5;
     outline: none;
-    
+
     &:focus {
       border-color: var(--semi-color-primary);
     }
   `,
 	groupSection: styled.div`
     margin-bottom: 24px;
-    
+
     &:last-child {
       margin-bottom: 0;
     }
   `,
-	groupTitle: styled(Typography.Title)`
+	groupTitle: styled(Typography.Title as any)`
     margin: 6px 0 6px 0 !important;
     font-size: 16px !important;
   ` as typeof Typography.Title,
@@ -231,6 +232,7 @@ export const KeyboardPanel: React.FC = () => {
 			return
 		}
 
+		// 搜索输入快捷键为全局动作，不能和其他快捷键重复
 		const isDuplicateInSameGroup = shortcuts.some((shortcut) => {
 			if (shortcut.id === currentShortcut.id || shortcut.shortcut.toLowerCase() !== tempKeys.toLowerCase()) {
 				return false

@@ -76,6 +76,8 @@ const normalizeSearchConfig = (value: StoredSearchConfig): SearchConfigAtomType 
 
 const storedSearchConfigAtom = atom<SearchConfigAtomType>(DefaultSearchConfig)
 
+// 搜索引擎配置需要在插件窗口关闭后仍可靠保存。
+// 这里不用 atomWithStorage 的隐式异步写入，改为显式读 sync、兼容旧存储并在写入时 await chrome.storage.sync。
 storedSearchConfigAtom.onMount = (setValue) => {
 	void (async () => {
 		const [syncStorage, chromeLocalStorage] = await Promise.all([

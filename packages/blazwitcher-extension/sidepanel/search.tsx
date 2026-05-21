@@ -46,14 +46,14 @@ function Search({ onSearch }: SearchProps) {
 						.filter((item) => item.trim())
 						.join('')
 				: value
-			onSearch(formattedValue.toLowerCase())
+			onSearch(formattedValue)
 		},
 		[isComposition, onSearch]
 	)
 
 	useEffect(() => {
 		setInputValue(searchValue.value)
-		onSearch(searchValue.value.toLowerCase())
+		onSearch(searchValue.value)
 	}, [searchValue, onSearch])
 
 	return (
