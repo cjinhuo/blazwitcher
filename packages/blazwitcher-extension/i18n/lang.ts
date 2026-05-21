@@ -242,6 +242,14 @@ export const lang = {
 		[LanguageType.zh]: '查询',
 		[LanguageType.en]: 'Query',
 	},
+	searchOpen: {
+		[LanguageType.zh]: '搜索/打开输入内容',
+		[LanguageType.en]: 'Search/Open Input',
+	},
+	searchOpenHere: {
+		[LanguageType.zh]: '在当前页搜索/打开输入内容',
+		[LanguageType.en]: 'Search/Open Input Here',
+	},
 	edit: {
 		[LanguageType.zh]: '编辑',
 		[LanguageType.en]: 'Edit',
@@ -371,6 +379,50 @@ export const lang = {
 		[LanguageType.zh]: '搜索时要求单词连续匹配，如搜索 "hello"，则 "heo" 不会被匹配',
 		[LanguageType.en]:
 			'Require consecutive word matching when searching, e.g. searching "hello", "heo" will not be matched',
+	},
+	searchEngineQueryTemplate: {
+		[LanguageType.zh]: '搜索引擎 Query',
+		[LanguageType.en]: 'Search Engine Query',
+	},
+	searchEngines: {
+		[LanguageType.zh]: '搜索引擎',
+		[LanguageType.en]: 'Search Engines',
+	},
+	addSearchEngine: {
+		[LanguageType.zh]: '添加搜索引擎',
+		[LanguageType.en]: 'Add Search Engine',
+	},
+	editSearchEngine: {
+		[LanguageType.zh]: '编辑搜索引擎',
+		[LanguageType.en]: 'Edit Search Engine',
+	},
+	searchEngineName: {
+		[LanguageType.zh]: '名称',
+		[LanguageType.en]: 'Name',
+	},
+	defaultSearchEngine: {
+		[LanguageType.zh]: '默认',
+		[LanguageType.en]: 'Default',
+	},
+	noSearchEngines: {
+		[LanguageType.zh]: '暂无搜索引擎',
+		[LanguageType.en]: 'No search engines',
+	},
+	searchEnginePreview: {
+		[LanguageType.zh]: '预览',
+		[LanguageType.en]: 'Preview',
+	},
+	searchEngineNameRequired: {
+		[LanguageType.zh]: '请输入搜索引擎名称',
+		[LanguageType.en]: 'Please input search engine name',
+	},
+	searchEngineQueryTemplateInvalid: {
+		[LanguageType.zh]: '请输入包含 %s 的 http/https 搜索 URL',
+		[LanguageType.en]: 'Please input an http/https search URL containing %s',
+	},
+	searchEngineQueryTemplateDesc: {
+		[LanguageType.zh]: '使用 %s 作为输入内容占位符，例如 Google: https://www.google.com/search?q=%s',
+		[LanguageType.en]: 'Use %s as the input placeholder, e.g. Google: https://www.google.com/search?q=%s',
 	},
 	// footer icon
 	settingTooltip: {

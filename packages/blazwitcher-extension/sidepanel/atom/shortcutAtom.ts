@@ -23,6 +23,16 @@ const defaultShortcutConfigs: Shortcut[] = [
 		action: 'searchHistory',
 		shortcut: 'Ctrl + Shift + H',
 	},
+	{
+		id: OperationItemPropertyTypes.searchOpen,
+		action: 'searchOpen',
+		shortcut: 'Ctrl + ↵',
+	},
+	{
+		id: OperationItemPropertyTypes.searchOpenHere,
+		action: 'searchOpenHere',
+		shortcut: 'Ctrl + Shift + ↵',
+	},
 	// Tab 专用快捷键
 	{
 		id: OperationItemPropertyTypes.tabOpen,
@@ -99,7 +109,7 @@ export const shortcutsAtom = atom((get) => {
 	return defaultShortcutConfigs.map((config) => ({
 		id: config.id,
 		action: config.action,
-		shortcut: mappings[config.id] || config.shortcut,
+		shortcut: Object.hasOwn(mappings, config.id) ? mappings[config.id] : config.shortcut,
 		tooltip: config.tooltip,
 	}))
 })

@@ -130,9 +130,10 @@ interface ListProps<T extends ListItemType = ListItemType> {
 	// 通过 props 传进来就可以在外面控制如何渲染和点击事件
 	RenderItem: React.FC<{ item: T }>
 	handleItemClick: (item: T) => void
+	searchValue: string
 }
 
-export default function List({ list, RenderItem, handleItemClick }: ListProps) {
+export default function List({ list, RenderItem, handleItemClick, searchValue }: ListProps) {
 	const i18n = useAtomValue(i18nAtom)
 	const isComposition = useAtomValue(compositionAtom)
 	const setActiveItem = useSetAtom(activeItemAtom)
@@ -233,7 +234,7 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 	)
 
 	// 根据不同类型触发快捷键，不同类型的快捷键互不干扰
-	useKeyboardListen(list, activeIndex)
+	useKeyboardListen(list, activeIndex, searchValue)
 	// listen default event
 	useEffect(() => {
 		// only listen to keydown when not in composition（type chinese）

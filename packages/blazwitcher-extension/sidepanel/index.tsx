@@ -96,9 +96,16 @@ export default function SidePanel() {
 					: [])
 			)
 			// RenderItem 如果使用函数，会导致每次渲染都会重新创建一个新的函数，从而导致性能问题
-			return <List list={itemsWithDivide} RenderItem={ListItemRenderItem} handleItemClick={handleItemClick} />
+			return (
+				<List
+					list={itemsWithDivide}
+					RenderItem={ListItemRenderItem}
+					handleItemClick={handleItemClick}
+					searchValue={searchValue}
+				/>
+			)
 		},
-		[i18n, searchConfig]
+		[i18n, searchConfig, searchValue]
 	)
 
 	const RenderContent = useMemo(() => {
@@ -116,7 +123,14 @@ export default function SidePanel() {
 		if (searchValue.startsWith('/')) {
 			const [hitPlugin, pluginList, mainSearchValue] = matchPlugin(plugins(i18n), searchValue)
 			if (!hitPlugin || hitPlugin?.action)
-				return <List list={pluginList} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem} />
+				return (
+					<List
+						list={pluginList}
+						handleItemClick={handlePluginItemClick}
+						RenderItem={RenderPluginItem}
+						searchValue={searchValue}
+					/>
+				)
 			if (hitPlugin.render) {
 				return hitPlugin.render(mainSearchValue)
 			}

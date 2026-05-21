@@ -16,6 +16,8 @@ import {
 import { storageGet, storageRemove } from './promisify'
 import { ItemType, type ListItemType, type Matrix } from './types'
 
+export { faviconURL } from './favicon'
+
 /**
  * 滚动元素到视图中，如果元素在容器中，则滚动容器，如果元素在容器中，则滚动容器，如果元素在容器中，则滚动容器
  * @param element 需要滚动的元素
@@ -125,29 +127,110 @@ export const activeTab = async (item: ListItemType<ItemType.Tab>) => {
 	closeCurrentWindowAndClearStorage()
 }
 
-export const createTabWithUrl = async (url: string) => {
+const getTargetWindowId = async () => {
 	const storage = await storageGet()
-	// need to focus the last active window to fix the bug of switching abort in arc browser
 	const lastActiveWindowId = storage[LAST_ACTIVE_WINDOW_ID_KEY]
+
 	if (lastActiveWindowId) {
-		await chrome.windows.update(lastActiveWindowId, { focused: true })
+		try {
+			const targetWindow = await chrome.windows.get(lastActiveWindowId)
+			if (targetWindow?.id && targetWindow.type === 'normal') {
+				await chrome.windows.update(targetWindow.id, { focused: true })
+				return targetWindow.id
+			}
+		} catch {}
 	}
-	await chrome.tabs.create({ url, windowId: lastActiveWindowId })
+
+	const selfWindowId = storage[SELF_WINDOW_ID_KEY]
+	const windows = await chrome.windows.getAll({ windowTypes: ['normal'] })
+	const targetWindow = windows.find((item) => item.focused && item.id !== selfWindowId) || windows[0]
+	if (targetWindow?.id) {
+		await chrome.windows.update(targetWindow.id, { focused: true })
+		return targetWindow.id
+	}
+
+	return undefined
+}
+
+export const createTabWithUrl = async (url: string) => {
+	const targetWindowId = await getTargetWindowId()
+	await chrome.tabs.create({ url, windowId: targetWindowId })
 	closeCurrentWindowAndClearStorage()
 }
 
 export const navigateCurrentTab = async (url: string) => {
-	const storage = await storageGet()
-	const lastActiveWindowId = storage[LAST_ACTIVE_WINDOW_ID_KEY]
-	const [activeTab] = await chrome.tabs.query({ active: true, windowId: lastActiveWindowId })
+	const targetWindowId = await getTargetWindowId()
+	const [activeTab] = await chrome.tabs.query({ active: true, windowId: targetWindowId })
 	if (activeTab?.id) {
 		await chrome.tabs.update(activeTab.id, { url })
+		closeCurrentWindowAndClearStorage()
 	}
-	closeCurrentWindowAndClearStorage()
 }
 
 export const handleItemClick = async (item: ListItemType) => {
 	isTabItem(item) ? await activeTab(item) : await createTabWithUrl(item.data.url)
+}
+
+const SUPPORTED_NAVIGATION_PROTOCOLS = new Set(['http:', 'https:', 'ftp:'])
+const DOMAIN_LABEL_PATTERN = /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/i
+
+const hasExplicitProtocol = (value: string) => /^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(value)
+
+const isValidPort = (port: string) => {
+	if (!port) return true
+	if (!/^\d+$/.test(port)) return false
+	const portNumber = Number(port)
+	return portNumber > 0 && portNumber <= 65535
+}
+
+const isValidIpv4Host = (host: string) => {
+	const parts = host.split('.')
+	return (
+		parts.length === 4 &&
+		parts.every((part) => {
+			if (!/^\d{1,3}$/.test(part)) return false
+			if (part.length > 1 && part.startsWith('0')) return false
+			const value = Number(part)
+			return value >= 0 && value <= 255
+		})
+	)
+}
+
+const isValidDomainHost = (host: string) => {
+	if (!host.includes('.')) return false
+	const labels = host.split('.')
+	const tld = labels.at(-1)
+	if (!tld || /^\d+$/.test(tld)) return false
+	if (!/^([a-z\u00A1-\uFFFF]{2,}|xn--[a-z0-9-]{2,})$/i.test(tld)) return false
+	return labels.every((label) => DOMAIN_LABEL_PATTERN.test(label))
+}
+
+const isValidUrlHost = (url: URL) => {
+	const host = url.hostname.replace(/^\[|\]$/g, '')
+	if (!host) return false
+	if (host === 'localhost') return true
+	if (isValidIpv4Host(host)) return true
+	if (url.hostname.startsWith('[') && url.hostname.endsWith(']')) return true
+	return isValidDomainHost(host)
+}
+
+export const isLikelyUrl = (value: string) => {
+	const input = value.trim()
+	if (!input) return false
+	if (/[\s<>]/.test(input) || input.startsWith('mailto:')) return false
+	try {
+		const url = new URL(hasExplicitProtocol(input) ? input : `https://${input}`)
+		return SUPPORTED_NAVIGATION_PROTOCOLS.has(url.protocol) && isValidPort(url.port) && isValidUrlHost(url)
+	} catch {
+		return false
+	}
+}
+
+export const toNavigableUrl = (value: string) => {
+	const input = value.trim()
+	if (!input) return ''
+	if (hasExplicitProtocol(input)) return input
+	return `https://${input}`
 }
 
 export const closeTab = async (item: ListItemType<ItemType.Tab>) => {
@@ -169,13 +252,6 @@ export const queryInNewTab = async (item: ListItemType) => {
 		url = `chrome://history/?q=${q}`
 	}
 	await createTabWithUrl(url)
-}
-
-export function faviconURL(u: string) {
-	const url = new URL(chrome.runtime.getURL('/_favicon/'))
-	url.searchParams.set('pageUrl', u)
-	url.searchParams.set('size', '24')
-	return url.toString()
 }
 
 export function sleep(ms: number) {

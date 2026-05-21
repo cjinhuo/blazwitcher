@@ -62,3 +62,8 @@ export const getTypeSpecificOperationIds = (itemType: ItemType): OperationItemPr
 			return []
 	}
 }
+
+export const getSearchOperationIds = () => ({
+	openId: OperationItemPropertyTypes.searchOpen,
+	openHereId: OperationItemPropertyTypes.searchOpenHere,
+})

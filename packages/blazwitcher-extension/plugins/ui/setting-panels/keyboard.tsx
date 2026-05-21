@@ -29,7 +29,12 @@ const shortcutTypeGroups: Record<string, OperationItemPropertyTypes[]> = {
 		OperationItemPropertyTypes.delete,
 	],
 	bookmark: [OperationItemPropertyTypes.bookmarkOpen, OperationItemPropertyTypes.bookmarkOpenHere],
-	common: [OperationItemPropertyTypes.start, OperationItemPropertyTypes.query],
+	common: [
+		OperationItemPropertyTypes.start,
+		OperationItemPropertyTypes.query,
+		OperationItemPropertyTypes.searchOpen,
+		OperationItemPropertyTypes.searchOpenHere,
+	],
 }
 
 // 获取快捷键所属的分组
@@ -41,6 +46,9 @@ const getShortcutGroup = (id: OperationItemPropertyTypes): keyof typeof shortcut
 	}
 	return null
 }
+
+const isGlobalShortcut = (id: OperationItemPropertyTypes) =>
+	id === OperationItemPropertyTypes.searchOpen || id === OperationItemPropertyTypes.searchOpenHere
 
 const styles = {
 	card: styled(Card)`
@@ -223,19 +231,17 @@ export const KeyboardPanel: React.FC = () => {
 			return
 		}
 
-		// 获取当前快捷键所属的分组
-		const currentGroup = getShortcutGroup(currentShortcut.id)
-		if (!currentGroup) {
-			Toast.error(i18n('unknownOperation'))
-			return
-		}
-
-		// 只检查同组内的快捷键是否冲突
-		const groupIds = shortcutTypeGroups[currentGroup]
-		const isDuplicateInSameGroup = shortcuts.some(
-			(s) =>
-				groupIds.includes(s.id) && s.id !== currentShortcut.id && s.shortcut.toLowerCase() === tempKeys.toLowerCase()
-		)
+		const isDuplicateInSameGroup = shortcuts.some((shortcut) => {
+			if (shortcut.id === currentShortcut.id || shortcut.shortcut.toLowerCase() !== tempKeys.toLowerCase()) {
+				return false
+			}
+			if (isGlobalShortcut(currentShortcut.id) || isGlobalShortcut(shortcut.id)) {
+				return true
+			}
+			const currentGroup = getShortcutGroup(currentShortcut.id)
+			const targetGroup = getShortcutGroup(shortcut.id)
+			return currentGroup && currentGroup === targetGroup
+		})
 
 		if (isDuplicateInSameGroup) {
 			Toast.error(i18n('shortcutConflictInSameType'))
