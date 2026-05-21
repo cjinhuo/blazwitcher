@@ -68,7 +68,10 @@ const normalizeSearchConfig = (value: StoredSearchConfig): SearchConfigAtomType 
 
 	return {
 		...DefaultSearchConfig,
-		...value,
+		historyDisplayCount: value.historyDisplayCount ?? DefaultSearchConfig.historyDisplayCount,
+		bookmarkDisplayCount: value.bookmarkDisplayCount ?? DefaultSearchConfig.bookmarkDisplayCount,
+		topSuggestionsCount: value.topSuggestionsCount ?? DefaultSearchConfig.topSuggestionsCount,
+		enableConsecutiveSearch: value.enableConsecutiveSearch ?? DefaultSearchConfig.enableConsecutiveSearch,
 		searchEngines,
 		defaultSearchEngineId,
 	}

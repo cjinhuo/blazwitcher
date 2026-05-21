@@ -105,14 +105,16 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number, sea
 			const orderedKeys = standardizeKeyOrder(keys)
 			const pressedShortcut = orderedKeys.join(' + ')
 
-			if (pressedShortcut.toLowerCase() === shortcuts.find((s) => s.id === searchOpenId)?.shortcut.toLowerCase()) {
+			const hasSearchInput = searchValue.trim() !== ''
+
+			if (hasSearchInput && pressedShortcut.toLowerCase() === shortcuts.find((s) => s.id === searchOpenId)?.shortcut.toLowerCase()) {
 				e.preventDefault()
 				e.stopPropagation()
 				void handleSearchFallback('NEW_TAB')
 				return
 			}
 
-			if (pressedShortcut.toLowerCase() === shortcuts.find((s) => s.id === searchOpenHereId)?.shortcut.toLowerCase()) {
+			if (hasSearchInput && pressedShortcut.toLowerCase() === shortcuts.find((s) => s.id === searchOpenHereId)?.shortcut.toLowerCase()) {
 				e.preventDefault()
 				e.stopPropagation()
 				void handleSearchFallback('CURRENT_TAB')
