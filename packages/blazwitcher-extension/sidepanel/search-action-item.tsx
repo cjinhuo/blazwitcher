@@ -49,6 +49,13 @@ const TextPart = styled.span`
 	flex-shrink: 0;
 `
 
+const ValuePart = styled.span`
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	min-width: 0;
+`
+
 export const RenderSearchActionItem = ({ item }: { item: ListItemType<ItemType.SearchAction> }) => {
 	const colorMap = useColorMap()
 	const valueHitRanges: [number, number][] = item.data.value ? [[0, item.data.value.length - 1]] : []
@@ -66,7 +73,9 @@ export const RenderSearchActionItem = ({ item }: { item: ListItemType<ItemType.S
 			</ActionIcon>
 			<ActionTitle className={NORMAL_TEXT_CLASS}>
 				<TextPart>{item.data.prefix}&nbsp;</TextPart>
-				<HighlightText source={item.data.value} hitRanges={valueHitRanges} id={item.data.id} />
+				<ValuePart>
+					<HighlightText source={item.data.value} hitRanges={valueHitRanges} id={item.data.id} />
+				</ValuePart>
 				{item.data.suffix && <TextPart>&nbsp;{item.data.suffix}</TextPart>}
 			</ActionTitle>
 			<RenderSearchActionOperation item={item} />

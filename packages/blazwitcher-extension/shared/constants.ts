@@ -60,16 +60,28 @@ export interface SearchEngineConfig {
 	queryTemplate: string
 }
 
-export const DEFAULT_SEARCH_ENGINE: SearchEngineConfig = {
+export const GOOGLE_SEARCH_ENGINE: SearchEngineConfig = {
 	id: 'google',
 	name: 'Google',
 	queryTemplate: DEFAULT_SEARCH_ENGINE_QUERY_TEMPLATE,
 }
 
+export const BAIDU_SEARCH_ENGINE: SearchEngineConfig = {
+	id: 'baidu',
+	name: 'Baidu',
+	queryTemplate: `https://www.baidu.com/s?wd=${SEARCH_QUERY_PLACEHOLDER}`,
+}
+
+export const BING_SEARCH_ENGINE: SearchEngineConfig = {
+	id: 'bing',
+	name: 'Bing',
+	queryTemplate: `https://www.bing.com/search?q=${SEARCH_QUERY_PLACEHOLDER}`,
+}
+
 export const SEARCH_ENGINE_PRESETS: SearchEngineConfig[] = [
-	{
-		...DEFAULT_SEARCH_ENGINE,
-	},
+	GOOGLE_SEARCH_ENGINE,
+	BAIDU_SEARCH_ENGINE,
+	BING_SEARCH_ENGINE,
 ]
 
 // 首屏与分片加载：首条消息只发 20 条 tabs
@@ -89,7 +101,7 @@ export const DefaultSearchConfig = {
 	topSuggestionsCount: DEFAULT_TOP_SUGGESTIONS_COUNT,
 	enableConsecutiveSearch: DEFAULT_ENABLE_CONSECUTIVE_SEARCH,
 	searchEngines: SEARCH_ENGINE_PRESETS,
-	defaultSearchEngineId: DEFAULT_SEARCH_ENGINE.id,
+	defaultSearchEngineId: GOOGLE_SEARCH_ENGINE.id,
 }
 
 export enum DebugMode {
