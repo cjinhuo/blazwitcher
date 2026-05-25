@@ -1,9 +1,10 @@
 import { IconLink, IconSearch } from '@douyinfe/semi-icons'
 import styled from 'styled-components'
 import { ContentContainer, IMAGE_CLASS, NORMAL_TEXT_CLASS } from '~shared/common-styles'
-import type { ListItemType } from '~shared/types'
+import { ItemType, type ListItemType } from '~shared/types'
 import { useColorMap } from '~sidepanel/hooks/useTheme'
 import HighlightText from './highlight-text'
+import { RenderSearchActionOperation } from './operation'
 
 // 普通列表没有命中时，渲染“打开输入内容”或“使用默认搜索引擎搜索”的兜底项。
 const ActionIcon = styled.div`
@@ -48,7 +49,7 @@ const TextPart = styled.span`
 	flex-shrink: 0;
 `
 
-export const RenderSearchActionItem = ({ item }: { item: ListItemType }) => {
+export const RenderSearchActionItem = ({ item }: { item: ListItemType<ItemType.SearchAction> }) => {
 	const colorMap = useColorMap()
 	const valueHitRanges: [number, number][] = item.data.value ? [[0, item.data.value.length - 1]] : []
 	return (
@@ -68,6 +69,7 @@ export const RenderSearchActionItem = ({ item }: { item: ListItemType }) => {
 				<HighlightText source={item.data.value} hitRanges={valueHitRanges} id={item.data.id} />
 				{item.data.suffix && <TextPart>&nbsp;{item.data.suffix}</TextPart>}
 			</ActionTitle>
+			<RenderSearchActionOperation item={item} />
 		</ContentContainer>
 	)
 }

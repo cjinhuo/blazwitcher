@@ -250,6 +250,22 @@ export const lang = {
 		[LanguageType.zh]: '在当前页搜索/打开输入内容',
 		[LanguageType.en]: 'Search/Open Input Here',
 	},
+	searchActionOpenNewTab: {
+		[LanguageType.zh]: '在新标签页打开地址',
+		[LanguageType.en]: 'Open address in new tab',
+	},
+	searchActionOpenCurrentTab: {
+		[LanguageType.zh]: '在当前页打开地址',
+		[LanguageType.en]: 'Open address in current tab',
+	},
+	searchActionSearchNewTab: {
+		[LanguageType.zh]: '在新标签页打开搜索内容',
+		[LanguageType.en]: 'Search in new tab',
+	},
+	searchActionSearchCurrentTab: {
+		[LanguageType.zh]: '在当前页打开搜索内容',
+		[LanguageType.en]: 'Search in current tab',
+	},
 	goToUrl: {
 		[LanguageType.zh]: '打开',
 		[LanguageType.en]: 'Go to',

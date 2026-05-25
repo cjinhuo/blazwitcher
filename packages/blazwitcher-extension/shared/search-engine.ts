@@ -1,4 +1,4 @@
-import { SEARCH_QUERY_PLACEHOLDER } from './constants'
+import { SEARCH_QUERY_PLACEHOLDER, type SearchEngineConfig } from './constants'
 import { faviconURL } from './favicon'
 
 export const buildSearchUrl = (query: string, queryTemplate: string) => {
@@ -24,4 +24,20 @@ export const isValidSearchEngineQueryTemplate = (queryTemplate: string) => {
 export const getSearchEngineIconUrl = (queryTemplate: string) => {
 	const url = parseSearchEngineQueryTemplate(queryTemplate)
 	return url ? faviconURL(url.origin) : undefined
+}
+
+export const resolveSearchInput = (
+	input: string,
+	searchEngines: SearchEngineConfig[],
+	defaultSearchEngineId: string,
+	isUrl: (value: string) => boolean,
+	toUrl: (value: string) => string
+) => {
+	const normalizedInput = input.trim()
+	const searchEngine = searchEngines.find((engine) => engine.id === defaultSearchEngineId)
+	return {
+		openUrl: isUrl(normalizedInput) ? toUrl(normalizedInput) : undefined,
+		searchEngine,
+		searchUrl: searchEngine ? buildSearchUrl(normalizedInput, searchEngine.queryTemplate) : undefined,
+	}
 }

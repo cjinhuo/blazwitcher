@@ -58,6 +58,8 @@ export const getTypeSpecificOperationIds = (itemType: ItemType): OperationItemPr
 			return [OperationItemPropertyTypes.historyOpen, OperationItemPropertyTypes.historyOpenHere]
 		case ItemType.Bookmark:
 			return [OperationItemPropertyTypes.bookmarkOpen, OperationItemPropertyTypes.bookmarkOpenHere]
+		case ItemType.SearchAction:
+			return [OperationItemPropertyTypes.searchOpen, OperationItemPropertyTypes.searchOpenHere]
 		default:
 			return []
 	}

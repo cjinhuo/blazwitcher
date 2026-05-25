@@ -8,7 +8,7 @@ import plugins, { matchPlugin } from '~plugins'
 import { RenderPluginItem, usePluginClickItem } from '~plugins/ui/render-item'
 import { MAIN_CONTENT_CLASS } from '~shared/constants'
 import { faviconURL } from '~shared/favicon'
-import { buildSearchUrl, getSearchEngineIconUrl } from '~shared/search-engine'
+import { getSearchEngineIconUrl, resolveSearchInput } from '~shared/search-engine'
 import { ItemType, type ListItemType } from '~shared/types'
 import {
 	createTabWithUrl,
@@ -63,34 +63,39 @@ const buildSearchActionItems = (
 	const input = searchValue.trim()
 	if (!input) return []
 
+	const resolvedSearchInput = resolveSearchInput(
+		input,
+		searchConfig.searchEngines,
+		searchConfig.defaultSearchEngineId,
+		isLikelyUrl,
+		toNavigableUrl
+	)
 	const items: ListItemType<ItemType.SearchAction>[] = []
-	if (isLikelyUrl(input)) {
-		const url = toNavigableUrl(input)
+	if (resolvedSearchInput.openUrl) {
 		items.push({
 			itemType: ItemType.SearchAction,
 			data: {
 				id: 'go-to-url',
 				actionType: 'open',
 				prefix: i18n('goToUrl'),
-				value: url,
-				url,
-				favIconUrl: faviconURL(url),
+				value: resolvedSearchInput.openUrl,
+				url: resolvedSearchInput.openUrl,
+				favIconUrl: faviconURL(resolvedSearchInput.openUrl),
 			},
 		})
 	}
 
-	const searchEngine = searchConfig.searchEngines.find((engine) => engine.id === searchConfig.defaultSearchEngineId)
-	if (searchEngine) {
+	if (resolvedSearchInput.searchEngine && resolvedSearchInput.searchUrl) {
 		items.push({
 			itemType: ItemType.SearchAction,
 			data: {
-				id: `search-${searchEngine.id}`,
+				id: `search-${resolvedSearchInput.searchEngine.id}`,
 				actionType: 'search',
-				prefix: i18n('searchWithEngine', searchEngine.name),
+				prefix: i18n('searchWithEngine', resolvedSearchInput.searchEngine.name),
 				value: input,
-				suffix: i18n('searchWithEngineSuffix', searchEngine.name),
-				url: buildSearchUrl(input, searchEngine.queryTemplate),
-				favIconUrl: getSearchEngineIconUrl(searchEngine.queryTemplate) || '',
+				suffix: i18n('searchWithEngineSuffix', resolvedSearchInput.searchEngine.name),
+				url: resolvedSearchInput.searchUrl,
+				favIconUrl: getSearchEngineIconUrl(resolvedSearchInput.searchEngine.queryTemplate) || '',
 			},
 		})
 	}

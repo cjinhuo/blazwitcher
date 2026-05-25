@@ -2,10 +2,12 @@ import { useAtom, useAtomValue } from 'jotai'
 import { useCallback } from 'react'
 import { type ListItemType, OperationItemPropertyTypes } from '~shared/types'
 import {
+	createTabWithUrl,
 	deleteItem,
 	handleItemClick,
 	isBookmarkItem,
 	isHistoryItem,
+	isSearchActionItem,
 	isTabItem,
 	navigateCurrentTab,
 	queryInNewTab,
@@ -51,11 +53,21 @@ export const useListOperations = () => {
 				// Tab: 切换到标签页，History/Bookmark: 打开新标签页
 				handleItemClick(item)
 				break
+			case OperationItemPropertyTypes.searchOpen:
+				if (isSearchActionItem(item)) {
+					await createTabWithUrl(item.data.url)
+				}
+				break
 			case OperationItemPropertyTypes.tabOpenHere:
 			case OperationItemPropertyTypes.historyOpenHere:
 			case OperationItemPropertyTypes.bookmarkOpenHere:
 				// 在当前页打开
 				await navigateCurrentTab(item.data.url)
+				break
+			case OperationItemPropertyTypes.searchOpenHere:
+				if (isSearchActionItem(item)) {
+					await navigateCurrentTab(item.data.url)
+				}
 				break
 			case OperationItemPropertyTypes.close:
 				isTabItem(item) &&

@@ -162,6 +162,55 @@ const Open = ({ item }: { item: ListItemType }) => {
 	)
 }
 
+// 保留独立操作区以便按 actionType 区分地址打开和搜索文案
+// 当前结构比较独立，如需融入底层需要拓展相关接口
+export const RenderSearchActionOperation = ({ item }: { item: ListItemType<ItemType.SearchAction> }) => {
+	const { handleOperations } = useListOperations()
+	const shortcutsMap = useAtomValue(shortcutsAtom)
+	const i18n = useAtomValue(i18nAtom)
+	const isOpenAction = item.data.actionType === 'open'
+
+	const openInfo = {
+		title: i18n(isOpenAction ? 'searchActionOpenNewTab' : 'searchActionSearchNewTab'),
+		shortcut: shortcutsMap.find((s) => s.id === OperationItemPropertyTypes.searchOpen)?.shortcut || '',
+	}
+	const openHereInfo = {
+		title: i18n(isOpenAction ? 'searchActionOpenCurrentTab' : 'searchActionSearchCurrentTab'),
+		shortcut: shortcutsMap.find((s) => s.id === OperationItemPropertyTypes.searchOpenHere)?.shortcut || '',
+	}
+
+	const customContent = (
+		<TooltipContainer>
+			<TooltipRow>
+				<span>{openInfo.title}</span>
+				<ShortcutText>{openInfo.shortcut}</ShortcutText>
+			</TooltipRow>
+			<TooltipRow>
+				<span>{openHereInfo.title}</span>
+				<ShortcutText>{openHereInfo.shortcut}</ShortcutText>
+			</TooltipRow>
+		</TooltipContainer>
+	)
+
+	const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		e.stopPropagation()
+		void handleOperations(OperationItemPropertyTypes.searchOpen, item)
+	}
+
+	return (
+		<OperationContainer onClick={handleClick}>
+			<PopoverWrapper content={customContent}>
+				<IconContainer
+					className={`${OPERATION_ICON_CLASS} ${VISIBILITY_CLASS}`}
+					data-name={OperationItemPropertyTypes.searchOpen}
+				>
+					<RightArrow></RightArrow>
+				</IconContainer>
+			</PopoverWrapper>
+		</OperationContainer>
+	)
+}
+
 const Query = ({ item }: { item: ListItemType }) => (
 	<IconWithName name={OperationItemPropertyTypes.query} item={item}>
 		<QueryIcon></QueryIcon>
