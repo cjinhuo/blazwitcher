@@ -339,6 +339,10 @@ export const lang = {
 		[LanguageType.zh]: '书签快捷键',
 		[LanguageType.en]: 'Bookmark Shortcuts',
 	},
+	searchEngineShortcuts: {
+		[LanguageType.zh]: '搜索引擎快捷键',
+		[LanguageType.en]: 'Search Engine Shortcuts',
+	},
 	commonShortcuts: {
 		[LanguageType.zh]: '通用快捷键',
 		[LanguageType.en]: 'Common Shortcuts',

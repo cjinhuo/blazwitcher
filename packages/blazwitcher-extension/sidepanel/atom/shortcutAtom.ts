@@ -26,12 +26,12 @@ const defaultShortcutConfigs: Shortcut[] = [
 	{
 		id: OperationItemPropertyTypes.searchOpen,
 		action: 'searchOpen',
-		shortcut: 'Ctrl + ↵',
+		shortcut: '↵',
 	},
 	{
 		id: OperationItemPropertyTypes.searchOpenHere,
 		action: 'searchOpenHere',
-		shortcut: 'Ctrl + Shift + ↵',
+		shortcut: 'Shift + ↵',
 	},
 	// Tab 专用快捷键
 	{

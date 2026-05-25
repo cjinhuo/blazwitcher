@@ -29,12 +29,8 @@ const shortcutTypeGroups: Record<string, OperationItemPropertyTypes[]> = {
 		OperationItemPropertyTypes.delete,
 	],
 	bookmark: [OperationItemPropertyTypes.bookmarkOpen, OperationItemPropertyTypes.bookmarkOpenHere],
-	common: [
-		OperationItemPropertyTypes.start,
-		OperationItemPropertyTypes.query,
-		OperationItemPropertyTypes.searchOpen,
-		OperationItemPropertyTypes.searchOpenHere,
-	],
+	searchEngine: [OperationItemPropertyTypes.searchOpen, OperationItemPropertyTypes.searchOpenHere],
+	common: [OperationItemPropertyTypes.start, OperationItemPropertyTypes.query],
 }
 
 // 获取快捷键所属的分组
@@ -46,9 +42,6 @@ const getShortcutGroup = (id: OperationItemPropertyTypes): keyof typeof shortcut
 	}
 	return null
 }
-
-const isGlobalShortcut = (id: OperationItemPropertyTypes) =>
-	id === OperationItemPropertyTypes.searchOpen || id === OperationItemPropertyTypes.searchOpenHere
 
 // Semi 的类组件类型和 styled-components 在当前 React 类型组合下不完全兼容，这里只隔离样式包装边界。
 const styles = {
@@ -196,6 +189,7 @@ export const KeyboardPanel: React.FC = () => {
 			tab: shortcuts.filter((s) => shortcutTypeGroups.tab.includes(s.id)),
 			history: shortcuts.filter((s) => shortcutTypeGroups.history.includes(s.id)),
 			bookmark: shortcuts.filter((s) => shortcutTypeGroups.bookmark.includes(s.id)),
+			searchEngine: shortcuts.filter((s) => shortcutTypeGroups.searchEngine.includes(s.id)),
 		}
 	}, [shortcuts])
 
@@ -232,13 +226,10 @@ export const KeyboardPanel: React.FC = () => {
 			return
 		}
 
-		// 搜索输入快捷键为全局动作，不能和其他快捷键重复
+		// 同组快捷键冲突检测
 		const isDuplicateInSameGroup = shortcuts.some((shortcut) => {
 			if (shortcut.id === currentShortcut.id || shortcut.shortcut.toLowerCase() !== tempKeys.toLowerCase()) {
 				return false
-			}
-			if (isGlobalShortcut(currentShortcut.id) || isGlobalShortcut(shortcut.id)) {
-				return true
 			}
 			const currentGroup = getShortcutGroup(currentShortcut.id)
 			const targetGroup = getShortcutGroup(shortcut.id)
@@ -326,6 +317,14 @@ export const KeyboardPanel: React.FC = () => {
 				<styles.groupSection>
 					<styles.groupTitle heading={5}>{i18n('bookmarkShortcuts')}</styles.groupTitle>
 					<List dataSource={groupedShortcuts.bookmark} renderItem={renderShortcutItem} />
+				</styles.groupSection>
+			)}
+
+			{/* Search Engine 快捷键 */}
+			{groupedShortcuts.searchEngine.length > 0 && (
+				<styles.groupSection>
+					<styles.groupTitle heading={5}>{i18n('searchEngineShortcuts')}</styles.groupTitle>
+					<List dataSource={groupedShortcuts.searchEngine} renderItem={renderShortcutItem} />
 				</styles.groupSection>
 			)}
 

@@ -2,16 +2,11 @@ import { useAtomValue } from 'jotai'
 import { debounce } from 'lodash-es'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { usePluginClickItem } from '~plugins/ui/render-item'
-import { resolveSearchInput } from '~shared/search-engine'
 import { ItemType, type ListItemType, OperationItemPropertyTypes } from '~shared/types'
-import { createTabWithUrl, isLikelyUrl, navigateCurrentTab, toNavigableUrl } from '~shared/utils'
-import { compositionAtom, searchConfigAtom, shortcutsAtom } from '~sidepanel/atom'
+import { compositionAtom, shortcutsAtom } from '~sidepanel/atom'
 import { useListOperations } from '~sidepanel/hooks/useOperations'
 import { collectPressedKeys, isValidShortcut, standardizeKeyOrder } from '~sidepanel/utils/keyboardUtils'
 import { getTypeSpecificOperationIds } from '~sidepanel/utils/shortcutMappingUtils'
-
-const searchOpenId = OperationItemPropertyTypes.searchOpen
-const searchOpenHereId = OperationItemPropertyTypes.searchOpenHere
 
 // 根据项目类型和快捷键匹配对应的操作 ID
 const getOperationIdByItemType = (
@@ -35,12 +30,10 @@ const getOperationIdByItemType = (
 	return matchedShortcut?.id || null
 }
 
-export const useKeyboardListen = (list: ListItemType[], activeIndex: number, searchValue: string) => {
+export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => {
 	const shortcuts = useAtomValue(shortcutsAtom)
 	const isComposition = useAtomValue(compositionAtom)
-	const searchConfig = useAtomValue(searchConfigAtom)
 	const activeItem = list?.[activeIndex]
-	const hasSearchInput = searchValue.trim() !== ''
 	const { handleOperations } = useListOperations()
 	const handlePluginClick = usePluginClickItem()
 	const activeItemRef = useRef(activeItem)
@@ -62,40 +55,6 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number, sea
 		}
 	}, [activeItem, handlePluginClick])
 
-	const handleSearchFallback = useCallback(
-		async (disposition: 'NEW_TAB' | 'CURRENT_TAB') => {
-			const input = searchValue.trim()
-			if (!input) return
-
-			const resolvedSearchInput = resolveSearchInput(
-				input,
-				searchConfig.searchEngines,
-				searchConfig.defaultSearchEngineId,
-				isLikelyUrl,
-				toNavigableUrl
-			)
-
-			// 输入看起来像 URL 时直接打开，否则交给默认搜索引擎。
-			if (resolvedSearchInput.openUrl) {
-				if (disposition === 'NEW_TAB') {
-					await createTabWithUrl(resolvedSearchInput.openUrl)
-				} else {
-					await navigateCurrentTab(resolvedSearchInput.openUrl)
-				}
-				return
-			}
-
-			if (!resolvedSearchInput.searchUrl) return
-
-			if (disposition === 'NEW_TAB') {
-				await createTabWithUrl(resolvedSearchInput.searchUrl)
-			} else {
-				await navigateCurrentTab(resolvedSearchInput.searchUrl)
-			}
-		},
-		[searchConfig.defaultSearchEngineId, searchConfig.searchEngines, searchValue]
-	)
-
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
 			if (isComposition) {
@@ -110,43 +69,6 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number, sea
 
 			const orderedKeys = standardizeKeyOrder(keys)
 			const pressedShortcut = orderedKeys.join(' + ')
-
-			if (activeItem?.itemType === ItemType.SearchAction) {
-				if (pressedShortcut === '↵') {
-					void createTabWithUrl(activeItem.data.url)
-					e.preventDefault()
-					e.stopPropagation()
-					return
-				}
-
-				const operationId = getOperationIdByItemType(activeItem.itemType, pressedShortcut, shortcuts)
-				if (operationId) {
-					debouncedOperationHandler(operationId)
-					e.preventDefault()
-					e.stopPropagation()
-					return
-				}
-			}
-
-			if (
-				hasSearchInput &&
-				pressedShortcut.toLowerCase() === shortcuts.find((s) => s.id === searchOpenId)?.shortcut.toLowerCase()
-			) {
-				e.preventDefault()
-				e.stopPropagation()
-				void handleSearchFallback('NEW_TAB')
-				return
-			}
-
-			if (
-				hasSearchInput &&
-				pressedShortcut.toLowerCase() === shortcuts.find((s) => s.id === searchOpenHereId)?.shortcut.toLowerCase()
-			) {
-				e.preventDefault()
-				e.stopPropagation()
-				void handleSearchFallback('CURRENT_TAB')
-				return
-			}
 
 			if (!activeItem) {
 				return
@@ -174,13 +96,5 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number, sea
 			window.removeEventListener('keydown', handleKeyDown)
 			debouncedOperationHandler.cancel()
 		}
-	}, [
-		shortcuts,
-		debouncedOperationHandler,
-		activeItem,
-		hasSearchInput,
-		isComposition,
-		handlePluginEnter,
-		handleSearchFallback,
-	])
+	}, [shortcuts, debouncedOperationHandler, activeItem, isComposition, handlePluginEnter])
 }

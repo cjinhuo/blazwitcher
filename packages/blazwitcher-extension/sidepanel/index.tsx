@@ -7,19 +7,9 @@ import styled from 'styled-components'
 import plugins, { matchPlugin } from '~plugins'
 import { RenderPluginItem, usePluginClickItem } from '~plugins/ui/render-item'
 import { MAIN_CONTENT_CLASS } from '~shared/constants'
-import { faviconURL } from '~shared/favicon'
-import { getSearchEngineIconUrl, resolveSearchInput } from '~shared/search-engine'
 import { ItemType, type ListItemType } from '~shared/types'
-import {
-	createTabWithUrl,
-	handleItemClick,
-	isLikelyUrl,
-	orderList,
-	searchWithList,
-	splitToGroup,
-	toNavigableUrl,
-} from '~shared/utils'
-import { i18nAtom, type i18nFunction, type SearchConfigAtomType, searchConfigAtom } from '~sidepanel/atom'
+import { handleItemClick, orderList, searchWithList, splitToGroup } from '~shared/utils'
+import { i18nAtom, searchConfigAtom } from '~sidepanel/atom'
 import useOriginalList from '~sidepanel/hooks/useOriginalList'
 import { useTheme } from '~sidepanel/hooks/useTheme'
 import Footer from './footer'
@@ -30,6 +20,8 @@ import List from './list'
 import { RenderItem as ListItemRenderItem } from './list-item'
 import Search from './search'
 import { RenderSearchActionItem } from './search-action-item'
+import { buildSearchActionItems } from './utils/buildSearchActionItems'
+import { normalizeSearchValue } from './utils/normalizeSearchValue'
 import { startup } from './utils/startup'
 
 const { Header, Content } = Layout
@@ -47,62 +39,6 @@ const ContentWrapper = styled(Content)`
 
 startup()
 
-const normalizeSearchValue = (value: string) => {
-	const trimmedValue = value.trim()
-	if (trimmedValue.startsWith('、')) {
-		return `/${trimmedValue.slice(1)}`
-	}
-	return trimmedValue
-}
-
-const buildSearchActionItems = (
-	searchValue: string,
-	searchConfig: SearchConfigAtomType,
-	i18n: i18nFunction
-): ListItemType<ItemType.SearchAction>[] => {
-	const input = searchValue.trim()
-	if (!input) return []
-
-	const resolvedSearchInput = resolveSearchInput(
-		input,
-		searchConfig.searchEngines,
-		searchConfig.defaultSearchEngineId,
-		isLikelyUrl,
-		toNavigableUrl
-	)
-	const items: ListItemType<ItemType.SearchAction>[] = []
-	if (resolvedSearchInput.openUrl) {
-		items.push({
-			itemType: ItemType.SearchAction,
-			data: {
-				id: 'go-to-url',
-				actionType: 'open',
-				prefix: i18n('goToUrl'),
-				value: resolvedSearchInput.openUrl,
-				url: resolvedSearchInput.openUrl,
-				favIconUrl: faviconURL(resolvedSearchInput.openUrl),
-			},
-		})
-	}
-
-	if (resolvedSearchInput.searchEngine && resolvedSearchInput.searchUrl) {
-		items.push({
-			itemType: ItemType.SearchAction,
-			data: {
-				id: `search-${resolvedSearchInput.searchEngine.id}`,
-				actionType: 'search',
-				prefix: i18n('searchWithEngine', resolvedSearchInput.searchEngine.name),
-				value: input,
-				suffix: i18n('searchWithEngineSuffix', resolvedSearchInput.searchEngine.name),
-				url: resolvedSearchInput.searchUrl,
-				favIconUrl: getSearchEngineIconUrl(resolvedSearchInput.searchEngine.queryTemplate) || '',
-			},
-		})
-	}
-
-	return items
-}
-
 export default function SidePanel() {
 	useTheme()
 	useLanguage()
@@ -117,11 +53,6 @@ export default function SidePanel() {
 	const [searchValue, setSearchValue] = useState('')
 
 	const handlePluginItemClick = usePluginClickItem()
-	const handleSearchActionClick = useCallback((item: ListItemType) => {
-		if (item.itemType === ItemType.SearchAction) {
-			void createTabWithUrl(item.data.url)
-		}
-	}, [])
 
 	const RenderList = useCallback(
 		(list: ListItemType[], hasInput: boolean) => {
@@ -160,16 +91,9 @@ export default function SidePanel() {
 					: [])
 			)
 			// RenderItem 如果使用函数，会导致每次渲染都会重新创建一个新的函数，从而导致性能问题
-			return (
-				<List
-					list={itemsWithDivide}
-					RenderItem={ListItemRenderItem}
-					handleItemClick={handleItemClick}
-					searchValue={searchValue}
-				/>
-			)
+			return <List list={itemsWithDivide} RenderItem={ListItemRenderItem} handleItemClick={handleItemClick} />
 		},
-		[i18n, searchConfig, searchValue]
+		[i18n, searchConfig]
 	)
 
 	const RenderContent = useMemo(() => {
@@ -185,22 +109,15 @@ export default function SidePanel() {
 
 		// 插件匹配
 		if (searchValue.startsWith('/')) {
-			const [hitPlugin, pluginList, mainSearchValue] = matchPlugin(plugins(i18n), searchValue.toLowerCase())
+			const [hitPlugin, pluginList, mainSearchValue] = matchPlugin(plugins(i18n), realSearchValue)
 			if (!hitPlugin || hitPlugin?.action)
-				return (
-					<List
-						list={pluginList}
-						handleItemClick={handlePluginItemClick}
-						RenderItem={RenderPluginItem}
-						searchValue={searchValue}
-					/>
-				)
+				return <List list={pluginList} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem} />
 			if (hitPlugin.render) {
 				return hitPlugin.render(mainSearchValue)
 			}
 			if (hitPlugin.dataProcessing) {
 				realList = hitPlugin.dataProcessing(originalList)
-				realSearchValue = mainSearchValue.toLowerCase()
+				realSearchValue = mainSearchValue
 			}
 		}
 
@@ -212,14 +129,13 @@ export default function SidePanel() {
 					<List
 						list={[{ itemType: ItemType.Divide, data: { name: i18n('topSuggestions') } }, ...searchActionItems]}
 						RenderItem={RenderSearchActionItem}
-						handleItemClick={handleSearchActionClick}
-						searchValue={searchValue}
+						handleItemClick={handleItemClick}
 					/>
 				)
 			}
 		}
 		return RenderList(filteredList, realSearchValue !== '')
-	}, [searchValue, originalList, handlePluginItemClick, i18n, RenderList, searchConfig, handleSearchActionClick])
+	}, [searchValue, originalList, handlePluginItemClick, i18n, RenderList, searchConfig])
 
 	const handleSearch = useCallback((value: string) => {
 		setSearchValue(normalizeSearchValue(value))
