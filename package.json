@@ -16,6 +16,8 @@
     "fetch_releases": "dotenv -e .env -- pnpm --filter blazwitcher fetch-releases",
     "bump_and_push": "pnpm bump_version && pnpm push_release",
     "bump_and_push_and_fetch": "pnpm bump_version && pnpm push_release && pnpm fetch_releases",
+    "test": "pnpm --filter blazwitcher test",
+    "test:coverage": "pnpm --filter blazwitcher test:coverage",
     "lint": "find ./packages ./server -name '*.ts' -o -name '*.tsx' | xargs pnpm exec biome check",
     "format": "find ./packages ./server -name '*.ts' -o -name '*.tsx' -o -name '*.json' | xargs pnpm exec biome format --write",
     "commit": "git add . && czg"
