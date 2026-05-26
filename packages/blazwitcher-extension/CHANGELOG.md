@@ -1,5 +1,17 @@
 # blazwitcher
 
+## 1.4.0
+
+### Minor Changes
+
+- feat: add search action items that show URL navigation and search engine shortcuts when no results match the input @kwen.siu@gmail.com · 2026-05-26 · [#0b8061fd](https://github.com/cjinhuo/blazwitcher/commit/0b8061fd51b87a537b4f8fca396a643f0e030a69)
+- feat: 新增搜索操作项展示类型，当输入内容无匹配结果时显示快捷链接跳转和搜索引擎跳转选项 @kwen.siu@gmail.com · 2026-05-26 · [#0b8061fd](https://github.com/cjinhuo/blazwitcher/commit/0b8061fd51b87a537b4f8fca396a643f0e030a69)
+
+### Patch Changes
+
+- fix: correct extension startup shortcut display formatting in keyboard settings on Windows @kwen.siu@gmail.com · 2026-05-26 · [#ba9f0064](https://github.com/cjinhuo/blazwitcher/commit/ba9f006461d48f15bc6eb3747780ee39c1a6ea29)
+- fix: 修复 Windows 下键盘设置页扩展启动快捷键显示格式错误的问题 @kwen.siu@gmail.com · 2026-05-26 · [#ba9f0064](https://github.com/cjinhuo/blazwitcher/commit/ba9f006461d48f15bc6eb3747780ee39c1a6ea29)
+
 ## 1.3.0
 
 ### Minor Changes
