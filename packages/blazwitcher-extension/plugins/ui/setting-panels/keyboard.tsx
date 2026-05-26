@@ -169,7 +169,13 @@ export const KeyboardPanel: React.FC = () => {
 	useEffect(() => {
 		const fetchStartExtensionShortcut = async () => {
 			const shortcut = await getExecuteActionShortcuts()
-			setStartExtensionShortcut(shortcut?.split('').join(' + ') || '')
+			setStartExtensionShortcut(
+				shortcut
+					?.split('+')
+					.map((key) => key.trim())
+					.filter(Boolean)
+					.join(' + ') || ''
+			)
 		}
 		fetchStartExtensionShortcut()
 	}, [])
