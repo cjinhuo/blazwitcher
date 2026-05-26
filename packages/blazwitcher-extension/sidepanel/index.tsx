@@ -19,6 +19,9 @@ import { usePerformanceReport } from './hooks/usePerformanceReport'
 import List from './list'
 import { RenderItem as ListItemRenderItem } from './list-item'
 import Search from './search'
+import { RenderSearchActionItem } from './search-action-item'
+import { buildSearchActionItems } from './utils/buildSearchActionItems'
+import { normalizeSearchValue } from './utils/normalizeSearchValue'
 import { startup } from './utils/startup'
 
 const { Header, Content } = Layout
@@ -35,14 +38,6 @@ const ContentWrapper = styled(Content)`
 `
 
 startup()
-
-const normalizeSearchValue = (value: string) => {
-	const trimmedValue = value.trim()
-	if (trimmedValue.startsWith('、')) {
-		return `/${trimmedValue.slice(1)}`
-	}
-	return trimmedValue
-}
 
 export default function SidePanel() {
 	useTheme()
@@ -65,10 +60,10 @@ export default function SidePanel() {
 			let restList = orderedList
 			const itemsWithDivide: ListItemType[] = []
 			if (hasInput && orderedList.length > 0) {
-				const topSuggestions = orderedList.slice(0, searchConfig.topSuggestionsCount).map((item) => {
-					item.data.isShowType = true
-					return item
-				})
+				const topSuggestions = orderedList.slice(0, searchConfig.topSuggestionsCount).map((item) => ({
+					...item,
+					data: { ...item.data, isShowType: true },
+				}))
 				itemsWithDivide.push(
 					...[
 						{
@@ -109,12 +104,12 @@ export default function SidePanel() {
 			return RenderList(originalList, false)
 		}
 
-		let realSearchValue = searchValue
+		let realSearchValue = searchValue.toLowerCase()
 		let realList = originalList
 
 		// 插件匹配
 		if (searchValue.startsWith('/')) {
-			const [hitPlugin, pluginList, mainSearchValue] = matchPlugin(plugins(i18n), searchValue)
+			const [hitPlugin, pluginList, mainSearchValue] = matchPlugin(plugins(i18n), realSearchValue)
 			if (!hitPlugin || hitPlugin?.action)
 				return <List list={pluginList} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem} />
 			if (hitPlugin.render) {
@@ -127,6 +122,18 @@ export default function SidePanel() {
 		}
 
 		const filteredList = searchWithList(realList, realSearchValue, searchConfig)
+		if (realSearchValue && filteredList.length === 0) {
+			const searchActionItems = buildSearchActionItems(searchValue, searchConfig, i18n)
+			if (searchActionItems.length > 0) {
+				return (
+					<List
+						list={[{ itemType: ItemType.Divide, data: { name: i18n('topSuggestions') } }, ...searchActionItems]}
+						RenderItem={RenderSearchActionItem}
+						handleItemClick={handleItemClick}
+					/>
+				)
+			}
+		}
 		return RenderList(filteredList, realSearchValue !== '')
 	}, [searchValue, originalList, handlePluginItemClick, i18n, RenderList, searchConfig])
 

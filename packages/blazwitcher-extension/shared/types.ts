@@ -38,11 +38,22 @@ export interface HistoryItemType extends chrome.history.HistoryItem, BaseItemTyp
 	favIconUrl: string
 }
 
+export interface SearchActionItemType {
+	id: string
+	actionType: 'open' | 'search'
+	prefix: string
+	value: string
+	suffix?: string
+	url: string
+	favIconUrl: string
+}
+
 export interface ItemTypeSet {
 	[ItemType.Tab]: TabItemType
 	[ItemType.Bookmark]: BookmarkItemType
 	[ItemType.History]: HistoryItemType
 	[ItemType.Plugin]: CommandPlugin
+	[ItemType.SearchAction]: SearchActionItemType
 }
 
 export enum ItemType {
@@ -51,6 +62,7 @@ export enum ItemType {
 	History = 'history',
 	Divide = 'divide',
 	Plugin = 'plugin',
+	SearchAction = 'searchAction',
 }
 
 export interface ListItemType<T extends ItemType = ItemType> {
@@ -65,6 +77,8 @@ export enum OperationItemPropertyTypes {
 	switch = 'switch',
 	pin = 'pin',
 	query = 'query',
+	searchOpen = 'searchOpen',
+	searchOpenHere = 'searchOpenHere',
 	delete = 'delete',
 	close = 'close',
 	// Tab 专用快捷键
@@ -80,6 +94,8 @@ export enum OperationItemPropertyTypes {
 
 export const OperationItemTitleMap: Record<string, TranslationKeys> = {
 	[OperationItemPropertyTypes.query]: 'query',
+	[OperationItemPropertyTypes.searchOpen]: 'searchOpen',
+	[OperationItemPropertyTypes.searchOpenHere]: 'searchOpenHere',
 	// Tab 专用
 	[OperationItemPropertyTypes.tabOpen]: 'tabOpen',
 	[OperationItemPropertyTypes.tabOpenHere]: 'tabOpenHere',

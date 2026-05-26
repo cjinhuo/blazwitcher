@@ -29,6 +29,7 @@ const shortcutTypeGroups: Record<string, OperationItemPropertyTypes[]> = {
 		OperationItemPropertyTypes.delete,
 	],
 	bookmark: [OperationItemPropertyTypes.bookmarkOpen, OperationItemPropertyTypes.bookmarkOpenHere],
+	searchEngine: [OperationItemPropertyTypes.searchOpen, OperationItemPropertyTypes.searchOpenHere],
 	common: [OperationItemPropertyTypes.start, OperationItemPropertyTypes.query],
 }
 
@@ -42,8 +43,9 @@ const getShortcutGroup = (id: OperationItemPropertyTypes): keyof typeof shortcut
 	return null
 }
 
+// Semi 的类组件类型和 styled-components 在当前 React 类型组合下不完全兼容，这里只隔离样式包装边界。
 const styles = {
-	card: styled(Card)`
+	card: styled(Card as any)`
     width: 100%;
   ` as typeof Card,
 	shortcutDisplay: styled.div`
@@ -89,7 +91,7 @@ const styles = {
     color: var(--semi-color-text-2);
     cursor: pointer;
     flex-shrink: 0;
-    
+
     &:hover {
       color: var(--semi-color-text-1);
     }
@@ -102,7 +104,7 @@ const styles = {
     text-overflow: ellipsis;
     line-height: 1.5;
   `,
-	listItem: styled(List.Item)`
+	listItem: styled(List.Item as any)`
     display: flex;
     align-items: center;
     padding: 12px 16px;
@@ -111,17 +113,17 @@ const styles = {
       background-color: var(--semi-color-fill-0);
     }
   `,
-	editButton: styled(Button)`
+	editButton: styled(Button as any)`
     flex-shrink: 0;
   ` as typeof Button,
 	modalSection: styled.div`
     margin-bottom: 16px;
-    
+
     .label {
       font-weight: 600;
       margin-bottom: 8px;
     }
-    
+
     .content {
       color: var(--semi-color-text-0);
     }
@@ -139,19 +141,19 @@ const styles = {
     font-size: 11px;
     line-height: 1.5;
     outline: none;
-    
+
     &:focus {
       border-color: var(--semi-color-primary);
     }
   `,
 	groupSection: styled.div`
     margin-bottom: 24px;
-    
+
     &:last-child {
       margin-bottom: 0;
     }
   `,
-	groupTitle: styled(Typography.Title)`
+	groupTitle: styled(Typography.Title as any)`
     margin: 6px 0 6px 0 !important;
     font-size: 16px !important;
   ` as typeof Typography.Title,
@@ -187,6 +189,7 @@ export const KeyboardPanel: React.FC = () => {
 			tab: shortcuts.filter((s) => shortcutTypeGroups.tab.includes(s.id)),
 			history: shortcuts.filter((s) => shortcutTypeGroups.history.includes(s.id)),
 			bookmark: shortcuts.filter((s) => shortcutTypeGroups.bookmark.includes(s.id)),
+			searchEngine: shortcuts.filter((s) => shortcutTypeGroups.searchEngine.includes(s.id)),
 		}
 	}, [shortcuts])
 
@@ -223,19 +226,15 @@ export const KeyboardPanel: React.FC = () => {
 			return
 		}
 
-		// 获取当前快捷键所属的分组
-		const currentGroup = getShortcutGroup(currentShortcut.id)
-		if (!currentGroup) {
-			Toast.error(i18n('unknownOperation'))
-			return
-		}
-
-		// 只检查同组内的快捷键是否冲突
-		const groupIds = shortcutTypeGroups[currentGroup]
-		const isDuplicateInSameGroup = shortcuts.some(
-			(s) =>
-				groupIds.includes(s.id) && s.id !== currentShortcut.id && s.shortcut.toLowerCase() === tempKeys.toLowerCase()
-		)
+		// 同组快捷键冲突检测
+		const isDuplicateInSameGroup = shortcuts.some((shortcut) => {
+			if (shortcut.id === currentShortcut.id || shortcut.shortcut.toLowerCase() !== tempKeys.toLowerCase()) {
+				return false
+			}
+			const currentGroup = getShortcutGroup(currentShortcut.id)
+			const targetGroup = getShortcutGroup(shortcut.id)
+			return currentGroup && currentGroup === targetGroup
+		})
 
 		if (isDuplicateInSameGroup) {
 			Toast.error(i18n('shortcutConflictInSameType'))
@@ -318,6 +317,14 @@ export const KeyboardPanel: React.FC = () => {
 				<styles.groupSection>
 					<styles.groupTitle heading={5}>{i18n('bookmarkShortcuts')}</styles.groupTitle>
 					<List dataSource={groupedShortcuts.bookmark} renderItem={renderShortcutItem} />
+				</styles.groupSection>
+			)}
+
+			{/* Search Engine 快捷键 */}
+			{groupedShortcuts.searchEngine.length > 0 && (
+				<styles.groupSection>
+					<styles.groupTitle heading={5}>{i18n('searchEngineShortcuts')}</styles.groupTitle>
+					<List dataSource={groupedShortcuts.searchEngine} renderItem={renderShortcutItem} />
 				</styles.groupSection>
 			)}
 

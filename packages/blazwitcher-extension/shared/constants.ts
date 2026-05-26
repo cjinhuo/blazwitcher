@@ -51,6 +51,38 @@ export const DEFAULT_BOOKMARK_DISPLAY_COUNT = 10
 export const DEFAULT_HISTORY_DISPLAY_COUNT = 10
 export const DEFAULT_TOP_SUGGESTIONS_COUNT = 2
 export const DEFAULT_ENABLE_CONSECUTIVE_SEARCH = false
+export const SEARCH_QUERY_PLACEHOLDER = '%s'
+export const DEFAULT_SEARCH_ENGINE_QUERY_TEMPLATE = `https://www.google.com/search?q=${SEARCH_QUERY_PLACEHOLDER}`
+
+export interface SearchEngineConfig {
+	id: string
+	name: string
+	queryTemplate: string
+}
+
+export const GOOGLE_SEARCH_ENGINE: SearchEngineConfig = {
+	id: 'google',
+	name: 'Google',
+	queryTemplate: DEFAULT_SEARCH_ENGINE_QUERY_TEMPLATE,
+}
+
+export const BAIDU_SEARCH_ENGINE: SearchEngineConfig = {
+	id: 'baidu',
+	name: 'Baidu',
+	queryTemplate: `https://www.baidu.com/s?wd=${SEARCH_QUERY_PLACEHOLDER}`,
+}
+
+export const BING_SEARCH_ENGINE: SearchEngineConfig = {
+	id: 'bing',
+	name: 'Bing',
+	queryTemplate: `https://www.bing.com/search?q=${SEARCH_QUERY_PLACEHOLDER}`,
+}
+
+export const SEARCH_ENGINE_PRESETS: SearchEngineConfig[] = [
+	GOOGLE_SEARCH_ENGINE,
+	BAIDU_SEARCH_ENGINE,
+	BING_SEARCH_ENGINE,
+]
 
 // 首屏与分片加载：首条消息只发 20 条 tabs
 export const INITIAL_TABS_COUNT = 20
@@ -68,6 +100,8 @@ export const DefaultSearchConfig = {
 	historyDisplayCount: DEFAULT_HISTORY_DISPLAY_COUNT,
 	topSuggestionsCount: DEFAULT_TOP_SUGGESTIONS_COUNT,
 	enableConsecutiveSearch: DEFAULT_ENABLE_CONSECUTIVE_SEARCH,
+	searchEngines: SEARCH_ENGINE_PRESETS,
+	defaultSearchEngineId: GOOGLE_SEARCH_ENGINE.id,
 }
 
 export enum DebugMode {

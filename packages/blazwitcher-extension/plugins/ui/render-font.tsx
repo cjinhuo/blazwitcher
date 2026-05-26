@@ -7,9 +7,7 @@ export function formatFontFamily(fontName: string) {
 export function renderFontItem(item: FontOption) {
 	const fontName = item.value
 	return (
-		<div style={{ fontFamily: fontName ? formatFontFamily(fontName) : 'inherit', fontSize: '14px' }}>
-			{item.label}
-		</div>
+		<div style={{ fontFamily: fontName ? formatFontFamily(fontName) : 'inherit', fontSize: '14px' }}>{item.label}</div>
 	)
 }
 

@@ -1,6 +1,6 @@
 import { useAtomValue } from 'jotai'
 import { debounce } from 'lodash-es'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { usePluginClickItem } from '~plugins/ui/render-item'
 import { ItemType, type ListItemType, OperationItemPropertyTypes } from '~shared/types'
 import { compositionAtom, shortcutsAtom } from '~sidepanel/atom'
@@ -10,7 +10,7 @@ import { getTypeSpecificOperationIds } from '~sidepanel/utils/shortcutMappingUti
 
 // 根据项目类型和快捷键匹配对应的操作 ID
 const getOperationIdByItemType = (
-	itemType: any,
+	itemType: ItemType,
 	pressedShortcut: string,
 	shortcuts: Array<{ id: OperationItemPropertyTypes; shortcut: string }>
 ): OperationItemPropertyTypes | null => {
@@ -36,12 +36,18 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 	const activeItem = list?.[activeIndex]
 	const { handleOperations } = useListOperations()
 	const handlePluginClick = usePluginClickItem()
+	const activeItemRef = useRef(activeItem)
+	activeItemRef.current = activeItem
 
-	const debouncedOperationHandler = debounce((id: OperationItemPropertyTypes) => {
-		if (activeItem) {
-			handleOperations(id, activeItem)
-		}
-	}, 100)
+	const debouncedOperationHandler = useMemo(
+		() =>
+			debounce((id: OperationItemPropertyTypes) => {
+				if (activeItemRef.current) {
+					handleOperations(id, activeItemRef.current)
+				}
+			}, 100),
+		[handleOperations]
+	)
 
 	const handlePluginEnter = useCallback(() => {
 		if (activeItem?.itemType === ItemType.Plugin) {
@@ -88,6 +94,7 @@ export const useKeyboardListen = (list: ListItemType[], activeIndex: number) => 
 
 		return () => {
 			window.removeEventListener('keydown', handleKeyDown)
+			debouncedOperationHandler.cancel()
 		}
 	}, [shortcuts, debouncedOperationHandler, activeItem, isComposition, handlePluginEnter])
 }

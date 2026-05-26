@@ -28,8 +28,8 @@ const IconContainer = styled.div`
 		background-color: transparent;
     cursor: pointer;
 
-		
-		
+
+
     &:hover {
       transform: scale(1.08);
 			transition: 0.05s;
@@ -60,7 +60,7 @@ const OperationContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-	position: relative; 
+	position: relative;
 `
 
 const TooltipContainer = styled.div`
@@ -162,6 +162,46 @@ const Open = ({ item }: { item: ListItemType }) => {
 	)
 }
 
+// 保留独立操作区以便按 actionType 区分地址打开和搜索文案
+export const RenderSearchActionOperation = ({ item }: { item: ListItemType<ItemType.SearchAction> }) => {
+	const { handleOperations } = useListOperations()
+	const shortcutsMap = useAtomValue(shortcutsAtom)
+	const i18n = useAtomValue(i18nAtom)
+	const isOpenAction = item.data.actionType === 'open'
+
+	const { openId, openHereId } = getOpenOperationIds(ItemType.SearchAction)
+	const openShortcut = shortcutsMap.find((s) => s.id === openId)?.shortcut || ''
+	const openHereShortcut = shortcutsMap.find((s) => s.id === openHereId)?.shortcut || ''
+
+	const customContent = (
+		<TooltipContainer>
+			<TooltipRow>
+				<span>{i18n(isOpenAction ? 'searchActionOpenNewTab' : 'searchActionSearchNewTab')}</span>
+				<ShortcutText>{openShortcut}</ShortcutText>
+			</TooltipRow>
+			<TooltipRow>
+				<span>{i18n(isOpenAction ? 'searchActionOpenCurrentTab' : 'searchActionSearchCurrentTab')}</span>
+				<ShortcutText>{openHereShortcut}</ShortcutText>
+			</TooltipRow>
+		</TooltipContainer>
+	)
+
+	const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		e.stopPropagation()
+		void handleOperations(openId, item)
+	}
+
+	return (
+		<OperationContainer onClick={handleClick}>
+			<PopoverWrapper content={customContent}>
+				<IconContainer className={`${OPERATION_ICON_CLASS} ${VISIBILITY_CLASS}`} data-name={openId}>
+					<RightArrow></RightArrow>
+				</IconContainer>
+			</PopoverWrapper>
+		</OperationContainer>
+	)
+}
+
 const Query = ({ item }: { item: ListItemType }) => (
 	<IconWithName name={OperationItemPropertyTypes.query} item={item}>
 		<QueryIcon></QueryIcon>
@@ -199,8 +239,9 @@ export const RenderOperation = ({ item }: { item: ListItemType }) => {
 	const { handleOperations } = useListOperations()
 	const handleClick = (e: React.MouseEvent<HTMLDivElement>, item: ListItemType) => {
 		e.stopPropagation()
-		const name = (e.target as HTMLDivElement).dataset.name as OperationItemPropertyTypes
-		handleOperations(name, item)
+		const target = (e.target as HTMLElement).closest<HTMLElement>('[data-name]')
+		const name = target?.dataset.name as OperationItemPropertyTypes
+		if (name) handleOperations(name, item)
 	}
 
 	const operationMap = getOperationMap()
