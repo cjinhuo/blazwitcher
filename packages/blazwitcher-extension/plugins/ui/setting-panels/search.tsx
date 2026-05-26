@@ -122,7 +122,7 @@ const PreviewUrl = styled.div`
 `
 
 const StyledInputNumber = styled(InputNumber)`
-  width: 120px; 
+  width: 120px;
 `
 
 const StyledInput = styled(Input)`
@@ -172,6 +172,10 @@ export const SearchPanel: React.FC = () => {
 
 	const handleDeleteSearchEngine = (id: string) => {
 		setConfig((prev) => {
+			if (prev.searchEngines.length <= 1) {
+				Toast.warning(i18n('atLeastOneSearchEngine'))
+				return prev
+			}
 			const searchEngines = prev.searchEngines.filter((engine) => engine.id !== id)
 			const defaultSearchEngineId =
 				prev.defaultSearchEngineId === id ? searchEngines[0]?.id || '' : prev.defaultSearchEngineId

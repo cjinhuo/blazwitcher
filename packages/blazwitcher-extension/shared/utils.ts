@@ -19,7 +19,7 @@ import { ItemType, type ListItemType, type Matrix } from './types'
 export { faviconURL } from './favicon'
 
 /**
- * 滚动元素到视图中，如果元素在容器中，则滚动容器，如果元素在容器中，则滚动容器，如果元素在容器中，则滚动容器
+ * 滚动元素到视图中，如果元素不在容器可视区域内则滚动容器
  * @param element 需要滚动的元素
  * @param container 容器
  * @param divideElement 分割元素
@@ -71,25 +71,7 @@ export function isSearchActionItem(item: ListItemType): item is ListItemType<Ite
 }
 
 export function getItemType(item: ListItemType) {
-	if (isTabItem(item)) {
-		return ItemType.Tab
-	}
-	if (isBookmarkItem(item)) {
-		return ItemType.Bookmark
-	}
-	if (isHistoryItem(item)) {
-		return ItemType.History
-	}
-	if (isPluginItem(item)) {
-		return ItemType.Plugin
-	}
-	if (isSearchActionItem(item)) {
-		return ItemType.SearchAction
-	}
-	if (isDivideItem(item)) {
-		return ItemType.Divide
-	}
-	return undefined
+	return item.itemType
 }
 
 // todo 需要做一个每次首次都不需要等待的节流函数
@@ -134,7 +116,7 @@ export const activeTab = async (item: ListItemType<ItemType.Tab>) => {
 	closeCurrentWindowAndClearStorage()
 }
 
-// 独立窗口模式下，yz'yu插件自身也是一个 Chrome 窗口。
+// 独立窗口模式下，由于插件自身也是一个 Chrome 窗口。
 // 搜索/打开输入内容时要落到用户原本操作的普通浏览器窗口，不能在插件窗口里替换页面。
 const getTargetWindowId = async () => {
 	const storage = await storageGet()

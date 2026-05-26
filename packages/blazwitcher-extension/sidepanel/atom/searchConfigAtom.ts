@@ -40,7 +40,13 @@ const isSameSearchConfig = (a: unknown, b: unknown) => JSON.stringify(a) === JSO
 const normalizeSearchEngines = (value: StoredSearchConfig): SearchEngineConfig[] => {
 	if (Array.isArray(value.searchEngines)) {
 		return value.searchEngines
-			.filter((engine) => engine?.id && engine?.name?.trim() && isValidSearchEngineQueryTemplate(engine.queryTemplate))
+			.filter(
+				(engine) =>
+					engine?.id &&
+					engine?.name?.trim() &&
+					engine?.queryTemplate &&
+					isValidSearchEngineQueryTemplate(engine.queryTemplate)
+			)
 			.map((engine) => ({
 				id: engine.id,
 				name: engine.name.trim(),

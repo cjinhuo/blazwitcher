@@ -239,8 +239,9 @@ export const RenderOperation = ({ item }: { item: ListItemType }) => {
 	const { handleOperations } = useListOperations()
 	const handleClick = (e: React.MouseEvent<HTMLDivElement>, item: ListItemType) => {
 		e.stopPropagation()
-		const name = (e.target as HTMLDivElement).dataset.name as OperationItemPropertyTypes
-		handleOperations(name, item)
+		const target = (e.target as HTMLElement).closest<HTMLElement>('[data-name]')
+		const name = target?.dataset.name as OperationItemPropertyTypes
+		if (name) handleOperations(name, item)
 	}
 
 	const operationMap = getOperationMap()

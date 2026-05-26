@@ -60,10 +60,10 @@ export default function SidePanel() {
 			let restList = orderedList
 			const itemsWithDivide: ListItemType[] = []
 			if (hasInput && orderedList.length > 0) {
-				const topSuggestions = orderedList.slice(0, searchConfig.topSuggestionsCount).map((item) => {
-					item.data.isShowType = true
-					return item
-				})
+				const topSuggestions = orderedList.slice(0, searchConfig.topSuggestionsCount).map((item) => ({
+					...item,
+					data: { ...item.data, isShowType: true },
+				}))
 				itemsWithDivide.push(
 					...[
 						{

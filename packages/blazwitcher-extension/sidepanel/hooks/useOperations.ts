@@ -43,50 +43,53 @@ export const useListOperations = () => {
 	)
 
 	// watch click and keyboard input
-	const handleOperations = async (name: OperationItemPropertyTypes, item: ListItemType) => {
-		switch (name) {
-			case OperationItemPropertyTypes.tabOpen:
-			case OperationItemPropertyTypes.historyOpen:
-			case OperationItemPropertyTypes.bookmarkOpen:
-			case OperationItemPropertyTypes.searchOpen:
-				// Tab: 切换到标签页，其他: 打开新标签页
-				handleItemClick(item)
-				break
-			case OperationItemPropertyTypes.tabOpenHere:
-			case OperationItemPropertyTypes.historyOpenHere:
-			case OperationItemPropertyTypes.bookmarkOpenHere:
-			case OperationItemPropertyTypes.searchOpenHere:
-				// 在当前页打开
-				await navigateCurrentTab(item.data.url)
-				break
-			case OperationItemPropertyTypes.close:
-				isTabItem(item) &&
-					chrome.tabs.remove(item.data.id).then(() => {
+	const handleOperations = useCallback(
+		async (name: OperationItemPropertyTypes, item: ListItemType) => {
+			switch (name) {
+				case OperationItemPropertyTypes.tabOpen:
+				case OperationItemPropertyTypes.historyOpen:
+				case OperationItemPropertyTypes.bookmarkOpen:
+				case OperationItemPropertyTypes.searchOpen:
+					// Tab: 切换到标签页，其他: 打开新标签页
+					handleItemClick(item)
+					break
+				case OperationItemPropertyTypes.tabOpenHere:
+				case OperationItemPropertyTypes.historyOpenHere:
+				case OperationItemPropertyTypes.bookmarkOpenHere:
+				case OperationItemPropertyTypes.searchOpenHere:
+					// 在当前页打开
+					await navigateCurrentTab(item.data.url)
+					break
+				case OperationItemPropertyTypes.close:
+					isTabItem(item) &&
+						chrome.tabs.remove(item.data.id).then(() => {
+							removeItemFromOriginList(item)
+						})
+					break
+				case OperationItemPropertyTypes.delete:
+					deleteItem(item).then(() => {
 						removeItemFromOriginList(item)
 					})
-				break
-			case OperationItemPropertyTypes.delete:
-				deleteItem(item).then(() => {
-					removeItemFromOriginList(item)
-				})
-				break
-			case OperationItemPropertyTypes.query:
-				if (isHistoryItem(item) || isBookmarkItem(item)) {
-					queryInNewTab(item)
-				}
-				break
-			case OperationItemPropertyTypes.pin:
-				if (isTabItem(item)) {
-					await chrome.tabs.update(item.data.id, { pinned: !item.data.pinned })
-					item.data.pinned = !item.data.pinned
-					updateItemInOriginList(item)
-				}
-				break
-			default:
-				console.error(i18n('unknownOperation'), name)
-				break
-		}
-	}
+					break
+				case OperationItemPropertyTypes.query:
+					if (isHistoryItem(item) || isBookmarkItem(item)) {
+						queryInNewTab(item)
+					}
+					break
+				case OperationItemPropertyTypes.pin:
+					if (isTabItem(item)) {
+						await chrome.tabs.update(item.data.id, { pinned: !item.data.pinned })
+						const updatedItem = { ...item, data: { ...item.data, pinned: !item.data.pinned } }
+						updateItemInOriginList(updatedItem)
+					}
+					break
+				default:
+					console.error(i18n('unknownOperation'), name)
+					break
+			}
+		},
+		[i18n, removeItemFromOriginList, updateItemInOriginList]
+	)
 
 	return {
 		removeItemFromOriginList,

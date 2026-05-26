@@ -440,6 +440,10 @@ export const lang = {
 		[LanguageType.zh]: '暂无搜索引擎',
 		[LanguageType.en]: 'No search engines',
 	},
+	atLeastOneSearchEngine: {
+		[LanguageType.zh]: '至少保留一个搜索引擎',
+		[LanguageType.en]: 'At least one search engine is required',
+	},
 	searchEnginePreview: {
 		[LanguageType.zh]: '预览',
 		[LanguageType.en]: 'Preview',
