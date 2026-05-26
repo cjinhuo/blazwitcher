@@ -12,7 +12,10 @@
 		"help": "plasmo --help",
 		"debug": "plasmo dev --verbose",
 		"fetch-releases": "npx tsx scripts/fetch-github-releases.ts",
-		"push-release": "npx tsx scripts/push-new-release.ts"
+		"push-release": "npx tsx scripts/push-new-release.ts",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage"
 	},
 	"dependencies": {
 		"@commitlint/config-conventional": "^19.2.2",
@@ -40,9 +43,12 @@
 		"@types/node": "20.11.5",
 		"@types/react": "18.2.48",
 		"@types/react-dom": "18.2.18",
+		"@vitest/coverage-v8": "^4.1.7",
+		"jsdom": "^29.1.1",
 		"path-browserify": "^1.0.0",
 		"typescript": "^5.7.3",
-		"url": "^0.11.0"
+		"url": "^0.11.0",
+		"vitest": "^4.1.7"
 	},
 	"@parcel/resolver-default": {
 		"packageExports": true

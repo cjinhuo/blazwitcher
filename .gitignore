@@ -46,3 +46,6 @@ tsconfig.tsbuildinfo
 
 # trae
 .trae/documents
+
+# test
+packages/blazwitcher-extension/coverage

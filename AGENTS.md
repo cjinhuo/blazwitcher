@@ -21,8 +21,8 @@ pnpm i                                    # 安装依赖
 ```bash
 pnpm dev                                   # 启动扩展开发服务器
 pnpm package                               # 构建生产环境扩展包
-pnpm --filter blazwitcher-extension dev    # 仅运行扩展开发模式
-pnpm --filter blazwitcher-extension build  # 仅构建扩展
+pnpm --filter blazwitcher dev    # 仅运行扩展开发模式
+pnpm --filter blazwitcher build  # 仅构建扩展
 ```
 
 ### 文档站点
@@ -176,7 +176,26 @@ import plugins from '~plugins'
 ### 测试
 
 - 服务端配置了 Jest（`test:*` 脚本）
-- 扩展目前没有测试配置
+- 扩展使用 Vitest + jsdom，配置位于 `packages/blazwitcher-extension/vitest.config.ts`
+
+**扩展测试命令：**
+
+```bash
+pnpm --filter blazwitcher test            # 运行所有测试
+pnpm --filter blazwitcher test:watch      # 监听模式
+pnpm --filter blazwitcher test:coverage   # 运行并生成覆盖率报告
+```
+
+**测试结构：**
+
+- 测试文件位于 `packages/blazwitcher-extension/tests/`
+- 全局 Chrome API mock 在 `tests/setup.ts`
+- 覆盖率报告输出到 `packages/blazwitcher-extension/coverage/`
+- 外部依赖（`text-search-engine`、`~shared/promisify`）在各测试文件中按需 mock
+
+**测试要求：**
+
+- 新增工具函数（如 `shared/utils.ts`、`shared/data-processing.ts` 等）时，必须补充对应的单元测试
 
 ### 国际化
 
