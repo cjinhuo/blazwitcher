@@ -2,6 +2,7 @@
   "name": "server",
   "private": true,
   "version": "1.0.0",
+  "packageManager": "pnpm@11.21.0",
   "description": "Nest TypeScript starter repository",
   "license": "MIT",
   "scripts": {
