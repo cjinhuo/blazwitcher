@@ -166,8 +166,8 @@ importers:
         specifier: ^6.1.11
         version: 6.1.19(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       text-search-engine:
-        specifier: 1.5.0
-        version: 1.5.0(react@18.2.0)
+        specifier: 1.5.3
+        version: 1.5.3(react@18.2.0)
     devDependencies:
       '@babel/parser':
         specifier: ^7.26.3
@@ -8146,8 +8146,8 @@ packages:
   text-decoder@1.2.3:
     resolution: {integrity: sha512-3/o9z3X0X0fTupwsYvR03pJ/DjWuqqrfwBgTQzdWDiQSm9KitAyz/9WqsT2JQW7KV2m+bC2ol/zqpW37NHxLaA==}
 
-  text-search-engine@1.5.0:
-    resolution: {integrity: sha512-/yq6VOv9Dd7vBVUk0DO/9z4UN6RlFV050qfy91f2EAn8d7um67+4NA1pbQ4D3lVrV0zV5jOT97UAZimxxWXa5w==}
+  text-search-engine@1.5.3:
+    resolution: {integrity: sha512-xvHne0XJlBZ1i4edxdYwbMRAyYKiGDdnPnVW3ISBhKsAwH4Moqyl0C8NAT5af5TXzMdAAb5jkwY7tk8Xzch9bw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
@@ -18093,7 +18093,7 @@ snapshots:
     dependencies:
       b4a: 1.6.7
 
-  text-search-engine@1.5.0(react@18.2.0):
+  text-search-engine@1.5.3(react@18.2.0):
     dependencies:
       react: 18.2.0
 
