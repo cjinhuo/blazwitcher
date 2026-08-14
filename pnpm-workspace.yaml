@@ -1,3 +1,5 @@
 packages:
   - 'packages/**'
   - 'server'
+allowBuilds:
+  sharp: true
