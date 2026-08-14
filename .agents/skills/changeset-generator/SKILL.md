@@ -1,170 +1,89 @@
 ---
 name: changeset-generator
-description: 生成 Changeset 变更日志文件。当用户需要记录功能变更、bug 修复或添加新版本变更说明时调用此 skill，自动生成符合规范的 changeset 文件。
+description: 在创建或更新 PR 前，根据当前 pnpm workspace、公开包发布影响、Changesets 历史格式和 changesets-toolkit 提交钩子，生成并校验 Changesets 3 变更记录。用户要求添加或生成 changeset、创建 changeset、准备 PR、判断分支是否需要版本说明，或选择 major、minor、patch 版本类型时使用。
 ---
 
-# Changeset 变更日志生成器
+# 生成 PR Changeset
 
-当用户明确要求“添加 changeset / 记录变更日志 / bump 版本说明 / 准备发布说明”时，必须遵循以下规范自动生成 changeset 文件。
+只有分支改动会影响公开包的消费者时才创建 changeset。始终从当前仓库读取配置，不写死仓库名、包名、目录或基础分支。
 
-## 决策顺序与优先级
+## 安全检查
 
-1. **先判断是否需要 changeset**：只有在用户明确要求添加/补 changeset 时才执行本 skill。
-2. **与提交的前后顺序**：若用户同一请求里同时要求“添加 changeset + 提交”，必须**先生成 changeset 文件**，再进行 Git 提交（确保 changeset 被包含在本次提交内）。
-3. **不确定时的默认策略**：当无法唯一确定包名或 bump type 时，列出候选并让用户选择（不要擅自猜测）。
+- 使用 `git rev-parse --show-toplevel` 定位仓库根目录，并在根目录执行后续命令。
+- 必须存在 pnpm workspace 和 `.changeset/config.json`；缺少任一项时停止。
+- 从 `.changeset/config.json` 读取 `baseBranch`，仅在字段缺失时默认使用 `master`，比较基准为 `origin/<baseBranch>`。
+- 当前分支不能是基础分支。执行 `git fetch origin <baseBranch>` 刷新基准；无法获取或解析基准时停止，不使用不明确的旧引用继续操作。
+- 执行 `git diff --cached --quiet --`，要求暂存区为空。若已有暂存文件，列出文件并停止，因为 toolkit 钩子最终会执行 `git commit`。
+- 记录执行前的 `git status --porcelain=v1`，生成后用它确认原有未暂存和未跟踪文件未被夹带或丢失。
+- 执行 `pnpm exec changeset --version`，要求实际主版本为 3；同时确认 `pnpm exec changeset add --help` 包含 `--since`、`--message`、`--major`、`--minor`、`--patch`。
+- 读取 Changesets 的 `commit` 配置，要求提交钩子解析到 `changesets-toolkit`。钩子未启用或指向其他模块时停止，不假设命令会自动提交。
+- 不在本 skill 中安装或升级依赖、重写锁文件、放宽包管理器安全策略，也不输出 npm token 等凭据。
 
-## 包名获取
+## 判断是否需要发布
 
-changeset 文件的 YAML front matter 里的 key 必须是要发布的包名。优先根据本次变更涉及的文件路径来推断包名；如果无法唯一确定，则列出候选包并让用户选择。
+1. 同时检查三类改动：
+   - 已提交分支差异：`git diff --name-status origin/<baseBranch>...HEAD`
+   - 未暂存差异：`git diff --name-status`
+   - 未跟踪文件：`git ls-files --others --exclude-standard`
+2. 读取根 workspace 配置及其匹配的 `package.json`。只有具备 `name`、`version` 且 `private` 不为 `true` 的包才是公开发布单元。
+3. 将改动映射到最近的 workspace 包。若改动位于共享或私有包，继续追踪其代码、资源、构建产物或运行时行为是否会被公开包打包或消费。
+4. 检查相对基础分支新增的 changeset，以及未跟踪的 `.changeset/*.md`，确认相同包和相同行为是否已经有发布说明。
+5. 公开 API、运行时行为、发布资源、兼容性、缺陷修复或性能变化会影响消费者时，生成 changeset。
+6. 纯文档、纯测试、纯 CI、纯格式化、纯私有工具改动且不改变公开产物时，说明判断依据并结束；禁止使用 `--empty`。
+7. 已有 changeset 完整覆盖本次变化时，不重复生成。除非用户明确要求，否则不修改已有 changeset。
 
-### npm/yarn/pnpm 项目（JavaScript/TypeScript）
+## 选择版本类型
 
-1. 根据变更文件路径，向上查找最近的 `package.json`
-2. 读取该 `package.json` 的 `name` 字段作为包名
+- `major`：不兼容的公开 API 或行为变化，需要消费者迁移；摘要必须说明破坏点和迁移方式。
+- `minor`：向后兼容的新功能、新导出、新选项或有意义的新能力。
+- `patch`：缺陷修复、性能优化、兼容性修正或改变发布行为的非破坏性重构。
+- 每个公开包选择所需的最高 bump。只有证据无法排除 major 与 minor 的实质歧义时才询问用户。
+- 一个逻辑变化跨多个公开包时使用一个 changeset；Changesets 3 要求同一 bump 下的多个包名使用逗号连接。
 
-示例：
-- 变更文件 `packages/auth/src/login.ts` → 包名取 `packages/auth/package.json` 的 `name`（如 `@scope/auth`）
-- 变更文件 `apps/web/src/main.ts` → 包名取 `apps/web/package.json` 的 `name`（如 `@scope/web`）
+## 编写中英文摘要
 
-如果变更文件不在任何子包目录下（例如只改了根目录配置），则使用根 `package.json` 的 `name` 作为包名，或由用户明确指定应 bump 的包。
+将 `--message` 写成类似 Conventional Commit 的双语 changeset 正文。它不是 Git 提交标题；实际 Git 提交标题由 toolkit 生成，例如 `chore(changeset): 🦋 package:old->new`。
 
-### uv/poetry/hatch 项目（Python）
+每个变化必须严格按英文在前、中文在后的顺序写两行：
 
-1. 根据变更文件路径，向上查找最近的 `pyproject.toml`
-2. 读取该 `pyproject.toml` 的 `project.name` 或 `tool.poetry.name` 作为包名
-
-示例：
-- 变更文件 `packages/core/src/main.py` → 包名取 `packages/core/pyproject.toml` 的 `project.name`（如 `my-core`）
-- 变更文件 `apps/api/routes/user.py` → 包名取 `apps/api/pyproject.toml` 的 `tool.poetry.name`（如 `api-service`）
-
-### Cargo 项目（Rust）
-
-1. 根据变更文件路径，向上查找最近的 `Cargo.toml`
-2. 读取该 `Cargo.toml` 的 `package.name` 作为包名
-
-示例：
-- 变更文件 `crates/utils/src/lib.rs` → 包名取 `crates/utils/Cargo.toml` 的 `package.name`（如 `my-utils`）
-- 变更文件 `apps/cli/src/main.rs` → 包名取 `apps/cli/Cargo.toml` 的 `package.name`（如 `my-cli`）
-
-### Go 项目
-
-Go 项目通常使用模块路径管理且不一定存在“包名=发布单元”的统一约定，可根据变更文件路径推断一个最小 scope 作为包名候选：
-- `pkg/auth/jwt.go` → `auth`
-- `internal/db/conn.go` → `db`
-- `cmd/server/main.go` → `server`
-
-如果变更文件不在任何明确的模块/目录下（如根目录配置文件），则省略包名或使用通用包名（如 `root`、`config`），并优先让用户确认。
-
-### 其他类型项目
-
-当项目不满足以上语言/包管理工具的识别条件时，根据变更文件所在目录推断一个合理的包名（或 scope），并在不确定时列出候选让用户确认
-
-#### 通用目录结构
-
-| 变更路径                       | 推荐包名/Scope   |
-| ------------------------------ | ---------------- |
-| `src/components/*`             | 组件名           |
-| `src/pages/*`, `src/app/*`     | 页面/路由名      |
-| `src/hooks/*`, `src/utils/*`   | `hooks`, `utils` |
-| `cmd/*`, `pkg/*`, `internal/*` | 命令/包/模块名   |
-| `README.md`                    | `docs`           |
-| `.github/workflows/*`          | `ci`             |
-| `Dockerfile`                   | `docker`         |
-
-## Changeset 文件格式
-
-文件位置：`.changeset/` 目录
-文件命名：使用随机组合命名（形容词-名词-动词），如 `brave-monkeys-cry.md`
-
-### 格式规范
-
-```markdown
----
-"package-name": bump-type
----
-
-英文描述
-中文描述
+```text
+fix: handle non-string values without throwing
+fix: 修复处理非字符串值时抛错的问题
 ```
 
-### 示例
+- 两行必须使用相同的 type，并表达相同语义。
+- type 只能从当前仓库 `commitlint.config.*` 读取；这三个仓库允许 `feat`、`fix`、`docs`、`style`、`refactor`、`perf`、`test`、`build`、`ci`、`chore`、`revert`。
+- 默认使用 `type: subject`，因为 changeset frontmatter 已标明包名。确需 scope 时使用 `type(scope): subject`，并确保 scope 存在于当前 commitlint 的 `scope-enum`；中英文两行的 scope 必须一致。
+- major 破坏性变化在 type 或 scope 后加 `!`，例如 `feat!: remove the legacy API`。
+- 英文 subject 使用简短祈使语气，中文 subject 使用对应的简洁说明；不要以句号结尾，不添加与历史不一致的 emoji。
+- 每行最多 120 个字符；若当前 commitlint 启用了更严格的 `header-max-length`，使用更严格的值。
+- type 描述变化性质，bump 描述 SemVer 影响，两者分别判断。不要仅凭 `feat`、`fix` 字样机械决定 bump。
+- 一个 changeset 包含多个独立变化时，为每个变化写一组中英文行，并用空行分隔；不要把中英文拆成两个 changeset。
 
-```markdown
----
-"blazwitcher": minor
----
+## 使用 Changesets 3 生成
 
-feat: new two separate shortcut for tab,bookmark and history to control whether to create a new tab or open it on the current page
-feat: 给标签页,书签和历史记录各新增两个独立的快捷键来控制是否新建标签页还是在当前页面打开
+只加入非空的 bump 参数，构造一条非交互命令：
+
+```sh
+pnpm exec changeset add \
+  --since "origin/$base_branch" \
+  --major "pkg-a,pkg-b" \
+  --minor "pkg-c" \
+  --patch "pkg-d" \
+  --message "$summary"
 ```
 
-## 版本类型（Bump Type）
+示例中的某组包为空时，必须省略对应整项参数。将完整中英文摘要作为一个经过安全引用的参数传入；禁止插入命令替换、反引号、凭据或不受信任的 shell 片段。不要使用 `--empty` 或 `--open`。
 
-| Bump Type | 适用场景                      |
-| --------- | ----------------------------- |
-| `major`   | 破坏性变更、不兼容的 API 变更 |
-| `minor`   | 新增功能、向后兼容的功能增强  |
-| `patch`   | Bug 修复、文档更新、小改动    |
+命令应输出 `Changeset added and committed!`。changesets-toolkit 会只暂存新 changeset 并创建提交，不要再手动创建第二个提交。
 
-## 自动判断规则
+## 校验结果
 
-根据变更类型自动推荐 bump type：
+1. 要求命令成功退出，并从输出中取得新生成的 `.changeset/*.md` 路径。
+2. 检查文件 frontmatter、公开包名、bump、中英文顺序、type、scope、单行长度和语义一致性。
+3. 执行 `git diff-tree --no-commit-id --name-status -r HEAD`，要求最新提交只包含一个新增的 `.changeset/*.md`，不得包含其他路径。
+4. 执行 `pnpm exec changeset status --since "origin/$base_branch"`，确认目标包和 bump 出现在发布计划中。
+5. 对照执行前状态，确认原有未暂存和未跟踪文件仍然存在，且暂存区为空。
+6. 报告生成或跳过结论、涉及包、bump、双语摘要、文件路径、提交哈希和校验结果。
 
-| 变更类型                | 推荐 Bump Type |
-| ----------------------- | -------------- |
-| `feat` (新功能)         | `minor`        |
-| `fix` (Bug 修复)        | `patch`        |
-| `breaking` (破坏性变更) | `major`        |
-| `docs` (文档更新)       | `patch`        |
-| `refactor` (重构)       | `patch`        |
-| `perf` (性能优化)       | `patch`        |
-| `style` (样式调整)      | `patch`        |
-| `chore` (杂项)          | `patch`        |
-
-## 随机文件名生成
-
-使用以下词库随机组合生成文件名：
-
-**形容词**：brave, silent, happy, gentle, swift, bright, calm, clever, cool, eager, fair, fast, fresh, good, great, kind, light, loud, nice, old, quick, rare, rich, safe, shy, slow, smart, soft, tall, thin, tiny, warm, weak, wild, wise, young
-
-**名词**：ants, bees, cats, dogs, elks, fish, goats, hens, inks, jays, keys, lions, mice, newts, owls, pigs, quails, rats, seals, tigers, umbrellas, voles, wolves, yaks, zebras, apples, books, clouds, doors, eagles
-
-**动词**：act, ask, be, bid, bow, buy, cry, cut, dig, do, eat, end, fly, get, go, hide, hit, jump, keep, lay, lie, look, make, meet, mix, move, open, pay, play, pull, push, put, read, rest, ride, rise, run, say, see, sell, set, show, sit, spin, stay, swim, take, talk, tell, try, turn, wait, walk, watch, work, write
-
-示例：`brave-cats-cry.md`, `silent-dogs-fly.md`, `happy-fish-swim.md`
-
-## 使用场景
-
-1. 用户要求添加 changeset
-2. 完成功能开发后需要记录变更
-3. 修复 Bug 后需要添加变更日志
-4. 发布新版本前整理变更记录
-
-## 输出要求（必须满足）
-
-1. **生成一个新的 changeset 文件**：写入 `.changeset/<随机名>.md`
-2. **YAML front matter 正确**：key 为包名（字符串需带双引号），value 为 bump type（`major|minor|patch`）
-3. **描述双语**：正文必须同时包含英文与中文两行描述（可使用 Markdown）
-4. **不修改历史 changeset**：除非用户明确要求修改既有文件，否则只新增文件
-
-## 多包支持
-
-如果需要同时更新多个包，可以在 YAML front matter 中列出：
-
-```markdown
----
-"blazwitcher": minor
-"blazwitcher-doc": patch
----
-
-feat: add new feature across packages
-feat: 跨包添加新功能
-```
-
-## 注意事项
-
-1. 每个 PR/变更只需要添加一个 changeset 文件
-2. 文件名必须唯一，使用随机组合避免冲突
-3. 描述内容支持 Markdown 格式
-4. 必须同时提供中英文描述
-5. 不要手动修改已有的 changeset 文件（除非必要）
+生成、自动提交或校验任一步失败时，立即停止并原样报告错误，保留现场用于诊断。不要手写替代 changeset，也不要运行 `changeset version`、进入或退出 prerelease、publish、push 或触发发布 workflow。
