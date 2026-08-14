@@ -2,6 +2,7 @@
   "name": "blazwitcher-monorepo",
   "version": "0.0.1",
   "private": true,
+  "packageManager": "pnpm@11.21.0",
   "workspaces": [
     "packages/*",
     "server"
@@ -22,11 +23,15 @@
     "format": "find ./packages ./server -name '*.ts' -o -name '*.tsx' -o -name '*.json' | xargs pnpm exec biome format --write",
     "commit": "git add . && czg"
   },
+  "engines": {
+    "node": "^22.11 || ^24 || >=26",
+    "pnpm": ">=11"
+  },
   "devDependencies": {
     "@biomejs/biome": "^2.3.10",
-    "@changesets/cli": "^2.27.8",
+    "@changesets/cli": "^3.0.0",
     "@commitlint/config-conventional": "^19.2.2",
-    "changesets-toolkit": "0.0.3",
+    "changesets-toolkit": "^0.1.0",
     "czg": "^1.12.0",
     "dotenv-cli": "^8.0.0",
     "fast-glob": "^3.3.3",

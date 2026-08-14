@@ -1,3 +1,14 @@
 packages:
   - 'packages/**'
   - 'server'
+allowBuilds:
+  '@nestjs/core': true
+  '@parcel/watcher': true
+  '@swc/core': true
+  esbuild: true
+  lmdb: true
+  msgpackr-extract: true
+  sharp: true
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - 'changesets-toolkit@0.1.0-beta.0 || 0.1.0'
