@@ -17,8 +17,6 @@ jobs:
           node-version: 22.x
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 11
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Run tests
