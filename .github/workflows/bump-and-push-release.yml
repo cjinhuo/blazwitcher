@@ -1,35 +1,36 @@
 name: Bump Version and Push New Release
 
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
 env:
   CHANGESET_READ_REPO_TOKEN: ${{ secrets.CHANGESET_READ_REPO_TOKEN }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-on:
-  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: 22.x
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4.0.0
+        uses: pnpm/action-setup@v4
         with:
-          version: 10
-      - name: Run Pnpm
-        run: pnpm install --no-frozen-lockfile
-      - name: Build
-        run: pnpm build
-        # 先build 完再 install 是为了让 changeset_version 的 bin 能正常使用
-      - name: Build Changeset-toolkit bin
-        run: pnpm install --no-frozen-lockfile
+          version: 11
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
       - name: Configure Git
         run: |
-          git config --global user.name "Shanks"
-          git config --global user.email "cjinhuo@qq.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git branch --set-upstream-to="origin/$GITHUB_REF_NAME" "$GITHUB_REF_NAME"
       - name: Bump Version and Push New Release
         run: pnpm bump_and_push
