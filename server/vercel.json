@@ -1,5 +1,7 @@
 {
+	"$schema": "https://openapi.vercel.sh/vercel.json",
 	"version": 2,
+	"installCommand": "corepack enable && pnpm install --frozen-lockfile",
 	"builds": [
 		{
 			"src": "src/main.ts",
