@@ -1,5 +1,12 @@
 # blazwitcher
 
+## 1.4.1
+
+### Patch Changes
+
+- chore: upgrade text-search-engine from 1.5.0 to 1.5.3 @cjinhuo · 2026-08-15 · [#affa6291](https://github.com/cjinhuo/blazwitcher/commit/affa629125a9427a381f7ae191d76913e4e20b39)
+- chore: 升级 text-search-engine 从 1.5.0 到 1.5.3 @cjinhuo · 2026-08-15 · [#affa6291](https://github.com/cjinhuo/blazwitcher/commit/affa629125a9427a381f7ae191d76913e4e20b39)
+
 ## 1.4.0
 
 ### Minor Changes
