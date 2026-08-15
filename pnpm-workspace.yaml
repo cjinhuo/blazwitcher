@@ -12,3 +12,4 @@ allowBuilds:
   unrs-resolver: true
 minimumReleaseAgeExclude:
   - 'changesets-toolkit@0.1.0-beta.0 || 0.1.0'
+  - text-search-engine@1.5.3
