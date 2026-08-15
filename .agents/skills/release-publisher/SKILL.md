@@ -5,98 +5,54 @@ description: "Handles version bumping and release publishing for blazwitcher ext
 
 # 版本发布助手
 
-此 skill 负责处理 blazwitcher 扩展的完整发布流程。
+处理 blazwitcher 扩展的完整发布流程：版本升级 → GitHub Release → Chrome Web Store。
 
-## 发布流程概览
-
-```
-changeset_version -> push-release -> fetch-releases -> publish chrome extension store
-```
-
-分为 2 个步骤：
-1. `changeset_version -> push-release`
-2. `fetch-releases -> build prod package -> publish chrome extension store -> git add .`
-
-## 可用命令
-
-### 完整发布（本地推荐）
-
-一键执行完整发布流程：
+## 完整发布流程
 
 ```bash
-pnpm run bump_and_push_and_fetch
-```
+# 1. 版本升级 + 推送 GitHub Release + 拉取 releases 数据
+pnpm bump_and_push_and_fetch
 
-此命令将：
-1. 使用 changeset 升级版本号
-2. 推送 release 到 GitHub
-3. 获取 blazwitcher-extension 的 releases
-
-### 分步命令
-
-#### 1. 仅升级版本
-
-```bash
-pnpm run bump_version
-```
-
-使用 changeset 升级版本并可选推送到 git。
-
-#### 2. 推送发布
-
-```bash
-pnpm run push_release
-```
-
-将最新 release 推送到 GitHub。
-
-#### 3. 获取 Releases
-
-```bash
-pnpm run fetch_releases
-```
-
-获取 blazwitcher-extension 的 releases。
-
-#### 4. 升级并推送（不获取）
-
-```bash
-pnpm run bump_and_push
-```
-
-组合 bump_version 和 push_release 步骤。
-
-## 生产构建
-
-发布前，创建生产构建包：
-
-```bash
+# 2. 构建生产包（产物：packages/blazwitcher-extension/build/chrome-mv3-prod.zip）
 pnpm package
+
+# 3. 上传并发布到 Chrome Web Store
+pnpm exec dotenv -e .env -- chrome-webstore-upload upload --source packages/blazwitcher-extension/build/chrome-mv3-prod.zip
+pnpm exec dotenv -e .env -- chrome-webstore-upload publish
 ```
 
-这将创建一个可以打包并发布到商店的生产构建包。
+> 上传后需 Google 审核（通常 1-3 天）。发布前确认 `package.json` 版本号已通过 changeset 升级，且高于线上版本。
+
+## 命令速查
+
+| 命令                                                                       | 说明                          |
+| -------------------------------------------------------------------------- | ----------------------------- |
+| `pnpm bump_version`                                                        | 用 changeset 升级版本号并推送 |
+| `pnpm push_release`                                                        | 推送 release 到 GitHub        |
+| `pnpm fetch_releases`                                                      | 拉取扩展的 releases 数据      |
+| `pnpm bump_and_push`                                                       | bump + push                   |
+| `pnpm bump_and_push_and_fetch`                                             | bump + push + fetch（推荐）   |
+| `pnpm package`                                                             | 构建生产包                    |
+| `pnpm exec dotenv -e .env -- chrome-webstore-upload upload --source <zip>` | 上传到 Chrome Web Store       |
+| `pnpm exec dotenv -e .env -- chrome-webstore-upload publish`               | 提交审核发布                  |
 
 ## 前置条件
 
-- 确保 `.env` 文件存在且包含必要的环境变量
-- Git 仓库应该是干净的（无未提交的更改）
-- Changeset 应该正确配置
-
-## 典型发布流程
-
-1. **确保代码就绪**：所有更改已提交并测试通过
-2. **运行完整发布命令**：
-   ```bash
-   pnpm run bump_and_push_and_fetch
-   ```
-3. **构建生产包**（如需要）：
-   ```bash
-   pnpm package
-   ```
-4. **发布到 Chrome 扩展商店**（手动步骤或通过 CI）
+- Git 工作区干净，改动已提交并测试通过
+- Changeset 已正确配置
+- `.env` 包含所需环境变量：
+  - GitHub Release：`CHANGESET_READ_REPO_TOKEN`
+  - Chrome Web Store：`EXTENSION_ID`、`CLIENT_ID`、`CLIENT_SECRET`、`REFRESH_TOKEN`、`PUBLISHER_ID`
 
 ## 故障排除
 
-- 如果 `bump_version` 失败，检查 `.env` 文件是否存在且变量正确
-- 如果 `push_release` 失败，验证 GitHub 凭证和权限
-- 如果 `fetch_releases` 失败，检查网络连接和 GitHub API 访问权限
+| 现象                            | 排查方向                                           |
+| ------------------------------- | -------------------------------------------------- |
+| `bump_version` 失败             | 检查 `.env` 是否存在及变量正确                     |
+| `push_release` 失败             | 验证 GitHub 凭证和权限                             |
+| `fetch_releases` 失败           | 检查网络连接和 GitHub API 访问                     |
+| `chrome-webstore-upload` 报 401 | `REFRESH_TOKEN` 已过期，需重新获取                 |
+| 上传报版本冲突                  | 确认版本号已通过 changeset 正确 bump               |
+| `command not found: dotenv`     | 命令需加 `pnpm exec` 前缀（dotenv-cli 是本地依赖） |
+
+> **首次配置或凭证过期** → 阅读 [chrome-webstore-setup.md](./chrome-webstore-setup.md) 完成 CLI 安装与 OAuth 凭证获取。
