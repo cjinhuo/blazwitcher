@@ -28,6 +28,9 @@ const chromeMock = {
 	bookmarks: {
 		getTree: vi.fn().mockResolvedValue([]),
 		get: vi.fn().mockResolvedValue([]),
+		getChildren: vi.fn().mockResolvedValue([]),
+		remove: vi.fn().mockResolvedValue(undefined),
+		create: vi.fn().mockResolvedValue({}),
 		onChanged: { addListener: vi.fn() },
 		onCreated: { addListener: vi.fn() },
 		onRemoved: { addListener: vi.fn() },

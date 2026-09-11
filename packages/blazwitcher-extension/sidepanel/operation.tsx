@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { PopoverWrapper } from '~shared/common-styles'
 import { VISIBILITY_CLASS } from '~shared/constants'
 import { ItemType, type ListItemType, OperationItemPropertyTypes, OperationItemTitleMap } from '~shared/types'
-import { isTabItem } from '~shared/utils'
+import { isBookmarkItem, isTabItem } from '~shared/utils'
 import { i18nAtom, shortcutsAtom } from '~sidepanel/atom'
 import { getOpenOperationIds } from '~sidepanel/utils/shortcutMappingUtils'
 import { useListOperations } from './hooks/useOperations'
@@ -102,6 +102,9 @@ const IconWithName = ({
 	)
 
 	const getTitle = useCallback(() => {
+		if (isBookmarkItem(item) && name === OperationItemPropertyTypes.delete) {
+			return i18n('deleteBookmark')
+		}
 		if (isTabItem(item) && name === OperationItemPropertyTypes.pin) {
 			return item.data.pinned ? i18n('unpinTab') : i18n('pinTab')
 		}
@@ -231,7 +234,7 @@ const Pin = ({ item }: { item: ListItemType }) => {
 
 export const getOperationMap = () => ({
 	[ItemType.Tab]: [Open, Pin, Close],
-	[ItemType.Bookmark]: [Open, Query],
+	[ItemType.Bookmark]: [Open, Query, Delete],
 	[ItemType.History]: [Open, Query, Delete],
 })
 
