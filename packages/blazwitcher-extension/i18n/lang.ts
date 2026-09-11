@@ -210,6 +210,26 @@ export const lang = {
 		[LanguageType.zh]: '从历史记录中删除',
 		[LanguageType.en]: 'Delete from History',
 	},
+	deleteBookmark: {
+		[LanguageType.zh]: '删除书签',
+		[LanguageType.en]: 'Delete Bookmark',
+	},
+	bookmarkDeleted: {
+		[LanguageType.zh]: '书签已删除',
+		[LanguageType.en]: 'Bookmark deleted',
+	},
+	undo: {
+		[LanguageType.zh]: '撤销',
+		[LanguageType.en]: 'Undo',
+	},
+	bookmarkDeleteFailed: {
+		[LanguageType.zh]: '无法删除书签，请重试',
+		[LanguageType.en]: 'Could not delete bookmark. Please try again.',
+	},
+	bookmarkRestoreFailed: {
+		[LanguageType.zh]: '无法恢复书签，请确认原文件夹仍然存在后重试',
+		[LanguageType.en]: 'Could not restore bookmark. Check that the original folder still exists and try again.',
+	},
 	closeTab: {
 		[LanguageType.zh]: '关闭当前标签页',
 		[LanguageType.en]: 'Close current tab',

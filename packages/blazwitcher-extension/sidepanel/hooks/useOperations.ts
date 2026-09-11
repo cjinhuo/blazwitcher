@@ -11,22 +11,24 @@ import {
 	queryInNewTab,
 } from '~shared/utils'
 import { i18nAtom, originalListAtom } from '~sidepanel/atom'
+import { useBookmarkDelete } from './useBookmarkDelete'
 
 export const useListOperations = () => {
 	const i18n = useAtomValue(i18nAtom)
 	const [originalList, setOriginalList] = useAtom(originalListAtom)
+	const deleteBookmark = useBookmarkDelete()
 
 	const removeItemFromOriginList = useCallback(
 		(item: ListItemType) => {
-			const _index = item.data.id
-				? originalList.findIndex((i) => i.data.id === item.data.id)
-				: originalList.findIndex((i) => i.data.url === item.data.url)
-			if (~_index) {
-				originalList.splice(_index, 1)
-				setOriginalList([...originalList])
-			}
+			setOriginalList((list) =>
+				list.filter(
+					(entry) =>
+						entry.itemType !== item.itemType ||
+						(item.data.id ? entry.data.id !== item.data.id : entry.data.url !== item.data.url)
+				)
+			)
 		},
-		[originalList, setOriginalList]
+		[setOriginalList]
 	)
 
 	const updateItemInOriginList = useCallback(
@@ -67,6 +69,10 @@ export const useListOperations = () => {
 						})
 					break
 				case OperationItemPropertyTypes.delete:
+					if (isBookmarkItem(item)) {
+						await deleteBookmark(item)
+						break
+					}
 					deleteItem(item).then(() => {
 						removeItemFromOriginList(item)
 					})
@@ -88,7 +94,7 @@ export const useListOperations = () => {
 					break
 			}
 		},
-		[i18n, removeItemFromOriginList, updateItemInOriginList]
+		[i18n, removeItemFromOriginList, updateItemInOriginList, deleteBookmark]
 	)
 
 	return {
