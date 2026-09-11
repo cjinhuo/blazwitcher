@@ -1,0 +1,16 @@
+packages/blazwitcher-extension/tests/sidepanel/hooks/useBookmarkDelete.toast.test.tsx
+  h_a840a534bb49a4 1-106
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "30506f26c586086f609b95297ce60c70a69b4442",
+  "prompts": {},
+  "humans": {
+    "h_a840a534bb49a4": {
+      "author": "陈金伙 <chenjinhuo@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
