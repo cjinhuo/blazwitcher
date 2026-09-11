@@ -1,6 +1,6 @@
-/** Remove a bookmark and retain a snapshot for a retryable, one-time restore. */
+/** 删除书签并保留恢复所需的快照；恢复失败可重试，成功后不会重复创建。 */
 export async function removeBookmarkWithUndo(id: string) {
-	// Read the current position: earlier deletions may have changed sibling indices.
+	// 删除前读取最新位置，之前的删除操作可能已改变同级书签的下标。
 	const [bookmark] = await chrome.bookmarks.get(id)
 	if (!bookmark?.url || !bookmark.parentId) {
 		throw new Error('Only bookmarks with a parent folder can be deleted')
