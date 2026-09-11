@@ -1,5 +1,12 @@
 # blazwitcher
 
+## 1.5.0
+
+### Minor Changes
+
+- feat: add bookmark deletion with an undo notification @cjinhuo · 2026-09-11 · [#7e24e586](https://github.com/cjinhuo/blazwitcher/commit/7e24e58662d11bb4158ead64946fc4e7067e0cac)
+- feat: 新增书签删除及通知撤销功能 @cjinhuo · 2026-09-11 · [#7e24e586](https://github.com/cjinhuo/blazwitcher/commit/7e24e58662d11bb4158ead64946fc4e7067e0cac)
+
 ## 1.4.1
 
 ### Patch Changes
