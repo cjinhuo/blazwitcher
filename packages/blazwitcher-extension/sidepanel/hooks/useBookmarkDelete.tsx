@@ -1,5 +1,5 @@
 import { Toast } from '@douyinfe/semi-ui'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useAtomValue, useSetAtom, useStore } from 'jotai'
 import { useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { removeBookmarkWithUndo } from '~shared/bookmarks'
@@ -51,6 +51,7 @@ const UndoButton = ({ label, onUndo }: { label: string; onUndo: () => Promise<vo
 export const useBookmarkDelete = () => {
 	const i18n = useAtomValue(i18nAtom)
 	const setOriginalList = useSetAtom(originalListAtom)
+	const store = useStore()
 
 	return useCallback(
 		async (item: ListItemType<ItemType.Bookmark>) => {
@@ -62,6 +63,11 @@ export const useBookmarkDelete = () => {
 				return
 			}
 
+			// Keep the bookmark's position so Undo returns it inside the visible display limit.
+			const bookmarkIndex = store
+				.get(originalListAtom)
+				.filter((entry) => entry.itemType === ItemType.Bookmark)
+				.findIndex((entry) => entry.data.id === item.data.id)
 			setOriginalList((list) =>
 				list.filter((entry) => entry.itemType !== ItemType.Bookmark || entry.data.id !== item.data.id)
 			)
@@ -78,11 +84,14 @@ export const useBookmarkDelete = () => {
 								try {
 									const bookmark = await restore()
 									const [data] = traversalBookmarkTreeNode([bookmark], [], item.data.folderName)
-									setOriginalList((list) =>
-										list.some((entry) => entry.itemType === ItemType.Bookmark && entry.data.id === bookmark.id)
-											? list
-											: [...list, { itemType: ItemType.Bookmark, data }]
-									)
+									setOriginalList((list) => {
+										if (list.some((entry) => entry.itemType === ItemType.Bookmark && entry.data.id === bookmark.id)) {
+											return list
+										}
+										const nextBookmark = list.filter((entry) => entry.itemType === ItemType.Bookmark)[bookmarkIndex]
+										const insertIndex = nextBookmark ? list.indexOf(nextBookmark) : list.length
+										return list.toSpliced(insertIndex, 0, { itemType: ItemType.Bookmark, data })
+									})
 									Toast.close(toastId)
 								} catch {
 									Toast.error(i18n('bookmarkRestoreFailed'))
@@ -93,6 +102,6 @@ export const useBookmarkDelete = () => {
 				),
 			})
 		},
-		[i18n, setOriginalList]
+		[i18n, setOriginalList, store]
 	)
 }

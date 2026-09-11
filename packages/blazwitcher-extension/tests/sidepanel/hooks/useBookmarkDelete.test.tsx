@@ -4,8 +4,10 @@ import React from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { act } from 'react-dom/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { DefaultSearchConfig } from '~shared/constants'
 import { traversalBookmarkTreeNode } from '~shared/data-processing'
 import { ItemType, type ListItemType, OperationItemPropertyTypes } from '~shared/types'
+import { orderList } from '~shared/utils'
 import { originalListAtom } from '~sidepanel/atom'
 import { useListOperations } from '~sidepanel/hooks/useOperations'
 
@@ -134,6 +136,35 @@ describe('bookmark delete operation', () => {
 		expect(Toast.close).toHaveBeenCalledWith('toast-id')
 	})
 
+	it.each([
+		0,
+		4,
+		DefaultSearchConfig.bookmarkDisplayCount - 1,
+	])('returns undone bookmark %i to its visible position when the list exceeds the display limit', async (deletedIndex) => {
+		const bookmarks = Array.from({ length: DefaultSearchConfig.bookmarkDisplayCount + 1 }, (_, index) =>
+			makeBookmark({
+				...node,
+				id: String(index),
+				index,
+				title: `Bookmark ${index}`,
+				url: `https://example.com/${index}`,
+			})
+		)
+		act(() => store.set(originalListAtom, bookmarks))
+		getBookmark.mockResolvedValue([bookmarks[deletedIndex].data])
+		createBookmark.mockResolvedValue({ ...bookmarks[deletedIndex].data, id: 'restored' })
+		await deleteBookmark(bookmarks[deletedIndex])
+		const visibleAfterDelete = orderList(store.get(originalListAtom), DefaultSearchConfig)
+		expect(visibleAfterDelete.some((item) => item.data.id === bookmarks[deletedIndex].data.id)).toBe(false)
+		const undo = renderUndo()
+		await act(async () => undo.click())
+		const visibleAfterUndo = orderList(store.get(originalListAtom), DefaultSearchConfig)
+		expect(visibleAfterUndo.map((item) => item.data.title)).toEqual(
+			bookmarks.slice(0, DefaultSearchConfig.bookmarkDisplayCount).map((item) => item.data.title)
+		)
+		expect(visibleAfterUndo[deletedIndex].data.id).toBe('restored')
+	})
+
 	it('allows retrying undo after an API failure', async () => {
 		await deleteBookmark()
 		const button = renderUndo()
@@ -179,7 +210,7 @@ describe('bookmark delete operation', () => {
 		await act(async () => secondUndo.click())
 		const firstUndo = renderUndo(0)
 		await act(async () => firstUndo.click())
-		expect(store.get(originalListAtom).map((item) => item.data.id)).toEqual(['restored-Second', 'restored-Example'])
+		expect(store.get(originalListAtom).map((item) => item.data.id)).toEqual(['restored-Example', 'restored-Second'])
 	})
 
 	it('preserves bookmarks when deleting a history item with the same ID', async () => {
