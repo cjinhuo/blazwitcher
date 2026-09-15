@@ -130,9 +130,10 @@ interface ListProps<T extends ListItemType = ListItemType> {
 	// 通过 props 传进来就可以在外面控制如何渲染和点击事件
 	RenderItem: React.FC<{ item: T }>
 	handleItemClick: (item: T) => void
+	emptyDescription?: string
 }
 
-export default function List({ list, RenderItem, handleItemClick }: ListProps) {
+export default function List({ list, RenderItem, handleItemClick, emptyDescription }: ListProps) {
 	const i18n = useAtomValue(i18nAtom)
 	const isComposition = useAtomValue(compositionAtom)
 	const setActiveItem = useSetAtom(activeItemAtom)
@@ -258,7 +259,7 @@ export default function List({ list, RenderItem, handleItemClick }: ListProps) {
 					<Empty
 						image={<IllustrationNoResult style={{ width: 150, height: 150 }} />}
 						darkModeImage={<IllustrationNoResultDark style={{ width: 150, height: 150 }} />}
-						description={i18n('emptySearch')}
+						description={emptyDescription ?? i18n('emptySearch')}
 						style={{
 							padding: 30,
 						}}

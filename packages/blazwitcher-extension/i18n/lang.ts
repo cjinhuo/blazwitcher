@@ -298,6 +298,14 @@ export const lang = {
 		[LanguageType.zh]: '',
 		[LanguageType.en]: (engine: string) => `on ${engine}`,
 	},
+	searchEngineCommand: {
+		[LanguageType.zh]: '使用默认搜索引擎搜索输入内容',
+		[LanguageType.en]: 'Search input with the default search engine',
+	},
+	searchEngineInputHint: {
+		[LanguageType.zh]: '请输入搜索内容，例如：/se GitHub',
+		[LanguageType.en]: 'Enter a search term, e.g. /se GitHub',
+	},
 	edit: {
 		[LanguageType.zh]: '编辑',
 		[LanguageType.en]: 'Edit',
