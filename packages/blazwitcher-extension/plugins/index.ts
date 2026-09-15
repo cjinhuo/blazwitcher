@@ -1,5 +1,5 @@
 // 插件模块统一导出
-import { type CommandPlugin, ItemType, type ListItemType } from '~shared/types'
+import { ItemType, type ListItemType } from '~shared/types'
 import type { i18nFunction } from '~sidepanel/atom'
 import {
 	aiGroupingPlugin,
@@ -8,39 +8,23 @@ import {
 	filterByHistoryPlugin,
 	filterByTabPlugin,
 	pinCurrentTabPlugin,
+	searchEnginePlugin,
 	settingPlugin,
 } from './commands'
 
 // 命令插件导出
 export { filterByBookmarkPlugin, filterByHistoryPlugin, filterByTabPlugin, settingPlugin } from './commands'
+// 插件匹配工具函数
+export { matchPlugin } from './match-plugin'
 // UI组件导出
 export { RenderPluginItem, usePluginClickItem } from './ui/render-item'
 export { SettingPanels } from './ui/setting-panels'
-
-// 插件匹配工具函数
-export function matchPlugin(
-	plugins: ListItemType<ItemType.Plugin>[],
-	value: string
-): [hitPlugin: CommandPlugin | null, showPluginList: ListItemType<ItemType.Plugin>[], mainSearchValue: string] {
-	const pluginMap = plugins.reduce<Record<string, ListItemType<ItemType.Plugin>>>((acc, plugin) => {
-		acc[plugin.data.command] = plugin
-		return acc
-	}, {})
-	const filteredPlugins = plugins.filter((plugin) => plugin.data.command.startsWith(value))
-	for (let i = 0; i < value.length; i++) {
-		const str = value.slice(0, i + 1)
-		if (pluginMap[str]) {
-			// 命中时只展示当前命中的插件
-			return [pluginMap[str].data, [pluginMap[str]], value.slice(str.length)] as const
-		}
-	}
-	return [null, filteredPlugins, value] as const
-}
 
 // 默认插件列表
 const plugins = (i18n: i18nFunction): ListItemType<ItemType.Plugin>[] =>
 	[
 		settingPlugin(i18n),
+		searchEnginePlugin(i18n),
 		aiGroupingPlugin(i18n),
 		pinCurrentTabPlugin(i18n),
 		duplicateCurrentTabPlugin(i18n),
