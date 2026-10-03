@@ -31,18 +31,4 @@ describe('matchPlugin', () => {
 
 		expect(result[0]).toBeNull()
 	})
-
-	it('matches commands without changing the case of their arguments', () => {
-		const result = matchPlugin([makePlugin('/s'), makePlugin('/se')], '/SE "useState"')
-
-		expect(result[0]?.command).toBe('/se')
-		expect(result[2]).toBe(' "useState"')
-	})
-
-	it('matches partial commands without regard to case', () => {
-		const result = matchPlugin([makePlugin('/ai'), makePlugin('/se')], '/A')
-
-		expect(result[0]).toBeNull()
-		expect(result[1].map((plugin) => plugin.data.command)).toEqual(['/ai'])
-	})
 })

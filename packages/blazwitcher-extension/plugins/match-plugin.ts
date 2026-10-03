@@ -9,11 +9,11 @@ export function matchPlugin(
 		return acc
 	}, {})
 	const commandToken = value.trim().split(/\s+/, 1)[0]
-	const hitPlugin = pluginMap[commandToken.toLowerCase()]
+	const hitPlugin = pluginMap[commandToken]
 	if (hitPlugin) {
 		return [hitPlugin.data, [hitPlugin], value.slice(commandToken.length)] as const
 	}
 
-	const filteredPlugins = plugins.filter((plugin) => plugin.data.command.startsWith(value.toLowerCase()))
+	const filteredPlugins = plugins.filter((plugin) => plugin.data.command.startsWith(value))
 	return [null, filteredPlugins, value] as const
 }

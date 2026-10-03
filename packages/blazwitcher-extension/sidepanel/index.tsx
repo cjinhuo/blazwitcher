@@ -109,15 +109,15 @@ export default function SidePanel() {
 
 		// 插件匹配
 		if (searchValue.startsWith('/')) {
-			const [hitPlugin, pluginList, mainSearchValue] = matchPlugin(plugins(i18n), searchValue)
+			const [hitPlugin, pluginList, mainSearchValue] = matchPlugin(plugins(i18n), realSearchValue)
 			if (!hitPlugin || hitPlugin?.action)
 				return <List list={pluginList} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem} />
 			if (hitPlugin.render) {
-				return hitPlugin.render(mainSearchValue)
+				return hitPlugin.render(mainSearchValue, searchValue.slice(hitPlugin.command.length))
 			}
 			if (hitPlugin.dataProcessing) {
 				realList = hitPlugin.dataProcessing(originalList)
-				realSearchValue = mainSearchValue.toLowerCase()
+				realSearchValue = mainSearchValue
 			}
 		}
 
