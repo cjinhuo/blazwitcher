@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai'
+import { useAtomValue } from '~node_modules/jotai'
 import { DebugMode } from '~shared/constants'
 import { debugAtom } from '~sidepanel/atom/windowAtom'
 

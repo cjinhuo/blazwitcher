@@ -101,23 +101,17 @@ describe('sidepanel search commands', () => {
 		Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: false })
 	})
 
-	it.each(['/se', '/SE'])('preserves keyword case through %s routing and URL generation', (command) => {
-		act(() => harness.onSearch?.(`${command} "useState"`))
-		expect(harness.list).toHaveLength(1)
-		expect(harness.list[0].data.value).toBe('"useState"')
-		expect(harness.list[0].data.url).toBe('https://github.com/search?q=%22useState%22')
-	})
-
-	it('preserves the case of URL paths and query parameters and only offers search', () => {
-		act(() => harness.onSearch?.('/se https://example.com/CaseSensitive?q=AbC'))
+	it.each([
+		['/se ', 'GitHub'],
+		['/SE ', '"useState"'],
+		['/se', 'https://example.com/CaseSensitive?q=AbC'],
+		['/se ', 'İstanbul 大小写'],
+	])('searches the original keyword via %s even when local results exist: %s', (command, query) => {
+		act(() => harness.onSearch?.(`${command}${query}`))
 		expect(harness.list).toHaveLength(1)
 		expect(harness.list[0].data.actionType).toBe('search')
-		expect(new URL(harness.list[0].data.url).searchParams.get('q')).toBe('https://example.com/CaseSensitive?q=AbC')
-	})
-
-	it('preserves non-ASCII keyword case', () => {
-		act(() => harness.onSearch?.('/se İstanbul 大小写'))
-		expect(new URL(harness.list[0].data.url).searchParams.get('q')).toBe('İstanbul 大小写')
+		expect(harness.list[0].data.value).toBe(query)
+		expect(harness.list[0].data.url).toBe(`https://github.com/search?q=${encodeURIComponent(query)}`)
 	})
 
 	it('shows the usage hint when the search term is empty', () => {
@@ -126,20 +120,31 @@ describe('sidepanel search commands', () => {
 		expect(harness.emptyDescription).toBe('searchEngineInputHint')
 	})
 
-	it.each(['/s', '/S'])('keeps %s settings panel names case-insensitive', (command) => {
-		act(() => harness.onSearch?.(`${command} SEARCH`))
+	it.each(['/s SEARCH', '/S SEARCH', '/sSEARCH'])('keeps settings arguments working for %s', (input) => {
+		act(() => harness.onSearch?.(input))
 		expect(harness.settingPanel).toBe(SettingPanelKey.SEARCH)
 	})
 
 	it.each([
-		['/B', ItemType.Bookmark],
-		['/H', ItemType.History],
-		['/T', ItemType.Tab],
-	])('keeps %s filtering case-insensitive', (command, itemType) => {
-		act(() => harness.onSearch?.(`${command} GITHUB`))
+		['/B GITHUB', ItemType.Bookmark],
+		['/H GITHUB', ItemType.History],
+		['/T GITHUB', ItemType.Tab],
+		['/BGITHUB', ItemType.Bookmark],
+		['/HGITHUB', ItemType.History],
+		['/TGITHUB', ItemType.Tab],
+	])('keeps filter arguments working for %s', (input, itemType) => {
+		act(() => harness.onSearch?.(input))
 		const results = harness.list.filter((item) => item.itemType !== ItemType.Divide)
 		expect(results).toHaveLength(1)
 		expect(results[0].itemType).toBe(itemType)
 		expect(results[0].data.title).toBe('GitHub')
+	})
+
+	it.each([
+		['/p', ['/pin']],
+		['/unknown', []],
+	])('keeps plugin suggestions for %s', (input, commands) => {
+		act(() => harness.onSearch?.(input))
+		expect(harness.list.map((item) => item.data.command)).toEqual(commands)
 	})
 })
