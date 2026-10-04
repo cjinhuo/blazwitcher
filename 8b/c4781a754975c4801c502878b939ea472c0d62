@@ -1,0 +1,22 @@
+packages/blazwitcher-extension/plugins/commands/search-engine.tsx
+  h_a840a534bb49a4 33
+packages/blazwitcher-extension/plugins/commands/setting.tsx
+  h_a840a534bb49a4 12
+packages/blazwitcher-extension/shared/types.ts
+  h_a840a534bb49a4 124
+packages/blazwitcher-extension/sidepanel/index.tsx
+  h_a840a534bb49a4 116
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "8bc4781a754975c4801c502878b939ea472c0d62",
+  "prompts": {},
+  "humans": {
+    "h_a840a534bb49a4": {
+      "author": "陈金伙 <chenjinhuo@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
