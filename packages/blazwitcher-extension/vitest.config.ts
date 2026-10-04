@@ -4,18 +4,6 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
 	// Plasmo preserves JSX for its build; Vitest needs to transform component tests.
 	oxc: { jsx: { runtime: 'automatic' } },
-	plugins: [
-		{
-			// Command integration tests use the real registry; Plasmo owns SVG rendering.
-			name: 'plasmo-svg-test-stub',
-			resolveId(id) {
-				if (id.startsWith('react:~assets/') && id.endsWith('.svg')) return `\0${id}`
-			},
-			load(id) {
-				if (id.startsWith('\0react:~assets/')) return 'export default () => null'
-			},
-		},
-	],
 	resolve: {
 		alias: {
 			'~shared': path.resolve(__dirname, './shared'),
