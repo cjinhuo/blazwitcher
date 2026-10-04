@@ -1,0 +1,24 @@
+.changeset/quick-views-bow.md
+  h_a840a534bb49a4 5-6,8-9
+packages/blazwitcher-extension/i18n/lang.ts
+  h_a840a534bb49a4 306-307
+packages/blazwitcher-extension/plugins/commands/search-engine.tsx
+  h_a840a534bb49a4 7
+packages/blazwitcher-extension/plugins/match-plugin.ts
+  h_a840a534bb49a4 12-18
+packages/blazwitcher-extension/tests/plugins/index.test.ts
+  h_a840a534bb49a4 15-28,31-36,39-42,44-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "20eb1617351ddce87fc10b15e22c86e528342d13",
+  "prompts": {},
+  "humans": {
+    "h_a840a534bb49a4": {
+      "author": "陈金伙 <chenjinhuo@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
