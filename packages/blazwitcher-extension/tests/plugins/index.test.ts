@@ -12,23 +12,36 @@ const makePlugin = (command: string): ListItemType<ItemType.Plugin> => ({
 })
 
 describe('matchPlugin', () => {
-	it('matches a longer command before a shorter command with the same prefix', () => {
-		const result = matchPlugin([makePlugin('/s'), makePlugin('/se')], '/se test')
-
-		expect(result[0]?.command).toBe('/se')
-		expect(result[2]).toBe(' test')
+	it.each([
+		['/e GitHub', '/e', ' GitHub'],
+		['/eGitHub', '/e', 'GitHub'],
+		['/e', '/e', ''],
+		['/e   GitHub', '/e', '   GitHub'],
+		['/e\tGitHub', '/e', '\tGitHub'],
+		['/s search', '/s', ' search'],
+		['/ssearch', '/s', 'search'],
+		['/setting', '/s', 'etting'],
+	])('matches %s without changing its remaining argument', (input, command, argument) => {
+		const result = matchPlugin([makePlugin('/s'), makePlugin('/e')], input)
+		expect(result[0]?.command).toBe(command)
+		expect(result[1]).toEqual([makePlugin(command)])
+		expect(result[2]).toBe(argument)
 	})
 
-	it('keeps /s settings command working with an argument', () => {
-		const result = matchPlugin([makePlugin('/s'), makePlugin('/se')], '/s search')
-
-		expect(result[0]?.command).toBe('/s')
-		expect(result[2]).toBe(' search')
+	it.each(['/b', '/h', '/t'])('keeps %s filters working with or without a space', (command) => {
+		for (const argument of ['GitHub', ' GitHub']) {
+			const result = matchPlugin([makePlugin(command)], `${command}${argument}`)
+			expect(result[0]?.command).toBe(command)
+			expect(result[2]).toBe(argument)
+		}
 	})
 
-	it('does not match a command embedded in a longer token', () => {
-		const result = matchPlugin([makePlugin('/s'), makePlugin('/se')], '/setting')
+	it('keeps suggestions for an incomplete command', () => {
+		const plugins = [makePlugin('/s'), makePlugin('/e')]
+		expect(matchPlugin(plugins, '/')).toEqual([null, plugins, '/'])
+	})
 
-		expect(result[0]).toBeNull()
+	it('returns no match for an unknown command', () => {
+		expect(matchPlugin([makePlugin('/s'), makePlugin('/e')], '/unknown')).toEqual([null, [], '/unknown'])
 	})
 })

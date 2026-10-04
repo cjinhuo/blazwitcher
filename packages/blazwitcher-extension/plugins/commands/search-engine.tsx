@@ -4,7 +4,7 @@ import type { CommandPlugin } from '~shared/types'
 import type { i18nFunction } from '~sidepanel/atom'
 
 export const searchEnginePlugin = (i18n: i18nFunction): CommandPlugin => ({
-	command: '/se',
+	command: '/e',
 	description: i18n('searchEngineCommand'),
 	icon: <QueryIcon width={24} height={24} />,
 	render: (mainSearchValue?: string) => <SearchEngineCommand searchValue={mainSearchValue} />,

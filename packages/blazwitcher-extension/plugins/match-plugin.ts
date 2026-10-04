@@ -8,12 +8,13 @@ export function matchPlugin(
 		acc[plugin.data.command] = plugin
 		return acc
 	}, {})
-	const commandToken = value.trim().split(/\s+/, 1)[0]
-	const hitPlugin = pluginMap[commandToken]
-	if (hitPlugin) {
-		return [hitPlugin.data, [hitPlugin], value.slice(commandToken.length)] as const
-	}
-
 	const filteredPlugins = plugins.filter((plugin) => plugin.data.command.startsWith(value))
+	for (let i = 0; i < value.length; i++) {
+		const str = value.slice(0, i + 1)
+		if (pluginMap[str]) {
+			// 命中时只展示当前命中的插件
+			return [pluginMap[str].data, [pluginMap[str]], value.slice(str.length)] as const
+		}
+	}
 	return [null, filteredPlugins, value] as const
 }

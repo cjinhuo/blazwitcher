@@ -303,8 +303,8 @@ export const lang = {
 		[LanguageType.en]: 'Search input with the default search engine',
 	},
 	searchEngineInputHint: {
-		[LanguageType.zh]: '请输入搜索内容，例如：/se GitHub',
-		[LanguageType.en]: 'Enter a search term, e.g. /se GitHub',
+		[LanguageType.zh]: '请输入搜索内容，例如：/e GitHub',
+		[LanguageType.en]: 'Enter a search term, e.g. /e GitHub',
 	},
 	edit: {
 		[LanguageType.zh]: '编辑',
