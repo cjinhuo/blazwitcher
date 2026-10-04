@@ -121,7 +121,7 @@ export interface CommandPlugin {
 	icon: React.ReactNode
 	description: string
 	dataProcessing?: (data: ListItemType[]) => ListItemType[]
-	render?: (searchValue?: string, rawSearchValue?: string) => React.ReactNode
+	render?: (searchValue?: string) => React.ReactNode
 	action?: (context?: PluginContext) => void
 }
 

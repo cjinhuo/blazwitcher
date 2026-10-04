@@ -30,5 +30,5 @@ export const searchEnginePlugin = (i18n: i18nFunction): CommandPlugin => ({
 	command: '/se',
 	description: i18n('searchEngineCommand'),
 	icon: <QueryIcon width={24} height={24} />,
-	render: (mainSearchValue, rawSearchValue = mainSearchValue) => <SearchEngineCommand searchValue={rawSearchValue} />,
+	render: (searchValue) => <SearchEngineCommand searchValue={searchValue} />,
 })

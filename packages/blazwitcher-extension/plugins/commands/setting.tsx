@@ -9,7 +9,7 @@ export const settingPlugin = (i18n: i18nFunction): CommandPlugin => ({
 	description: i18n('settingPage'),
 	icon: <SettingSvg width={24} height={24} />,
 	render: (mainSearchValue?: string) => {
-		const panelName = mainSearchValue?.trim()
+		const panelName = mainSearchValue?.trim().toLowerCase()
 
 		// 输入 /s + 对应panelKey也能跳转到对应的设置界面
 		const panelMap: Record<string, SettingPanelKey> = {
