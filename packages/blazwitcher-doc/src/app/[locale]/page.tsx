@@ -1,5 +1,6 @@
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import FeatureCard from '@/components/FeatureCard'
+import HomePromoVideo from '@/components/home-promo-video'
 import SectionContent from '@/components/section-content'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
@@ -10,6 +11,7 @@ import { SiteHeader } from '@/components/site-header'
  */
 export default function Home() {
 	const t = useTranslations('LandingPage')
+	const locale = useLocale()
 
 	return (
 		<div className='relative flex min-h-screen flex-col'>
@@ -25,6 +27,7 @@ export default function Home() {
 
 				{/* 视频和功能轮播区域 */}
 				<div className='container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl'>
+					<HomePromoVideo key={locale} />
 					{/* YouTube 视频嵌入 */}
 					{/* <div className='mb-16 flex justify-center items-center'>
 						<div className='relative rounded-lg overflow-hidden aspect-video'>

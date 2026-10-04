@@ -1,0 +1,4 @@
+.venv/
+media/
+public/generated/
+__pycache__/
