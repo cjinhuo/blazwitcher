@@ -10,6 +10,14 @@
 			"get_algorithm": "获取同款拼音搜索算法",
 			"engine_name": "文本搜索引擎"
 		},
+		"video": {
+			"title": "Blazwitcher：拼音搜索与 AI 标签分组演示",
+			"description": "少一点寻找，多一点专注。28 秒了解 Blazwitcher。",
+			"download": "下载演示视频",
+			"enableMusic": "开启音乐",
+			"muteMusic": "关闭音乐",
+			"captions": "中文"
+		},
 		"features": {
 			"title": "拼音搜索，一键直达",
 			"subtitle": "智能拼音识别，让浏览更丝滑",

@@ -1,0 +1,29 @@
+{
+  "name": "blazwitcher-video",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "remotion studio src/index.ts",
+    "assets": "uv --quiet run --python 3.12 manim render -t --format=webm --fps=30 -r 1200,760 --media_dir media manim/scenes.py TabSwarm TabGrouping && node scripts/prepare-assets.mjs && pnpm music",
+    "music": "uv --quiet run --python 3.12 python scripts/compose-music.py",
+    "render": "pnpm music && pnpm render:zh && pnpm render:en",
+    "render:zh": "remotion render src/index.ts BlazwitcherHero out/blazwitcher-hero-zh.mp4 --codec=h264 --crf=20 --audio-codec=aac --audio-bitrate=192k --concurrency=4",
+    "render:en": "remotion render src/index.ts BlazwitcherHeroEn out/blazwitcher-hero-en.mp4 --codec=h264 --crf=20 --audio-codec=aac --audio-bitrate=192k --concurrency=4",
+    "poster": "pnpm poster:zh && pnpm poster:en",
+    "poster:zh": "remotion still src/index.ts BlazwitcherHero out/blazwitcher-hero-poster.jpg --frame=210",
+    "poster:en": "remotion still src/index.ts BlazwitcherHeroEn out/blazwitcher-hero-en-poster.jpg --frame=210",
+    "check": "tsc --noEmit",
+    "export:site": "node scripts/export-site.mjs"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.532",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "4.0.532"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.3"
+  }
+}

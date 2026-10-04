@@ -10,6 +10,14 @@
 			"get_algorithm": "Get the same Pinyin algorithm",
 			"engine_name": "Text Search Engine"
 		},
+		"video": {
+			"title": "Blazwitcher: Pinyin search and AI tab grouping",
+			"description": "Less searching, more focus. Meet Blazwitcher in 28 seconds.",
+			"download": "Download demo video",
+			"enableMusic": "Enable music",
+			"muteMusic": "Mute music",
+			"captions": "English"
+		},
 		"features": {
 			"title": "Pinyin Search, One-Click Access",
 			"subtitle": "Smart Recognition for Smoother Browsing",
