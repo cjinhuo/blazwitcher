@@ -6,7 +6,7 @@ import { useColorMap } from '~sidepanel/hooks/useTheme'
 import HighlightText from './highlight-text'
 import { RenderSearchActionOperation } from './operation'
 
-// 普通列表没有命中时，渲染“打开输入内容”或“使用默认搜索引擎搜索”的兜底项。
+// 复用搜索行，渲染“打开输入内容”或“使用已配置的搜索引擎搜索”。
 const ActionIcon = styled.div`
 	position: relative;
 	width: 40px;

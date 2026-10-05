@@ -97,23 +97,26 @@ export default function SidePanel() {
 	)
 
 	const RenderContent = useMemo(() => {
-		if (originalList.length === 0) {
+		let realSearchValue = searchValue.toLowerCase()
+		const pluginMatch = searchValue.startsWith('/') ? matchPlugin(plugins(i18n), realSearchValue) : undefined
+		if (originalList.length === 0 && pluginMatch?.[0]?.command !== '/e') {
 			return <Empty description={''} />
 		}
 		if (searchValue === '') {
 			return RenderList(originalList, false)
 		}
 
-		let realSearchValue = searchValue.toLowerCase()
 		let realList = originalList
 
 		// 插件匹配
-		if (searchValue.startsWith('/')) {
-			const [hitPlugin, pluginList, mainSearchValue] = matchPlugin(plugins(i18n), realSearchValue)
+		if (pluginMatch) {
+			const [hitPlugin, pluginList, mainSearchValue] = pluginMatch
 			if (!hitPlugin || hitPlugin?.action)
 				return <List list={pluginList} handleItemClick={handlePluginItemClick} RenderItem={RenderPluginItem} />
 			if (hitPlugin.render) {
-				return hitPlugin.render(mainSearchValue)
+				return hitPlugin.render(
+					hitPlugin.command === '/e' ? searchValue.slice(hitPlugin.command.length) : mainSearchValue
+				)
 			}
 			if (hitPlugin.dataProcessing) {
 				realList = hitPlugin.dataProcessing(originalList)

@@ -1,5 +1,5 @@
 import { faviconURL } from '~shared/favicon'
-import { getSearchEngineIconUrl, resolveSearchInput } from '~shared/search-engine'
+import { buildSearchUrl, getSearchEngineIconUrl } from '~shared/search-engine'
 import { ItemType, type ListItemType } from '~shared/types'
 import { isLikelyUrl, toNavigableUrl } from '~shared/utils'
 import type { i18nFunction, SearchConfigAtomType } from '~sidepanel/atom'
@@ -12,39 +12,36 @@ export const buildSearchActionItems = (
 	const input = searchValue.trim()
 	if (!input) return []
 
-	const resolvedSearchInput = resolveSearchInput(
-		input,
-		searchConfig.searchEngines,
-		searchConfig.defaultSearchEngineId,
-		isLikelyUrl,
-		toNavigableUrl
-	)
+	const openUrl = isLikelyUrl(input) ? toNavigableUrl(input) : undefined
 	const items: ListItemType<ItemType.SearchAction>[] = []
-	if (resolvedSearchInput.openUrl) {
+	if (openUrl) {
 		items.push({
 			itemType: ItemType.SearchAction,
 			data: {
 				id: 'go-to-url',
 				actionType: 'open',
 				prefix: i18n('goToUrl'),
-				value: resolvedSearchInput.openUrl,
-				url: resolvedSearchInput.openUrl,
-				favIconUrl: faviconURL(resolvedSearchInput.openUrl),
+				value: openUrl,
+				url: openUrl,
+				favIconUrl: faviconURL(openUrl),
 			},
 		})
 	}
 
-	if (resolvedSearchInput.searchEngine && resolvedSearchInput.searchUrl) {
+	const engines = [...searchConfig.searchEngines].sort(
+		(a, b) => Number(b.id === searchConfig.defaultSearchEngineId) - Number(a.id === searchConfig.defaultSearchEngineId)
+	)
+	for (const engine of engines) {
 		items.push({
 			itemType: ItemType.SearchAction,
 			data: {
-				id: `search-${resolvedSearchInput.searchEngine.id}`,
+				id: `search-${engine.id}`,
 				actionType: 'search',
-				prefix: i18n('searchWithEngine', resolvedSearchInput.searchEngine.name),
+				prefix: i18n('searchWithEngine', engine.name),
 				value: input,
-				suffix: i18n('searchWithEngineSuffix', resolvedSearchInput.searchEngine.name),
-				url: resolvedSearchInput.searchUrl,
-				favIconUrl: getSearchEngineIconUrl(resolvedSearchInput.searchEngine.queryTemplate) || '',
+				suffix: i18n('searchWithEngineSuffix', engine.name),
+				url: buildSearchUrl(input, engine.queryTemplate),
+				favIconUrl: getSearchEngineIconUrl(engine.queryTemplate) || '',
 			},
 		})
 	}
