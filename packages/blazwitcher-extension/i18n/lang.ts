@@ -299,12 +299,20 @@ export const lang = {
 		[LanguageType.en]: (engine: string) => `on ${engine}`,
 	},
 	searchEngineCommand: {
-		[LanguageType.zh]: '使用默认搜索引擎搜索输入内容',
-		[LanguageType.en]: 'Search input with the default search engine',
+		[LanguageType.zh]: '选择搜索引擎搜索输入内容',
+		[LanguageType.en]: 'Choose a search engine to search your input',
 	},
 	searchEngineInputHint: {
 		[LanguageType.zh]: '请输入搜索内容，例如：/e GitHub',
 		[LanguageType.en]: 'Enter a search term, e.g. /e GitHub',
+	},
+	searchEngineKeyboardHint: {
+		[LanguageType.zh]: '输入后用 ↑/↓ 选择搜索引擎，按 Enter 搜索',
+		[LanguageType.en]: 'After typing, use ↑/↓ to choose a search engine and press Enter to search',
+	},
+	searchEngineNotConfigured: {
+		[LanguageType.zh]: '尚未配置搜索引擎，请通过 /s search 添加',
+		[LanguageType.en]: 'No search engines configured. Add one via /s search',
 	},
 	edit: {
 		[LanguageType.zh]: '编辑',

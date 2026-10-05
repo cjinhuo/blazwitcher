@@ -1,3 +1,5 @@
+import { IconSearch } from '@douyinfe/semi-icons'
+import { Empty } from '@douyinfe/semi-ui'
 import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 import { ItemType, type ListItemType } from '~shared/types'
@@ -20,12 +22,16 @@ export function SearchEngineCommand({ searchValue = '' }: SearchEngineCommandPro
 		[searchConfig, searchValue, i18n]
 	)
 
-	return (
-		<List
-			list={searchItems}
-			RenderItem={RenderSearchActionItem}
-			handleItemClick={handleItemClick}
-			emptyDescription={!searchValue.trim() ? i18n('searchEngineInputHint') : undefined}
-		/>
-	)
+	if (!searchValue.trim() || searchItems.length === 0) {
+		return (
+			<Empty
+				image={<IconSearch size='extra-large' style={{ color: 'var(--semi-color-text-2)' }} />}
+				title={i18n(!searchValue.trim() ? 'searchEngineInputHint' : 'searchEngineNotConfigured')}
+				description={!searchValue.trim() ? i18n('searchEngineKeyboardHint') : undefined}
+				style={{ padding: 30 }}
+			/>
+		)
+	}
+
+	return <List list={searchItems} RenderItem={RenderSearchActionItem} handleItemClick={handleItemClick} />
 }
