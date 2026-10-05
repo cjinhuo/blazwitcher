@@ -1,5 +1,20 @@
 # blazwitcher
 
+## 1.6.0
+
+### Minor Changes
+
+- feat: add engine selection to /e and unmatched searches @cjinhuo · 2026-10-05 · [#e56f7bac](https://github.com/cjinhuo/blazwitcher/commit/e56f7bac8cc8f03cd6f36be9e70dfcc1299f9dd1)
+- feat: 为 /e 和无匹配搜索添加搜索引擎选择 @cjinhuo · 2026-10-05 · [#e56f7bac](https://github.com/cjinhuo/blazwitcher/commit/e56f7bac8cc8f03cd6f36be9e70dfcc1299f9dd1)
+- fix: show /e input guidance and preserve query case @cjinhuo · 2026-10-05 · [#e56f7bac](https://github.com/cjinhuo/blazwitcher/commit/e56f7bac8cc8f03cd6f36be9e70dfcc1299f9dd1)
+- fix: 为 /e 显示输入引导并保留查询大小写 @cjinhuo · 2026-10-05 · [#e56f7bac](https://github.com/cjinhuo/blazwitcher/commit/e56f7bac8cc8f03cd6f36be9e70dfcc1299f9dd1)
+- feat: add the /e shortcut for the default search engine @deretame · 2026-10-04 · [#221d8c64](https://github.com/cjinhuo/blazwitcher/commit/221d8c64b52c4cb340010ca3c0821358e7aefa5b)
+- feat: 新增 /e 默认搜索引擎搜索快捷键 @deretame · 2026-10-04 · [#221d8c64](https://github.com/cjinhuo/blazwitcher/commit/221d8c64b52c4cb340010ca3c0821358e7aefa5b)
+- fix: show a hint when /e has no search term @deretame · 2026-10-04 · [#221d8c64](https://github.com/cjinhuo/blazwitcher/commit/221d8c64b52c4cb340010ca3c0821358e7aefa5b)
+- fix: 为缺少搜索内容的 /e 显示使用提示 @deretame · 2026-10-04 · [#221d8c64](https://github.com/cjinhuo/blazwitcher/commit/221d8c64b52c4cb340010ca3c0821358e7aefa5b)
+- fix: use a consistent Jotai import path in the sidepanel @deretame · 2026-10-04 · [#221d8c64](https://github.com/cjinhuo/blazwitcher/commit/221d8c64b52c4cb340010ca3c0821358e7aefa5b)
+- fix: 统一 sidepanel 中的 Jotai 导入路径 @deretame · 2026-10-04 · [#221d8c64](https://github.com/cjinhuo/blazwitcher/commit/221d8c64b52c4cb340010ca3c0821358e7aefa5b)
+
 ## 1.5.0
 
 ### Minor Changes
