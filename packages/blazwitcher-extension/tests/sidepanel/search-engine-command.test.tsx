@@ -248,6 +248,22 @@ describe('/e sidepanel search', () => {
 		expect(chrome.tabs.create).toHaveBeenCalledTimes(1)
 	})
 
+	it.each([
+		['/e useState', 'useState'],
+		['unmatchedQuery', 'unmatchedQuery'],
+	])('uses the selected engine in the current browser tab for %s', async (value, query) => {
+		seedOriginalList()
+		vi.mocked(chrome.tabs.query).mockResolvedValueOnce([{ id: 9 } as chrome.tabs.Tab])
+		search(value)
+		await press('ArrowDown')
+		expect(store.get(activeItemAtom)?.data.id).toBe('search-google')
+		await press('Enter', { shiftKey: true })
+		expect(chrome.tabs.update).toHaveBeenCalledWith(9, {
+			url: `https://www.google.com/search?q=${encodeURIComponent(query)}`,
+		})
+		expect(chrome.tabs.create).not.toHaveBeenCalled()
+	})
+
 	it('refreshes rows after adding, removing and changing the default engine', () => {
 		search('/e GitHub')
 		act(() =>
@@ -274,6 +290,14 @@ describe('/e sidepanel search', () => {
 		expect(store.get(activeItemAtom)).toBeUndefined()
 		await press('Enter')
 		expect(chrome.tabs.create).not.toHaveBeenCalled()
+	})
+
+	it('opens the suggested search settings when the source list and engines are empty', () => {
+		act(() => store.set(searchConfigAtom, { ...DefaultSearchConfig, searchEngines: [], defaultSearchEngineId: '' }))
+		search('/e GitHub')
+		expect(container.textContent).toContain(lang.searchEngineNotConfigured.en)
+		search('/s search')
+		expect(container.textContent).toContain('settings: search')
 	})
 
 	it('clears the active item when returning from a query to the input hint', async () => {

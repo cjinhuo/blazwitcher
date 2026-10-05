@@ -99,7 +99,7 @@ export default function SidePanel() {
 	const RenderContent = useMemo(() => {
 		let realSearchValue = searchValue.toLowerCase()
 		const pluginMatch = searchValue.startsWith('/') ? matchPlugin(plugins(i18n), realSearchValue) : undefined
-		if (originalList.length === 0 && pluginMatch?.[0]?.command !== '/e') {
+		if (originalList.length === 0 && !pluginMatch?.[0]?.render) {
 			return <Empty description={''} />
 		}
 		if (searchValue === '') {
