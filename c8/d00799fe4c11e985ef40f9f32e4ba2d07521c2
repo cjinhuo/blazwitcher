@@ -1,0 +1,16 @@
+.changeset/floppy-memes-dream.md
+  h_a840a534bb49a4 1-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "c8d00799fe4c11e985ef40f9f32e4ba2d07521c2",
+  "prompts": {},
+  "humans": {
+    "h_a840a534bb49a4": {
+      "author": "陈金伙 <chenjinhuo@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
