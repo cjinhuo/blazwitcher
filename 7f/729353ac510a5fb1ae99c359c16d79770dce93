@@ -1,0 +1,38 @@
+packages/blazwitcher-extension/package.json
+  h_1bd18f210feaa5 35
+packages/blazwitcher-extension/shared/data-processing.ts
+  h_1bd18f210feaa5 57,117,125
+packages/blazwitcher-extension/shared/utils.ts
+  h_1bd18f210feaa5 10
+packages/blazwitcher-extension/sidepanel/index.tsx
+  h_1bd18f210feaa5 10-11,24,57-70,124,137,142,156
+packages/blazwitcher-extension/sidepanel/utils/createListSearcher.ts
+  h_1bd18f210feaa5 1-9,12-35
+packages/blazwitcher-extension/tests/shared/data-processing.test.ts
+  h_1bd18f210feaa5 268-271,324-325,382-383
+packages/blazwitcher-extension/tests/shared/process-tabs-by-window.test.ts
+  h_1bd18f210feaa5 1
+packages/blazwitcher-extension/tests/shared/utils.test.ts
+  h_1bd18f210feaa5 9,40
+packages/blazwitcher-extension/tests/sidepanel/search-engine-command.test.tsx
+  h_1bd18f210feaa5 4,21-23,92-99,164,383-451
+packages/blazwitcher-extension/tests/sidepanel/utils/createListSearcher.test.ts
+  h_1bd18f210feaa5 1-153
+pnpm-lock.yaml
+  h_1bd18f210feaa5 169-170,8894-8895,19632
+pnpm-workspace.yaml
+  h_1bd18f210feaa5 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.21",
+  "base_commit_sha": "7f729353ac510a5fb1ae99c359c16d79770dce93",
+  "prompts": {},
+  "humans": {
+    "h_1bd18f210feaa5": {
+      "author": "陈金伙 <cjinhuo@qq.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
