@@ -7,8 +7,8 @@ import styled from 'styled-components'
 import plugins, { matchPlugin } from '~plugins'
 import { RenderPluginItem, usePluginClickItem } from '~plugins/ui/render-item'
 import { MAIN_CONTENT_CLASS } from '~shared/constants'
-import { ItemType, type ListItemType } from '~shared/types'
-import { handleItemClick, orderList, searchWithList, splitToGroup } from '~shared/utils'
+import { type CommandPlugin, ItemType, type ListItemType } from '~shared/types'
+import { handleItemClick, orderList, splitToGroup } from '~shared/utils'
 import { i18nAtom, searchConfigAtom } from '~sidepanel/atom'
 import useOriginalList from '~sidepanel/hooks/useOriginalList'
 import { useTheme } from '~sidepanel/hooks/useTheme'
@@ -21,6 +21,7 @@ import { RenderItem as ListItemRenderItem } from './list-item'
 import Search from './search'
 import { RenderSearchActionItem } from './search-action-item'
 import { buildSearchActionItems } from './utils/buildSearchActionItems'
+import { createListSearcher } from './utils/createListSearcher'
 import { normalizeSearchValue } from './utils/normalizeSearchValue'
 import { startup } from './utils/startup'
 
@@ -53,6 +54,20 @@ export default function SidePanel() {
 	const [searchValue, setSearchValue] = useState('')
 
 	const handlePluginItemClick = usePluginClickItem()
+	const getSearcher = useMemo(() => {
+		// 按命令范围延迟创建；查询变化时复用，列表或连续搜索配置变化时重建。
+		const searchers = new Map<string, ReturnType<typeof createListSearcher>>()
+		return (scope?: CommandPlugin) => {
+			const key = scope?.command ?? ''
+			let searcher = searchers.get(key)
+			if (!searcher) {
+				const list = scope?.dataProcessing ? scope.dataProcessing(originalList) : originalList
+				searcher = createListSearcher(list, searchConfig.enableConsecutiveSearch)
+				searchers.set(key, searcher)
+			}
+			return searcher
+		}
+	}, [originalList, searchConfig.enableConsecutiveSearch])
 
 	const RenderList = useCallback(
 		(list: ListItemType[], hasInput: boolean) => {
@@ -106,7 +121,7 @@ export default function SidePanel() {
 			return RenderList(originalList, false)
 		}
 
-		let realList = originalList
+		let searchScope: CommandPlugin | undefined
 
 		// 插件匹配
 		if (pluginMatch) {
@@ -119,12 +134,12 @@ export default function SidePanel() {
 				)
 			}
 			if (hitPlugin.dataProcessing) {
-				realList = hitPlugin.dataProcessing(originalList)
+				searchScope = hitPlugin
 				realSearchValue = mainSearchValue
 			}
 		}
 
-		const filteredList = searchWithList(realList, realSearchValue, searchConfig)
+		const filteredList = getSearcher(searchScope).search(realSearchValue)
 		if (realSearchValue && filteredList.length === 0) {
 			const searchActionItems = buildSearchActionItems(searchValue, searchConfig, i18n)
 			if (searchActionItems.length > 0) {
@@ -138,7 +153,7 @@ export default function SidePanel() {
 			}
 		}
 		return RenderList(filteredList, realSearchValue !== '')
-	}, [searchValue, originalList, handlePluginItemClick, i18n, RenderList, searchConfig])
+	}, [searchValue, originalList, handlePluginItemClick, i18n, RenderList, searchConfig, getSearcher])
 
 	const handleSearch = useCallback((value: string) => {
 		setSearchValue(normalizeSearchValue(value))

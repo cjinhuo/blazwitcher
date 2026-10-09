@@ -1,9 +1,9 @@
 import { createStore, Provider } from 'jotai'
 import { createRoot, type Root } from 'react-dom/client'
 import { act } from 'react-dom/test-utils'
+import { createSearcher } from 'text-search-engine'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DefaultSearchConfig, LanguageType, LIST_ITEM_ACTIVE_CLASS } from '~shared/constants'
-import { getCompositeSourceAndHost } from '~shared/text-search-pinyin'
 import { ItemType, type ListItemType, OperationItemPropertyTypes } from '~shared/types'
 import {
 	activeItemAtom,
@@ -17,6 +17,9 @@ import SidePanel from '~sidepanel/index'
 import { lang } from '../../i18n/lang'
 
 const input = vi.hoisted(() => ({ search: (_value: string) => {} }))
+
+// 保留真实 SDK 行为，只记录搜索器创建次数。
+vi.mock('text-search-engine', { spy: true })
 
 // Keep the real List, search row, keyboard hook and operations; isolate storage,
 // unrelated panels and Plasmo SVG imports from this sidepanel integration test.
@@ -86,6 +89,14 @@ vi.mock('~plugins', async () => {
 	return {
 		matchPlugin,
 		default: () => [
+			...[
+				['/t', ItemType.Tab],
+				['/b', ItemType.Bookmark],
+				['/h', ItemType.History],
+			].map(([command, itemType]) => ({
+				itemType: ItemType.Plugin,
+				data: { command, dataProcessing: (list: ListItemType[]) => list.filter((item) => item.itemType === itemType) },
+			})),
 			{
 				itemType: ItemType.Plugin,
 				data: { command: '/e', render: (value: string) => <SearchEngineCommand searchValue={value} /> },
@@ -150,7 +161,7 @@ describe('/e sidepanel search', () => {
 						id: 1,
 						title: 'Other',
 						url: 'https://other.example/',
-						...getCompositeSourceAndHost('Other', 'https://other.example/'),
+						host: 'other.example',
 					},
 				},
 			])
@@ -368,5 +379,74 @@ describe('/e sidepanel search', () => {
 		expect(rows().filter((row) => row.textContent?.includes('Search'))).toHaveLength(0)
 		search('/s SEARCH')
 		expect(container.textContent).toContain('settings: search')
+	})
+
+	it('连续输入与排序配置变化复用搜索器，连续搜索开关和列表变化时重建', () => {
+		seedOriginalList()
+		search('other')
+		search('othe')
+		search('oth')
+		expect(createSearcher).toHaveBeenCalledTimes(1)
+		act(() => store.set(searchConfigAtom, { ...store.get(searchConfigAtom), historyDisplayCount: 5 }))
+		expect(createSearcher).toHaveBeenCalledTimes(1)
+		act(() => store.set(searchConfigAtom, { ...store.get(searchConfigAtom), enableConsecutiveSearch: true }))
+		expect(createSearcher).toHaveBeenCalledTimes(2)
+		act(() => store.set(originalListAtom, [...store.get(originalListAtom)]))
+		expect(createSearcher).toHaveBeenCalledTimes(3)
+	})
+
+	it('各命令只搜索对应类型，空参数保留列表，切回已有范围复用实例', () => {
+		seedOriginalList()
+		act(() =>
+			store.set(originalListAtom, [
+				...store.get(originalListAtom),
+				{
+					itemType: ItemType.Bookmark,
+					data: { id: 'b1', title: 'Other bookmark', url: 'https://bookmark.example', host: 'bookmark.example' },
+				},
+				{
+					itemType: ItemType.History,
+					data: { id: 'h1', title: 'Other history', url: 'https://history.example', host: 'history.example' },
+				},
+			])
+		)
+		for (const [command, itemType] of [
+			['/t', ItemType.Tab],
+			['/b', ItemType.Bookmark],
+			['/h', ItemType.History],
+		]) {
+			search(`${command} other`)
+			expect(store.get(activeItemAtom)?.itemType).toBe(itemType)
+			search(command)
+			expect(store.get(activeItemAtom)?.itemType).toBe(itemType)
+		}
+		expect(createSearcher).toHaveBeenCalledTimes(3)
+		search('/t oth')
+		expect(createSearcher).toHaveBeenCalledTimes(3)
+		search('other')
+		expect(createSearcher).toHaveBeenCalledTimes(4)
+		search('/b other')
+		expect(createSearcher).toHaveBeenCalledTimes(4)
+	})
+
+	it('输入过程中追加分片数据后立即可匹配，清空输入后展示原始列表', () => {
+		seedOriginalList()
+		search('jk github')
+		expect(store.get(activeItemAtom)?.itemType).toBe(ItemType.SearchAction)
+		act(() =>
+			store.set(originalListAtom, [
+				...store.get(originalListAtom),
+				{
+					itemType: ItemType.Tab,
+					data: { id: 2, title: '  React 监控平台  ', url: 'https://github.com', host: 'github.com' },
+				},
+			])
+		)
+		expect(store.get(activeItemAtom)?.data.id).toBe(2)
+		expect(store.get(activeItemAtom)?.data.titleHitRanges).toEqual([[8, 9]])
+		expect(createSearcher).toHaveBeenCalledTimes(2)
+		search('')
+		expect(createSearcher).toHaveBeenCalledTimes(2)
+		expect(store.get(activeItemAtom)?.data).not.toHaveProperty('titleHitRanges')
 	})
 })

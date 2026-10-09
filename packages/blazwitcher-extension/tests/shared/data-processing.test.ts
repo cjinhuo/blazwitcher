@@ -1,15 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('text-search-engine', () => ({
-	extractBoundaryMapping: vi.fn((source: string) => ({
-		pinyinString: source,
-		boundary: [],
-		originalIndices: [],
-		originalString: source,
-		originalLength: source.length,
-	})),
-}))
-
 vi.mock('~shared/promisify', () => ({
 	tabsQuery: vi.fn().mockResolvedValue([]),
 	getBookmarksTree: vi.fn().mockResolvedValue([]),
@@ -275,6 +265,10 @@ describe('tabsProcessing', () => {
 		expect(result[0].itemType).toBe('tab')
 		expect(result[0].data.id).toBe(1)
 		expect(result[0].data.url).toBe('https://example.com')
+		expect(result[0].data.title).toBe('Example')
+		expect(result[0].data.host).toBe('example.com')
+		expect(result[0].data).not.toHaveProperty('compositeSource')
+		expect(result[0].data).not.toHaveProperty('compositeBoundaryMapping')
 	})
 
 	it('should filter out chrome:// tabs', async () => {
@@ -327,6 +321,8 @@ describe('historyProcessing', () => {
 		expect(result).toHaveLength(1)
 		expect(result[0].itemType).toBe('history')
 		expect(result[0].data.url).toBe('https://example.com')
+		expect(result[0].data.host).toBe('example.com')
+		expect(result[0].data).not.toHaveProperty('compositeBoundaryMapping')
 	})
 
 	it('should filter out chrome-extension:// history items', async () => {
@@ -383,6 +379,8 @@ describe('bookmarksProcessingOnce', () => {
 		expect(result).toHaveLength(1)
 		expect(result[0].itemType).toBe('bookmark')
 		expect(result[0].data.url).toBe('https://example.com')
+		expect(result[0].data.host).toBe('example.com')
+		expect(result[0].data).not.toHaveProperty('compositeBoundaryMapping')
 	})
 
 	it('should handle nested bookmark tree', async () => {

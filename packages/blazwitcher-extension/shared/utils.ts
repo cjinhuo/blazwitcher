@@ -1,12 +1,5 @@
-import {
-	isConsecutiveForChar,
-	isStrictnessSatisfied,
-	mergeSpacesWithRanges,
-	searchSentenceByBoundaryMapping,
-} from 'text-search-engine'
 import type { SearchConfigAtomType } from '~sidepanel/atom'
 import {
-	DEFAULT_STRICTNESS_COEFFICIENT,
 	LAST_ACTIVE_WINDOW_ID_KEY,
 	SELF_WINDOW_ID_KEY,
 	SELF_WINDOW_STATE,
@@ -14,7 +7,7 @@ import {
 	URL_DARK_PARAM,
 } from './constants'
 import { storageGet, storageRemove } from './promisify'
-import { ItemType, type ListItemType, type Matrix } from './types'
+import { ItemType, type ListItemType } from './types'
 
 export { faviconURL } from './favicon'
 
@@ -249,58 +242,6 @@ export function sleep(ms: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-/**
- * 将复合命中范围根据 source 长度拆分为多个 range
- * @param compositeHitRanges
- * @param compositeSourceLengths
- */
-export function splitCompositeHitRanges(compositeHitRanges: Matrix, compositeSourceLengths: number[]) {
-	if (compositeHitRanges.length < 1) return [compositeHitRanges]
-	const result: (Matrix | undefined)[] = []
-	const temp: Matrix = []
-	let hitRangeIndex = 0
-	let sourceIndex = 0
-	let cumulativeSourceLength = compositeSourceLengths[sourceIndex]
-	let currentRange = compositeHitRanges[hitRangeIndex]
-	const append = (increaseSourceIndex = true) => {
-		if (temp.length > 0) {
-			// 减去前面累加 source 的长度
-			const gap = compositeSourceLengths.slice(0, result.length).reduce((a, b) => a + b, 0)
-			result.push([...temp.map(([a, b]) => [a - gap, b - gap] as [number, number])])
-			temp.length = 0
-		} else {
-			result.push(undefined)
-		}
-		if (increaseSourceIndex) {
-			cumulativeSourceLength += compositeSourceLengths[++sourceIndex]
-		}
-	}
-	while (hitRangeIndex < compositeHitRanges.length && sourceIndex < compositeSourceLengths.length) {
-		const [start, end] = currentRange
-		const _index = cumulativeSourceLength - 1
-		if (_index < start) {
-			append()
-		} else if (_index >= start && _index < end) {
-			temp.push([start, _index])
-			currentRange = [_index + 1, end]
-			append()
-		} else if (_index === end) {
-			temp.push(currentRange)
-			currentRange = compositeHitRanges[++hitRangeIndex]
-			append()
-		} else {
-			// cumulativeSourceLength > end
-			temp.push(currentRange)
-			currentRange = compositeHitRanges[++hitRangeIndex]
-		}
-	}
-	if (compositeSourceLengths.length - sourceIndex > 0) {
-		append(false)
-		result.push(...Array(compositeSourceLengths.length - sourceIndex - 1).fill(undefined))
-	}
-	return result
-}
-
 export const compareForHitRangeLength = (a: ListItemType, b: ListItemType) => {
 	if (a.data.compositeHitRanges && b.data.compositeHitRanges) {
 		return a.data.compositeHitRanges.length - b.data.compositeHitRanges.length
@@ -355,34 +296,6 @@ export const orderList = (list: ListItemType[], searchConfig: SearchConfigAtomTy
 			.slice(0, searchConfig.historyDisplayCount),
 		...bookmarks.toSorted(compareForHitRangeLength).slice(0, searchConfig.bookmarkDisplayCount),
 	].toSorted(compareForHitRangeLength)
-}
-
-export const searchWithList = (list: ListItemType[], searchValue: string, searchConfig: SearchConfigAtomType) => {
-	if (searchValue === '') return list
-	return list.reduce<ListItemType[]>((acc, item) => {
-		const { hitRanges, wordHitRangesMapping } = searchSentenceByBoundaryMapping(
-			item.data.compositeBoundaryMapping,
-			searchValue
-		)
-		if (
-			hitRanges &&
-			(!searchConfig.enableConsecutiveSearch ||
-				isConsecutiveForChar(item.data.compositeSource, searchValue, wordHitRangesMapping, hitRanges))
-		) {
-			const mergedHitRanges = mergeSpacesWithRanges(item.data.compositeSource, hitRanges)
-			if (isStrictnessSatisfied(DEFAULT_STRICTNESS_COEFFICIENT, searchValue, mergedHitRanges)) {
-				const [titleHitRanges, hostHitRanges] = splitCompositeHitRanges(mergedHitRanges, [
-					item.data.title.length,
-					item.data.host.length,
-				])
-				acc.push({
-					...item,
-					data: { ...item.data, compositeHitRanges: mergedHitRanges, titleHitRanges, hostHitRanges },
-				})
-			}
-		}
-		return acc
-	}, [])
 }
 
 export const splitToGroup = (list: ListItemType[]) => {

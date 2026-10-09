@@ -1,14 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
-
-vi.mock('text-search-engine', () => ({
-	extractBoundaryMapping: vi.fn((s: string) => ({
-		pinyinString: s,
-		boundary: [],
-		originalIndices: [],
-		originalString: s,
-		originalLength: s.length,
-	})),
-}))
+import { describe, expect, it } from 'vitest'
 
 import { processTabsForAI } from '~shared/process-tabs-by-window'
 import { ItemType } from '~shared/types'
@@ -23,14 +13,6 @@ const makeTab = (id: number, windowId: number, opts: { groupId?: number; tabGrou
 		host: `tab${id}.com`,
 		tabGroup: opts.tabGroup || null,
 		groupId: opts.groupId ?? -1,
-		compositeSource: `tab ${id}tab${id}.com`,
-		compositeBoundaryMapping: {
-			pinyinString: '',
-			boundary: [],
-			originalIndices: [],
-			originalString: '',
-			originalLength: 0,
-		},
 	},
 })
 
