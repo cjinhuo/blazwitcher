@@ -22,7 +22,6 @@ import {
 	storageGetSync,
 	tabsQuery,
 } from './promisify'
-import { getCompositeSourceAndHost } from './text-search-pinyin'
 import { type BookmarkItemType, ItemType, type ListItemType } from './types'
 import { faviconURL } from './utils'
 
@@ -55,7 +54,7 @@ async function processTabItem(tab: chrome.tabs.Tab) {
 	return {
 		...tab,
 		tabGroup: await tabGroupProcessing(tab.groupId),
-		...getCompositeSourceAndHost(tab.title, tab.url),
+		host: new URL(tab.url).host,
 		favIconUrl: faviconURL(tab.url),
 	}
 }
@@ -115,7 +114,7 @@ export async function bookmarksProcessingOnce(): Promise<ListItemType<ItemType.B
 function processHistoryItem(history: chrome.history.HistoryItem) {
 	return {
 		...history,
-		...getCompositeSourceAndHost(history.title, history.url),
+		host: new URL(history.url).host,
 		favIconUrl: faviconURL(history.url),
 	}
 }
@@ -123,7 +122,7 @@ function processHistoryItem(history: chrome.history.HistoryItem) {
 function processedBookmarkItem(bookmark: chrome.bookmarks.BookmarkTreeNode, folderName = '') {
 	return {
 		...bookmark,
-		...getCompositeSourceAndHost(bookmark.title, bookmark.url),
+		host: new URL(bookmark.url).host,
 		favIconUrl: faviconURL(bookmark.url),
 		folderName,
 	}

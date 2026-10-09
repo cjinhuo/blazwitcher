@@ -3,18 +3,7 @@ import type { TranslationKeys } from '~sidepanel/atom'
 
 export type Matrix = [number, number][]
 
-export interface SourceMappingData {
-	pinyinString: string
-	boundary: Matrix
-	originalIndices: number[]
-	originalString: string
-	originalLength: number
-}
-
 interface BaseItemType {
-	// a set of title,host,folderName and group
-	compositeSource: string
-	compositeBoundaryMapping: SourceMappingData
 	compositeHitRanges?: Matrix
 
 	host: string
@@ -26,7 +15,6 @@ interface BaseItemType {
 	isShowType?: boolean
 }
 export interface TabItemType extends chrome.tabs.Tab, BaseItemType {
-	titleBoundaryMapping: SourceMappingData
 	tabGroup: chrome.tabGroups.TabGroup | null
 }
 export interface BookmarkItemType extends chrome.bookmarks.BookmarkTreeNode, BaseItemType {

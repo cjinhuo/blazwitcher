@@ -1,15 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
 
-vi.mock('text-search-engine', () => ({
-	extractBoundaryMapping: vi.fn((s: string) => ({
-		pinyinString: s,
-		boundary: [],
-		originalIndices: [],
-		originalString: s,
-		originalLength: s.length,
-	})),
-}))
-
 import { ItemType } from '~shared/types'
 import { buildSearchActionItems } from '~sidepanel/utils/buildSearchActionItems'
 

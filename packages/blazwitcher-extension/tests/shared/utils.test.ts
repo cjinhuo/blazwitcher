@@ -1,24 +1,4 @@
-import {
-	isConsecutiveForChar as mockIsConsecutive,
-	isStrictnessSatisfied as mockIsStrictness,
-	mergeSpacesWithRanges as mockMergeSpaces,
-	searchSentenceByBoundaryMapping as mockSearchSentence,
-} from 'text-search-engine'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-
-vi.mock('text-search-engine', () => ({
-	extractBoundaryMapping: vi.fn((s) => ({
-		pinyinString: s,
-		boundary: [],
-		originalIndices: [],
-		originalString: s,
-		originalLength: s.length,
-	})),
-	searchSentenceByBoundaryMapping: vi.fn(),
-	isConsecutiveForChar: vi.fn(),
-	mergeSpacesWithRanges: vi.fn(),
-	isStrictnessSatisfied: vi.fn(),
-}))
 
 vi.mock('~shared/promisify', () => ({
 	storageGet: vi.fn().mockResolvedValue({}),
@@ -26,7 +6,7 @@ vi.mock('~shared/promisify', () => ({
 }))
 
 import { storageGet, storageRemove } from '~shared/promisify'
-import { ItemType, type ListItemType, type Matrix } from '~shared/types'
+import { ItemType, type ListItemType } from '~shared/types'
 import {
 	closeCurrentWindowAndClearStorage,
 	closeTab,
@@ -49,9 +29,7 @@ import {
 	queryInNewTab,
 	safeSendMessage,
 	scrollIntoViewIfNeeded,
-	searchWithList,
 	sleep,
-	splitCompositeHitRanges,
 	splitToGroup,
 	throttle,
 	toNavigableUrl,
@@ -59,7 +37,7 @@ import {
 
 const makeItem = (itemType: ItemType, data: any = {}): ListItemType => ({
 	itemType,
-	data: { title: '', url: '', host: '', compositeSource: '', ...data },
+	data: { title: '', url: '', host: '', ...data },
 })
 
 describe('type guard functions', () => {
@@ -221,65 +199,6 @@ describe('toNavigableUrl', () => {
 
 	it('trims whitespace before processing', () => {
 		expect(toNavigableUrl('  example.com  ')).toBe('https://example.com')
-	})
-})
-
-describe('splitCompositeHitRanges', () => {
-	it('returns [compositeHitRanges] when hitRanges is empty', () => {
-		const emptyRanges: Matrix = []
-		const result = splitCompositeHitRanges(emptyRanges, [5, 10])
-		expect(result).toEqual([emptyRanges])
-	})
-
-	it('splits single range within first source', () => {
-		const hitRanges: Matrix = [[0, 2]]
-		const sourceLengths = [5, 5]
-		const result = splitCompositeHitRanges(hitRanges, sourceLengths)
-		expect(result[0]).toEqual([[0, 2]])
-	})
-
-	it('splits range spanning two sources', () => {
-		const hitRanges: Matrix = [[2, 7]]
-		const sourceLengths = [5, 5]
-		const result = splitCompositeHitRanges(hitRanges, sourceLengths)
-		// First source gets [2, 4], second source gets [0, 2]
-		expect(result[0]).toEqual([[2, 4]])
-		expect(result[1]).toEqual([[0, 2]])
-	})
-
-	it('handles multiple ranges across sources', () => {
-		const hitRanges: Matrix = [
-			[0, 2],
-			[6, 8],
-		]
-		const sourceLengths = [5, 5]
-		const result = splitCompositeHitRanges(hitRanges, sourceLengths)
-		expect(result[0]).toEqual([[0, 2]])
-		expect(result[1]).toEqual([[1, 3]])
-	})
-
-	it('handles range ending exactly at source boundary', () => {
-		const hitRanges: Matrix = [[0, 4]]
-		const sourceLengths = [5, 5]
-		const result = splitCompositeHitRanges(hitRanges, sourceLengths)
-		expect(result[0]).toEqual([[0, 4]])
-	})
-
-	it('returns undefined for sources without hits', () => {
-		const hitRanges: Matrix = [[6, 8]]
-		const sourceLengths = [5, 5]
-		const result = splitCompositeHitRanges(hitRanges, sourceLengths)
-		expect(result[0]).toBeUndefined()
-		expect(result[1]).toEqual([[1, 3]])
-	})
-
-	it('handles three sources', () => {
-		const hitRanges: Matrix = [[0, 2]]
-		const sourceLengths = [5, 5, 5]
-		const result = splitCompositeHitRanges(hitRanges, sourceLengths)
-		expect(result[0]).toEqual([[0, 2]])
-		expect(result[1]).toBeUndefined()
-		expect(result[2]).toBeUndefined()
 	})
 })
 
@@ -506,14 +425,6 @@ describe('orderList', () => {
 			title: `Tab ${id}`,
 			url: `https://tab${id}.com`,
 			host: `tab${id}.com`,
-			compositeSource: `tab ${id}tab${id}.com`,
-			compositeBoundaryMapping: {
-				pinyinString: '',
-				boundary: [],
-				originalIndices: [],
-				originalString: '',
-				originalLength: 0,
-			},
 			active: false,
 			lastAccessed: Date.now(),
 			...opts,
@@ -527,14 +438,6 @@ describe('orderList', () => {
 			title: `Bookmark ${id}`,
 			url,
 			host: new URL(url).host,
-			compositeSource: `bookmark ${id}${new URL(url).host}`,
-			compositeBoundaryMapping: {
-				pinyinString: '',
-				boundary: [],
-				originalIndices: [],
-				originalString: '',
-				originalLength: 0,
-			},
 			folderName: '',
 			favIconUrl: '',
 		},
@@ -547,14 +450,6 @@ describe('orderList', () => {
 			title: `History ${id}`,
 			url,
 			host: new URL(url).host,
-			compositeSource: `history ${id}${new URL(url).host}`,
-			compositeBoundaryMapping: {
-				pinyinString: '',
-				boundary: [],
-				originalIndices: [],
-				originalString: '',
-				originalLength: 0,
-			},
 			favIconUrl: '',
 			lastVisitTime: Date.now(),
 		},
@@ -617,88 +512,6 @@ describe('orderList', () => {
 		const list = [makeBookmarkItem('b1', 'https://a.com'), makeBookmarkItem('b2', 'https://b.com')]
 		const result = orderList(list, config)
 		expect(result).toHaveLength(1)
-	})
-})
-
-describe('searchWithList', () => {
-	const searchConfig = {
-		bookmarkDisplayCount: 10,
-		historyDisplayCount: 10,
-		topSuggestionsCount: 2,
-		enableConsecutiveSearch: false,
-		searchEngines: [],
-		defaultSearchEngineId: 'google',
-	}
-
-	const makeSearchableItem = (itemType: ItemType, title: string, host: string): ListItemType => ({
-		itemType,
-		data: {
-			title,
-			url: `https://${host}`,
-			host,
-			compositeSource: `${title}${host}`,
-			compositeBoundaryMapping: {
-				pinyinString: `${title}${host}`,
-				boundary: [],
-				originalIndices: [],
-				originalString: `${title}${host}`,
-				originalLength: title.length + host.length,
-			},
-		},
-	})
-
-	beforeEach(() => {
-		vi.mocked(mockSearchSentence).mockReset()
-		vi.mocked(mockMergeSpaces).mockReset()
-		vi.mocked(mockIsStrictness).mockReset()
-		vi.mocked(mockIsConsecutive).mockReset()
-	})
-
-	it('returns full list when search value is empty', () => {
-		const list = [makeSearchableItem(ItemType.Tab, 'Test', 'test.com')]
-		expect(searchWithList(list, '', searchConfig)).toEqual(list)
-	})
-
-	it('filters items based on search sentence results', () => {
-		const list = [
-			makeSearchableItem(ItemType.Tab, 'Hello', 'hello.com'),
-			makeSearchableItem(ItemType.Tab, 'World', 'world.com'),
-		]
-
-		vi.mocked(mockSearchSentence)
-			.mockReturnValueOnce({ hitRanges: [[0, 4]], wordHitRangesMapping: [] })
-			.mockReturnValueOnce({ hitRanges: null, wordHitRangesMapping: [] })
-
-		vi.mocked(mockMergeSpaces).mockReturnValue([[0, 4]])
-		vi.mocked(mockIsStrictness).mockReturnValue(true)
-
-		const result = searchWithList(list, 'hello', searchConfig)
-		expect(result).toHaveLength(1)
-		expect(result[0].data.title).toBe('Hello')
-	})
-
-	it('respects enableConsecutiveSearch config', () => {
-		const list = [makeSearchableItem(ItemType.Tab, 'Hello', 'hello.com')]
-		const configWithConsecutive = { ...searchConfig, enableConsecutiveSearch: true }
-
-		vi.mocked(mockSearchSentence).mockReturnValue({ hitRanges: [[0, 4]], wordHitRangesMapping: [] })
-		vi.mocked(mockIsConsecutive).mockReturnValue(false)
-		vi.mocked(mockMergeSpaces).mockReturnValue([[0, 4]])
-		vi.mocked(mockIsStrictness).mockReturnValue(true)
-
-		const result = searchWithList(list, 'hello', configWithConsecutive)
-		expect(result).toHaveLength(0)
-	})
-
-	it('filters by strictness', () => {
-		const list = [makeSearchableItem(ItemType.Tab, 'Hello', 'hello.com')]
-
-		vi.mocked(mockSearchSentence).mockReturnValue({ hitRanges: [[0, 1]], wordHitRangesMapping: [] })
-		vi.mocked(mockMergeSpaces).mockReturnValue([[0, 1]])
-		vi.mocked(mockIsStrictness).mockReturnValue(false)
-
-		const result = searchWithList(list, 'hello', searchConfig)
-		expect(result).toHaveLength(0)
 	})
 })
 
