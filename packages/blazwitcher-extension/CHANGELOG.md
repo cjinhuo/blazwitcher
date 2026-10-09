@@ -1,5 +1,14 @@
 # blazwitcher
 
+## 1.6.1
+
+### Patch Changes
+
+- perf: reuse multi-field searchers and reduce background message payloads @cjinhuo · 2026-10-09 · [#69d4e27e](https://github.com/cjinhuo/blazwitcher/commit/69d4e27eae6c3fa775b54eb313572e484a1f2e5e)
+- perf: 复用多字段搜索器并减少后台消息体积 @cjinhuo · 2026-10-09 · [#69d4e27e](https://github.com/cjinhuo/blazwitcher/commit/69d4e27eae6c3fa775b54eb313572e484a1f2e5e)
+- fix: preserve post-merge strictness and restore trimmed title highlight offsets @cjinhuo · 2026-10-09 · [#69d4e27e](https://github.com/cjinhuo/blazwitcher/commit/69d4e27eae6c3fa775b54eb313572e484a1f2e5e)
+- fix: 保留合并范围后的严格度检查并还原标题裁剪后的高亮偏移 @cjinhuo · 2026-10-09 · [#69d4e27e](https://github.com/cjinhuo/blazwitcher/commit/69d4e27eae6c3fa775b54eb313572e484a1f2e5e)
+
 ## 1.6.0
 
 ### Minor Changes
