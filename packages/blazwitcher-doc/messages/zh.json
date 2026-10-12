@@ -4,7 +4,11 @@
 			"line1": "极致丝滑的",
 			"line2": "拼音搜索插件"
 		},
-		"description": " 一款可以全局搜索标签、书签和历史记录的 Chrome 浏览器扩展，支持拼音模糊搜索和 AI 标签分组",
+		"description": "一款支持 Chrome 和 Microsoft Edge 的浏览器扩展，可以全局搜索标签、书签和历史记录，支持拼音模糊搜索和 AI 标签分组",
+		"compatibility": {
+			"label": "支持的浏览器",
+			"edge_install": "Edge 可直接从 Chrome Web Store 安装。如有提示，请允许来自其他商店的扩展。"
+		},
 		"actions": {
 			"install_store": "通过插件商店安装",
 			"get_algorithm": "获取同款拼音搜索算法",

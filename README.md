@@ -6,22 +6,36 @@
 
 <div align="center">
 <a href="https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg" target="_blank">
-<img src="https://img.shields.io/badge/chrome-extension?style=flat&label=extension&color=deepskyblue" alt="chrome-extension">
+<img src="./packages/blazwitcher-doc/public/browsers/chrome.svg" alt="Install on Chrome" title="Install on Chrome" width="36" height="36">
+</a>
+&nbsp;&nbsp;
+<a href="https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg" target="_blank">
+<img src="./packages/blazwitcher-doc/public/browsers/edge.svg" alt="Install on Microsoft Edge" title="Install on Microsoft Edge" width="36" height="36">
+</a>
+<br>
+<a href="./LICENSE" target="_blank">
+<img src="https://img.shields.io/badge/license-Apache--2.0-blue?style=flat" alt="License: Apache-2.0">
 </a>
 <a href="https://github.com/cjinhuo/blazwitcher/releases" target="_blank">
 <img src="https://img.shields.io/github/v/release/cjinhuo/blazwitcher?style=flat&label=release&color=green" alt="github-release">
 </a>
+<a href="https://github.com/cjinhuo/blazwitcher/actions/workflows/test.yml?query=branch%3Amaster" target="_blank">
+<img src="https://img.shields.io/github/actions/workflow/status/cjinhuo/blazwitcher/test.yml?branch=master&label=tests&style=flat" alt="Unit tests">
+</a>
+<a href="https://blazwitcher.vercel.app/en" target="_blank">
+<img src="https://img.shields.io/badge/website-Blazwitcher-blue?style=flat" alt="Official website">
+</a>
 </div>
 
 <div align="center">
-<p>A Chrome Extension to blaze through your tabs, bookmarks, and history — with powerful fuzzy Pinyin search and grouping tabs by AI</p>
+<p>A browser extension for Chrome and Microsoft Edge to blaze through your tabs, bookmarks, and history — with powerful fuzzy Pinyin search and grouping tabs by AI</p>
 </div>
 
 
 # Overview
 [中文 README](./docs/README_zh.md)
 
-[Blazwitcher](https://blazwitcher.vercel.app/) is a local [Chrome Extension](https://chromewebstore.google.com/detail/blazwitcher-search-and-sw/fjgablnemienkegdnbihhemebmmonihg?hl=en-US) for searching tabs, bookmarks, and history, with support for fuzzy **Pinyin** search. It is also the perfect solution for those who work with multiple tabs open and want to switch the correct tab or create a new tab from history or bookmarks quickly without the hassle of manually operation.
+[Blazwitcher](https://blazwitcher.vercel.app/) is a local [browser extension for Chrome and Microsoft Edge](https://chromewebstore.google.com/detail/blazwitcher-search-and-sw/fjgablnemienkegdnbihhemebmmonihg?hl=en-US) for searching tabs, bookmarks, and history, with support for fuzzy **Pinyin** search. It is also the perfect solution for those who work with multiple tabs open and want to switch the correct tab or create a new tab from history or bookmarks quickly without the hassle of manually operation.
 
 # Features
 ## Fuzzy Pinyin Search
@@ -68,8 +82,8 @@ Those people who are looking for quick action and speed, like:
 
 
 # Quick Installation
-1. Visit [Chrome Extension Store](https://chromewebstore.google.com/detail/blazwitcher-search-and-sw/fjgablnemienkegdnbihhemebmmonihg?hl=en-US)
-2. Add it to your browser
+1. Open [Blazwitcher in the Chrome Web Store](https://chromewebstore.google.com/detail/blazwitcher-search-and-sw/fjgablnemienkegdnbihhemebmmonihg?hl=en-US) in Chrome or Microsoft Edge.
+2. Add it to your browser. In Edge, allow extensions from other stores if prompted.
 
 ## Shortcut
 The default **shortcut key** to activate Blazwitcher Extension is `Command+Shift+K` on Mac, and `Ctrl+Shift+K` on Windows. Of course, you can type `/s keyboard` to customize it, or directly visit [chrome://extensions/shortcuts](chrome://extensions/shortcuts) to modify it to suit your habits.

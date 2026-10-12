@@ -15,15 +15,16 @@ const geist = Geist({
 // 页面元数据配置
 export const metadata: Metadata = {
 	metadataBase: new URL('https://blazwitcher.vercel.app'),
-	title: 'BlazWitcher - Ultimate Pinyin Search Engine for Chrome Extension',
+	title: 'BlazWitcher - Pinyin Search for Chrome & Edge',
 	description:
-		'BlazWitcher is a powerful Chrome extension with advanced pinyin search capabilities. Search tabs, bookmarks, and history with fuzzy pinyin search, text search engine, and AI grouping. 拼音模糊搜索浏览器扩展.',
+		'BlazWitcher is a browser extension for Chrome and Microsoft Edge. Search tabs, bookmarks, and history with fuzzy pinyin search and AI grouping. 拼音模糊搜索浏览器扩展.',
 	keywords: [
 		'pinyin search',
 		'blazwitcher',
 		'text search engine',
 		'拼音模糊搜索',
 		'chrome extension',
+		'edge extension',
 		'browser extension',
 		'tab search',
 		'bookmark search',
@@ -52,9 +53,9 @@ export const metadata: Metadata = {
 		locale: 'en_US',
 		url: 'https://blazwitcher.vercel.app',
 		siteName: 'BlazWitcher',
-		title: 'BlazWitcher - Ultimate Pinyin Search & AI Tab Grouping for Chrome Extension',
+		title: 'BlazWitcher - Pinyin Search & AI Tab Grouping for Chrome & Edge',
 		description:
-			'Ultimate pinyin search Chrome extension for tabs, bookmarks, and history. Features fuzzy pinyin search, text search engine, and AI-powered grouping. 拼音模糊搜索 & AI 标签分组浏览器插件',
+			'Pinyin search extension for Chrome and Microsoft Edge. Search tabs, bookmarks, and history with fuzzy pinyin search and AI-powered grouping. 拼音模糊搜索 & AI 标签分组浏览器插件',
 		images: [
 			{
 				url: '/880x440-radius.png',
@@ -67,7 +68,7 @@ export const metadata: Metadata = {
 	twitter: {
 		card: 'summary_large_image',
 		title: 'BlazWitcher - Ultimate Pinyin Search Engine',
-		description: 'Advanced pinyin search Chrome extension with fuzzy search capabilities and AI grouping.',
+		description: 'Pinyin search extension for Chrome and Microsoft Edge with fuzzy search and AI tab grouping.',
 		images: ['/880x440-radius.png'],
 		creator: '@blazwitcher',
 	},

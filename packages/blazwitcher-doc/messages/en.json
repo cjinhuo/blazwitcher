@@ -4,7 +4,11 @@
 			"line1": "Ultimate Smooth",
 			"line2": "Pinyin Search"
 		},
-		"description": "A Chrome Extension to blaze through your tabs, bookmarks, and history — with powerful fuzzy Pinyin search and grouping tags by AI",
+		"description": "A browser extension for Chrome and Microsoft Edge to blaze through your tabs, bookmarks, and history — with powerful fuzzy Pinyin search and AI tab grouping",
+		"compatibility": {
+			"label": "Supported browsers",
+			"edge_install": "Install in Edge from the Chrome Web Store. Allow extensions from other stores if prompted."
+		},
 		"actions": {
 			"install_store": "Install via Extension Store",
 			"get_algorithm": "Get the same Pinyin algorithm",

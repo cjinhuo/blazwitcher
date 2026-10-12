@@ -6,19 +6,33 @@
 
 <div align="center">
 <a href="https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg" target="_blank">
-<img src="https://img.shields.io/badge/chrome-extension?style=flat&label=extension&color=deepskyblue" alt="chrome-extension">
+<img src="../packages/blazwitcher-doc/public/browsers/chrome.svg" alt="在 Chrome 中安装" title="在 Chrome 中安装" width="36" height="36">
+</a>
+&nbsp;&nbsp;
+<a href="https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg" target="_blank">
+<img src="../packages/blazwitcher-doc/public/browsers/edge.svg" alt="在 Microsoft Edge 中安装" title="在 Microsoft Edge 中安装" width="36" height="36">
+</a>
+<br>
+<a href="../LICENSE" target="_blank">
+<img src="https://img.shields.io/badge/license-Apache--2.0-blue?style=flat" alt="许可证：Apache-2.0">
 </a>
 <a href="https://github.com/cjinhuo/blazwitcher/releases" target="_blank">
 <img src="https://img.shields.io/github/v/release/cjinhuo/blazwitcher?style=flat&label=release&color=green" alt="github-release">
 </a>
+<a href="https://github.com/cjinhuo/blazwitcher/actions/workflows/test.yml?query=branch%3Amaster" target="_blank">
+<img src="https://img.shields.io/github/actions/workflow/status/cjinhuo/blazwitcher/test.yml?branch=master&label=tests&style=flat" alt="单元测试">
+</a>
+<a href="https://blazwitcher.vercel.app/zh" target="_blank">
+<img src="https://img.shields.io/badge/website-Blazwitcher-blue?style=flat" alt="官方网站">
+</a>
 </div>
 
 <div align="center">
-<p>一款可以全局搜索标签、书签和历史记录的 Chrome 浏览器扩展，支持拼音模糊搜索和 AI 标签分组</p>
+<p>一款支持 Chrome 和 Microsoft Edge 的浏览器扩展，可以全局搜索标签、书签和历史记录，支持拼音模糊搜索和 AI 标签分组</p>
 </div>
 
 # 概述
-[Blazwitcher](https://blazwitcher.vercel.app/zh) 是一个[浏览器插件](https://chrome.google.com/webstore/detail/fjgablnemienkegdnbihhemebmmonihg)，用于搜索标签，书签和历史，支持模糊拼音搜索和 AI 标签分组。对于那些打开多个选项卡并希望切换正确的选项卡或从历史记录或书签中快速创建新选项卡而不想通过手动寻找的人来说，这也是一个完美的解决方案。
+[Blazwitcher](https://blazwitcher.vercel.app/zh) 是一个支持 Chrome 和 Microsoft Edge 的[浏览器插件](https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg)，用于搜索标签，书签和历史，支持模糊拼音搜索和 AI 标签分组。对于那些打开多个选项卡并希望切换正确的选项卡或从历史记录或书签中快速创建新选项卡而不想通过手动寻找的人来说，这也是一个完美的解决方案。
 
 # 功能
 ## 模糊拼音搜索
@@ -63,8 +77,8 @@
 ![setting.gif](./setting.gif)
 
 # 快速安装
-1.  访问 [Chrome 扩展商店](https://chrome.google.com/webstore/detail/ᾋfjgablnemienkegdnbihhemebmmonihg)
-2.  将其添加到浏览器中
+1.  在 Chrome 或 Microsoft Edge 中访问 [Chrome Web Store 安装页面](https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg)。
+2.  将其添加到浏览器中。在 Edge 中，如有提示，请允许来自其他商店的扩展。
 
 
 ## 适用人群

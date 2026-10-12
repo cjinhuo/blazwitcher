@@ -2,6 +2,7 @@
 'use client'
 
 import { motion } from 'motion/react'
+import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { LinkButton } from '@/components/ui/link-button'
 
@@ -37,6 +38,20 @@ export default function SectionContent() {
 				<br />
 			</p>
 
+			<ul
+				className='flex items-center justify-center gap-6 text-sm text-muted-foreground'
+				aria-label={t('compatibility.label')}
+			>
+				<li className='inline-flex items-center gap-2'>
+					<Image src='/browsers/chrome.svg' alt='' width={24} height={24} />
+					Chrome
+				</li>
+				<li className='inline-flex items-center gap-2'>
+					<Image src='/browsers/edge.svg' alt='' width={24} height={24} />
+					Microsoft Edge
+				</li>
+			</ul>
+
 			{/* 操作按钮组 */}
 			<div className='space-x-4'>
 				<LinkButton
@@ -48,6 +63,7 @@ export default function SectionContent() {
 					{t('actions.install_store')}
 				</LinkButton>
 			</div>
+			<p className='max-w-[42rem] text-sm leading-relaxed text-muted-foreground'>{t('compatibility.edge_install')}</p>
 
 			{/* 版本信息和次级操作 */}
 			<div className='flex flex-col items-center space-y-4 mt-4'>
