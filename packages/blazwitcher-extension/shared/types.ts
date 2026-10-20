@@ -189,6 +189,7 @@ export interface AiGroupingProgress {
 	progress: number
 	showReset: boolean
 	countdown?: number
+	durationMs?: number
 }
 
 export enum PortMessageType {

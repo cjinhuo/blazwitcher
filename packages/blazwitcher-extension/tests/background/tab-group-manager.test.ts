@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { TabGroupManager } from '~background/tab-group-manager'
+import { AI_TAB_GROUP_MESSAGE_TYPE } from '~shared/constants'
+import { safeSendMessage } from '~shared/utils'
 
 vi.mock('~shared/utils', () => ({
 	safeSendMessage: vi.fn().mockResolvedValue(undefined),
@@ -34,6 +36,145 @@ describe('TabGroupManager', () => {
 	afterEach(() => {
 		vi.useRealTimers()
 		vi.restoreAllMocks()
+		vi.unstubAllEnvs()
+		vi.unstubAllGlobals()
+	})
+
+	describe('development grouping duration', () => {
+		const windowData = {
+			windowId: 1,
+			ungroupedTabs: [],
+			existingGroups: [],
+			summary: { totalTabs: 1, ungroupedTabs: 1, existingGroupsCount: 0 },
+		}
+
+		beforeEach(() => {
+			vi.mocked(chrome.tabs.get).mockResolvedValue({ id: 1, url: 'https://example.com' } as chrome.tabs.Tab)
+			vi.mocked(chrome.tabGroups.update).mockResolvedValue({} as chrome.tabGroups.TabGroup)
+		})
+
+		function successfulResponse() {
+			return {
+				ok: true,
+				body: createMockReadableStream([
+					'data: {"content":{"progress":100,"newGroups":[{"tabIds":[1],"groupTitle":"Work","groupColor":"blue"}],"effectExistingGroups":[]},"status":"finished"}\n',
+				]),
+			}
+		}
+
+		it('includes the request and Chrome grouping time, then expires after 3 seconds despite countdown updates', async () => {
+			vi.stubEnv('NODE_ENV', 'development')
+			let now = 100
+			vi.spyOn(performance, 'now').mockImplementation(() => now)
+			vi.stubGlobal(
+				'fetch',
+				vi.fn(async () => {
+					now = 1600
+					return successfulResponse()
+				})
+			)
+			vi.mocked(chrome.tabGroups.update).mockImplementation(async () => {
+				now = 2850
+				return {} as chrome.tabGroups.TabGroup
+			})
+
+			await manager.execute(windowData)
+
+			expect(manager.getProgress()).toMatchObject({ durationMs: 2750, isProcessing: false, showReset: true })
+			expect(safeSendMessage).toHaveBeenLastCalledWith(
+				expect.objectContaining({
+					type: AI_TAB_GROUP_MESSAGE_TYPE,
+					durationMs: 2750,
+				})
+			)
+			vi.advanceTimersByTime(2999)
+			expect(manager.getProgress()).toMatchObject({ durationMs: 2750 })
+			vi.advanceTimersByTime(1)
+			expect(manager.getProgress()).toMatchObject({ durationMs: undefined, showReset: true })
+			expect(safeSendMessage).toHaveBeenLastCalledWith(expect.objectContaining({ durationMs: undefined }))
+		})
+
+		it('clears the previous duration when the next request fails', async () => {
+			vi.stubEnv('NODE_ENV', 'development')
+			vi.stubGlobal(
+				'fetch',
+				vi.fn().mockResolvedValueOnce(successfulResponse()).mockRejectedValueOnce(new Error('Offline'))
+			)
+			await manager.execute(windowData)
+			expect(manager.getProgress()).toHaveProperty('durationMs', expect.any(Number))
+
+			await manager.execute(windowData)
+
+			expect(manager.getProgress()).toMatchObject({ durationMs: undefined, isProcessing: false })
+		})
+
+		it('gives a new grouping its own full display interval', async () => {
+			vi.stubEnv('NODE_ENV', 'development')
+			vi.stubGlobal(
+				'fetch',
+				vi.fn().mockImplementation(async () => successfulResponse())
+			)
+			await manager.execute(windowData)
+			vi.advanceTimersByTime(2000)
+			await manager.execute(windowData)
+			vi.advanceTimersByTime(1000)
+			expect(manager.getProgress()).toHaveProperty('durationMs', expect.any(Number))
+			vi.advanceTimersByTime(2000)
+			expect(manager.getProgress()).toMatchObject({ durationMs: undefined })
+		})
+
+		it('keeps the development popup visible instead of focusing the tab window before showing the duration', async () => {
+			vi.stubEnv('NODE_ENV', 'development')
+			vi.stubGlobal('fetch', vi.fn().mockResolvedValue(successfulResponse()))
+			manager.setOriginalWindowData(windowData)
+
+			await manager.execute(windowData)
+
+			expect(chrome.windows.update).not.toHaveBeenCalled()
+			expect(manager.getProgress()).toHaveProperty('durationMs', expect.any(Number))
+		})
+
+		it('creates a new group in the source window while the development popup is focused', async () => {
+			vi.stubEnv('NODE_ENV', 'development')
+			vi.stubGlobal(
+				'fetch',
+				vi.fn().mockResolvedValue({
+					ok: true,
+					body: createMockReadableStream([
+						'data: {"content":{"progress":100,"newGroups":[{"tabIds":[1,2],"groupTitle":"Work","groupColor":"blue"}],"effectExistingGroups":[]},"status":"finished"}\n',
+					]),
+				})
+			)
+			// Chrome defaults new groups to the current window, which is the popup here.
+			vi.spyOn(chrome.tabs, 'group').mockImplementation(async (options: chrome.tabs.GroupOptions) => {
+				const targetWindowId = options.createProperties?.windowId ?? 99
+				if (targetWindowId !== 1) throw new Error('Tabs cannot be grouped in a popup window')
+				return 42
+			})
+			manager.setOriginalWindowData(windowData)
+
+			await manager.execute(windowData)
+
+			expect(chrome.tabs.group).toHaveBeenCalledWith({ tabIds: [1, 2], createProperties: { windowId: 1 } })
+			expect(chrome.tabGroups.update).toHaveBeenCalledWith(42, { title: 'Work', color: 'blue' })
+			expect(chrome.windows.update).not.toHaveBeenCalled()
+		})
+
+		it('does not measure or broadcast a duration in production', async () => {
+			vi.stubEnv('NODE_ENV', 'production')
+			const clock = vi.spyOn(performance, 'now')
+			vi.stubGlobal('fetch', vi.fn().mockResolvedValue(successfulResponse()))
+			manager.setOriginalWindowData(windowData)
+
+			await manager.execute(windowData)
+
+			expect(clock).not.toHaveBeenCalled()
+			expect(chrome.windows.update).toHaveBeenCalledWith(1, { focused: true })
+			expect(manager.getProgress()).not.toHaveProperty('durationMs')
+			for (const [message] of vi.mocked(safeSendMessage).mock.calls) {
+				expect(message).not.toHaveProperty('durationMs')
+			}
+		})
 	})
 
 	describe('constructor', () => {
