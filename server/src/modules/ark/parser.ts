@@ -72,20 +72,21 @@ export class LLMResponseParser {
 	 */
 	private parseXMLTags<T>(tagName: string, handler: TagHandler<T>) {
 		const regex = new RegExp(`<${tagName}>\\s*({[\\s\\S]*?})\\s*<\\/${tagName}>`, 'g')
-		let match: RegExpExecArray | null
+		let hasParsedTag = false
 
-		while ((match = regex.exec(this.accumulator)) !== null) {
+		this.accumulator = this.accumulator.replace(regex, (tag, json) => {
 			try {
-				const data = JSON.parse(match[1])
+				const data = JSON.parse(json)
 				console.log('tagName', tagName, 'data', data)
 				handler(data)
-				this.accumulator = ''
-				return true
+				hasParsedTag = true
+				return ''
 			} catch (error) {
 				console.error(`解析 ${tagName} 标签失败:`, error)
-				return false
+				return tag
 			}
-		}
+		})
+		return hasParsedTag
 	}
 
 	private updateProgress() {

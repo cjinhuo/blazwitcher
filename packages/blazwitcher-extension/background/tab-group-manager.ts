@@ -11,6 +11,8 @@ export class TabGroupManager {
 	originalWindowData?: WindowData
 	originalWindowId?: number
 	private countdownTimer?: NodeJS.Timeout
+	private groupingStartedAt?: number
+	private groupingDurationTimer?: NodeJS.Timeout
 
 	constructor() {
 		this.streamState = {
@@ -36,6 +38,7 @@ export class TabGroupManager {
 			isProcessing: this.streamState.isProcessing,
 			showReset: this.streamState.showReset,
 			countdown: this.streamState.countdown,
+			...(process.env.NODE_ENV === 'development' ? { durationMs: this.streamState.durationMs } : {}),
 		}
 	}
 
@@ -102,6 +105,13 @@ export class TabGroupManager {
 
 	// 执行 AI 分组 (stream)
 	async execute(currentWindowData: WindowData) {
+		if (process.env.NODE_ENV === 'development') {
+			clearTimeout(this.groupingDurationTimer)
+			this.groupingDurationTimer = undefined
+			this.streamState.durationMs = undefined
+			this.groupingStartedAt = performance.now()
+		}
+
 		try {
 			const response = await fetch(`${SERVER_URL}/ark/categorize-tabs`, {
 				method: 'POST',
@@ -138,10 +148,7 @@ export class TabGroupManager {
 		}
 		safeSendMessage({
 			type: AI_TAB_GROUP_MESSAGE_TYPE,
-			progress: this.streamState.progress,
-			showReset: this.streamState.showReset,
-			isProcessing: this.streamState.isProcessing,
-			countdown: this.streamState.countdown,
+			...this.getProgress(),
 		})
 	}
 
@@ -179,6 +186,13 @@ export class TabGroupManager {
 									progress: 100,
 								})
 								await this.groupTabs()
+								if (process.env.NODE_ENV === 'development' && this.groupingStartedAt !== undefined) {
+									this.streamState.durationMs = performance.now() - this.groupingStartedAt
+									this.groupingDurationTimer = setTimeout(() => {
+										this.groupingDurationTimer = undefined
+										this.sendProgressMessage({ durationMs: undefined })
+									}, 3000)
+								}
 								// 分组完成后显示重置按钮
 								this.showResetButton()
 								break
@@ -197,8 +211,10 @@ export class TabGroupManager {
 	}
 
 	private async groupTabs(): Promise<void> {
-		// 定位到分组标签所在的窗口
-		if (this.originalWindowId) chrome.windows.update(this.originalWindowId, { focused: true })
+		// 开发环境保留弹窗焦点，避免耗时提示在弹窗后面过期。
+		if (this.originalWindowId && process.env.NODE_ENV !== 'development') {
+			chrome.windows.update(this.originalWindowId, { focused: true })
+		}
 
 		// 过滤掉特殊页面的标签页，这些页面不允许分组
 		const filterSpecialPages = async (tabIds: number[]) => {
@@ -237,6 +253,9 @@ export class TabGroupManager {
 				if (validTabIds.length > 0) {
 					const groupId = await chrome.tabs.group({
 						tabIds: validTabIds,
+						...(process.env.NODE_ENV === 'development' && this.originalWindowId !== undefined
+							? { createProperties: { windowId: this.originalWindowId } }
+							: {}),
 					})
 					await chrome.tabGroups.update(groupId, {
 						title: item.groupTitle,
