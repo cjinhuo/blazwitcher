@@ -1,5 +1,14 @@
 # blazwitcher
 
+## 1.6.2
+
+### Patch Changes
+
+- chore: show AI grouping duration for three seconds in development @cjinhuo@qq.com · 2026-10-20 · [#2cc3dcc9](https://github.com/cjinhuo/blazwitcher/commit/2cc3dcc952cd8cddc2a256d2307cf47ff120147c)
+- chore: 在开发环境展示 AI 分组耗时并于 3 秒后隐藏 @cjinhuo@qq.com · 2026-10-20 · [#2cc3dcc9](https://github.com/cjinhuo/blazwitcher/commit/2cc3dcc952cd8cddc2a256d2307cf47ff120147c)
+- fix: create development tab groups in their source window @cjinhuo@qq.com · 2026-10-20 · [#2cc3dcc9](https://github.com/cjinhuo/blazwitcher/commit/2cc3dcc952cd8cddc2a256d2307cf47ff120147c)
+- fix: 在开发环境将标签分组创建到原窗口 @cjinhuo@qq.com · 2026-10-20 · [#2cc3dcc9](https://github.com/cjinhuo/blazwitcher/commit/2cc3dcc952cd8cddc2a256d2307cf47ff120147c)
+
 ## 1.6.1
 
 ### Patch Changes
