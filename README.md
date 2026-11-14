@@ -37,6 +37,8 @@
 
 [Blazwitcher](https://blazwitcher.vercel.app/) is a local [browser extension for Chrome and Microsoft Edge](https://chromewebstore.google.com/detail/blazwitcher-search-and-sw/fjgablnemienkegdnbihhemebmmonihg?hl=en-US) for searching tabs, bookmarks, and history, with support for fuzzy **Pinyin** search. It is also the perfect solution for those who work with multiple tabs open and want to switch the correct tab or create a new tab from history or bookmarks quickly without the hassle of manually operation.
 
+Prefer searching from Raycast? Install [Blazwitcher for Raycast](https://www.raycast.com/julian0197/blazwitcher) to search tabs, bookmarks, and history with fuzzy Pinyin search. The Raycast edition supports **Google Chrome on macOS only**, not Microsoft Edge. See its [README](https://github.com/cjinhuo/blazwitcher-raycast#readme) for setup and features.
+
 # Features
 ## Fuzzy Pinyin Search
 Supports Chinese and English mixed fuzzy search, Chinese-friendly (powered by [text-search-engine](https://github.com/cjinhuo/text-search-engine)). The search results are sorted by **weight value** (higher weight for more consecutive character matches) and last usage time in descending order, allowing you to locate your target faster. Search capabilities include:
