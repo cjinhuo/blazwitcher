@@ -34,6 +34,8 @@
 # 概述
 [Blazwitcher](https://blazwitcher.vercel.app/zh) 是一个支持 Chrome 和 Microsoft Edge 的[浏览器插件](https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg)，用于搜索标签，书签和历史，支持模糊拼音搜索和 AI 标签分组。对于那些打开多个选项卡并希望切换正确的选项卡或从历史记录或书签中快速创建新选项卡而不想通过手动寻找的人来说，这也是一个完美的解决方案。
 
+习惯从 Raycast 搜索？可以安装 [Blazwitcher Raycast 版](https://www.raycast.com/julian0197/blazwitcher)，通过拼音模糊搜索查找标签页、书签和历史记录。Raycast 版**仅支持 macOS 上的 Google Chrome**，不支持 Microsoft Edge。安装说明与功能介绍见其[中文 README](https://github.com/cjinhuo/blazwitcher-raycast/blob/master/README.zh-CN.md)。
+
 # 功能
 ## 模糊拼音搜索
 支持中英文混合模糊搜索，对国人超级 Nice (依赖于[文本搜索算法](https://github.com/cjinhuo/text-search-engine))，最终搜索的结果按照返回的**权重值**(命中连续字符越多，权重越高)和最近使用的时间降序输出，更快定位目标，搜索能力：
