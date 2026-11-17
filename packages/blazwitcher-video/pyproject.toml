@@ -2,4 +2,4 @@
 name = "blazwitcher-video-assets"
 version = "0.0.0"
 requires-python = ">=3.12,<3.13"
-dependencies = ["manim==0.21.0"]
+dependencies = ["manim==0.22.1", "pillow==13.0.0"]
