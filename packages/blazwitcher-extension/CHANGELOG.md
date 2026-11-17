@@ -1,5 +1,12 @@
 # blazwitcher
 
+## 1.6.3
+
+### Patch Changes
+
+- fix: upgrade text-search-engine to 1.6.2 for Unicode ranges and common heteronym pinyin matching @cjinhuo · 2026-11-17 · [#8b1dc30b](https://github.com/cjinhuo/blazwitcher/commit/8b1dc30b1beca5894363ac4ff1ea3e4158ce105e)
+- fix: 升级 text-search-engine 至 1.6.2，修复 Unicode 命中范围并完善常见多音字拼音匹配 @cjinhuo · 2026-11-17 · [#8b1dc30b](https://github.com/cjinhuo/blazwitcher/commit/8b1dc30b1beca5894363ac4ff1ea3e4158ce105e)
+
 ## 1.6.2
 
 ### Patch Changes
