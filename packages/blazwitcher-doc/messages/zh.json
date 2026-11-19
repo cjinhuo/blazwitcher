@@ -1,4 +1,9 @@
 {
+	"Metadata": {
+		"title": "BlazWitcher｜Chrome 与 Edge 拼音搜索和 AI 标签分组扩展",
+		"description": "用一个快捷键搜索 Chrome 和 Edge 的标签页、书签与历史记录。BlazWitcher 支持汉字、拼音首字母和英文混合匹配，也可用 AI 整理标签分组。",
+		"imageAlt": "适用于 Chrome 与 Microsoft Edge 的 BlazWitcher 拼音搜索扩展"
+	},
 	"LandingPage": {
 		"slogan": {
 			"line1": "极致丝滑的",

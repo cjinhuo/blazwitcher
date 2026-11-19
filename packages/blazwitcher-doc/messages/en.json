@@ -1,4 +1,9 @@
 {
+	"Metadata": {
+		"title": "BlazWitcher | Fuzzy Pinyin Search for Chrome and Edge",
+		"description": "Search open tabs, bookmarks and browsing history in one shortcut. BlazWitcher matches Chinese pinyin, initials and English, and can organize tabs into groups with AI.",
+		"imageAlt": "BlazWitcher browser extension for Chrome and Microsoft Edge"
+	},
 	"LandingPage": {
 		"slogan": {
 			"line1": "Ultimate Smooth",
