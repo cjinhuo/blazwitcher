@@ -1,139 +1,78 @@
-import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
-import './globals.css'
 import { Analytics } from '@vercel/analytics/react'
-import { NextIntlClientProvider } from 'next-intl'
+import type { Metadata, Viewport } from 'next'
+import { Geist } from 'next/font/google'
+import { notFound } from 'next/navigation'
+import { hasLocale, NextIntlClientProvider } from 'next-intl'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { StructuredData } from '@/components/structured-data'
 import { ThemeProvider } from '@/components/theme-provider'
+import { routing } from '@/i18n/routing'
+import { languageUrls, siteUrl } from '@/lib/site'
+import './globals.css'
 
-// 配置 Geist 字体
-const geist = Geist({
-	subsets: ['latin'],
-	variable: '--font-geist',
-})
+const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
+type LocaleParams = Promise<{ locale: string }>
 
-// 页面元数据配置
-export const metadata: Metadata = {
-	metadataBase: new URL('https://blazwitcher.vercel.app'),
-	title: 'BlazWitcher - Pinyin Search for Chrome & Edge',
-	description:
-		'BlazWitcher is a browser extension for Chrome and Microsoft Edge. Search tabs, bookmarks, and history with fuzzy pinyin search and AI grouping. 拼音模糊搜索浏览器扩展.',
-	keywords: [
-		'pinyin search',
-		'blazwitcher',
-		'text search engine',
-		'拼音模糊搜索',
-		'chrome extension',
-		'edge extension',
-		'browser extension',
-		'tab search',
-		'bookmark search',
-		'fuzzy search',
-		'chinese search',
-		'pinyin fuzzy search',
-		'browser productivity',
-		'tab management',
-	],
-	authors: [{ name: 'BlazWitcher Team' }],
-	creator: 'BlazWitcher',
-	publisher: 'BlazWitcher',
-	robots: {
-		index: true,
-		follow: true,
-		googleBot: {
-			index: true,
-			follow: true,
-			'max-video-preview': -1,
-			'max-image-preview': 'large',
-			'max-snippet': -1,
-		},
-	},
-	openGraph: {
-		type: 'website',
-		locale: 'en_US',
-		url: 'https://blazwitcher.vercel.app',
-		siteName: 'BlazWitcher',
-		title: 'BlazWitcher - Pinyin Search & AI Tab Grouping for Chrome & Edge',
-		description:
-			'Pinyin search extension for Chrome and Microsoft Edge. Search tabs, bookmarks, and history with fuzzy pinyin search and AI-powered grouping. 拼音模糊搜索 & AI 标签分组浏览器插件',
-		images: [
-			{
-				url: '/880x440-radius.png',
-				width: 880,
-				height: 440,
-				alt: 'BlazWitcher - Pinyin Search Engine',
-			},
-		],
-	},
-	twitter: {
-		card: 'summary_large_image',
-		title: 'BlazWitcher - Ultimate Pinyin Search Engine',
-		description: 'Pinyin search extension for Chrome and Microsoft Edge with fuzzy search and AI tab grouping.',
-		images: ['/880x440-radius.png'],
-		creator: '@blazwitcher',
-	},
-	alternates: {
-		canonical: 'https://blazwitcher.vercel.app',
-		languages: {
-			'en-US': 'https://blazwitcher.vercel.app/en',
-			'zh-CN': 'https://blazwitcher.vercel.app/zh',
-		},
-	},
-	icons: {
-		icon: [
-			{
-				url: '/icon.svg',
-				type: 'image/svg+xml',
-			},
-		],
-		apple: [
-			{
-				url: '/icon.svg',
-				type: 'image/svg+xml',
-			},
-		],
-	},
-	manifest: '/manifest.json',
+export function generateStaticParams() {
+	return routing.locales.map((locale) => ({ locale }))
 }
 
-/**
- * 根布局组件
- * @param {React.ReactNode} children - 子页面内容
- * @returns 包含主题和字体配置的页面布局
- */
-export default async function RootLayout({
-	children,
-	params,
-}: {
-	children: React.ReactNode
-	params: Promise<{ locale: string }>
-}) {
+export const viewport: Viewport = { themeColor: '#000000' }
+
+export async function generateMetadata({ params }: { params: LocaleParams }): Promise<Metadata> {
 	const { locale } = await params
+	if (!hasLocale(routing.locales, locale)) notFound()
+	const t = await getTranslations({ locale, namespace: 'Metadata' })
+	const title = t('title')
+	const description = t('description')
+	const url = languageUrls[locale]
+	const images = [{ url: `${siteUrl}/880x440-radius.png`, width: 880, height: 440, alt: t('imageAlt') }]
+
+	return {
+		metadataBase: new URL(siteUrl),
+		title,
+		description,
+		alternates: { canonical: url, languages: languageUrls },
+		openGraph: {
+			type: 'website',
+			siteName: 'BlazWitcher',
+			title,
+			description,
+			url,
+			images,
+			locale: locale === 'zh' ? 'zh_CN' : 'en_US',
+			alternateLocale: locale === 'zh' ? 'en_US' : 'zh_CN',
+		},
+		twitter: { card: 'summary_large_image', title, description, images },
+		robots: {
+			index: true,
+			follow: true,
+			googleBot: { 'max-image-preview': 'large', 'max-snippet': -1, 'max-video-preview': -1 },
+		},
+		authors: [{ name: 'BlazWitcher Team' }],
+		icons: { icon: '/icon.svg', apple: '/icon.svg' },
+		manifest: '/manifest.json',
+		formatDetection: { telephone: false },
+	}
+}
+
+export default async function RootLayout({ children, params }: { children: React.ReactNode; params: LocaleParams }) {
+	const { locale } = await params
+	if (!hasLocale(routing.locales, locale)) notFound()
+	setRequestLocale(locale)
+	const t = await getTranslations({ locale, namespace: 'Metadata' })
 
 	return (
 		<html lang={locale} suppressHydrationWarning>
-			<head>
-				<link rel='icon' type='image/svg+xml' href='/icon.svg' />
-				{/* SEO 优化 meta 标签 */}
-				<meta name='viewport' content='width=device-width, initial-scale=1' />
-				<meta name='theme-color' content='#000000' />
-				<meta name='format-detection' content='telephone=no' />
-				<link rel='canonical' href='https://blazwitcher.vercel.app' />
-				{/* 预连接到外部资源 */}
-				<link rel='preconnect' href='https://fonts.googleapis.com' />
-				<link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
-			</head>
 			<body className={`${geist.variable} font-sans antialiased`}>
-				<StructuredData locale={locale} />
+				<StructuredData locale={locale} description={t('description')} />
 				<NextIntlClientProvider>
-					{/* 主题提供者 */}
 					<ThemeProvider attribute='class' defaultTheme='light' enableSystem disableTransitionOnChange>
-						{/* 页面内容 */}
 						{children}
 					</ThemeProvider>
 				</NextIntlClientProvider>
+				<Analytics />
 			</body>
-			<Analytics />
 		</html>
 	)
 }

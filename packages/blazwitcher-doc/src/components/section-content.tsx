@@ -16,7 +16,7 @@ export default function SectionContent() {
 	return (
 		<motion.div
 			// 入场动画配置
-			initial={{ opacity: 0, y: -20 }}
+			initial={false}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.5 }}
 			className='container flex max-w-7xl flex-col items-center gap-4 text-center mx-auto px-4 sm:px-6 lg:px-8'

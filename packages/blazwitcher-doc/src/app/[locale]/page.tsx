@@ -1,17 +1,22 @@
-import { useLocale, useTranslations } from 'next-intl'
+import { notFound } from 'next/navigation'
+import { hasLocale } from 'next-intl'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 import FeatureCard from '@/components/FeatureCard'
 import HomePromoVideo from '@/components/home-promo-video'
 import SectionContent from '@/components/section-content'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
+import { routing } from '@/i18n/routing'
 
 /**
  * 首页组件
  * @returns 包含头部、主体内容和页脚的完整页面布局
  */
-export default function Home() {
-	const t = useTranslations('LandingPage')
-	const locale = useLocale()
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+	const { locale } = await params
+	if (!hasLocale(routing.locales, locale)) notFound()
+	setRequestLocale(locale)
+	const t = await getTranslations({ locale, namespace: 'LandingPage' })
 
 	return (
 		<div className='relative flex min-h-screen flex-col'>
@@ -39,7 +44,7 @@ export default function Home() {
 					<div className='flex items-center justify-center p-4'>
 						<div className='max-w-5xl w-full mx-auto'>
 							<div className='text-center mb-10'>
-								<h1 className='text-4xl font-bold text-primary mb-2'>{t('features.title')}</h1>
+								<h2 className='text-4xl font-bold text-primary mb-2'>{t('features.title')}</h2>
 								<p className='text-xl text-gray-400'>{t('features.subtitle')}</p>
 							</div>
 
