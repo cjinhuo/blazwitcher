@@ -17,7 +17,7 @@ const ResourceLinkData = [
 	{
 		label: 'Personal Blog',
 		cnLabel: '个人博客',
-		href: 'https://cjinhuo.github.io/',
+		href: 'https://cjinhuo.netlify.app/',
 	},
 	{
 		label: 'Email',
