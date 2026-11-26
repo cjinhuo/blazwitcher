@@ -5,6 +5,7 @@ import { motion } from 'motion/react'
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { LinkButton } from '@/components/ui/link-button'
+import { chromeStoreUrl } from '@/lib/site'
 
 /**
  * 首页主内容区块组件
@@ -22,7 +23,7 @@ export default function SectionContent() {
 			className='container flex max-w-7xl flex-col items-center gap-4 text-center mx-auto px-4 sm:px-6 lg:px-8'
 		>
 			{/* 渐变文字标题 */}
-			<h1 className='font-bold text-3xl sm:text-5xl md:text-6xl lg:text-7xl'>
+			<h1 className='max-w-5xl text-balance font-bold text-3xl sm:text-5xl lg:text-6xl'>
 				<span className='inline-block bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 bg-clip-text text-transparent bg-[size:200%] animate-gradient'>
 					{t('slogan.line1')}
 				</span>
@@ -35,7 +36,6 @@ export default function SectionContent() {
 			{/* 描述文本 */}
 			<p className='max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8 mx-auto'>
 				{t('description')}
-				<br />
 			</p>
 
 			<ul
@@ -54,12 +54,7 @@ export default function SectionContent() {
 
 			{/* 操作按钮组 */}
 			<div className='space-x-4'>
-				<LinkButton
-					href='https://chromewebstore.google.com/detail/blazwitcher-fuzzy-pinyin/fjgablnemienkegdnbihhemebmmonihg'
-					size='lg'
-					className='h-12'
-					isExternal
-				>
+				<LinkButton href={chromeStoreUrl} size='lg' className='h-12' isExternal>
 					{t('actions.install_store')}
 				</LinkButton>
 			</div>

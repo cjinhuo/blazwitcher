@@ -6,16 +6,16 @@
 	},
 	"LandingPage": {
 		"slogan": {
-			"line1": "Ultimate Smooth",
-			"line2": "Pinyin Search"
+			"line1": "Pinyin search for Chrome and Edge",
+			"line2": "Tabs, bookmarks, and history"
 		},
-		"description": "A browser extension for Chrome and Microsoft Edge to blaze through your tabs, bookmarks, and history — with powerful fuzzy Pinyin search and AI tab grouping",
+		"description": "Find an open tab, a saved bookmark, or a page from your browsing history by typing Chinese, full Pinyin, Pinyin initials, or English. Blazwitcher also offers AI tab grouping in the browser extension.",
 		"compatibility": {
 			"label": "Supported browsers",
 			"edge_install": "Install in Edge from the Chrome Web Store. Allow extensions from other stores if prompted."
 		},
 		"actions": {
-			"install_store": "Install via Extension Store",
+			"install_store": "Install from the Chrome Web Store",
 			"get_algorithm": "Get the same Pinyin algorithm",
 			"engine_name": "Text Search Engine"
 		},
@@ -53,6 +53,19 @@
 			"product": "Product",
 			"resources": "Resources",
 			"description": "Supercharge your browsing experience with Blazwitcher."
+		},
+		"guide": {
+			"title": "Try Pinyin initials in an open tab",
+			"intro": "For example, open a page titled “上下文工程” (context engineering). You can find it without switching to a Chinese keyboard.",
+			"open": "Open Blazwitcher with <mac></mac> on macOS or <windows></windows> on Windows if the default shortcut is assigned.",
+			"search": "Type <query></query>. The <filter></filter> prefix limits results to open tabs, and <initials></initials> matches the Pinyin initials of “上下文”.",
+			"select": "Use the arrow keys to select “上下文工程” and press <enter></enter> to switch to that tab.",
+			"filters": "Use <bookmarks></bookmarks> for bookmarks or <history></history> for browsing history. Select a saved result to open its page."
+		},
+		"raycast": {
+			"title": "Prefer searching in Raycast?",
+			"description": "Blazwitcher for Raycast is a separate extension for Google Chrome on macOS. It searches tabs, bookmarks, and history with Pinyin, but does not support Microsoft Edge or AI tab grouping. Basic search works without the optional Raycast Browser Extension.",
+			"install": "Get Blazwitcher from the Raycast Store"
 		}
 	}
 }

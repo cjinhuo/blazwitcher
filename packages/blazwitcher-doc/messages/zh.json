@@ -6,16 +6,16 @@
 	},
 	"LandingPage": {
 		"slogan": {
-			"line1": "极致丝滑的",
-			"line2": "拼音搜索插件"
+			"line1": "用拼音搜索 Chrome 和 Edge 的",
+			"line2": "标签页、书签与历史记录"
 		},
-		"description": "一款支持 Chrome 和 Microsoft Edge 的浏览器扩展，可以全局搜索标签、书签和历史记录，支持拼音模糊搜索和 AI 标签分组",
+		"description": "用汉字、全拼、拼音首字母或英文，查找打开的标签页、收藏的书签和浏览过的网页。浏览器扩展还支持 AI 标签分组。",
 		"compatibility": {
 			"label": "支持的浏览器",
 			"edge_install": "Edge 可直接从 Chrome Web Store 安装。如有提示，请允许来自其他商店的扩展。"
 		},
 		"actions": {
-			"install_store": "通过插件商店安装",
+			"install_store": "从 Chrome 网上应用店安装",
 			"get_algorithm": "获取同款拼音搜索算法",
 			"engine_name": "文本搜索引擎"
 		},
@@ -53,6 +53,19 @@
 			"product": "产品",
 			"resources": "资源",
 			"description": "使用 Blazwitcher 优化你的浏览体验。"
+		},
+		"guide": {
+			"title": "试试用拼音首字母切换标签页",
+			"intro": "假设你打开了标题为「上下文工程」的网页，不切换中文输入法也能找到它。",
+			"open": "若浏览器已分配默认快捷键，macOS 上按 <mac></mac>，Windows 上按 <windows></windows>，打开 Blazwitcher。",
+			"search": "输入 <query></query>。<filter></filter> 把结果限定为已打开的标签页，<initials></initials> 匹配「上下文」的拼音首字母。",
+			"select": "用方向键选中「上下文工程」，按 <enter></enter> 切换到该标签页。",
+			"filters": "要查书签就用 <bookmarks></bookmarks>，要查浏览记录就用 <history></history>。选中结果后即可打开对应网页。"
+		},
+		"raycast": {
+			"title": "习惯用 Raycast 搜索？",
+			"description": "Blazwitcher Raycast 版是独立扩展，只支持 macOS 上的 Google Chrome。它能用拼音查找标签页、书签和历史记录，不支持 Microsoft Edge 或 AI 标签分组。基本搜索不需要安装可选的 Raycast 浏览器扩展。",
+			"install": "从 Raycast Store 安装 Blazwitcher"
 		}
 	}
 }
